@@ -1,0 +1,164 @@
+﻿<!DOCTYPE HTML>
+{% load static %}
+<html lang="pt-pt">
+
+<head>
+
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <link href="favicon.ico" rel="icon">
+    <title>Dia Aberto</title>
+
+</head>
+
+<body>
+    <noscript>
+        <strong>We're sorry but dia_aberto_frontend doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div data-v-8716d23a="" id="app">
+        <nav data-v-a67fe1ba="" data-v-8716d23a="" role="navigation" aria-label="main navigation" class="navbar">
+            <div class="navbar-brand">
+                <a data-v-a67fe1ba="" href="/" class="navbar-item logo router-link-active">
+                    <img data-v-a67fe1ba="" alt="Dia Aberto" src="{% static "diaabertoapp/img/logo-navbar.png" %}">
+                </a>
+                <a role="button" aria-label="menu" class="navbar-burger burger">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <a data-v-a67fe1ba="" href="/atividades" class="navbar-item is-tab router-link"> Atividades </a>
+                    <a data-v-a67fe1ba="" href="/inscricoes" class="navbar-item is-tab router-link"> Inscrições </a>
+                    <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link"> Transportes </a>
+                    <a data-v-a67fe1ba="" href="/almocos" class="navbar-item is-tab router-link"> Almoços </a>
+                    <a data-v-a67fe1ba="" href="/configuracao" class="navbar-item is-tab router-link"> Configuração do Dia Aberto </a>
+                </div>
+                <div class="navbar-end">
+                    <div data-v-a67fe1ba="" class="navbar-item">
+                        <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                            <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                                <span data-v-a67fe1ba="" role="button">
+                                    <button data-v-a67fe1ba="" type="button" data-badge="0" class="button has-badge-rounded has-badge-warning is-text"
+                                        style="margin-right: 0.9rem;">
+                                        <!---->
+                                        <span>
+                                            <span data-v-a67fe1ba="" class="icon">
+                                                <i class="mdi mdi-bell mdi-24px"></i>
+                                            </span>
+                                        </span>
+                                        <!---->
+                                    </button>
+                                </span>
+                            </div>
+                            <div aria-hidden="true" class="background" style="display: none;"></div>
+                            <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                                <div role="menu" class="dropdown-content">
+                                    <div data-v-a67fe1ba="" role="menuitem" tabindex="0" class="dropdown-item">
+                                        <strong data-v-a67fe1ba="">Notificações</strong>
+                                    </div>
+                                    <hr data-v-a67fe1ba="" class="dropdown-divider">
+                                    <div data-v-a67fe1ba="">
+                                        <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
+                                            <div data-v-a67fe1ba="" class="has-text-grey"> Não tem novas notificações! </div>
+                                        </div>
+                                        <hr data-v-a67fe1ba="" class="dropdown-divider">
+                                    </div>
+                                    <a data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
+                                        <u data-v-a67fe1ba="">Ver todas as notificações</u>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                            <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                                <button data-v-a67fe1ba="" type="button" class="button is-text" style="margin-right: 0.9rem;">
+                                    <!---->
+                                    <span>
+                                        <span data-v-a67fe1ba="" class="icon">
+                                            <i class="mdi mdi-account-circle mdi-24px"></i>
+                                        </span>
+                                    </span>
+                                    <!---->
+                                </button>
+                            </div>
+                            <div aria-hidden="true" class="background" style="display: none;"></div>
+                            <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                                <div role="list" class="dropdown-content">
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Colaborador</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Administrador</a>
+                                </div>
+                            </div>
+                        </div>
+                        <button data-v-a67fe1ba="" type="button" class="button">
+                            <span class="icon is-small">
+                                <i class="mdi mdi-logout-variant"></i>
+                            </span>
+                            <span> Sair </span>
+                            <!---->
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+        <div data-v-8716d23a="" id="page-content">
+            <div data-v-8716d23a="" class="card">
+                <div data-v-8716d23a="" class="card-content">
+                    <div data-v-8716d23a="">
+                        <div class="section">
+                            <div class="columns">
+                                <div class="column is-7">
+                                    <h1 class="title has-text-centered">Nova plataforma</h1>
+                                    <h1 class="subtitle is-5 has-text-centered"> Simples, Intuitivo, Limpo. </h1>
+                                    <p> A plataforma online do Dia Aberto foi renovada pelos alunos em âmbito do curso de Licenciatura
+                                        de Engenharia Informática. </p>
+                                </div>
+                                <div class="column is-4">
+                                    <img alt="Logo" src="{% static "diaabertoapp/img/logo-large.png" %}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero is-light">
+                            <div class="hero-body">
+                                <div class="columns">
+                                    <div class="column is-8">
+                                        <p>2019 Dia Aberto por
+                                            <a>Grupo 9</a>
+                                        </p>
+                                        <small> Contacto de suporte:
+                                            <a href="">suporte.dia.aberto@ualg.pt</a>
+                                        </small>
+                                    </div>
+                                    <div class="column">
+                                        <img src="{% static "diaabertoapp/img/ualg-logo.png" %}" alt="Dia Aberto">
+                                    </div>
+                                    <div class="column is-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer data-v-8716d23a="" class="footer">
+            <div data-v-8716d23a="" style="float: left;"> (c) 2020 </div>
+            <div data-v-8716d23a="" style="float: right;"> Designed by Grupo 9 </div>
+            <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto </div>
+        </footer>
+    </div>
+    <script src="/js/chunk-vendors.63f37e79.js"></script>
+    <script src="/js/app.841e44b5.js"></script>
+</body>
+
+</html>
