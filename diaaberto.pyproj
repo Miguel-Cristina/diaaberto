@@ -4,6 +4,7 @@
     <Name>diaaberto</Name>
     <RootNamespace>diaaberto</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -47,6 +48,7 @@
     <Compile Include="diaaberto\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="diaabertoapp\static\diaabertoapp\favicon.ico" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\hero-background.jpg" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\logo-large.png" />
