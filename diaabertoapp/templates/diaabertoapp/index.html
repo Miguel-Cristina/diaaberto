@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
     <meta charset="utf-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
@@ -44,6 +44,7 @@
             <div class="navbar-menu">
                 <div class="navbar-start">
                     <a data-v-a67fe1ba="" href="/atividades" class="navbar-item is-tab router-link"> Atividades </a>
+                    <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
                     <a data-v-a67fe1ba="" href="/inscricoes" class="navbar-item is-tab router-link"> Inscrições </a>
                     <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link"> Transportes </a>
                     <a data-v-a67fe1ba="" href="/almocos" class="navbar-item is-tab router-link"> Almoços </a>
@@ -66,8 +67,8 @@
                                     </button>
                                 </span>
                             </div>
-                            <div aria-hidden="true" class="background" style="display: none;"></div>
-                            <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                            <div aria-hidden="true" class="background"></div>
+                            <div class="dropdown-menu" style="">
                                 <div role="menu" class="dropdown-content">
                                     <div data-v-a67fe1ba="" role="menuitem" tabindex="0" class="dropdown-item">
                                         <strong data-v-a67fe1ba="">Notificações</strong>
@@ -98,12 +99,12 @@
                                 </button>
                             </div>
                             <div aria-hidden="true" class="background" style="display: none;"></div>
-                            <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                            <div class="dropdown-menu" style="">
                                 <div role="list" class="dropdown-content">
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Participante Individual</a>
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Colaborador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Colaborador</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Professor Universitário</a>
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Administrador</a>
                                 </div>
@@ -163,19 +164,12 @@
             </div>
         </div>
         <footer data-v-8716d23a="" class="footer">
-            <div data-v-8716d23a="" style="float: left;"> (c) 2020 </div>
-            <div data-v-8716d23a="" style="float: right;"> Designed by Grupo 9 </div>
-            <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto </div>
+            <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
+            <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
+            <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
         </footer>
     </div>
-    <script src="/js/chunk-vendors.63f37e79.js"></script>
-      <script type="text/javascript">
-        var dropdown = document.querySelector('.dropdown');
-dropdown.addEventListener('click', function(event) {
-  event.stopPropagation();
-  dropdown.classList.toggle('is-active');
-});
-    </script>
+
 
 </body>
 

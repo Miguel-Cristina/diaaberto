@@ -50,6 +50,17 @@
   <ItemGroup>
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.css.map" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.min.css" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\accordion.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\alert.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\bulma.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\calendar.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\dropdown.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\file.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\message.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\modal.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\navbar.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\notification.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\tabs.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\favicon.ico" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\hero-background.jpg" />
@@ -58,8 +69,24 @@
     <Content Include="diaabertoapp\static\diaabertoapp\img\logo.png" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\ualg-logo.png" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\vue-logo.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\bulma.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\core.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\dismissableComponent.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugin.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\accordion.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\alert.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\calendar.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\dropdown.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\file.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\message.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\modal.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\navbar.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\notification.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\tabs.js" />
     <Content Include="diaabertoapp\templates\diaabertoapp\atividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\proporatividade.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -67,7 +94,10 @@
     <Folder Include="diaabertoapp\migrations\" />
     <Folder Include="diaabertoapp\static\" />
     <Folder Include="diaabertoapp\static\diaabertoapp\" />
+    <Folder Include="diaabertoapp\static\diaabertoapp\dist\" />
     <Folder Include="diaabertoapp\static\diaabertoapp\img\" />
+    <Folder Include="diaabertoapp\static\diaabertoapp\src\" />
+    <Folder Include="diaabertoapp\static\diaabertoapp\src\plugins\" />
     <Folder Include="diaabertoapp\templates\" />
     <Folder Include="diaabertoapp\templates\diaabertoapp\" />
     <Folder Include="diaaberto\" />

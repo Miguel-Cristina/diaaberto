@@ -6,3 +6,9 @@ def index(request):
 
 def atividades(request):
     return render(request, 'diaabertoapp/atividades.html', {})
+
+def minhasatividades(request):
+    return render(request, 'diaabertoapp/minhasatividades.html', {})
+
+def proporatividade(request):
+    return render(request, 'diaabertoapp/proporatividade.html', {})
