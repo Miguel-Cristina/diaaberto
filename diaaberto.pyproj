@@ -58,6 +58,7 @@
     <Content Include="diaabertoapp\static\diaabertoapp\img\logo.png" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\ualg-logo.png" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\vue-logo.png" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\atividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
