@@ -48,6 +48,8 @@
     <Compile Include="diaaberto\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="diaabertoapp\static\diaabertoapp\bulma.css.map" />
+    <Content Include="diaabertoapp\static\diaabertoapp\bulma.min.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\favicon.ico" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\hero-background.jpg" />
