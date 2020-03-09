@@ -1,1 +1,10 @@
-django >= 2.1.6, < 3.0
+Django
+mysql
+mysql_client
+mysqlclient
+MySQLdb
+pip
+pkg_resources
+pytz
+setuptools
+sqlparse

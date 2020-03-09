@@ -5,6 +5,7 @@
     <RootNamespace>diaaberto</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -84,6 +85,7 @@
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\notification.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\tabs.js" />
     <Content Include="diaabertoapp\templates\diaabertoapp\atividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\edificios.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\proporatividade.html" />

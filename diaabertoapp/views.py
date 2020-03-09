@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Edificio
 
 # Create your views here.
 def index(request):
@@ -12,3 +13,7 @@ def minhasatividades(request):
 
 def proporatividade(request):
     return render(request, 'diaabertoapp/proporatividade.html', {})
+
+def edificios(request):
+    edificios = Edificio.objects.all()
+    return render(request, 'diaabertoapp/edificios.html', {'edificios':edificios})
