@@ -72,47 +72,47 @@ class Atividade(models.Model):
     PALESTRAS = 'PL'
     CONFERENCIAS = 'CF'
     SEMINARIOS = 'SM'
-    TERTULIAS = 'TT'
+    TERTULIAS = 'TT' 
     OUTRASENSINO = 'OE'
     OUTRASCULTURAIS = 'OC'
     OUTRASDESPORTIVAS = 'OD'
     EXPOSICOES = 'EX'
     PASSEIOS = 'PS'
     OUTRAS = 'OU'
-    TIPO_ATIVIDADE_CHOICES = [
-        (VISITASINSTALACAO, 'Visitas Instalações'),
-        (VISITASLABORATORIO , 'Visitas Laboratórios'),
-        (ATIVIDADESEXPERIMENTAIS , 'Atividades Experimentais'),
-	    (ATIVIDADESTECNOLOGICAS ,'Atividades Tencnológicas'),
-	    (FEIRACIENCIAS ,'Feira das Ciências'),
-	    (PALESTRAS ,'Palestras'),
-	    (CONFERENCIAS ,'Conferências'),
-	    (SEMINARIOS ,'Seminários'),
-	    (TERTULIAS ,'Tertúlias'),
-	    (OUTRASENSINO ,'Outras Atividades (Ensino)'),
-	    (OUTRASCULTURAIS ,'Outras Atividades (Culturais)'),
-	    (OUTRASDESPORTIVAS ,'Outras Atividades (Desportivas)'),
-	    (EXPOSICOES ,'Exposições'),
-	    (PASSEIOS ,'Passeios'),
-	    (OUTRAS ,'Outras Atividades'),
-    ]
+    TIPO_ATIVIDADE_CHOICES = (
+        ('VI', 'Visitas Instalações'),
+        ('VL' , 'Visitas Laboratórios'),
+        ('AE' , 'Atividades Experimentais'),
+	    ('AT' ,'Atividades Tencnológicas'),
+	    ('FC' ,'Feira das Ciências'),
+	    ('PL' ,'Palestras'),
+	    ('CF' ,'Conferências'),
+	    ('SM' ,'Seminários'),
+	    ('TT' ,'Tertúlias'),
+	    ('OE' ,'Outras Atividades (Ensino)'),
+	    ('OC' ,'Outras Atividades (Culturais)'),
+	    ('OD' ,'Outras Atividades (Desportivas)'),
+	    ('EX' ,'Exposições'),
+	    ('PS' ,'Passeios'),
+	    ('OU' ,'Outras Atividades'),
+    )
     tipo_atividade = models.CharField(
         max_length=2,
-        choices=TIPO_ATIVIDADE_CHOICES,
+        choices=TIPO_ATIVIDADE_CHOICES
     )
     publico_alvo = models.CharField(max_length=45)
     data = models.DateField(default=datetime.date.today)
     
-    REJEITADA = 'Rejeitada'    #invalidada
-    PENDENTE = 'Pendente'     #por validar
-    VALIDADA = 'Validada'     #validada
+    REJEITADA = 'RJ'    #invalidada
+    PENDENTE = 'PD'     #por validar
+    VALIDADA = 'VD'     #validada
     VALIDACAO_CHOICES = [
-        (REJEITADA, 'Rejeitada'),
-        (PENDENTE, 'Pendente'),
-        (VALIDADA, 'Validada'),
+        ('RJ', 'Rejeitada'),
+        ('PD', 'Pendente'),
+        ('VD', 'Validada'),
     ]
     validada = models.CharField(
-        max_length=32,
+        max_length=2,
         choices=VALIDACAO_CHOICES,
         default=PENDENTE,
     )
@@ -122,6 +122,9 @@ class Atividade(models.Model):
     #Métodos
     def get_absolute_url(self):
         return reverse('atividade-detail-view',args=[str(self.id)])
+
+    def get_tipo(self):
+        return self.tipo_atividade
 
     def __str__(self):
         return self.nome
