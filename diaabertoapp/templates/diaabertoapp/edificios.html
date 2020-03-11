@@ -1,0 +1,25 @@
+﻿{% load static %}
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <table class="table table-hover tab">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome do Edificio</th>
+              </tr>
+            </thead>
+            {% for Edificios in edificios %}
+              <tr>
+                <td>{{ Edificios.id }}</td>
+                <td>{{ Edificios.nome }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+</body>
+</html>
