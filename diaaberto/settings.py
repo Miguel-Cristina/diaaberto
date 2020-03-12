@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'diaaberto.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME' : 'les',
+        'NAME' : 'mydb',
         'USER' : 'root',
         'PASSWORD' : 'admin',
         'HOST' : '127.0.0.1',

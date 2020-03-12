@@ -32,10 +32,10 @@ admin.site.register(Edificio, EdificioAdmin)
 class AtividadeAdmin(admin.ModelAdmin):
     list_display = ('nome', 'descricao', 'local', 'duracao', 'limite_participantes', 'tipo_atividade', 'publico_alvo', 'colored_name')
     def colored_name(self,obj):
-        if obj.validada == 'Validada':
+        if obj.validada == 'VD':
             estado = 'Validada'
             cor = 'rgb(179, 255, 153)'
-        elif obj.validada == 'Rejeitada':
+        elif obj.validada == 'RJ':
             estado = 'Rejeitada'
             cor = 'rgb(255, 153, 153)'
         else:
