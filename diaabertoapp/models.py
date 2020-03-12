@@ -55,6 +55,16 @@ class Tematica(models.Model):
     def __str__(self):
         return self.tema
 
+class Material(models.Model):
+    # Campos
+    id = models.AutoField(primary_key=True)
+    nome = models.CharField(max_length=40, unique=True)
+    
+    #Métodos
+    
+    def __str__(self):
+        return self.nome
+
 class Atividade(models.Model):
  
     id = models.AutoField(primary_key=True)
@@ -116,9 +126,8 @@ class Atividade(models.Model):
         choices=VALIDACAO_CHOICES,
         default=PENDENTE,
     )
-    
     #validada = models.BooleanField()
-
+    materiais = models.ManyToManyField(Material)
     #Métodos
     def get_absolute_url(self):
         return reverse('atividade-detail-view',args=[str(self.id)])
@@ -129,11 +138,5 @@ class Atividade(models.Model):
     def __str__(self):
         return self.nome
 
-class Material(models.Model):
-    # Campos
-    id = models.AutoField(primary_key=True)
-    nome = models.CharField(max_length=40, unique=True)
-    #Métodos
-    
-    def __str__(self):
-        return self.nome
+
+
