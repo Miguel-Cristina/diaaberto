@@ -6,7 +6,7 @@ import datetime
 class Campus(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
-    nome = models.CharField(max_length=40, unique=True)
+    nome = models.CharField(max_length=100, unique=True)
     morada = models.TextField(null=True)
     contacto = models.CharField(max_length=40)
     
@@ -93,7 +93,7 @@ class Atividade(models.Model):
         ('VI', 'Visitas Instalações'),
         ('VL' , 'Visitas Laboratórios'),
         ('AE' , 'Atividades Experimentais'),
-	    ('AT' ,'Atividades Tencnológicas'),
+	    ('AT' ,'Atividades Tecnológicas'),
 	    ('FC' ,'Feira das Ciências'),
 	    ('PL' ,'Palestras'),
 	    ('CF' ,'Conferências'),
@@ -126,8 +126,6 @@ class Atividade(models.Model):
         choices=VALIDACAO_CHOICES,
         default=PENDENTE,
     )
-    #validada = models.BooleanField()
-    materiais = models.ManyToManyField(Material)
     #Métodos
     def get_absolute_url(self):
         return reverse('atividade-detail-view',args=[str(self.id)])
@@ -138,5 +136,13 @@ class Atividade(models.Model):
     def __str__(self):
         return self.nome
 
+class MaterialQuantidade(models.Model):
+
+    atividade = models.ForeignKey('Atividade', related_name='material_quantidade', on_delete=models.SET_NULL, null=True)
+    material = models.ForeignKey('Material', related_name='material_quantidade', on_delete=models.SET_NULL, null=True, blank=True)
+    quantidade = models.IntegerField()
+
+    def __str__(self):
+        return self.material.nome + ' para ' + self.atividade.nome 
 
 

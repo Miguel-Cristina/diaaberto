@@ -1,5 +1,5 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, LocalAtividade, Tematica, Atividade,Material
+from diaabertoapp.models import Edificio, Campus, LocalAtividade, Tematica, Atividade, Material, MaterialQuantidade
 from django.utils.safestring import mark_safe
 
 # Register your models here.
@@ -20,9 +20,9 @@ class LocalAtividadeAdmin(admin.ModelAdmin):
     get_edificio.short_description = "Edificio"
 
 admin.site.register(LocalAtividade, LocalAtividadeAdmin)
-
 admin.site.register(Tematica)
 admin.site.register(Material)
+admin.site.register(MaterialQuantidade)
 
 class EdificioAdmin(admin.ModelAdmin):
     list_display = ('nome', 'campus')

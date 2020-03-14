@@ -23,6 +23,15 @@
         * {
             outline: none;
         }
+     
+
+            /* Style the collapsible content. Note: hidden by default */
+            .content {
+              padding: 0 18px;
+              display: none;
+              overflow: hidden;
+              background-color: #f1f1f1;
+            }
     </style>
 </head>
 
@@ -357,11 +366,11 @@
                                                 {% for Atividade in atividades %}
                                                 <tr draggable="false" class="">
                                                     <td class="chevron-cell">
-                                                        <a role="button">
+                                                        <button class="collapsible">
                                                             <span class="icon">
                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                             </span>
-                                                        </a>
+                                                        </button>
                                                     </td>
                                                     <!---->
                                                     <td data-label="Nome" class=""> {{ Atividade.nome }} </td>
@@ -373,7 +382,7 @@
                                                     <!---->
                                                 </tr>
                                                 <!---->
-                                                <tr class="detail" style="display:none;"><td colspan="4"><div class="detail-container"></div></td></tr>
+                                                <div class="content"><td colspan="4"><div class="detail-container">qualquer coisa</div></td></div>
                                                 <!---->
                                                 {% endfor %}
                                             </tbody>
@@ -431,7 +440,23 @@
     <!-- Individual components -->
     <script src="https://unpkg.com/buefy/dist/components/table"></script>
     <script src="https://unpkg.com/buefy/dist/components/input"></script>
+     
+    <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
 
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.maxHeight){
+          content.style.maxHeight = null;
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+        } 
+      });
+    }
+    </script>
     <script>
         new Vue({
             el: '#app'

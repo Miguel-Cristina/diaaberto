@@ -34,6 +34,9 @@
   <ItemGroup>
     <Compile Include="diaabertoapp\admin.py" />
     <Compile Include="diaabertoapp\apps.py" />
+    <Compile Include="diaabertoapp\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="diaabertoapp\migrations\__init__.py" />
     <Compile Include="diaabertoapp\models.py" />
     <Compile Include="diaabertoapp\tests.py" />

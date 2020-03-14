@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count
 from .models import Edificio, Atividade
+from .forms import CampusForm
 
 # Create your views here.
 def index(request):
@@ -32,3 +33,21 @@ def proporatividade(request):
 def edificios(request):
     edificios = Edificio.objects.all()
     return render(request, 'diaabertoapp/edificios.html', {'edificios':edificios})
+
+def get_campus(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = CampusForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/admin/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = CampusForm()
+
+    return render(request, 'proporatividade.html', {'form': form})
