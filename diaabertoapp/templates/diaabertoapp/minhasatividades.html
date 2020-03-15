@@ -24,6 +24,11 @@
         * {
             outline: none;
         }
+        .footer{
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
     </style>
 </head>
 
@@ -327,7 +332,7 @@
                                                 <tr>
                                                     <th width="40px"></th>
                                                     <!---->
-                                                    <th class="is-sortable" style="width:300px;" >
+                                                    <th class="is-sortable" style="width: 300px; " >
                                                         <div class="th-wrap" onclick="sortTable(1)">Nome
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-menu-up"></i>
@@ -376,7 +381,116 @@
                                                 <!---->
                                                 <tr class="detail" style="display:none">
                                                     <td colspan="4">
-                                                        <div class="detail-container"><strong>Descrição: </strong>{{ Atividade.descricao }} <strong>Tipo: </strong>{{ Atividade.get_tipo_atividade_display }}</div>
+                                                        
+                                                        <div class="content">
+    <div style="font-size: 15px;">
+        <p>
+            <strong>Nome: </strong> {{ Atividade.nome }} </p>
+        <p>
+            <strong>Criador:</strong> por configurar </p>
+        <p>
+            <strong>Data de submissão:</strong> {{ Atividade.data }} </p>
+        <p>
+            <strong>Estado de submissão:</strong> {{ Atividade.get_validada_display }} </p>
+        <p>
+            <strong>Tipo de Atividade:</strong> {{ Atividade.get_tipo_atividade_display }} </p>
+        <p>
+            <strong>Descrição:</strong> {{ Atividade.descricao }} </p>
+        <p>
+            <strong>Local:</strong> {{ Atividade.local }} </p>
+        <p>
+            <strong>Entidade Organizacional:</strong> por configurar </p>
+        <p>
+            <strong>Departamento:</strong> por configurar </p>
+        <p>
+            <strong>Sessões:</strong>
+        </p>
+        <div class="b-table">
+            <!---->
+            <!---->
+            <div class="table-wrapper">
+                <table class="table has-mobile-cards">
+                    <thead>
+                        <tr>
+                            <!---->
+                            <!---->
+                            <th class="">
+                                <div class="th-wrap">Dia
+                                    <span class="icon is-small" style="display: none;">
+                                        <i class="mdi mdi-arrow-up"></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <th class="">
+                                <div class="th-wrap">Hora
+                                    <span class="icon is-small" style="display: none;">
+                                        <i class="mdi mdi-arrow-up"></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <th class="">
+                                <div class="th-wrap">Duração
+                                    <span class="icon is-small" style="display: none;">
+                                        <i class="mdi mdi-arrow-up"></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <th class="">
+                                <div class="th-wrap">Máximo de participantes
+                                    <span class="icon is-small" style="display: none;">
+                                        <i class="mdi mdi-arrow-up"></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <th class="">
+                                <div class="th-wrap">Espaço
+                                    <span class="icon is-small" style="display: none;">
+                                        <i class="mdi mdi-arrow-up"></i>
+                                    </span>
+                                </div>
+                            </th>
+                            <!---->
+                        </tr>
+                        <!---->
+                        <!---->
+                    </thead>
+                    <tbody>
+                        <tr draggable="false" class="">
+                            <!---->
+                            <!---->
+                            <td data-label="Dia" class=""> 20/02/2020 </td>
+                            <td data-label="Hora" class=""> 09:30 </td>
+                            <td data-label="Duração" class=""> 60 min </td>
+                            <td data-label="Máximo de participantes" class=""> 25 </td>
+                            <td data-label="Espaço" class=""> Por alocar </td>
+                            <!---->
+                        </tr>
+                        <!---->
+                        <!---->
+                    </tbody>
+                    <!---->
+                </table>
+            </div>
+            <!---->
+        </div>
+    </div>
+    <div style="margin-top: 13px;">
+        <button type="button" class="button is-success" style="margin-right: 10px;">
+            <span class="icon is-small">
+                <i class="mdi mdi-check"></i>
+            </span>
+            <span>Aceitar</span>
+            <!---->
+        </button>
+        <button type="button" class="button is-danger">
+            <span class="icon is-small">
+                <i class="mdi mdi-delete"></i>
+            </span>
+            <span>Rejeitar</span>
+            <!---->
+        </button>
+    </div>
+</div>
                                                     </td>
                                                 </tr>
                                                 <!---->
@@ -424,12 +538,13 @@
                 </div>
             </div>
         </div>
-        <footer data-v-8716d23a="" class="footer">
+        </div>
+        <footer class="footer">
             <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
             <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
             <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
         </footer>
-        </div>
+        
  <script src="https://unpkg.com/vue"></script>
     <!-- Full bundle -->
     <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
