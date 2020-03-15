@@ -6,7 +6,8 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <meta charset="utf-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
@@ -23,15 +24,6 @@
         * {
             outline: none;
         }
-     
-
-            /* Style the collapsible content. Note: hidden by default */
-            .content {
-              padding: 0 18px;
-              display: none;
-              overflow: hidden;
-              background-color: #f1f1f1;
-            }
     </style>
 </head>
 
@@ -141,7 +133,7 @@
                                             <!---->
                                             <div class="autocomplete control">
                                                 <div class="control has-icons-left is-clearfix">
-                                                    <input type="text" autocomplete="off" placeholder="Nome da Atividade" class="input">
+                                                    <input type="text" autocomplete="off" id="nameSearch" onkeyup="searchByName()" placeholder="Nome da Atividade" class="input">
                                                     <span class="icon is-left">
                                                         <i class="mdi mdi-magnify mdi-24px"></i>
                                                     </span>
@@ -156,12 +148,12 @@
                                             <!---->
                                             <div class="control is-expanded has-icons-left">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select>
+                                                    <select onchange="searchByType()" id="typeSearch">
                                                         <option disabled="disabled" hidden="hidden" selected>
                                                             Tipo de Atividade
                                                         </option>
                                                         {% for Tipo in tiposatividades %}
-                                                            <option value="{{ Tipo.tipo_atividade }}">{{ Tipo.get_tipo_atividade_display }}</option>
+                                                            <option value="{{ Tipo.get_tipo_atividade_display }}">{{ Tipo.get_tipo_atividade_display }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
@@ -175,12 +167,12 @@
                                             <!---->
                                             <div class="control is-expanded has-icons-left">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select>
+                                                    <select onchange="searchByValidation()" id="validationSearch">
                                                         <option disabled="disabled" hidden="hidden" selected>
                                                             Estado
                                                         </option>
                                                         {% for Estado in estados %}
-                                                            <option value="{{ Estado.validada }}">{{ Estado.get_validada_display }}</option>
+                                                            <option value="{{ Estado.get_validada_display }}">{{ Estado.get_validada_display }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
@@ -235,45 +227,45 @@
                                 <div class="menu">
                                     <p class="menu-label">Filtros Sessão</p>
                                     <ul class="menu-list">
-    <div class="columns" style="margin-bottom: 0px;">
-        <div class="field column" style="margin-bottom: 0px;">
-            <!---->
-            <template>
-                <b-field>
-                    <b-timepicker
-                        placeholder="De"
-                        icon="clock"
-                        editable>
-                    </b-timepicker>
-                </b-field>
-            </template>
-            <!---->
-        </div>
-        <div class="field column">
-             <!---->
-            <template>
-                <b-field>
-                    <b-timepicker
-                        placeholder="Até"
-                        icon="clock"
-                        editable>
-                    </b-timepicker>
-                </b-field>
-            </template>
-            <!---->
-        </div>
-    </div>
-    <li class="is-not-menu">
-        <a class="">
-            <!---->
-            <span class="icon is-pulled-right">
-                <i class="mdi mdi-plus mdi-24px"></i>
-            </span>
-            <small>Mais Filtros de Sessão</small>
-        </a>
-        <!---->
-    </li>
-</ul>
+                                    <div class="columns" style="margin-bottom: 0px;">
+                                        <div class="field column" style="margin-bottom: 0px;">
+                                            <!---->
+                                            <template>
+                                                <b-field>
+                                                    <b-timepicker
+                                                        placeholder="De"
+                                                        icon="clock"
+                                                        editable>
+                                                    </b-timepicker>
+                                                </b-field>
+                                            </template>
+                                            <!---->
+                                        </div>
+                                        <div class="field column">
+                                             <!---->
+                                            <template>
+                                                <b-field>
+                                                    <b-timepicker
+                                                        placeholder="Até"
+                                                        icon="clock"
+                                                        editable>
+                                                    </b-timepicker>
+                                                </b-field>
+                                            </template>
+                                            <!---->
+                                        </div>
+                                    </div>
+                                    <li class="is-not-menu">
+                                        <a class="">
+                                            <!---->
+                                            <span class="icon is-pulled-right">
+                                                <i class="mdi mdi-plus mdi-24px"></i>
+                                            </span>
+                                            <small>Mais Filtros de Sessão</small>
+                                        </a>
+                                        <!---->
+                                    </li>
+                                </ul>
                                 </div>
                             </div>
                         </div>
@@ -330,19 +322,19 @@
                                     </div>
                                     <!---->
                                     <div class="table-wrapper">
-                                        <table class="table has-mobile-cards is-hoverable">
+                                        <table id="activitiesTable" class="table has-mobile-cards is-hoverable">
                                             <thead>
                                                 <tr>
                                                     <th width="40px"></th>
                                                     <!---->
-                                                    <th class="is-sortable" style="        width: 300px;">
-                                                        <div class="th-wrap">Nome
+                                                    <th class="is-sortable" style="width:300px;" >
+                                                        <div class="th-wrap" onclick="sortTable(1)">Nome
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-menu-up"></i>
                                                             </span>
                                                         </div>
                                                     </th>
-                                                    <th class="is-current-sort is-sortable">
+                                                    <th class="is-sortable">
                                                         <div class="th-wrap">Submetido a
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-menu-up"></i>
@@ -364,16 +356,16 @@
 
                                             <tbody>
                                                 {% for Atividade in atividades %}
-                                                <tr draggable="false" class="">
+                                                <tr draggable="false" class="header">
                                                     <td class="chevron-cell">
-                                                        <button class="collapsible">
+                                                        <a class="collapsible">
                                                             <span class="icon">
                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                             </span>
-                                                        </button>
+                                                        </a>
                                                     </td>
                                                     <!---->
-                                                    <td data-label="Nome" class=""> {{ Atividade.nome }} </td>
+                                                    <td data-label="Nome" id="activityName" class=""> {{ Atividade.nome }} </td>
                                                     <td data-label="Submetido a" class=""> {{ Atividade.data }} </td>
                                                     <td data-label="Estado" class="">
                                                         <span class="tag text {% if Atividade.validada  == "RJ" %}
@@ -382,7 +374,11 @@
                                                     <!---->
                                                 </tr>
                                                 <!---->
-                                                <div class="content"><td colspan="4"><div class="detail-container">qualquer coisa</div></td></div>
+                                                <tr class="detail" style="display:none">
+                                                    <td colspan="4">
+                                                        <div class="detail-container"><strong>Descrição: </strong>{{ Atividade.descricao }} <strong>Tipo: </strong>{{ Atividade.get_tipo_atividade_display }}</div>
+                                                    </td>
+                                                </tr>
                                                 <!---->
                                                 {% endfor %}
                                             </tbody>
@@ -433,6 +429,7 @@
             <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
             <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
         </footer>
+        </div>
  <script src="https://unpkg.com/vue"></script>
     <!-- Full bundle -->
     <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
@@ -440,22 +437,124 @@
     <!-- Individual components -->
     <script src="https://unpkg.com/buefy/dist/components/table"></script>
     <script src="https://unpkg.com/buefy/dist/components/input"></script>
-     
     <script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
+        $(document).ready(function () {
+            $('tr.header').click(function () {
+                //$(this).find('span').find('i').toggleClass('fa-thumbs-down');
+                if ($(this).find('span').find('i').hasClass('mdi mdi-chevron-right mdi-24px')) {
+                    $(this).find('span').find('i').removeClass("mdi mdi-chevron-right mdi-24px").addClass("mdi mdi-chevron-down mdi-24px");
+                  }else{
+                       $(this).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
+                  }
+                $(this).nextUntil('tr.header').slideToggle(100, function(){
+                    });
+            });
+        });
+    </script>
+    <script>
+        //
+        // Functions for search by parameters
+        //
+        function searchByName() {
+          // Declare variables
+          var input, filter, table, tr, td, i, txtValue, subtd;
+          input = document.getElementById("nameSearch");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("activitiesTable");
+          tr = table.getElementsByTagName("tr");
+         
+          // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+            
+                td = tr[i].getElementsByTagName("td")[1];
+                subtd = tr[i].getElementsByTagName("td")[0]; 
+                if (subtd)
+                {
+                    if ($(tr[i-1]).find('span').find('i').hasClass('mdi mdi-chevron-down mdi-24px')) {
+                    $(tr[i-1]).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
+                    tr[i].style.display = "none";
+                    //Os detalhes ficam escondidos.
+                  }
+                }
+                if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+          }
+        }
+    </script>
+    <script>
+        function searchByType() {
+          // Declare variables
+          var input, filter, table, tr, td, i, txtValue;
+          input = document.getElementById("typeSearch");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("activitiesTable");
+          tr = table.getElementsByTagName("tr");
 
-    for (i = 0; i < coll.length; i++) {
-      coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content.style.maxHeight){
-          content.style.maxHeight = null;
-        } else {
-          content.style.maxHeight = content.scrollHeight + "px";
-        } 
-      });
-    }
+          // Loop through all table rows, and hide those who don't match the search query
+          for (i = 0; i < tr.length; i++) {
+              td = tr[i].getElementsByTagName("td")[0];
+              subtd = tr[i].getElementsByTagName("td")[0]; 
+                if(subtd)
+                {
+                    if ($(tr[i-1]).find('span').find('i').hasClass('mdi mdi-chevron-down mdi-24px')) {
+                    $(tr[i-1]).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
+                    tr[i].style.display = "none";
+                    //Os detalhes ficam escondidos.
+                  }
+                }
+              if (td) {
+                  txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+                  tr[i - 1].style.display = "";
+                  if ($(tr[i - 1]).find('span').find('i').hasClass('mdi mdi-chevron-right mdi-24px')) {
+                      $(tr[i - 1]).find('span').find('i').removeClass("mdi mdi-chevron-right mdi-24px").addClass("mdi mdi-chevron-down mdi-24px");
+                  }
+              } else {
+                  tr[i].style.display = "none";
+              }
+              }
+            }
+          } 
+    </script>
+    <script>
+        function searchByValidation() {
+          // Declare variables
+          var input, filter, table, tr, td, i, txtValue;
+          input = document.getElementById("validationSearch");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("activitiesTable");
+          tr = table.getElementsByTagName("tr");
+
+          // Loop through all table rows, and hide those who don't match the search query
+          for (i = 0; i < tr.length; i++) {
+              td = tr[i].getElementsByTagName("td")[3];
+              subtd = tr[i].getElementsByTagName("td")[0]; 
+                if (subtd)
+                {
+                    if ($(tr[i-1]).find('span').find('i').hasClass('mdi mdi-chevron-down mdi-24px')) {
+                    $(tr[i-1]).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
+                    tr[i].style.display = "none";
+                    //Os detalhes ficam escondidos.
+                  }
+                }
+              if (td) {
+                  txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+                  
+              } else {
+                  tr[i].style.display = "none";
+              }
+              }
+            }
+          } 
     </script>
     <script>
         new Vue({

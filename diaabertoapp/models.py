@@ -126,6 +126,7 @@ class Atividade(models.Model):
         choices=VALIDACAO_CHOICES,
         default=PENDENTE,
     )
+    tematicas = models.ManyToManyField(Tematica, related_name='temas')
     #Métodos
     def get_absolute_url(self):
         return reverse('atividade-detail-view',args=[str(self.id)])

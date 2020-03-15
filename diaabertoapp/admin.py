@@ -29,8 +29,14 @@ class EdificioAdmin(admin.ModelAdmin):
 
 admin.site.register(Edificio, EdificioAdmin)
 
+class MateriaisInline(admin.TabularInline):
+    model = MaterialQuantidade
+
 class AtividadeAdmin(admin.ModelAdmin):
     list_display = ('nome', 'descricao', 'local', 'duracao', 'limite_participantes', 'tipo_atividade', 'publico_alvo', 'colored_name')
+    inlines = [
+        MateriaisInline,
+    ]
     def colored_name(self,obj):
         if obj.validada == 'VD':
             estado = 'Validada'
