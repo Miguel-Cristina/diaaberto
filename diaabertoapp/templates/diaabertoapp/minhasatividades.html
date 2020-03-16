@@ -133,64 +133,121 @@
                                 <div class="menu" style="        margin-bottom: 1rem;">
                                     <p class="menu-label">Filtros Atividade</p>
                                     <ul class="menu-list">
-
-                                        <div class="field">
+                                        <form method="GET" action=".">
+                                        <div class="field has-addons">
                                             <!---->
-                                            <div class="autocomplete control">
-                                                <div class="control has-icons-left is-clearfix">
-                                                    <input type="text" autocomplete="off" id="nameSearch" onkeyup="searchByName()" placeholder="Nome da Atividade" class="input">
-                                                    <span class="icon is-left">
+                                            {% if not nomesquery|length > 0 %}
+                                            <div class="control is-expanded">
+                                                <div class="control is-clearfix">
+                                                    <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input"><!--onkeyup="searchByName()"-->
+                                                    <!--<span class="icon is-left">
                                                         <i class="mdi mdi-magnify mdi-24px"></i>
-                                                    </span>
+                                                    </span>-->
                                                     <!---->
                                                     <!---->
                                                 </div>
                                                 
                                             </div>
+                                            <div class="control">
+                                                <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                              </div>
+                                            {% else %}<div class="control is-expanded">
+                                                <div class="control is-clearfix">
+                                                    <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                    <!---->
+                                                    <!---->
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>{% endif %}
                                             <!---->
                                         </div>
-                                        <div class="field">
+                                            
+                                        <div class="field has-addons">
                                             <!---->
-                                            <div class="control is-expanded has-icons-left">
+                                            {% if not tiposquery|length > 0 %}
+                                            <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select onchange="searchByType()" id="typeSearch">
+                                                    <select  id="typeSearch" name="tipo"><!--onchange="searchByType()"-->
                                                         <option disabled="disabled" hidden="hidden" selected>
                                                             Tipo de Atividade
                                                         </option>
                                                         {% for Tipo in tiposatividades %}
-                                                            <option value="{{ Tipo.get_tipo_atividade_display }}">{{ Tipo.get_tipo_atividade_display }}</option>
+                                                            <option value="{{ Tipo.tipo_atividade }}">{{ Tipo.get_tipo_atividade_display }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
-                                                <span class="icon is-left">
+                                                <!--<span class="icon is-left">
                                                     <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="typeSearch" name="tipo"><!--onchange="searchByType()"-->
+                                                        {% for Tipo in tiposatividades %}
+                                                            <option value="{{ Tipo.tipo_atividade }}" selected>{{ Tipo.get_tipo_atividade_display }}</option>
+                                                        {% endfor %}
+                                                    </select>
                                                 </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
                                             </div>
                                             <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('typeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
                                         </div>
-                                        <div class="field">
+                                        <div class="field has-addons">
                                             <!---->
-                                            <div class="control is-expanded has-icons-left">
+                                            {% if not estadosquery|length > 0 %}
+                                            <div class="control is-expanded">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select onchange="searchByValidation()" id="validationSearch">
+                                                    <select id="validationSearch" name="validada"><!--onchange="searchByValidation()"-->
                                                         <option disabled="disabled" hidden="hidden" selected>
                                                             Estado
                                                         </option>
                                                         {% for Estado in estados %}
-                                                            <option value="{{ Estado.get_validada_display }}">{{ Estado.get_validada_display }}</option>
+                                                            <option value="{{ Estado.validada }}">{{ Estado.get_validada_display }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
-                                                <span class="icon is-left">
-                                                    <i class="mdi mdi-magnify mdi-24px"></i>
-                                                </span>
+                                               
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
                                             </div>
                                             <!---->
+                                            {% else %}
+                                            <div class="control is-expanded">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select id="validationSearch"><!--onchange="searchByValidation()"-->
+                                                        {% for Estado in estados %}
+                                                            <option value="{{ Estado.get_validada_display }}" selected>{{ Estado.get_validada_display }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('validationSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                            </div>
+                                            {% endif %}
                                         </div>
 
 
 
-                                        <li class="is-not-menu">
+                                        <li class="is-menu more">
                                             <a class="">
                                                 <!---->
                                                 <span class="icon is-pulled-right">
@@ -205,8 +262,10 @@
                                                         <b-field>
                                                             <b-datepicker
                                                                 placeholder="Submetido depois de..."
+                                                                icon="calendar"
                                                                 :min-date="minDate"
-                                                                :max-date="maxDate">
+                                                                :max-date="maxDate"
+                                                                editable>
                                                             </b-datepicker>
                                                         </b-field>
                                                     </template>
@@ -218,8 +277,10 @@
                                                         <b-field>
                                                             <b-datepicker
                                                                 placeholder="Submetido antes de..."
+                                                                icon="calendar"
                                                                 :min-date="minDate"
-                                                                :max-date="maxDate">
+                                                                :max-date="maxDate"
+                                                                 editable>
                                                             </b-datepicker>
                                                         </b-field>
                                                     </template>
@@ -228,6 +289,7 @@
                                             </ul>
                                         </li>
                                     </ul>
+                                    </form>
                                 </div>
                                 <div class="menu">
                                     <p class="menu-label">Filtros Sessão</p>
@@ -500,27 +562,52 @@
                                             <!---->
                                         </table>
                                     </div>
+                                    {% if atividades.has_other_pages %}
                                     <div class="level">
                                         <div class="level-left"></div>
                                         <div class="level-right">
                                             <div class="level-item">
                                                 <nav class="pagination">
+                                                    {% if atividades.has_previous %}
+                                                    <a role="button" href="?page={{ atividades.previous_page_number }}" class="pagination-link pagination-previous">
+                                                        <span class="icon" aria-hidden="true">
+                                                            <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                        </span>
+                                                    </a>
+                                                    {% else %}
                                                     <a role="button" href="#" disabled="disabled" class="pagination-link pagination-previous">
                                                         <span class="icon" aria-hidden="true">
                                                             <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                         </span>
                                                     </a>
+                                                    {% endif %}
+                                                    {% if atividades.has_next %}
+                                                    <a role="button" href="?page={{ atividades.next_page_number }}" class="pagination-link pagination-next">
+                                                        <span class="icon" aria-hidden="true">
+                                                            <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                        </span>
+                                                    </a>
+                                                    {% else %}
                                                     <a role="button" href="#" disabled="disabled" class="pagination-link pagination-next">
                                                         <span class="icon" aria-hidden="true">
                                                             <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                         </span>
                                                     </a>
+                                                    {% endif %}
                                                     <ul class="pagination-list">
                                                         <!---->
                                                         <!---->
+                                                        {% for i in atividades.paginator.page_range %}
+                                                        {% if atividades.number == i %}
                                                         <li>
-                                                            <a role="button" href="#" aria-current="true" class="pagination-link is-current ">1</a>
+                                                            <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                         </li>
+                                                        {% else %}
+                                                        <li>
+                                                            <a role="button" href="?page={{ i }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+                                                        </li>
+                                                        {% endif %}
+                                                        {% endfor %}
                                                         <!---->
                                                         <!---->
                                                     </ul>
@@ -528,6 +615,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                {% endif %}
                                 </div>
 <!------------------------------------------------------------------------------------------------------------------Fim de Tabela------------------------------------------------------------------------------------------------------------>
                                 
@@ -566,111 +654,7 @@
             });
         });
     </script>
-    <script>
-        //
-        // Functions for search by parameters
-        //
-        function searchByName() {
-          // Declare variables
-          var input, filter, table, tr, td, i, txtValue, subtd;
-          input = document.getElementById("nameSearch");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("activitiesTable");
-          tr = table.getElementsByTagName("tr");
-         
-          // Loop through all table rows, and hide those who don't match the search query
-            for (i = 0; i < tr.length; i++) {
-            
-                td = tr[i].getElementsByTagName("td")[1];
-                subtd = tr[i].getElementsByTagName("td")[0]; 
-                if (subtd)
-                {
-                    if ($(tr[i-1]).find('span').find('i').hasClass('mdi mdi-chevron-down mdi-24px')) {
-                    $(tr[i-1]).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
-                    tr[i].style.display = "none";
-                    //Os detalhes ficam escondidos.
-                  }
-                }
-                if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-          }
-        }
-    </script>
-    <script>
-        function searchByType() {
-          // Declare variables
-          var input, filter, table, tr, td, i, txtValue;
-          input = document.getElementById("typeSearch");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("activitiesTable");
-          tr = table.getElementsByTagName("tr");
 
-          // Loop through all table rows, and hide those who don't match the search query
-          for (i = 0; i < tr.length; i++) {
-              td = tr[i].getElementsByTagName("td")[0];
-              subtd = tr[i].getElementsByTagName("td")[0]; 
-                if(subtd)
-                {
-                    if ($(tr[i-1]).find('span').find('i').hasClass('mdi mdi-chevron-down mdi-24px')) {
-                    $(tr[i-1]).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
-                    tr[i].style.display = "none";
-                    //Os detalhes ficam escondidos.
-                  }
-                }
-              if (td) {
-                  txtValue = td.textContent || td.innerText;
-              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                  tr[i].style.display = "";
-                  tr[i - 1].style.display = "";
-                  if ($(tr[i - 1]).find('span').find('i').hasClass('mdi mdi-chevron-right mdi-24px')) {
-                      $(tr[i - 1]).find('span').find('i').removeClass("mdi mdi-chevron-right mdi-24px").addClass("mdi mdi-chevron-down mdi-24px");
-                  }
-              } else {
-                  tr[i].style.display = "none";
-              }
-              }
-            }
-          } 
-    </script>
-    <script>
-        function searchByValidation() {
-          // Declare variables
-          var input, filter, table, tr, td, i, txtValue;
-          input = document.getElementById("validationSearch");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("activitiesTable");
-          tr = table.getElementsByTagName("tr");
-
-          // Loop through all table rows, and hide those who don't match the search query
-          for (i = 0; i < tr.length; i++) {
-              td = tr[i].getElementsByTagName("td")[3];
-              subtd = tr[i].getElementsByTagName("td")[0]; 
-                if (subtd)
-                {
-                    if ($(tr[i-1]).find('span').find('i').hasClass('mdi mdi-chevron-down mdi-24px')) {
-                    $(tr[i-1]).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
-                    tr[i].style.display = "none";
-                    //Os detalhes ficam escondidos.
-                  }
-                }
-              if (td) {
-                  txtValue = td.textContent || td.innerText;
-              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                  tr[i].style.display = "";
-                  
-              } else {
-                  tr[i].style.display = "none";
-              }
-              }
-            }
-          } 
-    </script>
     <script>
         new Vue({
             el: '#app'
