@@ -29,6 +29,10 @@
           bottom: 0;
           width: 100%;
         }
+        .menu-list a.is-active {
+            background-color: white;
+            color: black;
+        }
     </style>
 </head>
 
@@ -244,52 +248,44 @@
                                             </div>
                                             {% endif %}
                                         </div>
-
-
-
-                                        <li class="is-menu more">
-                                            <a class="">
-                                                <!---->
-                                                <span class="icon is-pulled-right">
-                                                    <i class="mdi mdi-plus mdi-24px"></i>
-                                                </span>
-                                                <small>Mais Filtros de Atividade</small>
-                                            </a>
-                                            <ul>
-                                                <div class="field">
-                                                    <!---->
-                                                    <template>
-                                                        <b-field>
-                                                            <b-datepicker
-                                                                placeholder="Submetido depois de..."
-                                                                icon="calendar"
-                                                                :min-date="minDate"
-                                                                :max-date="maxDate"
-                                                                editable>
-                                                            </b-datepicker>
-                                                        </b-field>
-                                                    </template>
-                                                    <!---->
-                                                </div>
-                                                <div class="field">
-                                                    <!---->
-                                                    <template>
-                                                        <b-field>
-                                                            <b-datepicker
-                                                                placeholder="Submetido antes de..."
-                                                                icon="calendar"
-                                                                :min-date="minDate"
-                                                                :max-date="maxDate"
-                                                                 editable>
-                                                            </b-datepicker>
-                                                        </b-field>
-                                                    </template>
-                                                    <!---->
-                                                </div>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                        <template>
+                                            <b-menu>
+                                                <b-menu-list>
+                                                    <b-menu-item>
+                                                        <template slot="label" slot-scope="props">
+                                                            <small>Mais Filtros de Atividade</small>
+                                                            <b-icon
+                                                                class="is-pulled-right"
+                                                                :icon="props.expanded ? 'minus' : 'plus'">
+                                                            </b-icon>
+                                                        </template>
+                                                        <template>
+                                                            <b-field>
+                                                                <b-datepicker
+                                                                    placeholder="Submetido depois de..."
+                                                                    icon="calendar"
+                                                                    :min-date="minDate"
+                                                                    :max-date="maxDate"
+                                                                    editable>
+                                                                </b-datepicker>
+                                                            </b-field>
+                                                        </template>
+                                                        <template>
+                                                            <b-field>
+                                                                <b-datepicker
+                                                                    placeholder="Submetido antes de..."
+                                                                    icon="calendar"
+                                                                    :min-date="minDate"
+                                                                    :max-date="maxDate"
+                                                                    editable>
+                                                                </b-datepicker>
+                                                            </b-field>
+                                                        </template>
+                                                    </b-menu-item>
+                                            </b-menu>
+                                        </template>
                                     </form>
+                                 </ul>
                                 </div>
                                 <div class="menu">
                                     <p class="menu-label">Filtros Sessão</p>
