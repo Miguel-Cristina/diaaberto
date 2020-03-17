@@ -45,6 +45,7 @@ def minhasatividades(request):
     unique_tipo_str = []
     unique_valida_obj = []
     unique_valida_str = []
+    local_obj = []
     for x in atividade_list:
         if x.tipo_atividade not in unique_tipo_str:
             unique_tipo_obj.append(x)
@@ -52,8 +53,7 @@ def minhasatividades(request):
         if x.validada not in unique_valida_str:
             unique_valida_obj.append(x)
             unique_valida_str.append(x.validada)
-    #END tipo_utilizador and estados filter filter 
-
+    #END tipo_utilizador and estados filter filter     
     return render(request, 'diaabertoapp/minhasatividades.html', {'atividades':atividades, 'tiposatividades':unique_tipo_obj, 'estados':unique_valida_obj, 'nomesquery':nome_query, 'tiposquery':tipo_query, 'estadosquery':estado_query})
 
 def proporatividade(request):

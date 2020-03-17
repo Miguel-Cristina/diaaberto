@@ -1,5 +1,5 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, LocalAtividade, Tematica, Atividade, Material, MaterialQuantidade
+from diaabertoapp.models import Edificio, Campus, Tematica, Atividade, Material, MaterialQuantidade, LocalAtividade,Local
 from django.utils.safestring import mark_safe
 
 # Register your models here.
@@ -9,7 +9,7 @@ class CampusAdmin(admin.ModelAdmin):
 
 admin.site.register(Campus, CampusAdmin)
 
-class LocalAtividadeAdmin(admin.ModelAdmin):
+class LocalAdmin(admin.ModelAdmin):
     list_display = ('sala','andar', 'get_edificio', 'descricao', 'get_campus')
 
     def get_campus(self, obj):
@@ -19,7 +19,8 @@ class LocalAtividadeAdmin(admin.ModelAdmin):
         return obj.edificio.nome
     get_edificio.short_description = "Edificio"
 
-admin.site.register(LocalAtividade, LocalAtividadeAdmin)
+admin.site.register(Local, LocalAdmin)
+admin.site.register(LocalAtividade)
 admin.site.register(Tematica)
 admin.site.register(Material)
 admin.site.register(MaterialQuantidade)
@@ -33,10 +34,13 @@ class MateriaisInline(admin.TabularInline):
     model = MaterialQuantidade
 
 class AtividadeAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'descricao', 'local', 'duracao', 'limite_participantes', 'tipo_atividade', 'publico_alvo', 'colored_name')
+    list_display = ('nome', 'descricao', 'get_local', 'duracao', 'limite_participantes', 'tipo_atividade', 'publico_alvo', 'colored_name')
     inlines = [
         MateriaisInline,
     ]
+    def get_local(self, obj):
+        return obj.local if obj.local else 'Por atribuir'
+    get_local.short_description = 'Localização'
     def colored_name(self,obj):
         if obj.validada == 'VD':
             estado = 'Validada'
