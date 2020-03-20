@@ -174,15 +174,15 @@
                                             
                                         <div class="field has-addons">
                                             <!---->
-                                            {% if not tiposquery|length > 0 %}
+                                            {% if not campusquery|length > 0 %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select  id="typeSearch" name="tipo"><!--onchange="searchByType()"-->
+                                                    <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
                                                         <option disabled="disabled" hidden="hidden" selected>
-                                                            Tipo de Atividade
+                                                            Campus
                                                         </option>
-                                                        {% for Tipo in tiposatividades %}
-                                                            <option value="{{ Tipo.tipo_atividade }}">{{ Tipo.get_tipo_atividade_display }}</option>
+                                                        {% for Campus in campuss %}
+                                                            <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
@@ -196,9 +196,9 @@
                                             {% else %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select  id="typeSearch" name="tipo"><!--onchange="searchByType()"-->
-                                                        {% for Tipo in tiposatividades %}
-                                                            <option value="{{ Tipo.tipo_atividade }}" selected>{{ Tipo.get_tipo_atividade_display }}</option>
+                                                    <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                        {% for Campus in campuss %}
+                                                            <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
@@ -208,7 +208,127 @@
                                             </div>
                                             <!---->
                                             <div class="control">
-                                                <button class="button is-danger" onclick="document.getElementById('typeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not faculdadequery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="faculdadeSearch" name="faculdade"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Faculdade
+                                                        </option>
+                                                        {% for Faculdade in faculdades %}
+                                                            <option value="{{ Faculdade.id }}">{{ Faculdade.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="faculdadeSearch" name="faculdade"><!--onchange="searchByType()"-->
+                                                        {% for Faculdade in faculdades %}
+                                                            <option value="{{ Faculdade.id }}">{{ Faculdade.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('faculdadeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not departamentoquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="departamentoSearch" name="departamento"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Departamento
+                                                        </option>
+                                                        {% for Departamento in departamentos %}
+                                                            <option value="{{ Departamento.id }}">{{ Departamento.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="departamentoSearch" name="departamento"><!--onchange="searchByType()"-->
+                                                        {% for Departamento in departamentos %}
+                                                            <option value="{{ Departamento.id }}">{{ Departamento.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('departamentoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                             <div class="field has-addons">
+                                            <!---->
+                                            {% if not tematicaquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Tema
+                                                        </option>
+                                                        {% for Tematica in tematicas %}
+                                                            <option value="{{ Tematica.id }}">{{ Tematica.tema }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                        {% for Tematica in tematicas %}
+                                                            <option value="{{ Tematica.id }}">{{ Tematica.tema }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('tematicaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
                                               </div>
                                             {% endif %}
                                         </div>
@@ -455,11 +575,17 @@
         <p>
             <strong>Descrição:</strong> {{ Atividade.descricao }} </p>
         <p>
-            <strong>Local:</strong> {{ Atividade.get_local }} </p>
+            <strong>Campus:</strong> {{ Atividade.campus }} </p>
         <p>
-            <strong>Entidade Organizacional:</strong> por configurar </p>
         <p>
-            <strong>Departamento:</strong> por configurar </p>
+            <strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+        <p>
+        <p>
+            <strong>Sala:</strong> {{ Atividade.sala }} </p>
+        <p>
+            <strong>Faculdade:</strong> {{ Atividade.faculdade }} </p>
+        <p>
+            <strong>Departamento:</strong> {{ Atividade.departamento }} </p>
         <p>
             <strong>Sessões:</strong>
         </p>

@@ -22,4 +22,23 @@
             {% endfor %}
           </table>
 </body>
+<script>
+    $(document).ready(function(){
+    $('select[name=campus]').change(function(){
+        campus_id = $(this).val();
+        request_url = '/get_edificios/' + campus_id + '/';
+        $.ajax({
+            url: request_url,
+            success: function(data){
+                $.each(data, function(index, text){
+                    $('select[name=edificio]').append(
+                         $('<option></option>').val(index).html(text)
+                     );
+                });
+            }
+        });
+        return false;
+    })
+});
+</script>
 </html>

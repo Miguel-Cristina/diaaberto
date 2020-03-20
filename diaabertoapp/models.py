@@ -3,6 +3,20 @@ import datetime
 # Create your models here.
 
 
+class Faculdade(models.Model):
+    # Campos
+    id = models.AutoField(primary_key=True)
+    nome = models.CharField(max_length=100, unique=True)
+    def __str__(self):
+        return self.nome
+class Departamento(models.Model):
+    # Campos
+    id = models.AutoField(primary_key=True)
+    nome = models.CharField(max_length=100, unique=True)
+    faculdade = models.ForeignKey(Faculdade, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.nome
+
 class Campus(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -21,40 +35,31 @@ class Campus(models.Model):
 class Edificio(models.Model):
     # Campos
     id = models.AutoField(primary_key= True)
-    nome = models.CharField(max_length=40, unique=True)
+    nome = models.CharField(max_length=40)
     campus = models.ForeignKey(Campus, on_delete=models.CASCADE,null=True)
+    class Meta:
+        unique_together = (("nome", "campus"),) 
+    #Métodos
+
+    def get_absolute_url(self):
+        return reverse('edificio-detail-view',args=[str(self.id)])
+
+    def __str__(self):
+        return self.nome
+
+class Sala(models.Model):
+    # Campos
+    id = models.AutoField(primary_key= True)
+    identificacao = models.CharField(max_length=40)
+    edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE,null=True)
+    class Meta:
+        unique_together = (("identificacao", "edificio"),) 
     #Métodos
     def get_absolute_url(self):
         return reverse('edificio-detail-view',args=[str(self.id)])
 
     def __str__(self):
-        return self.nome + ' ('+ self.campus.nome + ')'
-
-class Local(models.Model):
-    id = models.AutoField(primary_key=True)
-    edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE,null=True) #se o Edificio desaparecer, o local da atividade também desaparece, apesar deste campo ser por definição nulo (é tentador colocar models.DEFNULL, caso a chave estrangeira desapareça)
-    andar = models.CharField(max_length=30,null=True)
-    sala = models.CharField(max_length=30,null=True)
-    descricao = models.TextField(null=True, blank=True)
-    #Métodos
-    def get_absolute_url(self):
-        return reverse('localatividade-detail-view',args=[str(self.id)])
-    def __str__(self):
-        return self.edificio.campus.nome + ' Edificio ' + self.edificio.nome + ' Piso ' +self.andar + ' Sala ' + self.sala
-
-class LocalAtividade(models.Model):
-    id = models.AutoField(primary_key=True)
-    local = models.ForeignKey(Local, on_delete=models.CASCADE, null=True, blank=True)
-    descricao = models.TextField(null=True, blank=True)
-    #Métodos
-
-    def __str__(self): 
-        if self.local:
-            return str(self.local)
-        elif self.descricao and not self.local:
-            return 'Outro local: ' + self.descricao
-        else:
-            return 'Por atribuir'
+        return self.identificacao
 
 
 class Tematica(models.Model):
@@ -126,7 +131,8 @@ class Atividade(models.Model):
     )
     publico_alvo = models.CharField(max_length=45)
     data = models.DateField(default=datetime.date.today)
-    
+    faculdade = models.ForeignKey(Faculdade, on_delete=models.CASCADE, null=True)
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, null=True)
     REJEITADA = 'RJ'    #invalidada
     PENDENTE = 'PD'     #por validar
     VALIDADA = 'VD'     #validada
@@ -141,7 +147,10 @@ class Atividade(models.Model):
         default=PENDENTE,
     )
     tematicas = models.ManyToManyField(Tematica, related_name='temas')
-    local = models.ForeignKey(LocalAtividade, on_delete=models.CASCADE, null=True, blank=True) 
+    #local = models.ForeignKey(LocalAtividade, on_delete=models.CASCADE, null=True, blank=True)
+    campus = models.ForeignKey(Campus, on_delete=models.CASCADE, null=True, blank=True)
+    edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE, null=True, blank=True)
+    sala = models.ForeignKey(Sala, on_delete=models.CASCADE, null=True, blank=True)
     tipo_local = models.CharField(max_length=255, null=True, blank=True)
     #Métodos
     def get_absolute_url(self):
@@ -168,4 +177,31 @@ class MaterialQuantidade(models.Model):
     def __str__(self):
         return self.material.nome + ' para ' + self.atividade.nome 
 
+
+
+#class Local(models.Model):
+#    id = models.AutoField(primary_key=True)
+#    edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE,null=True) #se o Edificio desaparecer, o local da atividade também desaparece, apesar deste campo ser por definição nulo (é tentador colocar models.DEFNULL, caso a chave estrangeira desapareça)
+#    andar = models.CharField(max_length=30,null=True)
+#    sala = models.CharField(max_length=30,null=True)
+#    descricao = models.TextField(null=True, blank=True)
+#    #Métodos
+#    def get_absolute_url(self):
+#        return reverse('localatividade-detail-view',args=[str(self.id)])
+#    def __str__(self):
+#        return self.edificio.campus.nome + ' Edificio ' + self.edificio.nome + ' Piso ' +self.andar + ' Sala ' + self.sala
+
+#class LocalAtividade(models.Model):
+#    id = models.AutoField(primary_key=True)
+#    local = models.ForeignKey(Local, on_delete=models.CASCADE, null=True, blank=True)
+#    descricao = models.TextField(null=True, blank=True)
+#    #Métodos
+#
+#    def __str__(self): 
+#        if self.local:
+#            return str(self.local)
+#        elif self.descricao and not self.local:
+#            return 'Outro local: ' + self.descricao
+#        else:
+#            return 'Por atribuir'
 
