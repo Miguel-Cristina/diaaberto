@@ -31,10 +31,10 @@ class Calendar extends Plugin {
     static defaultOptions() {
         return {
             date: new Date(),
-            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            shortDays: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'], 
             navButtons: true,
-            format: 'yyyy-mm-dd',
+            format: 'dd-mm-yyyy',
             overlay: false
         };
     }

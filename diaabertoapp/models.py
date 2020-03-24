@@ -74,6 +74,18 @@ class Tematica(models.Model):
     def __str__(self):
         return self.tema
 
+class PublicoAlvo(models.Model):
+    # Campos
+    id = models.AutoField(primary_key=True)
+    nome = models.CharField(max_length=255, unique=True)
+    
+    #Métodos
+    def get_absolute_url(self):
+        return reverse('tematica-detail-view',args=[str(self.id)])
+
+    def __str__(self):
+        return self.nome
+
 class Material(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -129,7 +141,7 @@ class Atividade(models.Model):
         max_length=2,
         choices=TIPO_ATIVIDADE_CHOICES
     )
-    publico_alvo = models.CharField(max_length=45)
+    publico_alvo = models.ManyToManyField(PublicoAlvo, related_name='publico_alvo')
     data = models.DateField(default=datetime.date.today)
     faculdade = models.ForeignKey(Faculdade, on_delete=models.CASCADE, null=True)
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, null=True)

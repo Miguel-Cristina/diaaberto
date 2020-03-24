@@ -1,5 +1,5 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, Sala, Tematica, Atividade, Material, MaterialQuantidade, Faculdade, Departamento
+from diaabertoapp.models import Edificio, Campus, Sala, Tematica, Atividade, Material, MaterialQuantidade, Faculdade, Departamento, PublicoAlvo
 #LocalAtividade,Local
 from django.utils.safestring import mark_safe
 # Register your models here.
@@ -22,6 +22,8 @@ admin.site.register(Sala, SalaAdmin)
 
 admin.site.register(Tematica)
 
+admin.site.register(PublicoAlvo)
+
 admin.site.register(Material)
 
 admin.site.register(MaterialQuantidade)
@@ -35,7 +37,7 @@ class MateriaisInline(admin.TabularInline):
 
 class AtividadeAdmin(admin.ModelAdmin):
    
-    list_display = ('nome', 'descricao', 'campus', 'edificio', 'sala', 'duracao', 'limite_participantes', 'tipo_atividade', 'publico_alvo','colored_name')
+    list_display = ('nome', 'descricao', 'campus', 'edificio', 'sala', 'duracao', 'limite_participantes', 'tipo_atividade','colored_name')
     inlines = [
         MateriaisInline,
     ]

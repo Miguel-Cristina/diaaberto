@@ -17,5 +17,3 @@ class SalaForm(forms.ModelForm):
         model = Sala
 
         fields = ('campus', 'edificio', 'sala')
-
-    

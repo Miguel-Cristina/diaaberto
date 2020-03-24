@@ -24,6 +24,25 @@
         * {
             outline: none;
         }
+        .footer{
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+        /* Style the tab content */
+        .tabcontent {
+          display: none;
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          border-top: none;
+        }
+        /* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 0px solid #ccc;
+  background-color: #f1f1f1;
+}
+
     </style>
 </head>
 
@@ -49,8 +68,7 @@
                         <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
                             <div role="button" aria-haspopup="true" class="dropdown-trigger">
                                 <span data-v-a67fe1ba="" role="button">
-                                    <button data-v-a67fe1ba="" type="button" data-badge="0" class="button has-badge-rounded has-badge-warning is-text"
-                                        style="margin-right: 0.9rem;">
+                                    <button data-v-a67fe1ba="" type="button" data-badge="0" class="button has-badge-rounded has-badge-warning is-text" style="margin-right: 0.9rem;">
                                         <!---->
                                         <span>
                                             <span data-v-a67fe1ba="" class="icon">
@@ -136,21 +154,967 @@
                             </ul>
                         </nav>
                         <div style="padding: 3rem 2vw 1rem;">
-                           <form action="/campus/" method="post">
-                                {% csrf_token %}
-                                {{ form }}
-                                <input type="submit" value="Submit">
-                            </form>
+                            <div class="b-steps">
+                                <nav class="steps is-success">
+                                    <ul class="step-items">
+                                        <li class="step-item is-success is-active">
+                                            <a class="step-link">
+                                                <div class="step-marker">
+                                                    <span class="icon">
+                                                        <i class="mdi mdi-flask mdi-24px"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="step-details">
+                                                    <span class="step-title">Atividade</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="step-item is-success">
+                                            <a class="step-link">
+                                                <div class="step-marker">
+                                                    <span class="icon">
+                                                        <i class="mdi mdi-calendar-check mdi-24px"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="step-details">
+                                                    <span class="step-title">Sessões</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="step-item is-success">
+                                            <a class="step-link">
+                                                <div class="step-marker">
+                                                    <span class="icon">
+                                                        <i class="mdi mdi-check mdi-24px"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="step-details">
+                                                    <span class="step-title">Submissão</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <section class="step-content">
+                                    <div class="step-item" style="">
+                                        <div style="padding: 1rem 2vw 0px;">
+                                            <hr>
+                                            <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação de atividade </h2>
+                                            <div class="columns">
+                                                <div class="column">
+                                                    <div class="field">
+                                                        <label class="label">Nome da atividade</label>
+                                                        <div class="control is-clearfix">
+                                                            <input type="text" autocomplete="on" class="input" placeholder="ex: Exemplo de Atividade">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="column">
+                                                    <div class="field">
+                                                        <label class="label">Tipo de atividade</label>
+                                                        <div class="control is-expanded ">
+                                                            <span class="select is-fullwidth is-empty">
+                                                                <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                                    <option disabled="disabled" hidden="hidden" selected>
+                                                                        Tipo
+                                                                    </option>
+                                                                    {% for Tipo in tipos %}
+                                                                        <option value="{{ Tipo.0 }}">{{ Tipo.1 }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label class="label">Descrição da atividade</label>
+                                                <div class="control is-clearfix">
+                                                    <textarea maxlength="300" class="textarea" id="descricaoField" onkeyup="countChar(this)" placeholder="ex: Descrição do Exemplo de Atividade"></textarea>
+                                                    <p class="help counter" id="charNum"></p>
+                                                </div>
+                                                <!---->
+                                            </div>
+                                            <div class="columns">
+                                                <div class="column">
+                                                    <div class="columns">
+                                                        <div class="column">
+                                                        <div class="field">
+                                                        <label class="label">Número máximo de participantes</label>
+                                                        <div class="b-numberinput field has-addons">
+                                                            <p class="control">
+                                                                <button type="button" id="minus-btn" class="button is-primary">
+                                                                    <span class="icon">
+                                                                        <i class="mdi mdi-minus mdi-24px"></i>
+                                                                    </span>
+                                                                </button>
+                                                            </p>
+                                                            <div class="control is-clearfix">
+                                                                <input type="number" step="1" id="maxPersons_input" class="input" placeholder="Número máx. participantes" value="0" required>
+                                                            </div>
+                                                            <p class="control">
+                                                                <button type="button" id="plus-btn" class="button is-primary">
+                                                                    <span class="icon">
+                                                                        <i class="mdi mdi-plus mdi-24px"></i>
+                                                                    </span>
+                                                                </button>
+                                                            </p>
+                                                        </div>
+                                                     </div>
+                                                        </div>
+                                                        <div class="column">
+                                                        <div class="field">
+                                                        <label class="label">Duração da atividade</label>
+                                                        <div class="b-numberinput field has-addons">
+                                                            <p class="control">
+                                                                <button type="button" id="minus-btn2" class="button is-primary">
+                                                                    <span class="icon">
+                                                                        <i class="mdi mdi-minus mdi-24px"></i>
+                                                                    </span>
+                                                                </button>
+                                                            </p>
+                                                            <div class="control is-clearfix">
+                                                                <input type="number" step="5" id="duracao_input" class="input" placeholder="Duração em minutos" value="0" required>
+                                                            </div>
+                                                            <p class="control">
+                                                                <button type="button" id="plus-btn2" class="button is-primary">
+                                                                    <span class="icon">
+                                                                        <i class="mdi mdi-plus mdi-24px"></i>
+                                                                    </span>
+                                                                </button>
+                                                            </p>
+                                                        </div>
+                                                        <p class="help">Em minutos</p>
+                                                     </div>
+                                                            </div>
+                                                    </div>
+                                                    
+                                                    <div class="columns">
+                                                        <div class="column">
+                                                            <div class="field">
+                                                        <label class="label">Faculdade</label>
+                                                        <div class="control is-expanded ">
+                                                            <span class="select is-fullwidth is-empty">
+                                                                <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                                    <option disabled="disabled" hidden="hidden" selected>
+                                                                        Selecione o edificio...
+                                                                    </option>
+                                                                    {% for Faculdade in faculdades %}
+                                                                        <option value="{{ Faculdade.id }}">{{ Faculdade.nome }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                        </div>
+                                                        <div class="column">
+                                                            <div class="field">
+                                                        <label class="label">Departamento</label>
+                                                        <div class="control is-expanded ">
+                                                            <span class="select is-fullwidth is-empty">
+                                                                <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                                    <option disabled="disabled" hidden="hidden" selected>
+                                                                        Selecione a sala...
+                                                                    </option>
+                                                                    {% for Departamento in departamentos %}
+                                                                        <option value="{{ Departamento.id }}">{{ Departamento.nome }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                        </div>
+                                                    </div>
+                                                   <div class="tabs is-toggle is-fullwidth tab">
+                                                      <ul>
+                                                        <li>
+                                                          <a class="tablinks" onclick="openLocal(event, 'tipoLocal')">
+                                                            <span class="icon is-small "><i class="mdi mdi-image" aria-hidden="true"></i></span>
+                                                            <span>Qualquer sala com as minhas especificações</span>
+                                                          </a>
+                                                        </li>
+                                                        <li>
+                                                          <a onclick="openLocal(event, 'escolherLocal')">
+                                                            <span class="icon is-small tablinks" ><i class="mdi mdi-music" aria-hidden="true"></i></span>
+                                                            <span>Tenho preferência numa sala especifica</span>
+                                                          </a>
+                                                        </li>
+                                                      </ul>
+                                                       </div>
+                                                    <div id="tipoLocal" class="tabcontent">
+                                                      <h3>London</h3>
+                                                      <p>London is the capital city of England.</p>
+                                                    </div>
+
+                                                    <div id="escolherLocal" class="tabcontent">
+                                                      <h3>Paris</h3>
+                                                      <p>Paris is the capital of France.</p> 
+                                                    </div>
+
+
+
+
+
+                                                    <div class="field">
+                                                        <label class="label">Tipo de local a requisitar</label>
+                                                        <div class="control is-clearfix">
+                                                            <input type="text" autocomplete="on" class="input" placeholder="ex: Sala grande/Laboratório">
+                                                        </div>
+                                                    </div>
+                                                    <div class="field">
+                                                        <label class="label">Campus</label>
+                                                        <div class="control is-expanded ">
+                                                            <span class="select is-fullwidth is-empty">
+                                                                <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                                    <option disabled="disabled" hidden="hidden" selected>
+                                                                        Selecione o campus...
+                                                                    </option>
+                                                                    {% for Campus in campi %}
+                                                                        <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="columns">
+                                                        <div class="column">
+                                                            <div class="field">
+                                                        <label class="label">Edificio</label>
+                                                        <div class="control is-expanded ">
+                                                            <span class="select is-fullwidth is-empty">
+                                                                <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                                    <option disabled="disabled" hidden="hidden" selected>
+                                                                        Selecione o edificio...
+                                                                    </option>
+                                                                    {% for Edificio in edificios %}
+                                                                        <option value="{{ Edificio.id }}">{{ Edificio.nome }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                        </div>
+                                                        <div class="column">
+                                                            <div class="field">
+                                                        <label class="label">Sala</label>
+                                                        <div class="control is-expanded ">
+                                                            <span class="select is-fullwidth is-empty">
+                                                                <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                                    <option disabled="disabled" hidden="hidden" selected>
+                                                                        Selecione a sala...
+                                                                    </option>
+                                                                    {% for Sala in salas %}
+                                                                        <option value="{{ Sala.id }}">{{ Sala.identificacao }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                        </div>
+                                                    </div>
+
+                                                    
+                                                </div>
+                                                <div class="column">
+                                                    <div class="field">
+                                                       <label class="label">Tema(s) da atividade</label>
+                                                       <div class="control is-expanded">
+                                                            <div class="select is-multiple is-fullwidth is-expanded">
+                                                              <select multiple size="4">
+                                                                {% for Tema in tematicas %}
+                                                                            <option value="{{ Tema.id }}">{{ Tema.tema }}</option>
+                                                                        {% endfor %}
+                                                              </select>
+                                                            </div>
+                                                        </div>
+                                                        <p class="help">Clique CTRL + Clique para selecionar múltiplos temas</p>
+                                                    </div>
+                                                    <div class="field">
+                                                       <label class="label">Público(s)-alvo(s)</label>
+                                                       <div class="control is-expanded">
+                                                            <div class="select is-multiple is-fullwidth is-expanded">
+                                                              <select multiple size="4">
+                                                                {% for Publico in publicosalvo %}
+                                                                            <option value="{{ Publico.id }}">{{ Publico.nome }}</option>
+                                                                        {% endfor %}
+                                                              </select>
+                                                            </div>
+                                                        </div>
+                                                        <p class="help">Clique CTRL + Clique para selecionar múltiplos públicos-alvos</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="step-item" style="display: none;">
+                                        <div>
+                                            <div style="padding: 1rem 2vw 0px;">
+                                                <hr>
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;">
+                                                    Sessões da Atividade </h2>
+                                                <div data-v-136e9626="">
+                                                    <div data-v-136e9626="" class="b-table">
+                                                        <div class="field table-mobile-sort">
+                                                            <div class="field has-addons">
+                                                                <div class="control is-expanded">
+                                                                    <span class="select is-fullwidth">
+                                                                        <select>
+                                                                            <!---->
+                                                                            <!---->
+                                                                            <option value="[object Object]">
+                                                                                Horário
+                                                                            </option>
+                                                                            <option value="[object Object]">
+                                                                                Duração
+                                                                            </option>
+                                                                            <!---->
+                                                                            <!---->
+                                                                            <!---->
+                                                                            <!---->
+                                                                        </select>
+                                                                    </span>
+                                                                    <!---->
+                                                                </div>
+                                                                <div class="control">
+                                                                    <button class="button is-primary">
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                        </span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!---->
+                                                        <div class="table-wrapper">
+                                                            <table class="table is-striped has-mobile-cards is-hoverable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <!---->
+                                                                        <!---->
+                                                                        <th class="is-current-sort is-sortable">
+                                                                            <div class="th-wrap">Horário
+                                                                                <span class="icon is-small">
+                                                                                    <i class="mdi mdi-menu-up"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </th>
+                                                                        <th class="is-sortable">
+                                                                            <div class="th-wrap">Duração
+                                                                                <span class="icon is-small" style="display: none;">
+                                                                                    <i class="mdi mdi-menu-up"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </th>
+                                                                        <th class="">
+                                                                            <div class="th-wrap">Vagas
+                                                                                <span class="icon is-small" style="display: none;">
+                                                                                    <i class="mdi mdi-menu-up"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </th>
+                                                                        <th class="">
+                                                                            <div class="th-wrap">Colaboradores
+                                                                                <span class="icon is-small" style="display: none;">
+                                                                                    <i class="mdi mdi-menu-up"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </th>
+                                                                        <th class="">
+                                                                            <div class="th-wrap">Requerimentos Espaço
+                                                                                <span class="icon is-small" style="display: none;">
+                                                                                    <i class="mdi mdi-menu-up"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </th>
+                                                                        <th class="">
+                                                                            <div class="th-wrap is-centered">Ações
+                                                                                <span class="icon is-small" style="display: none;">
+                                                                                    <i class="mdi mdi-menu-up"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </th>
+                                                                        <!---->
+                                                                    </tr>
+                                                                    <!---->
+                                                                    <!---->
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr draggable="false" class="">
+                                                                        <!---->
+                                                                        <!---->
+                                                                        <td data-v-136e9626="" data-label="Horário" class="">
+                                                                            09:30 - 10:30 </td>
+                                                                        <td data-v-136e9626="" data-label="Duração" class=""> 60 min </td>
+                                                                        <td data-v-136e9626="" data-label="Vagas" class=""> 25 </td>
+                                                                        <td data-v-136e9626="" data-label="Colaboradores" class=""> 1 </td>
+                                                                        <td data-v-136e9626="" data-label="Requerimentos Espaço" class="">
+                                                                            <ul data-v-136e9626="" class="requerimentos">
+                                                                                <li data-v-136e9626=""> Sala </li>
+                                                                                <li data-v-136e9626=""> Computadores </li>
+                                                                            </ul>
+                                                                        </td>
+                                                                        <td data-v-136e9626="" data-label="Ações" class="has-text-centered">
+                                                                            <a data-v-136e9626="">
+                                                                                <span data-v-136e9626="" class="icon has-text-danger">
+                                                                                    <i class="mdi mdi-close-box mdi-24px"></i>
+                                                                                </span>
+                                                                            </a>
+                                                                        </td>
+                                                                        <!---->
+                                                                    </tr>
+                                                                    <!---->
+                                                                    <!---->
+                                                                    <tr draggable="false" class="">
+                                                                        <!---->
+                                                                        <!---->
+                                                                        <td data-v-136e9626="" data-label="Horário" class="">
+                                                                            11:30 - 12:00 </td>
+                                                                        <td data-v-136e9626="" data-label="Duração" class=""> 30 min </td>
+                                                                        <td data-v-136e9626="" data-label="Vagas" class=""> 15 </td>
+                                                                        <td data-v-136e9626="" data-label="Colaboradores" class=""> 0 </td>
+                                                                        <td data-v-136e9626="" data-label="Requerimentos Espaço" class="">
+                                                                            <ul data-v-136e9626="" class="requerimentos">
+                                                                                <li data-v-136e9626=""> Sala </li>
+                                                                            </ul>
+                                                                        </td>
+                                                                        <td data-v-136e9626="" data-label="Ações" class="has-text-centered">
+                                                                            <a data-v-136e9626="">
+                                                                                <span data-v-136e9626="" class="icon has-text-danger">
+                                                                                    <i class="mdi mdi-close-box mdi-24px"></i>
+                                                                                </span>
+                                                                            </a>
+                                                                        </td>
+                                                                        <!---->
+                                                                    </tr>
+                                                                    <!---->
+                                                                    <!---->
+                                                                </tbody>
+                                                                <!---->
+                                                            </table>
+                                                        </div>
+                                                        <!---->
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem; margin-bottom: 2rem;">
+                                                    Adicionar Sessão </h2>
+                                                <div data-v-5aa16ff8="">
+                                                    <div data-v-5aa16ff8="" class="columns">
+                                                        <div data-v-5aa16ff8="" class="column">
+                                                            <h1 data-v-5aa16ff8="" class="title is-6 has-text-centered">Informação da Sessão</h1>
+                                                            <div data-v-5aa16ff8="" class="columns">
+                                                                <div data-v-5aa16ff8="" class="column">
+                                                                    <div data-v-5aa16ff8="" class="field">
+                                                                        <label class="label">Horário de Início</label>
+                                                                        <div data-v-5aa16ff8="" class="timepicker control">
+                                                                            <div class="dropdown is-mobile-modal">
+                                                                                <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                                                                                    <div class="control has-icons-left is-clearfix">
+                                                                                        <input type="text" autocomplete="off" placeholder="De" class="input">
+                                                                                        <span class="icon is-left">
+                                                                                            <i class="mdi mdi-clock mdi-24px"></i>
+                                                                                        </span>
+                                                                                        <!---->
+                                                                                        <!---->
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div aria-hidden="true" class="background" style="display: none;"></div>
+                                                                                <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                                                                                    <div class="dropdown-content">
+                                                                                        <div tabindex="0" class="dropdown-item">
+                                                                                            <div class="field is-grouped-centered is-grouped">
+                                                                                                <!---->
+                                                                                                <div class="control">
+                                                                                                    <span class="select is-empty">
+                                                                                                        <select>
+                                                                                                            <option disabled="disabled" hidden="hidden" value="">
+                                                                                                                00
+                                                                                                            </option>
+                                                                                                            <option value="0">
+                                                                                                                00
+                                                                                                            </option>
+                                                                                                            <option value="1">
+                                                                                                                01
+                                                                                                            </option>
+                                                                                                            <option value="2">
+                                                                                                                02
+                                                                                                            </option>
+                                                                                                            <option value="3">
+                                                                                                                03
+                                                                                                            </option>
+                                                                                                            <option value="4">
+                                                                                                                04
+                                                                                                            </option>
+                                                                                                            <option value="5">
+                                                                                                                05
+                                                                                                            </option>
+                                                                                                            <option value="6">
+                                                                                                                06
+                                                                                                            </option>
+                                                                                                            <option value="7">
+                                                                                                                07
+                                                                                                            </option>
+                                                                                                            <option value="8">
+                                                                                                                08
+                                                                                                            </option>
+                                                                                                            <option value="9">
+                                                                                                                09
+                                                                                                            </option>
+                                                                                                            <option value="10">
+                                                                                                                10
+                                                                                                            </option>
+                                                                                                            <option value="11">
+                                                                                                                11
+                                                                                                            </option>
+                                                                                                            <option value="12">
+                                                                                                                12
+                                                                                                            </option>
+                                                                                                            <option value="13">
+                                                                                                                13
+                                                                                                            </option>
+                                                                                                            <option value="14">
+                                                                                                                14
+                                                                                                            </option>
+                                                                                                            <option value="15">
+                                                                                                                15
+                                                                                                            </option>
+                                                                                                            <option value="16">
+                                                                                                                16
+                                                                                                            </option>
+                                                                                                            <option value="17">
+                                                                                                                17
+                                                                                                            </option>
+                                                                                                            <option value="18">
+                                                                                                                18
+                                                                                                            </option>
+                                                                                                            <option value="19">
+                                                                                                                19
+                                                                                                            </option>
+                                                                                                            <option value="20">
+                                                                                                                20
+                                                                                                            </option>
+                                                                                                            <option value="21">
+                                                                                                                21
+                                                                                                            </option>
+                                                                                                            <option value="22">
+                                                                                                                22
+                                                                                                            </option>
+                                                                                                            <option value="23">
+                                                                                                                23
+                                                                                                            </option>
+                                                                                                        </select>
+                                                                                                    </span>
+                                                                                                    <!---->
+                                                                                                </div>
+                                                                                                <span class="control is-colon">:</span>
+                                                                                                <div class="control">
+                                                                                                    <span class="select is-empty">
+                                                                                                        <select>
+                                                                                                            <option disabled="disabled" hidden="hidden" value="">
+                                                                                                                00
+                                                                                                            </option>
+                                                                                                            <option value="0">
+                                                                                                                00
+                                                                                                            </option>
+                                                                                                            <option value="30">
+                                                                                                                30
+                                                                                                            </option>
+                                                                                                        </select>
+                                                                                                    </span>
+                                                                                                    <!---->
+                                                                                                </div>
+                                                                                                <!---->
+                                                                                                <!---->
+                                                                                                <!---->
+                                                                                            </div>
+                                                                                            <!---->
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!---->
+                                                                    </div>
+                                                                    <div data-v-5aa16ff8="" class="field has-numberinput has-numberinput-compact">
+                                                                        <label class="label">Máximo de Participantes</label>
+                                                                        <div data-v-5aa16ff8="" class="b-numberinput field has-addons">
+                                                                            <p class="control">
+                                                                                <button type="button" class="button is-primary">
+                                                                                    <span class="icon">
+                                                                                        <i class="mdi mdi-minus mdi-24px"></i>
+                                                                                    </span>
+                                                                                </button>
+                                                                            </p>
+                                                                            <div class="control is-clearfix">
+                                                                                <input type="number" autocomplete="on" step="1" class="input">
+                                                                                <!---->
+                                                                                <!---->
+                                                                                <!---->
+                                                                            </div>
+                                                                            <p class="control">
+                                                                                <button type="button" class="button is-primary">
+                                                                                    <span class="icon">
+                                                                                        <i class="mdi mdi-plus mdi-24px"></i>
+                                                                                    </span>
+                                                                                </button>
+                                                                            </p>
+                                                                        </div>
+                                                                        <!---->
+                                                                    </div>
+                                                                </div>
+                                                                <div data-v-5aa16ff8="" class="column">
+                                                                    <div data-v-5aa16ff8="" class="field">
+                                                                        <label class="label">Horário de Fim</label>
+                                                                        <div data-v-5aa16ff8="" class="timepicker control">
+                                                                            <div class="dropdown is-mobile-modal">
+                                                                                <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                                                                                    <div class="control has-icons-left is-clearfix">
+                                                                                        <input type="text" autocomplete="off" placeholder="Até" class="input">
+                                                                                        <span class="icon is-left">
+                                                                                            <i class="mdi mdi-clock mdi-24px"></i>
+                                                                                        </span>
+                                                                                        <!---->
+                                                                                        <!---->
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div aria-hidden="true" class="background" style="display: none;"></div>
+                                                                                <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                                                                                    <div class="dropdown-content">
+                                                                                        <div tabindex="0" class="dropdown-item">
+                                                                                            <div class="field is-grouped-centered is-grouped">
+                                                                                                <!---->
+                                                                                                <div class="control">
+                                                                                                    <span class="select is-empty">
+                                                                                                        <select>
+                                                                                                            <option disabled="disabled" hidden="hidden" value="">
+                                                                                                                00
+                                                                                                            </option>
+                                                                                                            <option value="0">
+                                                                                                                00
+                                                                                                            </option>
+                                                                                                            <option value="1">
+                                                                                                                01
+                                                                                                            </option>
+                                                                                                            <option value="2">
+                                                                                                                02
+                                                                                                            </option>
+                                                                                                            <option value="3">
+                                                                                                                03
+                                                                                                            </option>
+                                                                                                            <option value="4">
+                                                                                                                04
+                                                                                                            </option>
+                                                                                                            <option value="5">
+                                                                                                                05
+                                                                                                            </option>
+                                                                                                            <option value="6">
+                                                                                                                06
+                                                                                                            </option>
+                                                                                                            <option value="7">
+                                                                                                                07
+                                                                                                            </option>
+                                                                                                            <option value="8">
+                                                                                                                08
+                                                                                                            </option>
+                                                                                                            <option value="9">
+                                                                                                                09
+                                                                                                            </option>
+                                                                                                            <option value="10">
+                                                                                                                10
+                                                                                                            </option>
+                                                                                                            <option value="11">
+                                                                                                                11
+                                                                                                            </option>
+                                                                                                            <option value="12">
+                                                                                                                12
+                                                                                                            </option>
+                                                                                                            <option value="13">
+                                                                                                                13
+                                                                                                            </option>
+                                                                                                            <option value="14">
+                                                                                                                14
+                                                                                                            </option>
+                                                                                                            <option value="15">
+                                                                                                                15
+                                                                                                            </option>
+                                                                                                            <option value="16">
+                                                                                                                16
+                                                                                                            </option>
+                                                                                                            <option value="17">
+                                                                                                                17
+                                                                                                            </option>
+                                                                                                            <option value="18">
+                                                                                                                18
+                                                                                                            </option>
+                                                                                                            <option value="19">
+                                                                                                                19
+                                                                                                            </option>
+                                                                                                            <option value="20">
+                                                                                                                20
+                                                                                                            </option>
+                                                                                                            <option value="21">
+                                                                                                                21
+                                                                                                            </option>
+                                                                                                            <option value="22">
+                                                                                                                22
+                                                                                                            </option>
+                                                                                                            <option value="23">
+                                                                                                                23
+                                                                                                            </option>
+                                                                                                        </select>
+                                                                                                    </span>
+                                                                                                    <!---->
+                                                                                                </div>
+                                                                                                <span class="control is-colon">:</span>
+                                                                                                <div class="control">
+                                                                                                    <span class="select is-empty">
+                                                                                                        <select>
+                                                                                                            <option disabled="disabled" hidden="hidden" value="">
+                                                                                                                00
+                                                                                                            </option>
+                                                                                                            <option value="0">
+                                                                                                                00
+                                                                                                            </option>
+                                                                                                            <option value="30">
+                                                                                                                30
+                                                                                                            </option>
+                                                                                                        </select>
+                                                                                                    </span>
+                                                                                                    <!---->
+                                                                                                </div>
+                                                                                                <!---->
+                                                                                                <!---->
+                                                                                                <!---->
+                                                                                            </div>
+                                                                                            <!---->
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!---->
+                                                                    </div>
+                                                                    <div data-v-5aa16ff8="" class="field has-numberinput has-numberinput-compact">
+                                                                        <label class="label">Colaboradores Requeridos</label>
+                                                                        <div data-v-5aa16ff8="" class="b-numberinput field has-addons">
+                                                                            <p class="control">
+                                                                                <button type="button" class="button is-primary">
+                                                                                    <span class="icon">
+                                                                                        <i class="mdi mdi-minus mdi-24px"></i>
+                                                                                    </span>
+                                                                                </button>
+                                                                            </p>
+                                                                            <div class="control is-clearfix">
+                                                                                <input type="number" autocomplete="on" step="1" class="input">
+                                                                                <!---->
+                                                                                <!---->
+                                                                                <!---->
+                                                                            </div>
+                                                                            <p class="control">
+                                                                                <button type="button" class="button is-primary">
+                                                                                    <span class="icon">
+                                                                                        <i class="mdi mdi-plus mdi-24px"></i>
+                                                                                    </span>
+                                                                                </button>
+                                                                            </p>
+                                                                        </div>
+                                                                        <!---->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div data-v-5aa16ff8="" class="column is-offset-1">
+                                                            <h1 data-v-5aa16ff8="" class="title is-6 has-text-centered">Requerimentos de Espaço</h1>
+                                                            <div data-v-5aa16ff8="" class="columns" style="margin-bottom: 0px;">
+                                                                <div data-v-5aa16ff8="" class="column">
+                                                                    <div data-v-5aa16ff8="" class="field">
+                                                                        <!---->
+                                                                        <label data-v-5aa16ff8="" class="b-checkbox checkbox">
+                                                                            <input type="checkbox" true-value="true" value="false">
+                                                                            <span class="check"></span>
+                                                                            <span class="control-label"> Sala </span>
+                                                                        </label>
+                                                                        <!---->
+                                                                    </div>
+                                                                    <div data-v-5aa16ff8="" class="field">
+                                                                        <!---->
+                                                                        <label data-v-5aa16ff8="" class="b-checkbox checkbox">
+                                                                            <input type="checkbox" true-value="true" value="false">
+                                                                            <span class="check"></span>
+                                                                            <span class="control-label"> Computadores </span>
+                                                                        </label>
+                                                                        <!---->
+                                                                    </div>
+                                                                    <div data-v-5aa16ff8="" class="field">
+                                                                        <!---->
+                                                                        <label data-v-5aa16ff8="" class="b-checkbox checkbox">
+                                                                            <input type="checkbox" true-value="true" value="false">
+                                                                            <span class="check"></span>
+                                                                            <span class="control-label"> Laboratório </span>
+                                                                        </label>
+                                                                        <!---->
+                                                                    </div>
+                                                                </div>
+                                                                <div data-v-5aa16ff8="" class="column">
+                                                                    <div data-v-5aa16ff8="" class="field">
+                                                                        <!---->
+                                                                        <label data-v-5aa16ff8="" class="b-checkbox checkbox">
+                                                                            <input type="checkbox" true-value="true" value="false">
+                                                                            <span class="check"></span>
+                                                                            <span class="control-label"> Anfiteatro </span>
+                                                                        </label>
+                                                                        <!---->
+                                                                    </div>
+                                                                    <div data-v-5aa16ff8="" class="field">
+                                                                        <!---->
+                                                                        <label data-v-5aa16ff8="" class="b-checkbox checkbox">
+                                                                            <input type="checkbox" true-value="true" value="false">
+                                                                            <span class="check"></span>
+                                                                            <span class="control-label"> Pavilhão </span>
+                                                                        </label>
+                                                                        <!---->
+                                                                    </div>
+                                                                    <div data-v-5aa16ff8="" class="field">
+                                                                        <!---->
+                                                                        <label data-v-5aa16ff8="" class="b-checkbox checkbox">
+                                                                            <input type="checkbox" true-value="true" value="false">
+                                                                            <span class="check"></span>
+                                                                            <span class="control-label"> Ar Livre </span>
+                                                                        </label>
+                                                                        <!---->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div data-v-5aa16ff8="" class="field">
+                                                                <!---->
+                                                                <div data-v-5aa16ff8="" class="control is-clearfix">
+                                                                    <input type="text" autocomplete="on" placeholder="Outros" class="input">
+                                                                    <!---->
+                                                                    <!---->
+                                                                    <!---->
+                                                                </div>
+                                                                <!---->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div data-v-5aa16ff8="" class="has-text-centered" style="margin-top: 2rem;">
+                                                        <button data-v-5aa16ff8="" type="button" class="button" style="margin-right: 1rem;">
+                                                            <!---->
+                                                            <span>Limpar</span>
+                                                            <!---->
+                                                        </button>
+                                                        <button data-v-5aa16ff8="" type="button" class="button is-success">
+                                                            <span class="icon is-small">
+                                                                <i class="mdi mdi-plus"></i>
+                                                            </span>
+                                                            <span>Adicionar Sessão</span>
+                                                            <!---->
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="step-item" style="display: none;">
+                                        <div>
+                                            <hr>
+                                            <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Resumo da atividade </h2>
+                                            <p>Dados da Atividade, Sessões propostas, etc...</p>
+                                            <br>
+                                            <p> A atividade submetida será avaliada pelo coordenador do departamento. </p>
+                                            <p>Será notificado aquando de atualizações referentes à mesma.</p>
+                                            <br>
+                                            <p>Selecione "Submeter Atividade" para concluir a proposta.</p>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </section>
+                                <div class="column is-8 is-offset-2">
+                                    <div class="level">
+                                        <div class="level-left">
+                                            <a href="/minhasatividades" class="button is-outlined" type="button">
+                                                <!---->
+                                                <span> Cancelar </span>
+                                                <!---->
+                                            </a>
+                                        </div>
+                                        <div class="level-right">
+                                            <button type="button" class="button is-large is-success is-outlined">
+                                                <!---->
+                                                <span> Próximo </span>
+                                                <span class="icon is-medium">
+                                                    <i class="mdi mdi-forward mdi-36px"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        <footer data-v-8716d23a="" class="footer">
-            <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
-            <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
-            <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
-        </footer>
+        </div>
     </div>
+    <footer class="footer">
+        <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
+        <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
+        <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
+    </footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+        $('#plus-btn').click(function(){
+    	    $('#maxPersons_input').val(parseInt($('#maxPersons_input').val()) + 1 );
+    	        });
+            $('#minus-btn').click(function(){
+    	    $('#maxPersons_input').val(parseInt($('#maxPersons_input').val()) - 1 );
+    	    if ($('#maxPersons_input').val() <= 0) {
+			    $('#maxPersons_input').val(0);
+		    }
+    	        });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+        $('#plus-btn2').click(function(){
+    	    $('#duracao_input').val(parseInt($('#duracao_input').val()) + 5 );
+    	        });
+            $('#minus-btn2').click(function(){
+    	    $('#duracao_input').val(parseInt($('#duracao_input').val()) - 5 );
+    	    if ($('#duracao_input').val() <= 0) {
+			    $('#duracao_input').val(0);
+		    }
+    	        });
+        });
+    </script>
+    <script>
+      function countChar(val) {
+        var len = val.value.length;
+        if (len > 300) {
+            val.value = val.value.substring(0, 300);
+        } else {
+          $('#charNum').text(300 - len).append(' caracteres restantes');
+        }
+      };
+    </script>
+    <script>
+        function openLocal(evt, localName) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          document.getElementById(localName).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
+        </script>
 </body>
 
 </html>

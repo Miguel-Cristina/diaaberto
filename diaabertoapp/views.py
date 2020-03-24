@@ -1,11 +1,11 @@
 from django.views.generic import ListView
 from django.shortcuts import render
 from django.db.models import Count
-from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica
+from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica, PublicoAlvo, Sala
 from .forms import CampusForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import json
 from django.http import HttpResponse
+
 
 # Create your views here.
 def index(request):
@@ -50,8 +50,6 @@ def minhasatividades(request):
         atividade_list = atividade_list.filter(tematicas=tematica_query)
         tematicas = tematicas.filter(id=tematica_query)
     #END filter_by_tematica
-
-
     #BEGIN filter_by_estado
     estado_query = request.GET.get('validada')
     if estado_query !='' and estado_query is not None:
@@ -86,13 +84,41 @@ def minhasatividades(request):
             unique_valida_obj.append(x)
             unique_valida_str.append(x.validada)
     #END tipo_utilizador and estados filter filter 
-    #
-        
+
     #'tiposquery':tipo_query
-    return render(request, 'diaabertoapp/minhasatividades.html', {'atividades':atividades, 'campuss': campus_arr, 'campusquery':campus_query ,'faculdades':faculdades,'faculdadequery':faculdade_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'estados':unique_valida_obj, 'nomesquery':nome_query, 'tiposatividades':unique_tipo_obj, 'estadosquery':estado_query})
+    return render(request, 'diaabertoapp/minhasatividades.html', {'atividades':atividades,'campuss': campus_arr, 'campusquery':campus_query ,'faculdades':faculdades,'faculdadequery':faculdade_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'estados':unique_valida_obj, 'nomesquery':nome_query, 'tiposatividades':unique_tipo_obj, 'estadosquery':estado_query})
 
 def proporatividade(request):
-    return render(request, 'diaabertoapp/proporatividade.html', {})
+    def Sort_Tuple(tup):  
+  
+        # reverse = None (Sorts in Ascending order)  
+        # key is set to sort using second element of  
+        # sublist lambda has been used  
+        return(sorted(tup, key = lambda x: x[1]))
+    tipos_atividade = {('VI', 'Visitas Instalações'),
+        ('VL' , 'Visitas Laboratórios'),
+        ('AE' , 'Atividades Experimentais'),
+	    ('AT' ,'Atividades Tecnológicas'),
+	    ('FC' ,'Feira das Ciências'),
+	    ('PL' ,'Palestras'),
+	    ('CF' ,'Conferências'),
+	    ('SM' ,'Seminários'),
+	    ('TT' ,'Tertúlias'),
+	    ('OE' ,'Outras Atividades (Ensino)'),
+	    ('OC' ,'Outras Atividades (Culturais)'),
+	    ('OD' ,'Outras Atividades (Desportivas)'),
+	    ('EX' ,'Exposições'),
+	    ('PS' ,'Passeios'),
+	    ('OU' ,'Outras Atividades'),}
+    temas_atividade = Tematica.objects.all()
+    publico_alvo = PublicoAlvo.objects.all()
+    tipos_ordered = Sort_Tuple(tipos_atividade)
+    campi = Campus.objects.all()
+    edificios = Edificio.objects.all()
+    salas = Sala.objects.all()
+    faculdades = Faculdade.objects.all()
+    departamentos = Departamento.objects.all()
+    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades})
 
 
 def edificios(request):
