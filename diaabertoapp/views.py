@@ -1,10 +1,11 @@
 from django.views.generic import ListView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Count
 from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica, PublicoAlvo, Sala
-from .forms import CampusForm
+from .forms import CampusForm, AtividadeForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 
 
 # Create your views here.
@@ -118,7 +119,53 @@ def proporatividade(request):
     salas = Sala.objects.all()
     faculdades = Faculdade.objects.all()
     departamentos = Departamento.objects.all()
-    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades})
+
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = AtividadeForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            #nome = form.cleaned_data['nome']
+            #tipo_atividade = form.cleaned_data['tipo_atividade']
+            #descricao = form.cleaned_data['descricao']
+            #maximo_participantes = form.cleaned_data['maximo_participantes']
+            #duracao_atividade = form.cleaned_data['duracao_atividade']
+            #tematicas = form.cleaned_data['tematicas']
+            #publico_alvo = form.cleaned_data['publico_alvo']
+            #faculdade = form.cleaned_data['faculdade']
+            #departamento = form.cleaned_data['departamento']
+            #tipo_local = form.cleaned_data['tipo_local']
+            #cd = form.cleaned_data
+            #atividade = Atividade(cd)
+            #atividade.save()
+            form.save()
+
+            return HttpResponseRedirect('/minhasatividades/')
+        print(form.errors)
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = AtividadeForm()
+
+    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':form})
+
+def get_atividade(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = CreateAtividade(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/thanks/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = CreateAtividade()
+
+    return render(request, 'proporatividade.html', {'form': form})
 
 
 def edificios(request):

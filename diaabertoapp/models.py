@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from django.forms import ModelForm
 # Create your models here.
 
 
@@ -217,3 +218,7 @@ class MaterialQuantidade(models.Model):
 #        else:
 #            return 'Por atribuir'
 
+class AtividadeForm(ModelForm):
+     class Meta:
+         model = Atividade
+         fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'faculdade', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
