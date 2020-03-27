@@ -436,6 +436,7 @@
                                         </div>
                                             
                                     </div>
+                                    {{ form2 }}
                                     {{ form.data }}
                                     {{ form.validada }}
                                 </section>
@@ -600,28 +601,6 @@
 
         });
     </script>
-    <script>
-            $(function () {
-
-              // Oculta as opções do segundo select:
-              $("#salaSearch option").hide();
-  
-              // Observa o evento change do primeiro select:
-              $("#edificioSearch").on("change", function () {
-  
-                // Recupera o valor selecionado:
-                let course = $("#edificioSearch").val();
-                  $('#salaSearch option').prop('selected', function () { return this.defaultSelected; });
-                // Oculta as opções atuais:
-                $("#salaSearch option").hide();
-    
-                // Exibe as opções conforme a seleção:
-                $("#salaSearch option[data-course="+ course +"]").show();
-  
-              });
-
-            });
-        </script>
 
 </body>
 

@@ -2,7 +2,7 @@ from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.db.models import Count
 from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica, PublicoAlvo, Sala
-from .forms import CampusForm, AtividadeForm
+from .forms import CampusForm, AtividadeForm, MaterialForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -120,9 +120,11 @@ def proporatividade(request):
     faculdades = Faculdade.objects.all()
     departamentos = Departamento.objects.all()
 
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = AtividadeForm(request.POST)
+        form2 = MaterialForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             #nome = form.cleaned_data['nome']
@@ -146,8 +148,9 @@ def proporatividade(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = AtividadeForm()
+        form2 = MaterialForm()
 
-    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':form})
+    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':form, 'form2':form2})
 
 def get_atividade(request):
     # if this is a POST request we need to process the form data

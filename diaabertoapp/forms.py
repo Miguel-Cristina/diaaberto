@@ -1,5 +1,5 @@
 from django import forms
-from .models import Atividade, Campus, Edificio, Sala, Tematica, PublicoAlvo, Faculdade, Departamento
+from .models import Atividade, Campus, Edificio, Sala, Tematica, PublicoAlvo, Faculdade, Departamento, MaterialQuantidade
 import datetime
 
 
@@ -56,6 +56,12 @@ class AtividadeForm(forms.ModelForm):
     #sala = forms.ChoiceField(required=False,label="",choices=( (x.id, x.identificacao, x.edificio.id) for x in Sala.objects.all() ))
     data = forms.DateTimeField(initial=datetime.datetime.now, widget=forms.HiddenInput())
     validada = forms.CharField(initial='PD', widget=forms.HiddenInput())
+    
     class Meta:
         model = Atividade
         fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'faculdade', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
+
+class MaterialForm(forms.ModelForm):
+    class Meta:
+        model = MaterialQuantidade
+        fields =  ('material', 'quantidade',)
