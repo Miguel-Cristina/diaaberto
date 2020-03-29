@@ -562,17 +562,36 @@
                                                         
                                                         <div class="content">
     <div style="font-size: 15px;">
-        <p><strong>Nome: </strong> {{ Atividade.nome }} </p>
-        <p><strong>Descrição:</strong> {{ Atividade.descricao }} </p>
-        <p><strong>Criador:</strong> por configurar </p>
-        <p><strong>Data de submissão:</strong> {{ Atividade.data }} </p>
-        <p><strong>Estado de submissão:</strong> {{ Atividade.get_validada_display }} </p>
-        <p><strong>Tipo de Atividade:</strong> {{ Atividade.get_tipo_atividade_display }} </p>
-        <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
-        <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
-        <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
-        <p><strong>Faculdade:</strong> {{ Atividade.faculdade }} </p>
-        <p><strong>Departamento:</strong> {{ Atividade.departamento }} </p>
+        <div class="columns">
+            <div class="column">
+                        <p><strong>Nome: </strong> {{ Atividade.nome }} </p>
+                        <p><strong>Descrição:</strong> {{ Atividade.descricao }} </p>
+                        <p><strong>Tipo de Atividade:</strong> {{ Atividade.get_tipo_atividade_display }} </p>
+                        <p><strong>Temáticas:</strong> 
+                        {% for tema in Atividade.tematicas.all %}
+                            {{ tema }};           
+                        {% endfor %}
+                        </p>
+                        <p><strong>Público-alvo:</strong>
+                        {% for alvo in Atividade.publico_alvo.all %}
+                            {{ alvo }};           
+                        {% endfor %}
+                        </p>
+            </div>
+            <div class="column">
+                        <p><strong>Faculdade:</strong> {{ Atividade.faculdade }} </p>
+                        <p><strong>Departamento:</strong> {{ Atividade.departamento }} </p>
+                        <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
+                        <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                        <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
+            </div>
+            <div class="column">
+                        <p><strong>Material:</strong> </p>
+                        <p><strong>Responsável:</strong> por configurar </p>
+                        <p><strong>Data de submissão:</strong> {{ Atividade.data }} </p>
+                        <p><strong>Estado de submissão:</strong> {{ Atividade.get_validada_display }} </p>
+            </div>
+        </div>
         <p><strong>Sessões:</strong></p>
         <div class="b-table">
             <!---->

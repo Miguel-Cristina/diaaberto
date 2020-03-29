@@ -8,11 +8,13 @@
     <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
     <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
+    <script src="{% static 'diaabertoapp/dist/bulma-steps.js' %}"></script>
     <meta charset="utf-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
     <title>Dia Aberto</title>
+    {{ form.media.css }}
     <style>
         body,
         html {
@@ -64,9 +66,19 @@
             margin-bottom:0px
             /*style="margin-bottom:0px"*/
         }
+        element.style {
+        }
+        .b-steps .steps .step-items .step-item.is-completed .step-marker {
+            background-color: #23d160;
+            border-color: #23d160;
+            color: white;
+        }
+        .b-steps .steps .step-items .step-item:after, .b-steps .steps .step-items .step-item:before {
+            background: -webkit-gradient(linear,right top,left top,color-stop(50%,#23d160),color-stop(50%,#23d160));
+        }
 
     </style>
-
+    
 </head>
 
 <body>
@@ -180,7 +192,7 @@
                             <div class="b-steps">
                                 <nav class="steps is-success">
                                     <ul class="step-items">
-                                        <li class="step-item is-success is-active">
+                                        <li class="step-item link is-completed is-active">
                                             <a class="step-link">
                                                 <div class="step-marker">
                                                     <span class="icon">
@@ -192,7 +204,31 @@
                                                 </div>
                                             </a>
                                         </li>
-                                        <li class="step-item is-success">
+                                        <li class="step-item link is-success is-active">
+                                            <a class="step-link">
+                                                <div class="step-marker">
+                                                    <span class="icon">
+                                                        <i class="mdi mdi-home mdi-24px"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="step-details">
+                                                    <span class="step-title">Espaço</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="step-item link is-success">
+                                            <a class="step-link">
+                                                <div class="step-marker">
+                                                    <span class="icon">
+                                                        <i class="mdi mdi-laptop-mac mdi-24px"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="step-details">
+                                                    <span class="step-title">Materiais</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="step-item link is-success">
                                             <a class="step-link">
                                                 <div class="step-marker">
                                                     <span class="icon">
@@ -204,7 +240,7 @@
                                                 </div>
                                             </a>
                                         </li>
-                                        <li class="step-item is-success">
+                                        <li class="step-item link is-success">
                                             <a class="step-link">
                                                 <div class="step-marker">
                                                     <span class="icon">
@@ -219,8 +255,7 @@
                                     </ul>
                                 </nav>
                                 <section class="step-content">
-                                    <div class="step-item" style="">
-  <!-------------------------------><form method="POST" action=".">
+                                    <form method="POST" action="." id="atividadeForm">
                                         {% csrf_token %}
                                         {% if form.errors %}
                                             {% for field in form %}
@@ -236,233 +271,275 @@
                                                 </div>
                                             {% endfor %}
                                         {% endif %}
-                                        <div style="padding: 1rem 2vw 0px;">
-                                            <hr>
-                                            <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação de atividade </h2>
-                                            <div class="columns">
-                                                <div class="column">
-                                                    <div class="field">
-                                                        <label class="label">Nome da atividade</label>
-                                                        <div class="control is-clearfix">
-                                                            <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
-                                                            {{ form.nome }} {{ form.nome.errors }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="column">
-                                                    <div class="field">
-                                                        <label class="label">Tipo de atividade</label>
-                                                        <div class="control is-expanded ">
-                                                            <span class="select is-fullwidth">
-                                                                {{ form.tipo_atividade }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="field">
-                                                <label class="label">Descrição da atividade</label>
-                                                <div class="control is-clearfix">
-                                                    <!--<textarea maxlength="300" class="textarea" id="descricaoField" onkeyup="countChar(this)" placeholder="ex: Descrição do Exemplo de Atividade" name="descricao_atividade" required></textarea>-->
-                                                    {{ form.descricao }}
-                                                    <p class="help counter" id="charNum"></p>
-                                                </div>
-                                                <!---->
-                                            </div>
-                                            <div class="columns">
-                                                <div class="column">
-                                                    <div class="columns">
-                                                        <div class="column">
-                                                            <div class="field">
-                                                                <label class="label">Número máximo de participantes</label>
-                                                                <div class="b-numberinput field has-addons">
-                                                                    <p class="control">
-                                                                        <button type="button" id="minus-btn" class="button is-primary">
-                                                                            <span class="icon">
-                                                                                <i class="mdi mdi-minus mdi-24px"></i>
-                                                                            </span>
-                                                                        </button>
-                                                                    </p>
-                                                                    <div class="control is-clearfix">
-                                                                        <!--<input type="number" step="1" id="maxPersons_input" class="input" placeholder="0" value="" name="numero_participantes_atividade" required>-->
-                                                                        {{ form.limite_participantes }}
-                                                                    </div>
-                                                                    <p class="control">
-                                                                        <button type="button" id="plus-btn" class="button is-primary">
-                                                                            <span class="icon">
-                                                                                <i class="mdi mdi-plus mdi-24px"></i>
-                                                                            </span>
-                                                                        </button>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="column">
-                                                            <div class="field">
-                                                                <label class="label">Duração (em minutos) da atividade</label>
-                                                                <div class="b-numberinput field has-addons">
-                                                                    <p class="control">
-                                                                        <button type="button" id="minus-btn2" class="button is-primary">
-                                                                            <span class="icon">
-                                                                                <i class="mdi mdi-minus mdi-24px"></i>
-                                                                            </span>
-                                                                        </button>
-                                                                    </p>
-                                                                    <div class="control is-clearfix">
-                                                                        <!--<input type="number" step="5" id="duracao_input" class="input" placeholder="0" value="" name="duracao_atividade" required>-->
-                                                                        {{ form.duracao }}
-                                                                    </div>
-                                                                    <p class="control">
-                                                                        <button type="button" id="plus-btn2" class="button is-primary">
-                                                                            <span class="icon">
-                                                                                <i class="mdi mdi-plus mdi-24px"></i>
-                                                                            </span>
-                                                                        </button>
-                                                                    </p>
-                                                                </div>
-                                                                <!--<p class="help">Em minutos</p>-->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="columns">
-                                                        <div class="column">
-                                                            <div class="field">
-                                                                <label class="label">Tema(s) da atividade</label>
-                                                                <div class="control is-expanded">
-                                                                        <div class="select is-multiple is-fullwidth is-expanded">
-                                                                          {{ form.tematicas }}
-                                                                        </div>
-                                                                </div>
-                                                                <p class="help">Clique CTRL + Clique para selecionar múltiplos temas</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="column">
-                                                            <div class="field">
-                                                                <label class="label">Público(s)-alvo(s)</label>
-                                                                <div class="control is-expanded">
-                                                                        <div class="select is-multiple is-fullwidth is-expanded">
-                                                                            {{ form.publico_alvo }}
-                                                                        </div>
-                                                                </div>
-                                                                <p class="help">Clique CTRL + Clique para selecionar múltiplos públicos-alvos</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="column">
-                                                    <div class="columns">
-                                                        <div class="column">
-                                                            <div class="field">
-                                                                <label class="label">Faculdade</label>
-                                                                <div class="control">
-                                                                    <span class="select is-fullwidth">
-                                                                        {{ form.faculdade }}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="column">
-                                                            <div class="field">
-                                                                <label class="label">Departamento</label>
-                                                                <div class="control">
-                                                                    <span class="select is-fullwidth">
-                                                                        {{ form.departamento }}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="tabs is-toggle is-fullwidth tab" >
-                                                        <ul>
-                                                            <li>
-                                                              <a class="tablinks active" onclick="openLocal(event, 'tipoLocal')">
-                                                                <span class="icon is-small "><i class="mdi mdi-shuffle-variant" aria-hidden="true"></i></span>
-                                                                <span>Qualquer sala com as minhas especificações</span>
-                                                              </a>
-                                                            </li>
-                                                            <li>
-                                                              <a class="tablinks" onclick="openLocal(event, 'escolherLocal')">
-                                                                <span class="icon is-small tablinks" ><i class="mdi mdi-crosshairs-gps" aria-hidden="true"></i></span>
-                                                                <span>Tenho preferência numa sala especifica</span>
-                                                              </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div id="tipoLocal" class="tabcontent" style="display:block">
+                                        <div class="step-item stepcontent" style="">
+                                            <div style="padding: 1rem 2vw 0px;">
+                                                <hr>
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação de atividade </h2>
+                                                <div class="columns">
+                                                    <div class="column">
                                                         <div class="field">
-                                                            <label class="label">Tipo de local a requisitar</label>
+                                                            <label class="label">Nome da atividade</label>
                                                             <div class="control is-clearfix">
-                                                                <!--<input type="text" id="tipoLocalinput" class="input tipoLocalInput" placeholder="ex: Sala grande/Laboratório" name="tipo_local_atividade" required>-->
-                                                                {{ form.tipo_local }}
+                                                                <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
+                                                                {{ form.nome }} {{ form.nome.errors }}
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div id="escolherLocal" class="tabcontent">
+                                                    <div class="column">
                                                         <div class="field">
-                                                            <label class="label">Campus</label>
+                                                            <label class="label">Tipo de atividade</label>
                                                             <div class="control is-expanded ">
                                                                 <span class="select is-fullwidth">
-                                                                    {{ form.campus }}
+                                                                    {{ form.tipo_atividade }}
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <div class="columns">
-                                                            <div class="column">
-                                                                <div class="field">
-                                                                    <label class="label">Edificio</label>
-                                                                    <div class="control is-expanded ">
-                                                                        <span class="select is-fullwidth">
-                                                                            {{ form.edificio }}
+                                                    </div>
+                                                </div>
+                                                <div class="field">
+                                                    <label class="label">Descrição da atividade</label>
+                                                    <div class="control is-clearfix">
+                                                        <!--<textarea maxlength="300" class="textarea" id="descricaoField" onkeyup="countChar(this)" placeholder="ex: Descrição do Exemplo de Atividade" name="descricao_atividade" required></textarea>-->
+                                                        {{ form.descricao }}
+                                                        <p class="help counter" id="charNum"></p>
+                                                    </div>
+                                                    <!---->
+                                                </div> 
+                                                <div class="columns">
+                                                    <div class="column">
+                                                        <div class="field">
+                                                            <label class="label">Número máximo de participantes</label>
+                                                            <div class="b-numberinput field has-addons">
+                                                                <p class="control">
+                                                                    <button type="button" id="minus-btn" class="button is-primary">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-minus mdi-24px"></i>
                                                                         </span>
-                                                                    </div>
+                                                                    </button>
+                                                                </p>
+                                                                <div class="control is-clearfix">
+                                                                    <!--<input type="number" step="1" id="maxPersons_input" class="input" placeholder="0" value="" name="numero_participantes_atividade" required>-->
+                                                                    {{ form.limite_participantes }}
                                                                 </div>
+                                                                <p class="control">
+                                                                    <button type="button" id="plus-btn" class="button is-primary">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-plus mdi-24px"></i>
+                                                                        </span>
+                                                                    </button>
+                                                                </p>
                                                             </div>
-                                                            <div class="column">
-                                                                <div class="field">
-                                                                    <label class="label">Sala</label>
-                                                                    <div class="control is-expanded ">
-                                                                        <span class="select is-fullwidth">
-                                                                            {{ form.sala }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="field">
+                                                            <label class="label">Duração (em minutos) da atividade</label>
+                                                            <div class="b-numberinput field has-addons">
+                                                                <p class="control">
+                                                                    <button type="button" id="minus-btn2" class="button is-primary">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-minus mdi-24px"></i>
                                                                         </span>
-                                                                    </div>
+                                                                    </button>
+                                                                </p>
+                                                                <div class="control is-clearfix">
+                                                                    <!--<input type="number" step="5" id="duracao_input" class="input" placeholder="0" value="" name="duracao_atividade" required>-->
+                                                                    {{ form.duracao }}
                                                                 </div>
+                                                                <p class="control">
+                                                                    <button type="button" id="plus-btn2" class="button is-primary">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-plus mdi-24px"></i>
+                                                                        </span>
+                                                                    </button>
+                                                                </p>
+                                                            </div>
+                                                            <!--<p class="help">Em minutos</p>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="columns">
+                                                    <div class="column">
+                                                        <div class="field">
+                                                            <label class="label">Tema(s) da atividade</label>
+                                                            <div class="control is-expanded">
+                                                                    <div class="select is-multiple is-fullwidth is-expanded">
+                                                                        {{ form.tematicas }}
+                                                                    </div>
+                                                            </div>
+                                                            <p class="help">Clique CTRL + Clique para selecionar múltiplos temas</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="field">
+                                                            <label class="label">Público(s)-alvo(s)</label>
+                                                            <div class="control is-expanded">
+                                                                    <div class="select is-multiple is-fullwidth is-expanded">
+                                                                        {{ form.publico_alvo }}
+                                                                    </div>
+                                                            </div>
+                                                            <p class="help">Clique CTRL + Clique para selecionar múltiplos públicos-alvos</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{ form.data }}
+                                            {{ form.validada }}
+                                        </div>
+                                        <div class="step-item stepcontent" style="display:none">
+                                            <div style="padding: 1rem 2vw 0px;">
+                                                <hr>
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação do espaço </h2>
+                                                <div class="tabs is-toggle is-fullwidth tab" >
+                                                    <ul>
+                                                        <li>
+                                                            <a class="tabdlinks active" onclick="openDep(event, 'meuDepartamento')">
+                                                            <span class="icon is-small "><i class="mdi mdi-account-check" aria-hidden="true"></i></span>
+                                                            <span>Esta atividade pertence ao meu departamento</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="tabdlinks" onclick="openDep(event, 'escolherDepartamento')">
+                                                            <span class="icon is-small tablinks" ><i class="mdi mdi-tooltip-edit" aria-hidden="true"></i></span>
+                                                            <span>Esta atividade pertence a outro departamento</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="columns">
+                                                    <div class="column">
+                                                        <div class="field">
+                                                            <label class="label">Faculdade</label>
+                                                            <div class="control is-fullwidth">
+                                                                    {{ form.faculdade }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="field">
+                                                            <label class="label">Departamento</label>
+                                                            <div class="control is-fullwidth">
+                                                                    {{ form.departamento }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tabs is-toggle is-fullwidth tab" >
+                                                    <ul>
+                                                        <li>
+                                                            <a class="tablinks active" onclick="openLocal(event,'tipoLocal')">
+                                                            <span class="icon is-small "><i class="mdi mdi-shuffle-variant" aria-hidden="true"></i></span>
+                                                            <span>Qualquer sala com as minhas especificações</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="tablinks" onclick="openLocal(event, 'escolherLocal')">
+                                                            <span class="icon is-small tablinks" ><i class="mdi mdi-crosshairs-gps" aria-hidden="true"></i></span>
+                                                            <span>Tenho preferência numa sala especifica</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div id="tipoLocal" class="tabcontent" style="display:block">
+                                                    <div class="field">
+                                                        <label class="label">Tipo de local a requisitar</label>
+                                                        <div class="control is-clearfix">
+                                                            <!--<input type="text" id="tipoLocalinput" class="input tipoLocalInput" placeholder="ex: Sala grande/Laboratório" name="tipo_local_atividade" required>-->
+                                                            {{ form.tipo_local }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="escolherLocal" class="tabcontent">
+                                                    <div class="field">
+                                                        <label class="label">Campus</label>
+                                                        <div class="control is-expanded ">
+                                                                {{ form.campus }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="field">
+                                                        <label class="label">Edificio</label>
+                                                        <div class="control is-expanded ">
+                                                                {{ form.edificio }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="field">
+                                                        <label class="label">Sala</label>
+                                                        <div class="control is-expanded ">
+                                                                {{ form.sala }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="step-item stepcontent" style="display:none">
+                                            <div style="padding: 1rem 2vw 0px;">
+                                                <hr>
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação do material </h2>
+                                                <div class="columns">
+                                                    <div class="column">
+                                                        <div class="field">
+                                                            <label class="label">Nome da atividade</label>
+                                                            <div class="control is-clearfix">
+                                                                <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
+                                                                {{ form2 }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="field">
+                                                            <label class="label">Tipo de atividade</label>
+                                                            <div class="control is-expanded ">
+                                                                <span class="select is-fullwidth">
+                                                                    
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr>
                                         </div>
-                                            
-                                    </div>
-                                    {{ form2 }}
-                                    {{ form.data }}
-                                    {{ form.validada }}
+                                        <hr/>
+                                        <div class="column is-8 is-offset-2">
+                                            <div class="level">
+                                                <div class="level-left">
+                                                    <a href="/minhasatividades" class="button is-danger is-outlined" type="button">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-close mdi-24px"></i>
+                                                        </span>
+                                                        <span> Cancelar </span>
+                                                    </a>
+                                                </div>
+                                                <div class="level-right steps-action">
+                                                    <a href="#" data-nav="previous" class="button is-info is-outlined" id="prevBtn" onclick="nextPrev(-1)">
+                                                        <!---->
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-arrow-left mdi-24px"></i>
+                                                        </span>
+                                                        <span> Anterior </span>
+                                                    </a>
+                                                </div>
+                                                <div class="level-right steps-action">
+                                                    <a href="#" data-nav="next" type="submit" class="button is-success is-outlined" id="nextBtn" onclick="nextPrev(1)">
+                                                        <!---->
+                                                        <span> Próximo </span>
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-arrow-right mdi-24px"></i>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="level-right steps-action">
+                                                    <button href="#" type="submit" class="button is-success is-outlined">
+                                                        <!---->
+                                                        <span> Submeter </span>
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-check mdi-24px"></i>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </section>
-                                <div class="column is-8 is-offset-2">
-                                    <div class="level">
-                                        <div class="level-left">
-                                            <a href="/minhasatividades" class="button is-danger is-outlined" type="button">
-                                                <span class="icon is-small">
-                                                    <i class="mdi mdi-close mdi-24px"></i>
-                                                </span>
-                                                <span> Cancelar </span>
-                                                
-                                            </a>
-                                        </div>
-                                        <div class="level-right steps-action">
-                                            <button href="#" data-nav="previous" type="submit" class="button is-success is-outlined">
-                                                <!---->
-                                                <span> Próximo </span>
-                                                <span class="icon is-small">
-                                                    <i class="mdi mdi-arrow-right mdi-24px"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                        </form>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -550,58 +627,112 @@
             }
             //document.getElementById(inputLocalName).required = true;
         }
-        </script>
-    <script>
-        /*$(function () {
-
-          // Oculta as opções do segundo select:
-
-            $("#departamentoSearch option").hide();
-            let cours= $("#faculdadeSearch").val();
-              $('#departamentoSearch option').prop('selected', function () { return this.defaultSelected; });
-            // Oculta as opções atuais:
-            $("#departamentoSearch option").hide();
-            // Exibe as opções conforme a seleção:
-            $("#departamentoSearch option[data-course="+ cours +"]").show();
-
-          // Observa o evento change do primeiro select:
-          $("#faculdadeSearch").on("change", function () {
-  
-            // Recupera o valor selecionado:
-            let course = $("#faculdadeSearch").val();
-              $('#departamentoSearch option').prop('selected', function () { return this.defaultSelected; });
-            // Oculta as opções atuais:
-            $("#departamentoSearch option").hide();
-            // Exibe as opções conforme a seleção:
-            $("#departamentoSearch option[data-course="+ course +"]").show();
-  
-          });
-
-        });*/
     </script>
     <script>
-        $(function () {
+        function openDep(evt, localName) {
+            var i,g,h,j, tabdcontent, tabdlinks, changertabsinputs;
+            tabdcontent = document.getElementsByClassName("tabdcontent");
+            for (i = 0; i < tabdcontent.length; i++)
+            {
+                tabdcontent[i].style.display = "none";
+            }
 
-          // Oculta as opções do segundo select:
-          $("#edificioSearch option").hide();
-  
-          // Observa o evento change do primeiro select:
-          $("#campusSearch").on("change", function () {
-  
-            // Recupera o valor selecionado:
-            let course = $("#campusSearch").val();
-              $('#edificioSearch option').prop('selected', function () { return this.defaultSelected; });
-            // Oculta as opções atuais:
-            $("#edificioSearch option").hide();
-    
-            // Exibe as opções conforme a seleção:
-            $("#edificioSearch option[data-course="+ course +"]").show();
-  
-          });
-
-        });
+            tabdlinks = document.getElementsByClassName("tabdlinks");
+            for (i = 0; i < tabdlinks.length; i++) {
+                tabdlinks[i].className = tabdlinks[i].className.replace(" active", "");
+            }
+            document.getElementById(localName).style.display = "block";
+            evt.currentTarget.className += " active";
+            var inputLocalName = localName.concat('Input');
+            //document.getElementById(inputLocalName).required = true;
+        }
     </script>
+    <script>
+        var currentTab = 0; // Current tab is set to be the first tab (0)
+        showTab(currentTab); // Display the current tab
 
+        function showTab(n) {
+              // This function will display the specified tab of the form ...
+              var x = document.getElementsByClassName("stepcontent");
+              x[n].style.display = "block";
+              // ... and fix the Previous/Next buttons:
+              if (n == 0) {
+                document.getElementById("prevBtn").style.display = "none";
+              } else {
+                document.getElementById("prevBtn").style.display = "";
+              }
+              if (n == (x.length - 1)) {
+                document.getElementById("nextBtn").innerHTML = "Submeter"; //display:block;
+              } else {
+                document.getElementById("nextBtn").innerHTML = '<span> Próximo </span><span class="icon is-small"><i class="mdi mdi-arrow-right mdi-24px"></i></span>';
+              }
+              // ... and run a function that displays the correct step indicator:
+              fixStepIndicator(n)
+        }
+        function nextPrev(n) {
+              // This function will figure out which tab to display
+              var x = document.getElementsByClassName("stepcontent");
+              // Exit the function if any field in the current tab is invalid:
+              //if (n == 1 && !validateForm()) return false;
+              // Hide the current tab:
+              x[currentTab].style.display = "none";
+              // Increase or decrease the current tab by 1:
+              currentTab = currentTab + n;
+              // if you have reached the end of the form... :
+              if (currentTab >= x.length) {
+                //...the form gets submitted:
+                //document.getElementById("atividadeForm").submit();
+                return false;
+              }
+              // Otherwise, display the correct tab:
+              showTab(currentTab);
+            }
+        function validateForm()
+        {
+              // This function deals with validation of the form fields
+              //var x, y, i, valid = true;
+              //x = document.getElementsByClassName("stepcontent");
+              //y = x[currentTab].getElementsByTagName("input");
+              // A loop that checks every input field in the current tab:
+              //for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                //if (y[i].value == "") {
+                  // add an "invalid" class to the field:
+                  //y[i].className += " invalid";
+                  // and set the current valid status to false:
+                  //valid = true;
+               // }
+              //}
+              // If the valid status is true, mark the step as finished and valid:
+            //if (valid) {
+                document.getElementsByClassName("link")[currentTab].className.replace("is-success", "");
+                document.getElementsByClassName("link")[currentTab].className.replace("is-active","");
+                document.getElementsByClassName("link")[currentTab].className += " is-completed ";
+              //}
+              return true; // return the valid status
+        }
+        function fixStepIndicator(n)
+        {
+              // This function removes the "active" class of all steps...
+            var i, x = document.getElementsByClassName("link");
+            for (i = 0; i < x.length; i++)
+            {
+                if (i < n) {
+                    x[i].className = x[i].className.replace("is-success", "");
+                    x[i].className = x[i].className.replace("is-active", "");
+                    x[i].className = x[i].className += " is-completed ";
+                }
+                else
+                {
+                    x[i].className = x[i].className.replace("is-active", ""); 
+                }
+                           
+            }
+             //... and adds the "active" class to the current step:
+             x[n].className += " is-active";
+        }   
+    </script>
+    {{ form.media.js }}
 </body>
 
 </html>
