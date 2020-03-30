@@ -3,6 +3,7 @@ from .models import Atividade, Campus, Edificio, Sala, Tematica, PublicoAlvo, Fa
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
+from django.forms.models import inlineformset_factory
 
 class CampusForm(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100)
@@ -18,32 +19,17 @@ class SalaForm(forms.ModelForm):
         model = Sala
 
         fields = ('campus', 'edificio', 'sala')
+class MaterialQuantidadeForm(forms.ModelForm):
+    material = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Material a requisitar..."}))
+    quantidade = forms.IntegerField(min_value=1, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"quantidade_material"}))
+    class Meta:
+        model = MaterialQuantidade
+        exclude =  ('atividade',)
 
 class AtividadeForm(forms.ModelForm):
 
-    TIPOS_ATIVIDADES = {
-        ('Selecione o tipo de atividade...',
-         (
-        ('VI', 'Visitas Instalações'),
-        ('VL' , 'Visitas Laboratórios'),
-        ('AE' , 'Atividades Experimentais'),
-	    ('AT' ,'Atividades Tecnológicas'),
-	    ('FC' ,'Feira das Ciências'),
-	    ('PL' ,'Palestras'),
-	    ('CF' ,'Conferências'),
-	    ('SM' ,'Seminários'),
-	    ('TT' ,'Tertúlias'),
-	    ('OE' ,'Outras Atividades (Ensino)'),
-	    ('OC' ,'Outras Atividades (Culturais)'),
-	    ('OD' ,'Outras Atividades (Desportivas)'),
-	    ('EX' ,'Exposições'),
-	    ('PS' ,'Passeios'),
-	    ('OU' ,'Outras Atividades'),
-        )
-         )}   
 
     nome = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Ex: Nome da atividade"}))
-    tipo_atividade = forms.ChoiceField(label="",choices=TIPOS_ATIVIDADES, widget=forms.Select(attrs={'id': "tipoSearch", 'placeholder': "Escolha o tipo de atividade..."}))
     descricao = forms.CharField(label="", max_length=300, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea", 'id':"descricaoField",'onkeyup':"countChar(this)",'placeholder': "Ex: Descrição da atividade"}))
     limite_participantes = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'id':"maxPersons_input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_participantes_atividade"}))
     duracao = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'id':"duracao_input",'step':"5", 'type':"number",'placeholder':"0",'name':"duracao_atividade"}))
@@ -53,18 +39,21 @@ class AtividadeForm(forms.ModelForm):
     data = forms.DateTimeField(initial=datetime.datetime.now, widget=forms.HiddenInput())
     validada = forms.CharField(initial='PD', widget=forms.HiddenInput()) 
     faculdade = forms.ModelChoiceField(initial='2',queryset=Faculdade.objects.all(), label="",widget=ModelSelect2Widget(model=Faculdade,search_fields=['nome__icontains'],attrs={'id':"meuDepartamento",'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione a faculdade..."})) 
-    departamento = forms.ModelChoiceField(initial='2', queryset=Departamento.objects.all(), label="",widget=ModelSelect2Widget(model=Departamento,search_fields=['nome__icontains'],dependent_fields={'faculdade':'faculdade'},max_results=50,attrs={'id':"escolherDepartamento",'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o departamento..."})) #'disabled':"true",
+    departamento = forms.ModelChoiceField(initial='1', queryset=Departamento.objects.all(), label="",widget=ModelSelect2Widget(model=Departamento,search_fields=['nome__icontains'],dependent_fields={'faculdade':'faculdade'},max_results=50,attrs={'id':"escolherDepartamento",'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o departamento..."})) #'disabled':"true",
     campus = forms.ModelChoiceField(queryset=Campus.objects.all(), label="",widget=ModelSelect2Widget(model=Campus,search_fields=['nome__icontains'],attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o campus..."}))
     edificio = forms.ModelChoiceField(queryset=Edificio.objects.all(), label="",widget=ModelSelect2Widget(model=Edificio,search_fields=['nome__icontains'],dependent_fields={'campus':'campus'},attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o edificio..."}))
     sala = forms.ModelChoiceField(queryset=Sala.objects.all(), label="",widget=ModelSelect2Widget(model=Sala, search_fields=['identificacao__icontains'],dependent_fields={'edificio':'edificio'},attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione a sala..."}))
+    
     #material = forms.Mult
     class Meta:
         model = Atividade
         fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'faculdade', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
 
-class MaterialQuantidadeForm(forms.ModelForm):
-    class Meta:
-        model = MaterialQuantidade
-        fields =  ('atividade','material', 'quantidade',)
+    def __init__(self, *args, **kwargs):
+        super(AtividadeForm, self).__init__(*args, **kwargs)
+        self.fields['tipo_atividade'].choices = [('', 'Selecione o tipo de atividade...')] + list(
+            self.fields['tipo_atividade'].choices[1:])
+#MaterialQuantidadeFormSet = inlineformset_factory(Atividade, MaterialQuantidade, form=MaterialQuantidadeForm)   
+
 
 

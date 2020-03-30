@@ -100,7 +100,6 @@ class Material(models.Model):
 class Atividade(models.Model):
  
     id = models.AutoField(primary_key=True)
-    
     nome = models.CharField(max_length=255)
     descricao = models.TextField(null=True)
     duracao = models.IntegerField()
@@ -160,7 +159,6 @@ class Atividade(models.Model):
         default=PENDENTE,
     )
     tematicas = models.ManyToManyField(Tematica, related_name='temas')
-    #local = models.ForeignKey(LocalAtividade, on_delete=models.CASCADE, null=True, blank=True)
     campus = models.ForeignKey(Campus, on_delete=models.CASCADE, null=True, blank=True)
     edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE, null=True, blank=True)
     sala = models.ForeignKey(Sala, on_delete=models.CASCADE, null=True, blank=True)
@@ -184,11 +182,11 @@ class Atividade(models.Model):
 class MaterialQuantidade(models.Model):
 
     atividade = models.ForeignKey('Atividade', related_name='material_quantidade', on_delete=models.SET_NULL, null=True)
-    material = models.ForeignKey('Material', related_name='material_quantidade', on_delete=models.SET_NULL, null=True, blank=True)
-    quantidade = models.IntegerField()
+    material = models.CharField(max_length=255, null=True)
+    quantidade = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.material.nome + ' para ' + self.atividade.nome 
+        return self.material + ' para ' + self.atividade.nome 
 
 
 

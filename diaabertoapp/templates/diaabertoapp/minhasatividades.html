@@ -137,41 +137,7 @@
                                 <div class="menu" style="        margin-bottom: 1rem;">
                                     <p class="menu-label">Filtros Atividade</p>
                                     <ul class="menu-list">
-                                        <form method="GET" action=".">
-                                        <div class="field has-addons">
-                                            <!---->
-                                            {% if not nomesquery|length > 0 %}
-                                            <div class="control is-expanded">
-                                                <div class="control is-clearfix">
-                                                    <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input"><!--onkeyup="searchByName()"-->
-                                                    <!--<span class="icon is-left">
-                                                        <i class="mdi mdi-magnify mdi-24px"></i>
-                                                    </span>-->
-                                                    <!---->
-                                                    <!---->
-                                                </div>
-                                                
-                                            </div>
-                                            <div class="control">
-                                                <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                              </div>
-                                            {% else %}<div class="control is-expanded">
-                                                <div class="control is-clearfix">
-                                                    <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
-                                                    <!--<span class="icon is-left">
-                                                        <i class="mdi mdi-magnify mdi-24px"></i>
-                                                    </span>-->
-                                                    <!---->
-                                                    <!---->
-                                                </div>
-                                                
-                                            </div>
-                                            <div class="control">
-                                                <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                              </div>{% endif %}
-                                            <!---->
-                                        </div>
-                                            
+                                        <form method="GET" action=".">                                           
                                         <div class="field has-addons">
                                             <!---->
                                             {% if not campusquery|length > 0 %}
@@ -332,7 +298,134 @@
                                               </div>
                                             {% endif %}
                                         </div>
+
                                         <div class="field has-addons">
+                                            <!---->
+                                            {% if not tipo_query|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="tipoSearch" name="tipo"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Tipo de atividade
+                                                        </option>
+                                                        {% for Tipo in tipoatividade %}
+                                                            <option value="{{ Tipo.tipo_atividade }}">{{ Tipo.get_tipo_atividade_display }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="tipoSearch" name="tipo"><!--onchange="searchByType()"-->
+                                                        {% for Tipo in tipoatividade %}
+                                                            <option value="{{ Tipo.tipo_atividade }}">{{ Tipo.get_tipo_atividade_display }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('tipoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not publicoquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="publicoSearch" name="publico_alvo"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Público-alvo
+                                                        </option>
+                                                        {% for Publico in publicoalvo %}
+                                                            <option value="{{ Publico.id }}">{{ Publico.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="publicoSearch" name="publico_alvo"><!--onchange="searchByType()"-->
+                                                        {% for Publico in publicoalvo %}
+                                                            <option value="{{ Publico.id }}">{{ Publico.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('publicoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="field has-addons">
+                                            <!---->
+                                        {% if not nomesquery|length > 0 %}
+                                            <div class="control is-expanded">
+                                                <div class="control is-clearfix">
+                                                    <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input"><!--onkeyup="searchByName()"-->
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                    <!---->
+                                                    <!---->
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="control">
+                                                <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                              </div>
+                                        {% else %}<div class="control is-expanded">
+                                                <div class="control is-clearfix">
+                                                    <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                    <!---->
+                                                    <!---->
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                        {% endif %}
+                                            <!---->
+                                        </div>
+                                        
+                                        <template>
+                                            <b-menu>
+                                                <b-menu-list>
+                                                    <b-menu-item>
+                                                        <template slot="label" slot-scope="props">
+                                                            <small>Mais Filtros de Atividade</small>
+                                                            <b-icon
+                                                                class="is-pulled-right"
+                                                                :icon="props.expanded ? 'minus' : 'plus'">
+                                                            </b-icon>
+                                                        </template>
+                                                        <div class="field has-addons">
                                             <!---->
                                             {% if not estadosquery|length > 0 %}
                                             <div class="control is-expanded">
@@ -368,17 +461,6 @@
                                             </div>
                                             {% endif %}
                                         </div>
-                                        <template>
-                                            <b-menu>
-                                                <b-menu-list>
-                                                    <b-menu-item>
-                                                        <template slot="label" slot-scope="props">
-                                                            <small>Mais Filtros de Atividade</small>
-                                                            <b-icon
-                                                                class="is-pulled-right"
-                                                                :icon="props.expanded ? 'minus' : 'plus'">
-                                                            </b-icon>
-                                                        </template>
                                                         <template>
                                                             <b-field>
                                                                 <b-datepicker
@@ -586,7 +668,13 @@
                         <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
             </div>
             <div class="column">
-                        <p><strong>Material:</strong> </p>
+                        <p><strong>Material:</strong> 
+                        {% for Mat in materiais %}
+                            {% ifequal Mat.atividade.id Atividade.id %}
+                                {{ Mat.material }};
+                            {% endifequal %}
+                        {% endfor %}
+                        </p>
                         <p><strong>Responsável:</strong> por configurar </p>
                         <p><strong>Data de submissão:</strong> {{ Atividade.data }} </p>
                         <p><strong>Estado de submissão:</strong> {{ Atividade.get_validada_display }} </p>

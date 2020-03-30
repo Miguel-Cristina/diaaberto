@@ -41,6 +41,11 @@
           border-radius: 4px;
           border-top: none;*/
         }
+        .tabdcontent {
+          padding-left: .8em;
+          padding-right: .8em;
+          padding-bottom: .8em
+        }
         /* Style the tab */
         .tab {
           /*overflow: hidden;*/
@@ -63,11 +68,13 @@
           color: white;
         }
         .tabs {
-            margin-bottom:0px
+            margin-bottom: 0px
             /*style="margin-bottom:0px"*/
         }
+
         element.style {
         }
+
         .b-steps .steps .step-items .step-item.is-completed .step-marker {
             background-color: #23d160;
             border-color: #23d160;
@@ -76,7 +83,6 @@
         .b-steps .steps .step-items .step-item:after, .b-steps .steps .step-items .step-item:before {
             background: -webkit-gradient(linear,right top,left top,color-stop(50%,#23d160),color-stop(50%,#23d160));
         }
-
     </style>
     
 </head>
@@ -146,7 +152,7 @@
                                 </button>
                             </div>
                             <div class="background" style="display: none;" aria-hidden="true"></div>
-                            <div class="dropdown-menu" style="display: none;" aria-hidden="true">
+                            <div class="dropdown-menu" style="display: none; " aria-hidden="true">
                                 <div role="list" class="dropdown-content">
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
@@ -192,7 +198,7 @@
                             <div class="b-steps">
                                 <nav class="steps is-success">
                                     <ul class="step-items">
-                                        <li class="step-item link is-completed is-active">
+                                        <li class="step-item link is-success is-active">
                                             <a class="step-link">
                                                 <div class="step-marker">
                                                     <span class="icon">
@@ -406,7 +412,21 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <div class="columns">
+                                                <div class="tabdcontent" id="meuDepartamento">
+                                                    <div class="field">
+                                                        <label class="label">Faculdade</label>
+                                                        <div class="control is-fullwidth">
+                                                                {{ faculdades }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="field">
+                                                        <label class="label">Departamento</label>
+                                                        <div class="control is-fullwidth">
+                                                                {{ departamentos }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="columns tabdcontent" style="display:none" id="escolherDepartamento">
                                                     <div class="column">
                                                         <div class="field">
                                                             <label class="label">Faculdade</label>
@@ -475,27 +495,48 @@
                                             <div style="padding: 1rem 2vw 0px;">
                                                 <hr>
                                                 <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação do material </h2>
-                                                <div class="columns">
-                                                    <div class="column">
-                                                        <div class="field">
-                                                            <label class="label">Nome da atividade</label>
-                                                            <div class="control is-clearfix">
-                                                                <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
-                                                                {{ form2 }}
+                                                <div class="field">
+                                                    <div class="control is-clearfix">
+                                                        <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
+                                                       
+                                                        {% for fs in form2 %}
+                                                            
+
+                                                        <div class="columns">
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Material</label>
+                                                                    <div class="control is-expanded ">
+                                                                    {{ fs.material }}        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Quantidade</label>
+                                                                    <div class="control is-expanded">
+                                                                    {{ fs.quantidade }}    
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="column">
-                                                        <div class="field">
-                                                            <label class="label">Tipo de atividade</label>
-                                                            <div class="control is-expanded ">
-                                                                <span class="select is-fullwidth">
-                                                                    
-                                                                </span>
-                                                            </div>
-                                                        </div>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="step-item stepcontent" style="display:none">
+                                            <div style="padding: 1rem 2vw 0px;">
+                                                <hr>
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação das sessoes </h2>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="step-item stepcontent" style="display:none">
+                                            <div style="padding: 1rem 2vw 0px;">
+                                                <hr>
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Submeter atividade </h2>
+                                                
                                             </div>
                                         </div>
                                         <hr/>
@@ -527,7 +568,7 @@
                                                         </span>
                                                     </a>
                                                 </div>
-                                                <div class="level-right steps-action">
+                                                <div class="level-right steps-action" style="display:none" id="submitBtn">
                                                     <button href="#" type="submit" class="button is-success is-outlined">
                                                         <!---->
                                                         <span> Submeter </span>
@@ -657,14 +698,18 @@
               x[n].style.display = "block";
               // ... and fix the Previous/Next buttons:
               if (n == 0) {
-                document.getElementById("prevBtn").style.display = "none";
+                  document.getElementById("prevBtn").style.display = "none";
+                  document.getElementById("submitBtn").style.display = "none";
               } else {
                 document.getElementById("prevBtn").style.display = "";
               }
               if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Submeter"; //display:block;
+                  document.getElementById("nextBtn").style.display = "none"; //display:block;
+                  document.getElementById("submitBtn").style.display = "";
               } else {
-                document.getElementById("nextBtn").innerHTML = '<span> Próximo </span><span class="icon is-small"><i class="mdi mdi-arrow-right mdi-24px"></i></span>';
+                  document.getElementById("nextBtn").style.display = "";
+                  document.getElementById("submitBtn").style.display = "none";
+                  document.getElementById("nextBtn").innerHTML = '<span> Próximo </span><span class="icon is-small"><i class="mdi mdi-arrow-right mdi-24px"></i></span>';
               }
               // ... and run a function that displays the correct step indicator:
               fixStepIndicator(n)
@@ -679,11 +724,23 @@
               // Increase or decrease the current tab by 1:
               currentTab = currentTab + n;
               // if you have reached the end of the form... :
-              if (currentTab >= x.length) {
+            if (currentTab >= x.length) {
                 //...the form gets submitted:
                 //document.getElementById("atividadeForm").submit();
                 return false;
-              }
+            }
+            else if (currentTab < x.length) {
+                var  x = document.getElementsByClassName("link");
+                for (var i = currentTab; i < x.length; i++)
+                {
+                    //x[i].removeClass().addClass( "step-item link is-success" );
+                    while (x[i].className.includes("is-completed"))
+                    {
+                        x[i].className = x[i].className.replace("is-completed", "is-success");
+                    }
+                    
+                }
+            }
               // Otherwise, display the correct tab:
               showTab(currentTab);
             }
@@ -724,6 +781,7 @@
                 }
                 else
                 {
+                    //x[i].className = x[i].className.replace("is-completed", "");
                     x[i].className = x[i].className.replace("is-active", ""); 
                 }
                            

@@ -1,11 +1,12 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.db.models import Count
-from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica, PublicoAlvo, Sala
+from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica, PublicoAlvo, Sala, MaterialQuantidade
 from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 
 # Create your views here.
@@ -22,6 +23,8 @@ def minhasatividades(request):
     faculdades = Faculdade.objects.all()
     departamentos = Departamento.objects.all()
     tematicas = Tematica.objects.all()
+    materiais = MaterialQuantidade.objects.all()
+    publico_alvo = PublicoAlvo.objects.all()
     #BEGIN filter_by_name
     nome_query = request.GET.get('nome')
     if nome_query !='' and nome_query is not None:
@@ -38,6 +41,7 @@ def minhasatividades(request):
     if faculdade_query !='' and faculdade_query is not None:
         atividade_list = atividade_list.filter(faculdade=faculdade_query)
         faculdades = faculdades.filter(id=faculdade_query)
+        departamentos = departamentos.filter(faculdade=faculdade_query)
     #END filter_by_faculdade
     #BEGIN filter_by_departamento
     departamento_query = request.GET.get('departamento')
@@ -50,6 +54,12 @@ def minhasatividades(request):
     if tematica_query !='' and tematica_query is not None:
         atividade_list = atividade_list.filter(tematicas=tematica_query)
         tematicas = tematicas.filter(id=tematica_query)
+    #END filter_by_tematica
+    #BEGIN filter_by_publicoalvo
+    publico_query = request.GET.get('publico_alvo')
+    if publico_query !='' and publico_query is not None:
+        atividade_list = atividade_list.filter(publico_alvo=publico_query)
+        publico_alvo = publico_alvo.filter(id=publico_query)
     #END filter_by_tematica
     #BEGIN filter_by_estado
     estado_query = request.GET.get('validada')
@@ -87,7 +97,7 @@ def minhasatividades(request):
     #END tipo_utilizador and estados filter filter 
 
     #'tiposquery':tipo_query
-    return render(request, 'diaabertoapp/minhasatividades.html', {'atividades':atividades,'campuss': campus_arr, 'campusquery':campus_query ,'faculdades':faculdades,'faculdadequery':faculdade_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'estados':unique_valida_obj, 'nomesquery':nome_query, 'tiposatividades':unique_tipo_obj, 'estadosquery':estado_query})
+    return render(request, 'diaabertoapp/minhasatividades.html', {'atividades':atividades,'campuss': campus_arr, 'campusquery':campus_query ,'faculdades':faculdades,'faculdadequery':faculdade_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':unique_tipo_obj,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'tiposatividades':unique_tipo_obj, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query})
 
 def proporatividade(request):
     def Sort_Tuple(tup):  
@@ -117,41 +127,32 @@ def proporatividade(request):
     campi = Campus.objects.all()
     edificios = Edificio.objects.all()
     salas = Sala.objects.all()
-    faculdades = Faculdade.objects.all()
-    departamentos = Departamento.objects.all()
+    faculdades = Faculdade.objects.get(id=2)
+    departamentos = Departamento.objects.get(id=1)
 
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = AtividadeForm(request.POST)
-        form2 = MaterialQuantidadeForm(request.POST)
+        aForm = AtividadeForm(request.POST)
+        mForm = [MaterialQuantidadeForm(request.POST, prefix=str(x), instance=MaterialQuantidade()) for x in range(0,3)]
         #forms.inlineformset_factory(Atividade, Material, form=MaterialForm, extra=2)
         # check whether it's valid:
-        if form.is_valid():
-            #nome = form.cleaned_data['nome']
-            #tipo_atividade = form.cleaned_data['tipo_atividade']
-            #descricao = form.cleaned_data['descricao']
-            #maximo_participantes = form.cleaned_data['maximo_participantes']
-            #duracao_atividade = form.cleaned_data['duracao_atividade']
-            #tematicas = form.cleaned_data['tematicas']
-            #publico_alvo = form.cleaned_data['publico_alvo']
-            #faculdade = form.cleaned_data['faculdade']
-            #departamento = form.cleaned_data['departamento']
-            #tipo_local = form.cleaned_data['tipo_local']
-            #cd = form.cleaned_data
-            #atividade = Atividade(cd)
-            #atividade.save()
-            form.save()
-
+        if aForm.is_valid() and all([mFs.is_valid() for mFs in mForm]):
+            atividade = aForm.save()
+            for mFs in mForm:
+                material = mFs.save(commit=False)
+                material.atividade = atividade
+                material.save()
             return HttpResponseRedirect('/minhasatividades/')
-        print(form.errors)
+        print(aForm.errors)
+        print(mForm.errors)
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = AtividadeForm()
-        form2 = MaterialQuantidadeForm()
+        aForm = AtividadeForm()
+        mForm = [MaterialQuantidadeForm(request.POST, prefix=str(x), instance=MaterialQuantidade()) for x in range(0,3)]
 
-    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':form, 'form2':form2})
+    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':aForm, 'form2':mForm})
 
 def get_atividade(request):
     # if this is a POST request we need to process the form data
@@ -183,6 +184,9 @@ def get_campus(request):
         form = CampusForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
+            messages.success(request, 'The form is valid.')
+        else:
+            messages.error(request, 'The form is invalid.')
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
