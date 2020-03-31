@@ -263,20 +263,6 @@
                                 <section class="step-content">
                                     <form method="POST" action="." id="atividadeForm">
                                         {% csrf_token %}
-                                        {% if form.errors %}
-                                            {% for field in form %}
-                                                {% for error in field.errors %}
-                                                    <div class="alert alert-danger">
-                                                        <strong>{{ error|escape }}</strong>
-                                                    </div>
-                                                {% endfor %}
-                                            {% endfor %}
-                                            {% for error in form.non_field_errors %}
-                                                <div class="alert alert-danger">
-                                                    <strong>{{ error|escape }}</strong>
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
                                         <div class="step-item stepcontent" style="">
                                             <div style="padding: 1rem 2vw 0px;">
                                                 <hr>
@@ -287,8 +273,11 @@
                                                             <label class="label">Nome da atividade</label>
                                                             <div class="control is-clearfix">
                                                                 <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
-                                                                {{ form.nome }} {{ form.nome.errors }}
+                                                                {{ form.nome }} 
                                                             </div>
+                                                            {% for error in form.nome.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                     <div class="column">
@@ -499,7 +488,7 @@
                                                     <div class="control is-clearfix">
                                                         <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
                                                        
-                                                        {% for fs in form2 %}
+                                                        {% for frm2 in form2 %}
                                                             
 
                                                         <div class="columns">
@@ -507,7 +496,7 @@
                                                                 <div class="field">
                                                                     <label class="label">Material</label>
                                                                     <div class="control is-expanded ">
-                                                                    {{ fs.material }}        
+                                                                    {{ frm2.material }}        
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -515,12 +504,22 @@
                                                                 <div class="field">
                                                                     <label class="label">Quantidade</label>
                                                                     <div class="control is-expanded">
-                                                                    {{ fs.quantidade }}    
+                                                                    {{ frm2.quantidade }}    
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         {% endfor %}
+                                                    </div>
+                                                    <hr />
+                                                    <div class="has-text-centered">
+                                                        <a class="button is-success" id="addMaterialBtn" onclick="">
+                                                            <!---->
+                                                            <span class="icon is-small">
+                                                                <i class="mdi mdi-plus mdi-24px"></i>
+                                                            </span>
+                                                            <span> Adicionar material </span>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -528,8 +527,42 @@
                                         <div class="step-item stepcontent" style="display:none">
                                             <div style="padding: 1rem 2vw 0px;">
                                                 <hr>
-                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação das sessoes </h2>
-                                                
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação das sessões </h2>
+                                                <div class="field">
+                                                    <div class="control is-clearfix">
+                                                        <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
+                                                       
+                                                        
+                                                           {% for frm3 in form3 %}
+                                                        <div class="columns">
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Dia</label>
+                                                                    <div class="control is-expanded">
+                                                                    {{ frm3.dia }}    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Hora da Sessão</label>
+                                                                    <div class="control is-expanded ">
+                                                                    {{ frm3.sessao }}        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Número de Colaboradores</label>
+                                                                    <div class="control is-expanded">
+                                                                    {{ frm3.numero_colaboradores }}    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="step-item stepcontent" style="display:none">
@@ -560,14 +593,15 @@
                                                     </a>
                                                 </div>
                                                 <div class="level-right steps-action">
-                                                    <a href="#" data-nav="next" type="submit" class="button is-success is-outlined" id="nextBtn" onclick="nextPrev(1)">
+                                                    <button href="#" data-nav="next" type="submit" class="button is-success is-outlined" id="nextBtn" onclick="nextPrev(1)">
                                                         <!---->
                                                         <span> Próximo </span>
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-arrow-right mdi-24px"></i>
                                                         </span>
-                                                    </a>
+                                                    </button>
                                                 </div>
+                     
                                                 <div class="level-right steps-action" style="display:none" id="submitBtn">
                                                     <button href="#" type="submit" class="button is-success is-outlined">
                                                         <!---->
@@ -718,7 +752,7 @@
               // This function will figure out which tab to display
               var x = document.getElementsByClassName("stepcontent");
               // Exit the function if any field in the current tab is invalid:
-              //if (n == 1 && !validateForm()) return false;
+              if (n == 1 && !validateForm()) return false;
               // Hide the current tab:
               x[currentTab].style.display = "none";
               // Increase or decrease the current tab by 1:
@@ -746,27 +780,41 @@
             }
         function validateForm()
         {
+            
               // This function deals with validation of the form fields
-              //var x, y, i, valid = true;
-              //x = document.getElementsByClassName("stepcontent");
-              //y = x[currentTab].getElementsByTagName("input");
-              // A loop that checks every input field in the current tab:
-              //for (i = 0; i < y.length; i++) {
+            var x, y, i, f, z, valid = true;
+            x = document.getElementsByClassName("stepcontent");    
+            //y = x[currentTab].getElementsByTagName("input");
+            z = x[currentTab].getElementsByClassName("tabfields");
+            // A loop that checks every input field in the current tab:
+            /*for (i = 0; i < y.length; i++) {
                 // If a field is empty...
-                //if (y[i].value == "") {
-                  // add an "invalid" class to the field:
-                  //y[i].className += " invalid";
-                  // and set the current valid status to false:
-                  //valid = true;
-               // }
-              //}
-              // If the valid status is true, mark the step as finished and valid:
-            //if (valid) {
+                if (y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    //y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }*/
+            
+            for (f = 0; f < z.length; f++) {
+                // If a field is empty...
+                const isValid = z[f].checkValidity();
+                if (!isValid) {
+                    
+                    // add an "invalid" class to the field:
+                    //y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+            // If the valid status is true, mark the step as finished and valid:
+            if (valid) {
                 document.getElementsByClassName("link")[currentTab].className.replace("is-success", "");
                 document.getElementsByClassName("link")[currentTab].className.replace("is-active","");
                 document.getElementsByClassName("link")[currentTab].className += " is-completed ";
-              //}
-              return true; // return the valid status
+            }
+            return valid; // return the valid status
         }
         function fixStepIndicator(n)
         {

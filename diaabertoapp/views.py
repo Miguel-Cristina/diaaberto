@@ -1,8 +1,8 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.db.models import Count
-from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica, PublicoAlvo, Sala, MaterialQuantidade
-from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm
+from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade
+from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm, SessaoAtividadeForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -25,6 +25,8 @@ def minhasatividades(request):
     tematicas = Tematica.objects.all()
     materiais = MaterialQuantidade.objects.all()
     publico_alvo = PublicoAlvo.objects.all()
+    sessoes = Sessao.objects.all()
+    sessoesatividade = SessaoAtividade.objects.all()
     #BEGIN filter_by_name
     nome_query = request.GET.get('nome')
     if nome_query !='' and nome_query is not None:
@@ -71,6 +73,16 @@ def minhasatividades(request):
     if tipo_query !='' and tipo_query is not None:
         atividade_list = atividade_list.filter(tipo_atividade__icontains=tipo_query)
     #END filter_by_tipo
+    #BEGIN filter_by_sessao
+    unique_sesaoatividade_obj = []
+    sessao_query = request.GET.get('sessao')
+    if sessao_query !='' and sessao_query is not None:
+        atividades_sessions_id = sessoesatividade.filter(sessao=sessao_query)
+        for x in atividades_sessions_id:
+            unique_sesaoatividade_obj.append(x.atividade)
+        atividade_list = unique_sesaoatividade_obj
+        sessoes = sessoes.filter(id=sessao_query)
+    #END filter_by_sessao
     #BEGIN pagination
     page = request.GET.get('page', 1)
     paginator = Paginator(atividade_list, 5)
@@ -97,7 +109,7 @@ def minhasatividades(request):
     #END tipo_utilizador and estados filter filter 
 
     #'tiposquery':tipo_query
-    return render(request, 'diaabertoapp/minhasatividades.html', {'atividades':atividades,'campuss': campus_arr, 'campusquery':campus_query ,'faculdades':faculdades,'faculdadequery':faculdade_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':unique_tipo_obj,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'tiposatividades':unique_tipo_obj, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query})
+    return render(request, 'diaabertoapp/minhasatividades.html', {'atividades':atividades,'campuss': campus_arr, 'campusquery':campus_query ,'faculdades':faculdades,'faculdadequery':faculdade_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':unique_tipo_obj,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'tiposatividades':unique_tipo_obj, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query, 'sessoes':sessoes, 'sessoesquery':sessao_query, 'sessoesatividade':sessoesatividade})
 
 def proporatividade(request):
     def Sort_Tuple(tup):  
@@ -129,30 +141,42 @@ def proporatividade(request):
     salas = Sala.objects.all()
     faculdades = Faculdade.objects.get(id=2)
     departamentos = Departamento.objects.get(id=1)
-
+    distinct_sessoes = Sessao.objects.values('hora').distinct().count()
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         aForm = AtividadeForm(request.POST)
         mForm = [MaterialQuantidadeForm(request.POST, prefix=str(x), instance=MaterialQuantidade()) for x in range(0,3)]
+        sForm = [SessaoAtividadeForm(request.POST, prefix=str(y), instance=SessaoAtividade()) for y in range(0,distinct_sessoes)]
+        
         #forms.inlineformset_factory(Atividade, Material, form=MaterialForm, extra=2)
         # check whether it's valid:
-        if aForm.is_valid() and all([mFs.is_valid() for mFs in mForm]):
+        if aForm.is_valid():
             atividade = aForm.save()
             for mFs in mForm:
-                material = mFs.save(commit=False)
-                material.atividade = atividade
-                material.save()
+                if mFs.is_valid():
+                    material = mFs.save(commit=False)
+                    material.atividade = atividade
+                    material.save()
+
+            for sFs in sForm:
+                if sFs.is_valid():
+                    sessao = sFs.save(commit=False)
+                    sessao.atividade = atividade
+                    sessao.save()
+
             return HttpResponseRedirect('/minhasatividades/')
-        print(aForm.errors)
-        print(mForm.errors)
+        else:
+            print(aForm.errors)
 
     # if a GET (or any other method) we'll create a blank form
     else:
         aForm = AtividadeForm()
-        mForm = [MaterialQuantidadeForm(request.POST, prefix=str(x), instance=MaterialQuantidade()) for x in range(0,3)]
+        sForm = [SessaoAtividadeForm(prefix=str(y),instance=SessaoAtividade()) for y in range(0,distinct_sessoes)]
+        mForm = [MaterialQuantidadeForm(prefix=str(x), instance=MaterialQuantidade()) for x in range(0,3)]
+        
 
-    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':aForm, 'form2':mForm})
+    return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':aForm, 'form2':mForm, 'form3':sForm})
 
 def get_atividade(request):
     # if this is a POST request we need to process the form data

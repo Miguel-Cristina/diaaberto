@@ -1,5 +1,5 @@
 from django import forms
-from .models import Atividade, Campus, Edificio, Sala, Tematica, PublicoAlvo, Faculdade, Departamento, MaterialQuantidade, Material
+from .models import Atividade, Campus, Edificio, Sala, Tematica, PublicoAlvo, Faculdade, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
@@ -26,15 +26,23 @@ class MaterialQuantidadeForm(forms.ModelForm):
         model = MaterialQuantidade
         exclude =  ('atividade',)
 
+class SessaoAtividadeForm(forms.ModelForm):
+    dia = forms.DateField(label="", widget=forms.DateInput(attrs={'class': "input", 'placeholder': "Dia"}))
+    sessao = forms.ModelChoiceField(queryset=Sessao.objects.all(), label="",widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}))
+    numero_colaboradores = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_colaboradores"}))
+    class Meta:
+        model = SessaoAtividade
+        exclude =  ('atividade',)
+
 class AtividadeForm(forms.ModelForm):
 
 
-    nome = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Ex: Nome da atividade"}))
-    descricao = forms.CharField(label="", max_length=300, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea", 'id':"descricaoField",'onkeyup':"countChar(this)",'placeholder': "Ex: Descrição da atividade"}))
-    limite_participantes = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'id':"maxPersons_input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_participantes_atividade"}))
-    duracao = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'id':"duracao_input",'step':"5", 'type':"number",'placeholder':"0",'name':"duracao_atividade"}))
-    tematicas = forms.MultipleChoiceField(choices=( (x.id, x.tema) for x in Tematica.objects.all() ), label="", widget=forms.SelectMultiple(attrs={'size':"4",'name':"tema_atividade"}))
-    publico_alvo = forms.MultipleChoiceField(choices=( (x.id, x.nome) for x in PublicoAlvo.objects.all() ), label="", widget=forms.SelectMultiple(attrs={'size':"4",'name':"publico_alvo_atividade"}))
+    nome = forms.CharField(label="", max_length=255, required=True,widget=forms.TextInput(attrs={'class': "input tabfields",'placeholder': "Ex: Nome da atividade"}))
+    descricao = forms.CharField(label="", max_length=300, required=True, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea tabfields", 'id':"descricaoField",'onkeyup':"countChar(this)",'placeholder': "Ex: Descrição da atividade"}))
+    limite_participantes = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input tabfields",'id':"maxPersons_input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_participantes_atividade"}))
+    duracao = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input tabfields",'id':"duracao_input",'step':"5", 'type':"number",'placeholder':"0",'name':"duracao_atividade"}))
+    tematicas = forms.MultipleChoiceField(choices=( (x.id, x.tema) for x in Tematica.objects.all() ), label="",required=True, widget=forms.SelectMultiple(attrs={'class':"tabfields",'size':"4",'name':"tema_atividade"}))
+    publico_alvo = forms.MultipleChoiceField(choices=( (x.id, x.nome) for x in PublicoAlvo.objects.all() ), label="", required=True, widget=forms.SelectMultiple(attrs={'class':"tabfields",'size':"4",'name':"publico_alvo_atividade"}))
     tipo_local = forms.CharField(required=False, label="", max_length=255, widget=forms.TextInput(attrs={'type':"text", 'id':"tipoLocalinput", 'class':"input tipoLocalInput", 'placeholder':"ex: Sala grande/Laboratório",'name':"tipo_local_atividade"}))
     data = forms.DateTimeField(initial=datetime.datetime.now, widget=forms.HiddenInput())
     validada = forms.CharField(initial='PD', widget=forms.HiddenInput()) 
@@ -53,6 +61,7 @@ class AtividadeForm(forms.ModelForm):
         super(AtividadeForm, self).__init__(*args, **kwargs)
         self.fields['tipo_atividade'].choices = [('', 'Selecione o tipo de atividade...')] + list(
             self.fields['tipo_atividade'].choices[1:])
+
 #MaterialQuantidadeFormSet = inlineformset_factory(Atividade, MaterialQuantidade, form=MaterialQuantidadeForm)   
 
 

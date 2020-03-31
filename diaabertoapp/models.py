@@ -86,6 +86,16 @@ class PublicoAlvo(models.Model):
 
     def __str__(self):
         return self.nome
+class Sessao(models.Model):
+    # Campos
+    id = models.AutoField(primary_key=True)
+    hora = models.TimeField(unique=True,null=True)
+    
+    #Métodos
+    def get_hora(self):
+        return self.hora
+    def __str__(self):
+        return str(self.hora)
 
 class Material(models.Model):
     # Campos
@@ -164,17 +174,12 @@ class Atividade(models.Model):
     sala = models.ForeignKey(Sala, on_delete=models.CASCADE, null=True, blank=True)
     tipo_local = models.CharField(max_length=255, null=True, blank=True)
     #Métodos
-    def get_absolute_url(self):
-        return reverse('atividade-detail-view',args=[str(self.id)])
 
     def get_tipo(self):
         return self.tipo_atividade
 
     def get_tipo_local(self):
         return self.tipo_local if self.tipo_local else 'Local não especificado'
-
-    def get_local(self):
-        return self.local if self.local else 'Por atribuir (' + self.get_tipo_local() + ')'
 
     def __str__(self):
         return self.nome
@@ -188,33 +193,15 @@ class MaterialQuantidade(models.Model):
     def __str__(self):
         return self.material + ' para ' + self.atividade.nome 
 
-
-
-#class Local(models.Model):
-#    id = models.AutoField(primary_key=True)
-#    edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE,null=True) #se o Edificio desaparecer, o local da atividade também desaparece, apesar deste campo ser por definição nulo (é tentador colocar models.DEFNULL, caso a chave estrangeira desapareça)
-#    andar = models.CharField(max_length=30,null=True)
-#    sala = models.CharField(max_length=30,null=True)
-#    descricao = models.TextField(null=True, blank=True)
-#    #Métodos
-#    def get_absolute_url(self):
-#        return reverse('localatividade-detail-view',args=[str(self.id)])
-#    def __str__(self):
-#        return self.edificio.campus.nome + ' Edificio ' + self.edificio.nome + ' Piso ' +self.andar + ' Sala ' + self.sala
-
-#class LocalAtividade(models.Model):
-#    id = models.AutoField(primary_key=True)
-#    local = models.ForeignKey(Local, on_delete=models.CASCADE, null=True, blank=True)
-#    descricao = models.TextField(null=True, blank=True)
-#    #Métodos
-#
-#    def __str__(self): 
-#        if self.local:
-#            return str(self.local)
-#        elif self.descricao and not self.local:
-#            return 'Outro local: ' + self.descricao
-#        else:
-#            return 'Por atribuir'
+class SessaoAtividade(models.Model):
+    atividade = models.ForeignKey('Atividade', related_name='sessao_atividade', on_delete=models.SET_NULL, null=True)
+    sessao = models.ForeignKey('Sessao',on_delete=models.SET_NULL, null=True)
+    dia = models.DateField(null=True)
+    numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
+    class Meta:
+        unique_together = (("atividade", "sessao", "dia"),) 
+    def __str__(self):
+        return self.atividade.nome + ' às ' + str(self.sessao.hora)
 
 class AtividadeForm(ModelForm):
      class Meta:
