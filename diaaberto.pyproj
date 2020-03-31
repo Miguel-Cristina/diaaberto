@@ -94,6 +94,7 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\proporatividade.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\tarefas.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>

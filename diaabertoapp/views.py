@@ -16,6 +16,11 @@ def index(request):
 def atividades(request):
     return render(request, 'diaabertoapp/atividades.html', {})
 
+def tarefas(request):
+    return render(request, 'diaabertoapp/tarefas.html', {})
+
+
+
 def minhasatividades(request):
     #minhasatividades = Atividade.objects.all()
     atividade_list = Atividade.objects.all()
