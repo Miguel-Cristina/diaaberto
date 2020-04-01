@@ -100,7 +100,7 @@ class Sessao(models.Model):
 class Material(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
-    nome = models.CharField(max_length=40, unique=True)
+    nome = models.CharField(max_length=50, unique=True)
     
     #Métodos
     
@@ -186,31 +186,32 @@ class Atividade(models.Model):
 
 class MaterialQuantidade(models.Model):
 
-    atividade = models.ForeignKey('Atividade', related_name='material_quantidade', on_delete=models.SET_NULL, null=True)
+    atividade = models.ForeignKey('Atividade', related_name='material_quantidade', on_delete=models.CASCADE, null=True)
     material = models.CharField(max_length=255, null=True)
     quantidade = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.material + ' para ' + self.atividade.nome 
+        return self.material
 
 class SessaoAtividade(models.Model):
-    atividade = models.ForeignKey('Atividade', related_name='sessao_atividade', on_delete=models.SET_NULL, null=True)
+    atividade = models.ForeignKey('Atividade', related_name='sessao_atividade', on_delete=models.CASCADE, null=True)
     sessao = models.ForeignKey('Sessao',on_delete=models.SET_NULL, null=True)
     dia = models.DateField(null=True)
     numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
     class Meta:
         unique_together = (("atividade", "sessao", "dia"),) 
     def __str__(self):
-        return self.atividade.nome + ' às ' + str(self.sessao.hora)
+        return self.atividade.nome
 
 class Tarefa(models.Model):
+
      id = models.AutoField(primary_key=True)
      descricao = models.CharField(max_length=255, null=True)
      localizacao_grupo = models.CharField(max_length=255, null=True)
      destino = models.CharField(max_length=255, null=True)
      horario = models.TimeField(unique=True,null=True)
-     cordenador = models.IntegerField(default = 2)
-     coolaborador = models.IntegerField(default = 3)
+     coordenador = models.IntegerField(default = 2)
+     colaborador = models.IntegerField(default = 3)
      def __str__(self):
          return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao 
 

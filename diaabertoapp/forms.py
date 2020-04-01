@@ -3,7 +3,7 @@ from .models import Atividade, Campus, Edificio, Sala, Tematica, PublicoAlvo, Fa
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
-from django.forms.models import inlineformset_factory
+from django.forms import formset_factory
 
 class CampusForm(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100)
@@ -12,8 +12,8 @@ class CampusForm(forms.Form):
 
 class SalaForm(forms.ModelForm):
     campus = forms.ModelChoiceField(queryset=Campus.objects.all())
-    edificio = forms.ModelChoiceField(queryset=Edificio.objects.none()) # Need to populate this using jquery
-    sala = forms.ModelChoiceField(queryset=Sala.objects.none()) # Need to populate this using jquery
+    edificio = forms.ModelChoiceField(queryset=Edificio.objects.none()) 
+    sala = forms.ModelChoiceField(queryset=Sala.objects.none()) 
 
     class Meta:
         model = Sala
@@ -25,6 +25,7 @@ class MaterialQuantidadeForm(forms.ModelForm):
     class Meta:
         model = MaterialQuantidade
         exclude =  ('atividade',)
+MaterialFormSet = formset_factory(MaterialQuantidadeForm)
 
 class SessaoAtividadeForm(forms.ModelForm):
     dia = forms.DateField(label="", widget=forms.DateInput(attrs={'class': "input", 'placeholder': "Dia"}))
@@ -33,6 +34,7 @@ class SessaoAtividadeForm(forms.ModelForm):
     class Meta:
         model = SessaoAtividade
         exclude =  ('atividade',)
+SessaoFormSet = formset_factory(SessaoAtividadeForm)
 
 class AtividadeForm(forms.ModelForm):
 

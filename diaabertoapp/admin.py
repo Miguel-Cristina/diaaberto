@@ -1,5 +1,5 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, Sala, Tematica, Tarefa, Atividade, MaterialQuantidade, Faculdade, Departamento, PublicoAlvo, Sessao, SessaoAtividade
+from diaabertoapp.models import Edificio, Campus, Sala, Tematica, Atividade, MaterialQuantidade, Faculdade, Departamento, PublicoAlvo, Sessao, SessaoAtividade
 #LocalAtividade,Local
 from django.utils.safestring import mark_safe
 # Register your models here.
@@ -24,7 +24,7 @@ admin.site.register(Tematica)
 
 admin.site.register(PublicoAlvo)
 
-admin.site.register(Tarefa)
+#admin.site.register(Tarefa)
 
 admin.site.register(MaterialQuantidade)
 
