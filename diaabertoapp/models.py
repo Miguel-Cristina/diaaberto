@@ -219,3 +219,14 @@ class AtividadeForm(ModelForm):
      class Meta:
          model = Atividade
          fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'faculdade', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
+
+class Tarefa(models.Model):
+     id = models.AutoField(primary_key=True)
+     descricao = models.CharField(max_length=255, null=True)
+     localizacao_grupo = models.CharField(max_length=255, null=True)
+     destino = models.CharField(max_length=255, null=True)
+     horario = models.TimeField(unique=True,null=True)
+     cordenador = models.IntegerField(default = 2)
+     coolaborador = models.IntegerField(default = 3)
+     def str(self):
+         return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao

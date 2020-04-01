@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.db.models import Count
-from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tematica, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade
+from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tarefa, Tematica, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade
 from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm, SessaoAtividadeForm, MaterialFormSet, SessaoFormSet
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
@@ -15,11 +15,6 @@ def index(request):
 
 def atividades(request):
     return render(request, 'diaabertoapp/atividades.html', {})
-
-def tarefas(request):
-    return render(request, 'diaabertoapp/tarefas.html', {})
-
-
 
 def minhasatividades(request):
     #minhasatividades = Atividade.objects.all()
@@ -263,3 +258,18 @@ def get_salas(request, edificio_id):
     for sala in salas:
         sala_dict[sala.id] = sala.identificacao
     return HttpResponse(json.dumps(sala_dict), mimetype="application/json")
+
+def get_tarefas(request):
+    tarefas_1 = Tarefa.objects.all()
+     #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(tarefas_1, 5)
+    try:
+        tarefas = paginator.page(page)
+    except PageNotAnInteger:
+        tarefas = paginator.page(1)
+    except EmptyPage:
+        tarefas = paginator.page(paginator.num_pages)
+    #END pagination
+
+    return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
