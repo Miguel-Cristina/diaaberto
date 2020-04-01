@@ -203,18 +203,6 @@ class SessaoAtividade(models.Model):
     def __str__(self):
         return self.atividade.nome
 
-class Tarefa(models.Model):
-
-     id = models.AutoField(primary_key=True)
-     descricao = models.CharField(max_length=255, null=True)
-     localizacao_grupo = models.CharField(max_length=255, null=True)
-     destino = models.CharField(max_length=255, null=True)
-     horario = models.TimeField(unique=True,null=True)
-     coordenador = models.IntegerField(default = 2)
-     colaborador = models.IntegerField(default = 3)
-     def __str__(self):
-         return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao 
-
 class AtividadeForm(ModelForm):
      class Meta:
          model = Atividade
