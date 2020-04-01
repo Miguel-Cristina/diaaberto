@@ -485,7 +485,7 @@
                                                 <hr>
                                                 <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação do material </h2>
                                                 <div class="field">
-                                                    <div class="control is-clearfix">
+                                                    <div class="control is-clearfix" id="form_set_material">
                                                         <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
                                                        {{ form2.management_form }}
                                                         {% for frm2 in form2 %}
@@ -509,15 +509,35 @@
                                                         </div>
                                                         {% endfor %}
                                                     </div>
+                                                    <div id="empty_form_material" style="display:none">
+                                                        <div class="columns">
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Material</label>
+                                                                    <div class="control is-expanded ">
+                                                                    {{ form2.empty_form.material }}        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Quantidade</label>
+                                                                    <div class="control is-expanded">
+                                                                    {{ form2.empty_form.quantidade }}    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <hr />
                                                     <div class="has-text-centered">
-                                                        <a class="button is-success" id="addMaterialBtn" onclick="">
+                                                        <button type="button" class="button is-success" id="add_more_material">
                                                             <!---->
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-plus mdi-24px"></i>
                                                             </span>
                                                             <span> Adicionar material </span>
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -563,7 +583,7 @@
                                                         {% endfor %}
                                                     </div>
                                                     <div id="empty_form" style="display:none">
-                                                                                                                    <div class="columns">
+                                                        <div class="columns">
                                                             <div class="column">
                                                                 <div class="field">
                                                                     <label class="label">Dia</label>
@@ -884,6 +904,14 @@
             $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
         });
     </script>
+    <script>
+        $('#add_more_material').click(function() {
+            var form_idx = $('#id_form-TOTAL_FORMS').val();
+            $('#form_set_material').append($('#empty_form_material').html().replace(/__prefix__/g, form_idx));
+            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    </script>
+
     {{ form.media.js }}
 </body>
 
