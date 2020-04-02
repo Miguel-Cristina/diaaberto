@@ -83,6 +83,9 @@
         .b-steps .steps .step-items .step-item:after, .b-steps .steps .step-items .step-item:before {
             background: -webkit-gradient(linear,right top,left top,color-stop(50%,#23d160),color-stop(50%,#23d160));
         }
+        .tabfields.invalid {
+            background-color: #ffdddd;
+        }
     </style>
     
 </head>
@@ -627,8 +630,12 @@
                                         </div>
                                         <div class="step-item stepcontent" style="display:none">
                                             <div style="padding: 1rem 2vw 0px;">
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Resumo da atividade </h2>
+                                                <p> A atividade submetida será avaliada pelo coordenador do departamento. </p>
+                                                <p>Será notificado aquando de atualizações referentes à mesma.</p>
                                                 <hr>
-                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Submeter atividade </h2> 
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Submeter atividade </h2>
+                                                <h3>A minha proposta de atividade está pronta para avaliação!</h3>
                                             </div>
                                         </div>
                                         <hr/>
@@ -652,13 +659,13 @@
                                                     </a>
                                                 </div>
                                                 <div class="level-right steps-action">
-                                                    <button href="#" data-nav="next" type="button" class="button is-success is-outlined" id="nextBtn" onclick="nextPrev(1)">
+                                                    <a href="#" data-nav="next" class="button is-success is-outlined" id="nextBtn" onclick="nextPrev(1)">
                                                         <!---->
                                                         <span> Próximo </span>
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-arrow-right mdi-24px"></i>
                                                         </span>
-                                                    </button>
+                                                    </a>
                                                 </div>
                      
                                                 <div class="level-right steps-action" style="display:none" id="submitBtn">
@@ -759,7 +766,7 @@
             {
                 changertabsinputs[j].required = true;
             }
-            //document.getElementById(inputLocalName).required = true;
+            document.getElementById(inputLocalName).required = true;
         }
     </script>
     <script>
@@ -862,7 +869,7 @@
                 if (!isValid) {
                     
                     // add an "invalid" class to the field:
-                    //y[i].className += " invalid";
+                    z[f].className += " invalid";
                     // and set the current valid status to false:
                     valid = false;
                 }
