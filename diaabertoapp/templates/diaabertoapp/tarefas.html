@@ -2828,9 +2828,9 @@
                                                                       {% if tarefa.estado  == "PA" %} is-warning {% endif %} 
                                                                       {% if tarefa.estado  == "AT" %} is-success {% endif %}
                                                 " style="width: 7rem;font-size: small;"> {{ tarefa.get_estado_display }} </span> </td>
-                                                <td data-label="Ações" class="has-text-centered"><form action ="{% url 'delete_tarefa' tarefa.pk %}" method="POST"><in>{% csrf_token %}<button><span
-                                                            class="icon has-text-danger"><i
-                                                                class="mdi mdi-close-box mdi-24px"></i></span></button></form></td>
+                                                <td data-label="Ações" class="has-text-centered"><form action ="{% url 'delete_tarefa' tarefa.pk %}" method="POST"><in>{% csrf_token %}<button class="button has-text-white is-small" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede rejeitar a proposta?');"><span
+                                                            class="icon is-small has-text-danger"><i
+                                                                class=" has-text-red mdi mdi-close-box mdi-36px"></i></span></button></form></td>
                                                 <!---->
                                             </tr>
                                             <tr class="detail" style="display:none">
