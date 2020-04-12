@@ -14,4 +14,5 @@ urlpatterns = [
     path('tarefas/', views.get_tarefas, name='tarefas'),
     path(r'^aceitaratividade/(?P<pk>[0-9]+)/$', views.aceitaratividade, name="aceitaratividade"),
     path(r'^rejeitaratividade/(?P<pk>[0-9]+)/$', views.rejeitaratividade, name="rejeitaratividade"),
+    path(r'^editaratividade/(?P<pk>[0-9]+)/$', views.editaratividade, name="editaratividade"),
 ]

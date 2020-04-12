@@ -175,6 +175,9 @@ def proporatividade(request):
         sForm = SessaoFormSet()
     return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':aForm, 'form2':mForm, 'form3':sForm})
 
+def editaratividade(request,pk):
+    return HttpResponseRedirect('/minhasatividades/')
+
 def aceitaratividade(request,pk):
     object = Atividade.objects.get(pk=pk)
     object.validada = 'VD'
