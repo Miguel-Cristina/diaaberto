@@ -12,6 +12,8 @@ urlpatterns = [
     path('gestaoedificios/', views.edificios, name='gestaoedificios'),
     path('select2/', include('django_select2.urls')),
     path('tarefas/', views.get_tarefas, name='tarefas'),
+    path('adicionartarefa/', views.add_tarefa, name='adicionartarefa'),
+    path('tarefas/delete/<pk>',views.rem_tarefa, name='delete_tarefa'),
     path(r'^aceitaratividade/(?P<pk>[0-9]+)/$', views.aceitaratividade, name="aceitaratividade"),
     path(r'^rejeitaratividade/(?P<pk>[0-9]+)/$', views.rejeitaratividade, name="rejeitaratividade"),
     path(r'^editaratividade/(?P<pk>[0-9]+)/$', views.editaratividade, name="editaratividade"),

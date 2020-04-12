@@ -75,6 +75,7 @@ class Tematica(models.Model):
     def __str__(self):
         return self.tema
 
+
 class PublicoAlvo(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -209,12 +210,46 @@ class AtividadeForm(ModelForm):
          fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'faculdade', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
 
 class Tarefa(models.Model):
-     id = models.AutoField(primary_key=True)
-     descricao = models.CharField(max_length=255, null=True)
-     localizacao_grupo = models.CharField(max_length=255, null=True)
-     destino = models.CharField(max_length=255, null=True)
-     horario = models.TimeField(unique=True,null=True)
-     cordenador = models.IntegerField(default = 2)
-     coolaborador = models.IntegerField(default = 3)
-     def str(self):
-         return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao
+     
+    id = models.AutoField(primary_key=True)
+     
+    REJEITADA =   'RJ'
+    PORATRIBUIR = 'PA'
+    ATRIBUIDA =   'AT'
+    VALIDACAO_CHOICES = [
+        ('RJ', 'Rejeitada'),
+        ('PA', 'Por Atribuir'),
+        ('AT', 'Atribuida'),
+    ]
+    estado = models.CharField(
+        max_length=2,
+        choices=VALIDACAO_CHOICES,
+        default=PORATRIBUIR,
+    )
+
+    ATIVIDADE = 'ATV' 
+    PERCURSO =  'PE'   
+    OUTRA    =  'OT'
+
+    TIPO_TAREFAS_CHOICES = (
+        ('AV', 'Atividade'),
+        ('PE' , 'Percurso'),
+        ('OT', 'Outra'),
+    )
+    tipo_tarefa = models.CharField(
+        max_length=2,
+        choices=TIPO_TAREFAS_CHOICES,
+        default=ATIVIDADE
+    )
+    descricao = models.CharField(max_length=255, null=True)
+    atividade = models.ForeignKey('Atividade', related_name='tarefa_atividade', on_delete=models.CASCADE, null=True,blank=True)
+    localizacao_grupo = models.CharField(max_length=255, null=True)
+    destino = models.CharField(max_length=255, null=True)
+    horario = models.TimeField(null=True)
+    dia = models.DateField(default=datetime.date.today)
+    cordenador = models.IntegerField(default = 2)
+    coolaborador = models.IntegerField(default = 3)
+
+    def str(self):
+        return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao
+

@@ -1,15 +1,15 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.db.models import Count
-from .models import Edificio, Atividade, Campus, Faculdade, Departamento, Tarefa, Tematica, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade
-from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm, SessaoAtividadeForm, MaterialFormSet, SessaoFormSet
+from .models import Edificio, Atividade, Campus, Faculdade, Departamento,Tarefa ,Tematica, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade
+from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm, TarefaForm ,SessaoAtividadeForm, MaterialFormSet, SessaoFormSet
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 
-# Create your views here.
+ #Create your views here.
 def index(request):
     return render(request, 'diaabertoapp/index.html', {})
 
@@ -265,4 +265,36 @@ def get_tarefas(request):
         tarefas = paginator.page(paginator.num_pages)
     #END pagination
 
+    return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
+
+def add_tarefa(request):
+    if request.method == 'POST':
+        aForm = TarefaForm(request.POST)
+        if aForm.is_valid():
+            tarefa = aForm.save()
+            return HttpResponseRedirect('/tarefas/')
+        else:
+            aForm.errors
+    else:
+        aForm = TarefaForm()
+     
+    return render(request, 'diaabertoapp/adicionartarefa.html', {'form':aForm, 'atividades': atividades})
+    
+def rem_tarefa(request ,pk):
+    tarefas_1 = Tarefa.objects.all()
+    
+   #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(tarefas_1, 5)
+    try:
+        tarefas = paginator.page(page)
+    except PageNotAnInteger:
+        tarefas = paginator.page(1)
+    except EmptyPage:
+        tarefas = paginator.page(paginator.num_pages)
+    #END pagination
+    print("entrei")
+    if request.method == 'POST':
+       obj = Tarefa.objects.filter(pk=pk).delete()
+       return HttpResponseRedirect('/tarefas/')    
     return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})

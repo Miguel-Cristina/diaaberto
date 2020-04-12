@@ -1,8 +1,9 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, Sala, Tarefa, Tematica, Atividade, MaterialQuantidade, Faculdade, Departamento, PublicoAlvo, Sessao, SessaoAtividade
+from diaabertoapp.models import Edificio, Campus, Sala, Tarefa,Tematica, Atividade, MaterialQuantidade, Faculdade, Departamento, PublicoAlvo, Sessao, SessaoAtividade
 #LocalAtividade,Local
 from django.utils.safestring import mark_safe
 # Register your models here.
+
 
 class CampusAdmin(admin.ModelAdmin):
     list_display = ('nome', 'morada', 'contacto')
