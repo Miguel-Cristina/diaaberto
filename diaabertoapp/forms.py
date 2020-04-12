@@ -6,6 +6,18 @@ from django_select2.forms import ModelSelect2Widget
 from django.forms import formset_factory
 
 
+class TarefaForm(forms.ModelForm):
+     descricao =forms.CharField(label="", max_length=255, widget = forms.TextInput(attrs = {'class': "input", 'placeholder': "Descrição..."}))    
+     localizacao_grupo = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Localização"}))
+     destino = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Material a requisitar..."}))
+     horario_inicio = forms.DateTimeField()
+     horario_fim = forms.DateTimeField()
+     cordenador = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"id_cordenadore"}))
+     coolaborador = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"id_colaboradore"}))
+     
+     class Meta:
+        model = Tarefa
+
 class CampusForm(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100)
     morada = forms.CharField(label='Morada', max_length=200)
