@@ -144,28 +144,6 @@ def proporatividade(request):
     distinct_sessoes = Sessao.objects.values('hora').distinct().count()
 
     if request.method == 'POST':
-        # BEGIN INSTANCE FORM
-   #     aForm = AtividadeForm(request.POST)
-   #     mForm = [MaterialQuantidadeForm(request.POST, prefix=str(x), instance=MaterialQuantidade()) for x in range(0,1)]
-   #     sForm = [SessaoAtividadeForm(request.POST, prefix=str(y), instance=SessaoAtividade()) for y in range(0,1)]
-   #
-   #     # check whether it's valid:
-   #     if aForm.is_valid() and all([mf.is_valid() for mf in mForm]) and all([sf.is_valid() for sf in sForm]):
-   #         atividade = aForm.save()
-   #         for mFs in mForm:
-   #             #if mFs.is_valid():
-   #             #for mFs in mForm:
-   #             material = mFs.save(commit=False)
-   #             material.atividade = atividade
-   #             material.save()
-   #
-   #         for sFs in sForm:
-   #             #if sFs.is_valid():
-   #             #for sFs in sForm:
-   #             sessao = sFs.save(commit=False)
-   #             sessao.atividade = atividade
-   #             sessao.save()
-        # END INSTANCE FORM
         #BEGIN FORMSET FORM
         aForm = AtividadeForm(request.POST)
         mForm = MaterialFormSet(request.POST)
@@ -184,9 +162,9 @@ def proporatividade(request):
                     sessao.save()
             return HttpResponseRedirect('/minhasatividades/')
         else:
-            aForm.errors
-            mForm.errors
-            sForm.errors
+           print(aForm.errors)
+           print(mForm.errors)
+           print(sForm.errors)
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -195,8 +173,20 @@ def proporatividade(request):
         #sForm = [SessaoAtividadeForm(prefix=str(y),instance=SessaoAtividade()) for y in range(0,1)]
         mForm = MaterialFormSet()
         sForm = SessaoFormSet()
-
     return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_ordered, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'faculdades':faculdades, 'form':aForm, 'form2':mForm, 'form3':sForm})
+
+def aceitaratividade(request,pk):
+    object = Atividade.objects.get(pk=pk)
+    object.validada = 'VD'
+    object.save()
+    return HttpResponseRedirect('/minhasatividades/')
+
+def rejeitaratividade(request,pk):
+    object = Atividade.objects.get(pk=pk)
+    object.validada = 'RJ'
+    object.save()
+    return HttpResponseRedirect('/minhasatividades/')
+
 
 def get_atividade(request):
     # if this is a POST request we need to process the form data

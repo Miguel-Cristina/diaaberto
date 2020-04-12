@@ -83,6 +83,9 @@
         .b-steps .steps .step-items .step-item:after, .b-steps .steps .step-items .step-item:before {
             background: -webkit-gradient(linear,right top,left top,color-stop(50%,#23d160),color-stop(50%,#23d160));
         }
+        .tabfields.invalid {
+            background-color: #ffdddd;
+        }
     </style>
     
 </head>
@@ -485,7 +488,7 @@
                                                 <hr>
                                                 <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação do material </h2>
                                                 <div class="field">
-                                                    <div class="control is-clearfix">
+                                                    <div class="control is-clearfix" id="form_set_material">
                                                         <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
                                                        {{ form2.management_form }}
                                                         {% for frm2 in form2 %}
@@ -509,15 +512,35 @@
                                                         </div>
                                                         {% endfor %}
                                                     </div>
+                                                    <div id="empty_form_material" style="display:none">
+                                                        <div class="columns">
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Material</label>
+                                                                    <div class="control is-expanded ">
+                                                                    {{ form2.empty_form.material }}        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <label class="label">Quantidade</label>
+                                                                    <div class="control is-expanded">
+                                                                    {{ form2.empty_form.quantidade }}    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <hr />
                                                     <div class="has-text-centered">
-                                                        <a class="button is-success" id="addMaterialBtn" onclick="">
+                                                        <button type="button" class="button is-success" id="add_more_material">
                                                             <!---->
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-plus mdi-24px"></i>
                                                             </span>
                                                             <span> Adicionar material </span>
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -563,7 +586,7 @@
                                                         {% endfor %}
                                                     </div>
                                                     <div id="empty_form" style="display:none">
-                                                                                                                    <div class="columns">
+                                                        <div class="columns">
                                                             <div class="column">
                                                                 <div class="field">
                                                                     <label class="label">Dia</label>
@@ -607,8 +630,12 @@
                                         </div>
                                         <div class="step-item stepcontent" style="display:none">
                                             <div style="padding: 1rem 2vw 0px;">
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Resumo da atividade </h2>
+                                                <p> A atividade submetida será avaliada pelo coordenador do departamento. </p>
+                                                <p>Será notificado aquando de atualizações referentes à mesma.</p>
                                                 <hr>
-                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Submeter atividade </h2> 
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Submeter atividade </h2>
+                                                <h3>A minha proposta de atividade está pronta para avaliação!</h3>
                                             </div>
                                         </div>
                                         <hr/>
@@ -632,13 +659,13 @@
                                                     </a>
                                                 </div>
                                                 <div class="level-right steps-action">
-                                                    <button href="#" data-nav="next" type="button" class="button is-success is-outlined" id="nextBtn" onclick="nextPrev(1)">
+                                                    <a href="#" data-nav="next" class="button is-success is-outlined" id="nextBtn" onclick="nextPrev(1)">
                                                         <!---->
                                                         <span> Próximo </span>
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-arrow-right mdi-24px"></i>
                                                         </span>
-                                                    </button>
+                                                    </a>
                                                 </div>
                      
                                                 <div class="level-right steps-action" style="display:none" id="submitBtn">
@@ -739,7 +766,7 @@
             {
                 changertabsinputs[j].required = true;
             }
-            //document.getElementById(inputLocalName).required = true;
+            document.getElementById(inputLocalName).required = true;
         }
     </script>
     <script>
@@ -842,7 +869,7 @@
                 if (!isValid) {
                     
                     // add an "invalid" class to the field:
-                    //y[i].className += " invalid";
+                    z[f].className += " invalid";
                     // and set the current valid status to false:
                     valid = false;
                 }
@@ -884,6 +911,14 @@
             $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
         });
     </script>
+    <script>
+        $('#add_more_material').click(function() {
+            var form_idx = $('#id_form-TOTAL_FORMS').val();
+            $('#form_set_material').append($('#empty_form_material').html().replace(/__prefix__/g, form_idx));
+            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    </script>
+
     {{ form.media.js }}
 </body>
 
