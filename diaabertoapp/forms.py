@@ -1,9 +1,22 @@
 from django import forms
-from .models import Atividade, Campus, Edificio, Sala, Tematica, PublicoAlvo, Faculdade, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade
+from .models import Atividade, Campus, Edificio, Sala,Tarefa ,Tematica ,PublicoAlvo, Faculdade, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
 from django.forms import formset_factory
+
+class TarefaForm(forms.ModelForm):
+     descricao =forms.CharField(label="", max_length=255, widget = forms.TextInput(attrs = {'class': "input", 'placeholder': "Descrição..."}))    
+     localizacao_grupo = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Localização"}))
+     destino = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Material a requisitar..."}))
+     horario = forms.TimeField()
+     dia = forms.DateField()
+     cordenador = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"id_cordenadore"}))
+     coolaborador = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"id_colaboradore"}))
+     class Meta:
+        model = Tarefa
+        fields = ('descricao','localizacao_grupo','destino','horario','dia','cordenador','coolaborador', )
+
 
 class CampusForm(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100)

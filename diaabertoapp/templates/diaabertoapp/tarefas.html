@@ -2774,6 +2774,11 @@
                                                 <th width="40px"></th>
                                                 <!---->
                                                 <th class="is-sortable" style="width: 120px;">
+                                                    <div class="th-wrap">Dia <span class="icon is-small"
+                                                            style="display: none;"><i
+                                                                class="mdi mdi-menu-up"></i></span></div>
+                                                </th>
+                                                <th class="is-sortable" style="width: 120px;">
                                                     <div class="th-wrap">Horário <span class="icon is-small"
                                                             style="display: none;"><i
                                                                 class="mdi mdi-menu-up"></i></span></div>
@@ -2814,17 +2819,18 @@
                                                         </a>
                                                     </td>
                                                 <!---->
-                                                <td data-label="Horário" class=""> {{ tarefa.horario|time:"H:i" }}</td>
+                                                <td data-label="Horário" class=""> {{ tarefa.dia }} </td>
+                                                <td data-label="Horário" class=""> {{ tarefa.horario|time:"H:i" }} </td>
                                                 <td data-label="Nome" class=""> {{ tarefa.descricao }} </td>
-                                                <td data-label="Tipo" class=""> {{ tarefa.get_tipo_display }} </td>
+                                                <td data-label="Tipo" class=""> {{ tarefa.get_tipo_tarefa_display }} </td>
                                                 <td data-label="Estado" class=""> 
                                                 <span class="tag text {% if tarefa.estado  == "RJ" %} is-danger {% endif %} 
                                                                       {% if tarefa.estado  == "PA" %} is-warning {% endif %} 
                                                                       {% if tarefa.estado  == "AT" %} is-success {% endif %}
                                                 " style="width: 7rem;font-size: small;"> {{ tarefa.get_estado_display }} </span> </td>
-                                                <td data-label="Ações" class="has-text-centered"><a><span
+                                                <td data-label="Ações" class="has-text-centered"><form action ="{% url 'delete_tarefa' tarefa.pk %}" method="POST"><in>{% csrf_token %}<button><span
                                                             class="icon has-text-danger"><i
-                                                                class="mdi mdi-close-box mdi-24px"></i></span></a></td>
+                                                                class="mdi mdi-close-box mdi-24px"></i></span></button></form></td>
                                                 <!---->
                                             </tr>
                                             <tr class="detail" style="display:none">

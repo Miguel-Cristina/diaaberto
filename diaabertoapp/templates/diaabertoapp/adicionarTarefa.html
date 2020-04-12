@@ -1,0 +1,507 @@
+﻿<html lang="pt-pt">
+{% load static %}
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
+    <script src="{% static 'diaabertoapp/dist/bulma-steps.js' %}"></script>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
+    {{ form.media.css }}
+    <title>Dia Aberto</title>
+    <style>
+        body,
+        html {
+            min-height: 100%;
+            background-size: cover;
+            background: linear-gradient(to bottom, #ffffff, #eeeeff) no-repeat fixed center center;
+        }
+
+        * {
+            outline: none;
+        }
+    </style>
+    <script charset="utf-8" src="/js/tarefas.268f7ccd.js"></script>
+</head>
+
+<body>
+    <div data-v-8716d23a="" id="app">
+        <nav data-v-a67fe1ba="" data-v-8716d23a="" role="navigation" aria-label="main navigation" class="navbar">
+            <div class="navbar-brand"><a data-v-a67fe1ba="" href="/" class="navbar-item logo router-link-active"><img
+                        data-v-a67fe1ba="" alt="Dia Aberto" src="{% static 'diaabertoapp/img/logo-navbar.png' %}" ></a><a role="button"
+                    aria-label="menu" class="navbar-burger burger"><span aria-hidden="true"></span> <span
+                        aria-hidden="true"></span> <span aria-hidden="true"></span></a></div>
+            <div class="navbar-menu">
+                <div class="navbar-start"><a data-v-a67fe1ba="" href="/departamentoatividades"
+                        class="navbar-item is-tab router-link"> Atividades do Departamento </a><a data-v-a67fe1ba=""
+                        href="/inscricoes" class="navbar-item is-tab router-link"> Inscrições </a><a data-v-a67fe1ba=""
+                        href="/colaboradores" class="navbar-item is-tab router-link"> Colaboradores </a><a
+                        data-v-a67fe1ba="" href="/tarefas" class="navbar-item is-tab router-link"> Tarefas </a></div>
+                <div class="navbar-end">
+                    <div data-v-a67fe1ba="" class="navbar-item">
+                        <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                            <div role="button" aria-haspopup="true" class="dropdown-trigger"><span data-v-a67fe1ba=""
+                                    role="button"><button data-v-a67fe1ba="" type="button" data-badge="0"
+                                        class="button has-badge-rounded has-badge-warning is-text"
+                                        style="margin-right: 0.9rem;">
+                                        <!----> <span><span data-v-a67fe1ba="" class="icon"><i
+                                                    class="mdi mdi-bell mdi-24px"></i></span></span>
+                                        <!----></button></span></div>
+                            <div aria-hidden="true" class="background" style="display: none;"></div>
+                            <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                                <div role="menu" class="dropdown-content">
+                                    <div data-v-a67fe1ba="" role="menuitem" tabindex="0" class="dropdown-item"><strong
+                                            data-v-a67fe1ba="">Notificações</strong></div>
+                                    <hr data-v-a67fe1ba="" class="dropdown-divider">
+                                    <div data-v-a67fe1ba="">
+                                        <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
+                                            <div data-v-a67fe1ba="" class="has-text-grey"> Não tem novas notificações!
+                                            </div>
+                                        </div>
+                                        <hr data-v-a67fe1ba="" class="dropdown-divider">
+                                    </div><a data-v-a67fe1ba="" tabindex="0" class="dropdown-item"><u
+                                            data-v-a67fe1ba="">Ver todas as notificações</u></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                            <div role="button" aria-haspopup="true" class="dropdown-trigger"><button data-v-a67fe1ba=""
+                                    type="button" class="button is-text" style="margin-right: 0.9rem;">
+                                    <!----> <span><span data-v-a67fe1ba="" class="icon"><i
+                                                class="mdi mdi-account-circle mdi-24px"></i></span></span>
+                                    <!----></button></div>
+                            <div class="background" style="display: none;" aria-hidden="true"></div>
+                            <div class="dropdown-menu" style="display: none;" aria-hidden="true">
+                                <div role="list" class="dropdown-content"><a data-v-a67fe1ba="" role="listitem"
+                                        tabindex="0" class="dropdown-item is-disabled">Participante Individual</a><a
+                                        data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor
+                                        Secundário</a><a data-v-a67fe1ba="" role="listitem" tabindex="0"
+                                        class="dropdown-item is-disabled">Colaborador</a><a data-v-a67fe1ba=""
+                                        role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a><a
+                                        data-v-a67fe1ba="" role="listitem" tabindex="0"
+                                        class="dropdown-item">Coordenador</a><a data-v-a67fe1ba="" role="listitem"
+                                        tabindex="0" class="dropdown-item">Administrador</a></div>
+                            </div>
+                        </div><button data-v-a67fe1ba="" type="button" class="button"><span class="icon is-small"><i
+                                    class="mdi mdi-logout-variant"></i></span> <span> Sair </span>
+                            <!----></button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+        <div data-v-8716d23a="" id="page-content">
+            <div data-v-8716d23a="" class="card">
+                <div data-v-8716d23a="" class="card-content">
+                    <div data-v-8716d23a="" id="top">
+                        <nav aria-label="breadcrumbs" class="breadcrumb">
+                            <ul>
+                                <li><a href="/" class="router-link-active">Início</a></li>
+                                <li><a href="/tarefas" class="">Tarefas</a></li>
+                                <li class="is-active"><a href="/adicionartarefa"
+                                        class="router-link-exact-active router-link-active">Adicionar Tarefa</a></li>
+                            </ul>
+                        </nav>
+                        <div style="padding: 3rem 2vw 1rem;">
+                            <div class="b-steps">
+                                <nav class="steps is-success">
+                                    <ul class="step-items">
+                                        <li class="step-item is-success is-active"><a class="step-link">
+                                                <div class="step-marker"><span class="icon"><i
+                                                            class="mdi mdi-account-details mdi-24px"></i></span></div>
+                                                <div class="step-details"><span class="step-title">Adicionar
+                                                        Tarefa</span></div>
+                                            </a></li>
+                                    </ul>
+                                </nav>
+                                <section class="step-content">
+                                    <div class="step-item" style="">
+                                        <div style="padding: 1rem 2vw 0px;">
+                                            <hr>
+                                            <div class="column is-offset-3 is-6">
+                                                <div class="columns">
+                                                    <div class="column">
+                                                        <div class="field"><label class="label">Horário de
+                                                                Início</label>
+                                                            <div class="timepicker control">
+                                                                <div class="dropdown is-mobile-modal">
+                                                                    <div role="button" aria-haspopup="true"
+                                                                        class="dropdown-trigger">
+                                                                        <div class="control has-icons-left is-clearfix">
+                                                                            <input type="text" autocomplete="off"
+                                                                                placeholder="De" class="input"> <span
+                                                                                class="icon is-left"><i
+                                                                                    class="mdi mdi-clock mdi-24px"></i></span>
+                                                                            <!---->
+                                                                            <!---->
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="background" style="display: none;"
+                                                                        aria-hidden="true"></div>
+                                                                    <div class="dropdown-menu" style="display: none;"
+                                                                        aria-hidden="true">
+                                                                        <div class="dropdown-content">
+                                                                            <div tabindex="0" class="dropdown-item">
+                                                                                <div
+                                                                                    class="field is-grouped-centered is-grouped">
+                                                                                    <!---->
+                                                                                    <div class="control"><span
+                                                                                            class="select"><select>
+                                                                                                <!---->
+                                                                                                <option value="0">
+                                                                                                    00
+                                                                                                </option>
+                                                                                                <option value="1">
+                                                                                                    01
+                                                                                                </option>
+                                                                                                <option value="2">
+                                                                                                    02
+                                                                                                </option>
+                                                                                                <option value="3">
+                                                                                                    03
+                                                                                                </option>
+                                                                                                <option value="4">
+                                                                                                    04
+                                                                                                </option>
+                                                                                                <option value="5">
+                                                                                                    05
+                                                                                                </option>
+                                                                                                <option value="6">
+                                                                                                    06
+                                                                                                </option>
+                                                                                                <option value="7">
+                                                                                                    07
+                                                                                                </option>
+                                                                                                <option value="8">
+                                                                                                    08
+                                                                                                </option>
+                                                                                                <option value="9">
+                                                                                                    09
+                                                                                                </option>
+                                                                                                <option value="10">
+                                                                                                    10
+                                                                                                </option>
+                                                                                                <option value="11">
+                                                                                                    11
+                                                                                                </option>
+                                                                                                <option value="12">
+                                                                                                    12
+                                                                                                </option>
+                                                                                                <option value="13">
+                                                                                                    13
+                                                                                                </option>
+                                                                                                <option value="14">
+                                                                                                    14
+                                                                                                </option>
+                                                                                                <option value="15">
+                                                                                                    15
+                                                                                                </option>
+                                                                                                <option value="16">
+                                                                                                    16
+                                                                                                </option>
+                                                                                                <option value="17">
+                                                                                                    17
+                                                                                                </option>
+                                                                                                <option value="18">
+                                                                                                    18
+                                                                                                </option>
+                                                                                                <option value="19">
+                                                                                                    19
+                                                                                                </option>
+                                                                                                <option value="20">
+                                                                                                    20
+                                                                                                </option>
+                                                                                                <option value="21">
+                                                                                                    21
+                                                                                                </option>
+                                                                                                <option value="22">
+                                                                                                    22
+                                                                                                </option>
+                                                                                                <option value="23">
+                                                                                                    23
+                                                                                                </option>
+                                                                                            </select></span>
+                                                                                        <!---->
+                                                                                    </div> <span
+                                                                                        class="control is-colon">:</span>
+                                                                                    <div class="control"><span
+                                                                                            class="select"><select>
+                                                                                                <!---->
+                                                                                                <option value="0">
+                                                                                                    00
+                                                                                                </option>
+                                                                                                <option value="5">
+                                                                                                    05
+                                                                                                </option>
+                                                                                                <option value="10">
+                                                                                                    10
+                                                                                                </option>
+                                                                                                <option value="15">
+                                                                                                    15
+                                                                                                </option>
+                                                                                                <option value="20">
+                                                                                                    20
+                                                                                                </option>
+                                                                                                <option value="25">
+                                                                                                    25
+                                                                                                </option>
+                                                                                                <option value="30">
+                                                                                                    30
+                                                                                                </option>
+                                                                                                <option value="35">
+                                                                                                    35
+                                                                                                </option>
+                                                                                                <option value="40">
+                                                                                                    40
+                                                                                                </option>
+                                                                                                <option value="45">
+                                                                                                    45
+                                                                                                </option>
+                                                                                                <option value="50">
+                                                                                                    50
+                                                                                                </option>
+                                                                                                <option value="55">
+                                                                                                    55
+                                                                                                </option>
+                                                                                            </select></span>
+                                                                                        <!---->
+                                                                                    </div>
+                                                                                    <!---->
+                                                                                    <!---->
+                                                                                    <!---->
+                                                                                </div>
+                                                                                <!---->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!---->
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="field"><label class="label">Horário de Fim</label>
+                                                            <div class="timepicker control">
+                                                                <div class="dropdown is-mobile-modal">
+                                                                    <div role="button" aria-haspopup="true"
+                                                                        class="dropdown-trigger">
+                                                                        <div class="control has-icons-left is-clearfix">
+                                                                            <input type="text" autocomplete="off"
+                                                                                placeholder="Até" class="input"> <span
+                                                                                class="icon is-left"><i
+                                                                                    class="mdi mdi-clock mdi-24px"></i></span>
+                                                                            <!---->
+                                                                            <!---->
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="background" style="display: none;"
+                                                                        aria-hidden="true"></div>
+                                                                    <div class="dropdown-menu" style="display: none;"
+                                                                        aria-hidden="true">
+                                                                        <div class="dropdown-content">
+                                                                            <div tabindex="0" class="dropdown-item">
+                                                                                <div
+                                                                                    class="field is-grouped-centered is-grouped">
+                                                                                    <!---->
+                                                                                    <div class="control"><span
+                                                                                            class="select"><select>
+                                                                                                <!---->
+                                                                                                <option value="0">
+                                                                                                    00
+                                                                                                </option>
+                                                                                                <option value="1">
+                                                                                                    01
+                                                                                                </option>
+                                                                                                <option value="2">
+                                                                                                    02
+                                                                                                </option>
+                                                                                                <option value="3">
+                                                                                                    03
+                                                                                                </option>
+                                                                                                <option value="4">
+                                                                                                    04
+                                                                                                </option>
+                                                                                                <option value="5">
+                                                                                                    05
+                                                                                                </option>
+                                                                                                <option value="6">
+                                                                                                    06
+                                                                                                </option>
+                                                                                                <option value="7">
+                                                                                                    07
+                                                                                                </option>
+                                                                                                <option value="8">
+                                                                                                    08
+                                                                                                </option>
+                                                                                                <option value="9">
+                                                                                                    09
+                                                                                                </option>
+                                                                                                <option value="10">
+                                                                                                    10
+                                                                                                </option>
+                                                                                                <option value="11">
+                                                                                                    11
+                                                                                                </option>
+                                                                                                <option value="12">
+                                                                                                    12
+                                                                                                </option>
+                                                                                                <option value="13">
+                                                                                                    13
+                                                                                                </option>
+                                                                                                <option value="14">
+                                                                                                    14
+                                                                                                </option>
+                                                                                                <option value="15">
+                                                                                                    15
+                                                                                                </option>
+                                                                                                <option value="16">
+                                                                                                    16
+                                                                                                </option>
+                                                                                                <option value="17">
+                                                                                                    17
+                                                                                                </option>
+                                                                                                <option value="18">
+                                                                                                    18
+                                                                                                </option>
+                                                                                                <option value="19">
+                                                                                                    19
+                                                                                                </option>
+                                                                                                <option value="20">
+                                                                                                    20
+                                                                                                </option>
+                                                                                                <option value="21">
+                                                                                                    21
+                                                                                                </option>
+                                                                                                <option value="22">
+                                                                                                    22
+                                                                                                </option>
+                                                                                                <option value="23">
+                                                                                                    23
+                                                                                                </option>
+                                                                                            </select></span>
+                                                                                        <!---->
+                                                                                    </div> <span
+                                                                                        class="control is-colon">:</span>
+                                                                                    <div class="control"><span
+                                                                                            class="select"><select>
+                                                                                                <!---->
+                                                                                                <option value="0">
+                                                                                                    00
+                                                                                                </option>
+                                                                                                <option value="5">
+                                                                                                    05
+                                                                                                </option>
+                                                                                                <option value="10">
+                                                                                                    10
+                                                                                                </option>
+                                                                                                <option value="15">
+                                                                                                    15
+                                                                                                </option>
+                                                                                                <option value="20">
+                                                                                                    20
+                                                                                                </option>
+                                                                                                <option value="25">
+                                                                                                    25
+                                                                                                </option>
+                                                                                                <option value="30">
+                                                                                                    30
+                                                                                                </option>
+                                                                                                <option value="35">
+                                                                                                    35
+                                                                                                </option>
+                                                                                                <option value="40">
+                                                                                                    40
+                                                                                                </option>
+                                                                                                <option value="45">
+                                                                                                    45
+                                                                                                </option>
+                                                                                                <option value="50">
+                                                                                                    50
+                                                                                                </option>
+                                                                                                <option value="55">
+                                                                                                    55
+                                                                                                </option>
+                                                                                            </select></span>
+                                                                                        <!---->
+                                                                                    </div>
+                                                                                    <!---->
+                                                                                    <!---->
+                                                                                    <!---->
+                                                                                </div>
+                                                                                <!---->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!---->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="block">
+                                                    <div class="field"><label class="label">Tipo de Tarefa:</label>
+                                                        <!---->
+                                                    </div><label class="b-radio radio"
+                                                        style="margin-right: 1rem;"><input type="radio" name="atividade"
+                                                            value="Atividade"> <span class="check"></span> <span
+                                                            class="control-label"> Atividade </span></label><label
+                                                        class="b-radio radio" style="margin-right: 1rem;"><input
+                                                            type="radio" name="percurso" value="Percurso"> <span
+                                                            class="check"></span> <span class="control-label">
+                                                            Acompanhar participantes </span></label><label
+                                                        class="b-radio radio"><input type="radio" name="outra"
+                                                            value="Outra"> <span class="check"></span> <span
+                                                            class="control-label"> Outra </span></label>
+                                                </div>
+                                                <!---->
+                                                <div>
+                                                    <div class="field"><label class="label">Descrição da Tarefa</label>
+                                                        <div class="control is-clearfix"><textarea maxlength="100"
+                                                                class="textarea"></textarea>
+                                                            <!---->
+                                                            <!----> <small class="help counter is-invisible">
+                                                                39 / 100
+                                                            </small></div>
+                                                        <!---->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </section>
+                                <div class="column is-8 is-offset-2">
+                                    <div class="level">
+                                        <div class="level-left"><a href="/tarefas" class="button is-outlined"
+                                                type="button">
+                                                <!----> <span> Cancelar </span>
+                                                <!----></a></div>
+                                        <div class="level-right"><button type="button"
+                                                class="button is-large is-success is-outlined">
+                                                <!----> <span> Adicionar Tarefa </span>
+                                                <!----></button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer data-v-8716d23a="" class="footer">
+            <div data-v-8716d23a="" style="float: left;"> (c) 2020 </div>
+            <div data-v-8716d23a="" style="float: right;"> Designed by Grupo 9 </div>
+            <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto </div>
+        </footer>
+    </div>
+    <script src="/js/chunk-vendors.63f37e79.js"></script>
+    <script src="/js/app.841e44b5.js"></script>
+</body>
+
+</html>
