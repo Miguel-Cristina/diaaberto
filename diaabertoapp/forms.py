@@ -1,5 +1,5 @@
 from django import forms
-from .models import Atividade, Campus, Edificio, Sala, Tematica, PublicoAlvo, Faculdade, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade
+from .models import Atividade, Campus, Edificio, Sala, Tematica, Tarefa, PublicoAlvo, Faculdade, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
@@ -17,6 +17,7 @@ class TarefaForm(forms.ModelForm):
      
      class Meta:
         model = Tarefa
+        fields = ('descricao', 'localizacao_grupo' , 'destino' ,'horario_inicio', 'horario_fim', 'cordenador', 'coolaborador')
 
 class CampusForm(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100)
@@ -30,8 +31,8 @@ class SalaForm(forms.ModelForm):
 
     class Meta:
         model = Sala
-
         fields = ('campus', 'edificio', 'sala')
+
 class MaterialQuantidadeForm(forms.ModelForm):
     material = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Material a requisitar..."}))
     quantidade = forms.IntegerField(min_value=1, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"quantidade_material"}))
