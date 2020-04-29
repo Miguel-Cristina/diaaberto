@@ -1,0 +1,523 @@
+﻿<!DOCTYPE HTML>
+{% load static %}
+<html lang="pt-pt">
+
+<head>
+
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+    <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
+    <script src="{% static 'diaabertoapp/dist/bulma-steps.js' %}"></script>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
+    <title>Dia Aberto</title>
+    <style>
+        body,
+        html {
+            min-height: 100%;
+            background-size: cover;
+            background: linear-gradient(to bottom, #ffffff, #eeeeff) no-repeat fixed center center;
+        }
+
+        * {
+            outline: none;
+        }
+        .footer{
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+        /* Style the tab content */
+        .tabcontent {
+          display: none;
+          padding-left: .8em;
+          padding-right: .8em;
+        }
+        .tabdcontent {
+          padding-left: .8em;
+          padding-right: .8em;
+          padding-bottom: .8em
+        }
+        /* Style the tab */
+        .tab {
+          /*overflow: hidden;*/
+          border: 0px solid #ccc;
+          /*background-color: #f1f1f1;*/
+        }
+        
+        .tab a {
+          border: none;
+          /*outline: none;*/
+          cursor: pointer;
+          transition: 0.3s;
+        }
+        /* Change background color of buttons on hover */
+        .tab a:hover {
+                /*background-color: #ddd;*/
+        }
+        .tab a.active {
+          background-color: #3273dc;
+          color: white;
+        }
+        .tabs {
+            margin-bottom: 0px
+            /*style="margin-bottom:0px"*/
+        }
+
+        element.style {
+        }
+
+        .b-steps .steps .step-items .step-item.is-completed .step-marker {
+            background-color: #23d160;
+            border-color: #23d160;
+            color: white;
+        }
+        .b-steps .steps .step-items .step-item:after, .b-steps .steps .step-items .step-item:before {
+            background: -webkit-gradient(linear,right top,left top,color-stop(50%,#23d160),color-stop(50%,#23d160));
+        }
+        .tabfields.invalid {
+            background-color: #ffdddd;
+        }
+        .notices{
+            position: fixed;
+            display: flex;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8em;
+            overflow: hidden;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        .table.is-scrollable tbody {
+          overflow-y: scroll;
+          width: auto;
+          position: absolute;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div data-v-8716d23a="" id="app">
+        <nav data-v-a67fe1ba="" data-v-8716d23a="" role="navigation" aria-label="main navigation" class="navbar">
+            <div class="navbar-brand">
+                <a data-v-a67fe1ba="" href="/" class="navbar-item logo router-link-active">
+                    <img data-v-a67fe1ba="" alt="Dia Aberto" src="{% static 'diaabertoapp/img/logo-navbar.png' %}">
+                </a>
+                <a role="button" aria-label="menu" class="navbar-burger burger">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <a data-v-a67fe1ba="" href="#" class="navbar-item is-tab router-link"> Configuração das Atividades </a>
+                </div>
+                <div class="navbar-end">
+                    <div data-v-a67fe1ba="" class="navbar-item">
+                        <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                            <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                                <span data-v-a67fe1ba="" role="button">
+                                    <button data-v-a67fe1ba="" type="button" data-badge="0" class="button has-badge-rounded has-badge-warning is-text" style="margin-right: 0.9rem;">
+                                        <!---->
+                                        <span>
+                                            <span data-v-a67fe1ba="" class="icon">
+                                                <i class="mdi mdi-bell mdi-24px"></i>
+                                            </span>
+                                        </span>
+                                        <!---->
+                                    </button>
+                                </span>
+                            </div>
+                            <div aria-hidden="true" class="background" style="display: none;"></div>
+                            <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                                <div role="menu" class="dropdown-content">
+                                    <div data-v-a67fe1ba="" role="menuitem" tabindex="0" class="dropdown-item">
+                                        <strong data-v-a67fe1ba="">Notificações</strong>
+                                    </div>
+                                    <hr data-v-a67fe1ba="" class="dropdown-divider">
+                                    <div data-v-a67fe1ba="">
+                                        <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
+                                            <div data-v-a67fe1ba="" class="has-text-grey"> Não tem novas notificações! </div>
+                                        </div>
+                                        <hr data-v-a67fe1ba="" class="dropdown-divider">
+                                    </div>
+                                    <a data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
+                                        <u data-v-a67fe1ba="">Ver todas as notificações</u>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                            <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                                <button data-v-a67fe1ba="" type="button" class="button is-text" style="margin-right: 0.9rem;">
+                                    <!---->
+                                    <span>
+                                        <span data-v-a67fe1ba="" class="icon">
+                                            <i class="mdi mdi-account-circle mdi-24px"></i>
+                                        </span>
+                                    </span>
+                                    <!---->
+                                </button>
+                            </div>
+                            <div class="background" style="display: none;" aria-hidden="true"></div>
+                            <div class="dropdown-menu" style="display: none; " aria-hidden="true">
+                                <div role="list" class="dropdown-content">
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Colaborador</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-active">Administrador</a>
+                                </div>
+                            </div>
+                        </div>
+                        <button data-v-a67fe1ba="" type="button" class="button">
+                            <span class="icon is-small">
+                                <i class="mdi mdi-logout-variant"></i>
+                            </span>
+                            <span> Sair </span>
+                            <!---->
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
+            {% endfor %}
+        {% endif %}
+
+        <div data-v-8716d23a="" id="page-content">
+            <div data-v-8716d23a="" class="card">
+                <div data-v-8716d23a="" class="card-content">
+                    <div data-v-8716d23a="" id="top">
+                        <nav aria-label="breadcrumbs" class="breadcrumb">
+                            <ul>
+                                <li>
+                                    <a href="/administrador" class="router-link-active">Início</a>
+                                </li>
+                                <li class="is-active">
+                                    <a href="/administrador/configuraratividades" class="">Configuração das Atividades</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div style="padding: 3rem 2vw 1rem;">
+                            <div class="columns">
+                                
+                                <div class="column tile"> 
+                                    <div class="container box">
+                                        <div class="level">
+                                            <div class="level-left">
+                                                <div class="level-item">
+                                                    <p class="menu-label">Tipos de Atividade</p>
+                                                </div>
+                                            </div>
+                                            <div class="level-right">
+                                                <div class="level-item">
+
+                                                    <a  href="/administrador/configuraratividades/tipoatividade"  class="button is-success is-outlined  is-small">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-settings"></i>
+                                                        </span>
+                                                        <span>Configurar</span>
+                                                        <!---->
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        
+                                            <div class="table-container" style="overflow-y:scroll;height:600px">
+                                                <table id="activitiesTable" class="table has-mobile-cards is-hoverable is-fullwidth">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                {% if order_by == 'tipo' and sort == 'asc' %}
+                                                                    <a href="?order_by=tipo&sort=desc">
+                                                                        <div class="th-wrap">Tipo
+                                                                            <span class="icon is-small">
+                                                                                <i class="mdi mdi-menu-up"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                {% elif order_by == 'tipo' and sort == 'desc' %}
+                                                                    <a href="?order_by=tipo&sort=asc">
+                                                                        <div class="th-wrap">Tipo
+                                                                            <span class="icon is-small">
+                                                                                <i class="mdi mdi-menu-down"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                {% else %}
+                                                                    <a href="?order_by=tipo&sort=asc" style="color: black">
+                                                                        <div class="th-wrap">Tipo
+                                                                            <span class="icon is-small">
+                                                                                <i class="mdi mdi-sort"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                {% endif %}
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        {% for tipo in tipos %}
+                                                        <tr draggable="false" class="header">
+                                                            <td> {{ tipo }} </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+
+                                                    <!---->
+                                                </table>
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="column tile">
+                                    <div class="container box">
+                                        <div class="level">
+                                            <div class="level-left">
+                                                <div class="level-item">
+                                                    <p class="menu-label">Temáticas</p>
+                                                </div>
+                                            </div>
+                                            <div class="level-right">
+                                                <div class="level-item">
+
+                                                    <a href="/administrador/configuraratividades/tematicas" class="button is-success is-outlined  is-small">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-settings"></i>
+                                                        </span>
+                                                        <span>Configurar</span>
+                                                        <!---->
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="table-container" style="overflow-y:scroll;height:600px">
+                                            <table id="activitiesTable" class="table has-mobile-cards is-hoverable is-fullwidth">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="is-sortable" style="width: 300px;">
+                                                                {% if order_by == 'tema' and sort == 'asc' %}
+                                                                    <a href="?order_by=tema&sort=desc">
+                                                                        <div class="th-wrap">Tema
+                                                                            <span class="icon is-small">
+                                                                                <i class="mdi mdi-menu-up"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                {% elif order_by == 'tema' and sort == 'desc' %}
+                                                                    <a href="?order_by=tema&sort=asc">
+                                                                        <div class="th-wrap">Tema
+                                                                            <span class="icon is-small">
+                                                                                <i class="mdi mdi-menu-down"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                {% else %}
+                                                                    <a href="?order_by=tema&sort=asc" style="color: black">
+                                                                        <div class="th-wrap">Tema
+                                                                            <span class="icon is-small">
+                                                                                <i class="mdi mdi-sort"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                {% endif %}
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for tema in temas %}
+                                                    <tr draggable="false" class="header">
+                                                        <td> {{ tema }} </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+
+                                                <!---->
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column tile">
+                                    <div class="container box">
+                                        <div class="level">
+                                            <div class="level-left">
+                                                <div class="level-item">
+                                                    <p class="menu-label">Público-alvo</p>
+                                                </div>
+                                            </div>
+                                            <div class="level-right">
+                                                <div class="level-item">
+
+                                                    <a href="/administrador/configuraratividades/publicoalvo" class="button is-success is-outlined  is-small">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-settings"></i>
+                                                        </span>
+                                                        <span>Configurar</span>
+                                                        <!---->
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="table-container" style="overflow-y:scroll;height:600px">
+                                            <table id="activitiesTable" class="table has-mobile-cards is-hoverable  is-fullwidth">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="is-sortable" style="width: 300px;">
+                                                            {% if order_by == 'publico' and sort == 'asc' %}
+                                                                <a href="?order_by=publico&sort=desc">
+                                                                    <div class="th-wrap">Público-alvo
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                            {% elif order_by == 'publico' and sort == 'desc' %}
+                                                                <a href="?order_by=publico&sort=asc">
+                                                                    <div class="th-wrap">Público-alvo
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                            {% else %}
+                                                                <a href="?order_by=publico&sort=asc" style="color: black">
+                                                                    <div class="th-wrap">Público-alvo
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-sort"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                            {% endif %}
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for publico in publicos %}
+                                                    <tr draggable="false" class="header">
+                                                        <td> {{ publico }} </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+
+                                                <!---->
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column tile">
+                                    <div class="container box">
+                                        <div class="level">
+                                            <div class="level-left">
+                                                <div class="level-item">
+                                                    <p class="menu-label">Sessões</p>
+                                                </div>
+                                            </div>
+                                            <div class="level-right">
+                                                <div class="level-item">
+
+                                                    <a href="/administrador/configuraratividades/sessoes" class="button is-success is-outlined is-small">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-settings"></i>
+                                                        </span>
+                                                        <span>Configurar</span>
+                                                        <!---->
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="table-container" style="overflow-y:scroll;height:600px">
+                                            <table id="activitiesTable" class="table has-mobile-cards is-hoverable  is-fullwidth">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="is-sortable" style="width: 300px;">
+                                                            {% if order_by == 'sessao' and sort == 'asc' %}
+                                                                <a href="?order_by=sessao&sort=desc">
+                                                                    <div class="th-wrap">Hora
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                            {% elif order_by == 'sessao' and sort == 'desc' %}
+                                                                <a href="?order_by=sessao&sort=asc">
+                                                                    <div class="th-wrap">Hora
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                            {% else %}
+                                                                <a href="?order_by=sessao&sort=asc" style="color: black">
+                                                                    <div class="th-wrap">Hora
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-sort"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                            {% endif %}
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {% for sessao in sessoes %}
+                                                    <tr draggable="false" class="header">
+                                                        <td> {{ sessao }} </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+
+                                                <!---->
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
+        <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
+        <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
+    </footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        // suppose the `id` attribute of element is `message_container`.
+        var message_ele = document.getElementById("message_container");
+
+        setTimeout(function(){ 
+           message_ele.style.display = "none"; 
+        }, 4000);
+        // Timeout is 3 sec, you can change it
+
+    </script>
+
+</body>
+
+</html>

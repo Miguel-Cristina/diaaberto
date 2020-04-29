@@ -52,6 +52,7 @@
     <Compile Include="diaaberto\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="diaabertoapp\static\diaabertoapp\bulma-radio-checkbox.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.css.map" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.min.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\dist\accordion.js" />
@@ -90,10 +91,24 @@
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\tabs.js" />
     <Content Include="diaabertoapp\templates\diaabertoapp\adicionartarefa.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\atividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarsala.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarsalas.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configuraredificios.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarespacos.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\edificios.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\edificioSelect.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\administrador.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\login.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\alteraratividade.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configuraratividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\campus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\tipoatividade.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\tematicas.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\publicoalvo.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\sessoes.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\proporatividade.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\tarefas.html" />
     <Content Include="requirements.txt" />

@@ -8,6 +8,8 @@ class Faculdade(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100, unique=True)
+    class Meta:
+        db_table='Faculdade'
     def __str__(self):
         return self.nome
 class Departamento(models.Model):
@@ -15,6 +17,8 @@ class Departamento(models.Model):
     id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100, unique=True)
     faculdade = models.ForeignKey(Faculdade, on_delete=models.CASCADE)
+    class Meta:
+        db_table='Departamento'
     def __str__(self):
         return self.nome
 
@@ -26,6 +30,8 @@ class Campus(models.Model):
     contacto = models.CharField(max_length=40)
     
     #Métodos
+    class Meta:
+        db_table='Campus'
     def get_absolute_url(self):
         return reverse('campus-detail-view',args=[str(self.id)])
 
@@ -39,6 +45,7 @@ class Edificio(models.Model):
     nome = models.CharField(max_length=40)
     campus = models.ForeignKey(Campus, on_delete=models.CASCADE,null=True)
     class Meta:
+        db_table='Edificio'
         unique_together = (("nome", "campus"),) 
     #Métodos
 
@@ -54,6 +61,7 @@ class Sala(models.Model):
     identificacao = models.CharField(max_length=40)
     edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE,null=True)
     class Meta:
+        db_table='Sala'
         unique_together = (("identificacao", "edificio"),) 
     #Métodos
     def get_absolute_url(self):
@@ -67,7 +75,8 @@ class Tematica(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
     tema = models.CharField(max_length=255, unique=True)
-    
+    class Meta:
+        db_table='Tematica'
     #Métodos
     def get_absolute_url(self):
         return reverse('tematica-detail-view',args=[str(self.id)])
@@ -75,12 +84,25 @@ class Tematica(models.Model):
     def __str__(self):
         return self.tema
 
+class TipoAtividade(models.Model):
+    # Campos
+    id = models.AutoField(primary_key=True)
+    tipo = models.CharField(max_length=255, unique=True)
+    class Meta:
+        db_table='TipoAtividade'
+    #Métodos
+    def get_absolute_url(self):
+        return reverse('tipoatividade-detail-view',args=[str(self.id)])
+
+    def __str__(self):
+        return self.tipo
 
 class PublicoAlvo(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=255, unique=True)
-    
+    class Meta:
+        db_table='PublicoAlvo'
     #Métodos
     def get_absolute_url(self):
         return reverse('tematica-detail-view',args=[str(self.id)])
@@ -91,7 +113,8 @@ class Sessao(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
     hora = models.TimeField(unique=True,null=True)
-    
+    class Meta:
+        db_table='Sessao'
     #Métodos
     def get_hora(self):
         return self.hora
@@ -102,56 +125,65 @@ class Material(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=50, unique=True)
-    
+    class Meta:
+        db_table='Material'
     #Métodos
-    
     def __str__(self):
         return self.nome
 
+class UtilizadorTipo(models.Model):
+    id = models.AutoField(primary_key=True)
+    tipo = models.CharField(max_length=255)
+    class Meta:
+        db_table='UtilizadorTipo'
+    def __str__(self):
+        return self.tipo
+
+class Utilizador(models.Model):
+    # Campos
+    id = models.AutoField(primary_key=True)
+    utilizadortipo = models.ForeignKey(UtilizadorTipo, on_delete=models.PROTECT, null=True)
+    nome = models.CharField(max_length=50, null=True, blank=True)
+    email = models.CharField(max_length=50, null=True, blank=True)
+    data_nascimento = models.DateField(null=True)
+    numero_telemovel = models.CharField(max_length=255, null=True, blank=True)
+    cartao_cidadao = models.CharField(max_length=255, null=True)
+    deficiencias = models.CharField(max_length=255, null=True, blank=True)
+    permitir_localizacao = models.IntegerField(null=True)
+    utilizar_dados_pessoais = models.IntegerField(null=True)
+    validado = models.IntegerField(null=True, blank=True)
+    faculdade = models.ForeignKey(Faculdade, on_delete=models.PROTECT, null=True)
+    departamento = models.ForeignKey(Departamento, on_delete=models.PROTECT, null=True)
+    last_login = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table='Utilizador'
+
+    def __str__(self):
+        return self.nome
+
+class UtilizadorParticipante(models.Model):
+    id = models.AutoField(primary_key=True)
+    utilizador = models.ForeignKey(Utilizador, on_delete=models.PROTECT, null=True)
+    escola = models.CharField(max_length=255)
+    area_estudos = models.CharField(max_length=255)
+    ano_estudos = models.IntegerField(null=True, blank=True)
+    checkin = models.IntegerField(null=True, blank=True)
+    inscricao_id = models.IntegerField()
+    class Meta:
+        db_table='UtilizadorParticipante'
+    def __str__(self):
+        return self.utilizador.nome
+
+
 class Atividade(models.Model):
- 
+    # Campos
     id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=255)
     descricao = models.TextField(null=True)
     duracao = models.IntegerField()
     limite_participantes = models.IntegerField()
-
-    VISITASINSTALACAO = 'VI' 
-    VISITASLABORATORIO = 'VL'   
-    ATIVIDADESEXPERIMENTAIS = 'AE'    
-    ATIVIDADESTECNOLOGICAS = 'AT'
-    FEIRACIENCIAS = 'FC'
-    PALESTRAS = 'PL'
-    CONFERENCIAS = 'CF'
-    SEMINARIOS = 'SM'
-    TERTULIAS = 'TT' 
-    OUTRASENSINO = 'OE'
-    OUTRASCULTURAIS = 'OC'
-    OUTRASDESPORTIVAS = 'OD'
-    EXPOSICOES = 'EX'
-    PASSEIOS = 'PS'
-    OUTRAS = 'OU'
-    TIPO_ATIVIDADE_CHOICES = (
-        ('VI', 'Visitas Instalações'),
-        ('VL' , 'Visitas Laboratórios'),
-        ('AE' , 'Atividades Experimentais'),
-	    ('AT' ,'Atividades Tecnológicas'),
-	    ('FC' ,'Feira das Ciências'),
-	    ('PL' ,'Palestras'),
-	    ('CF' ,'Conferências'),
-	    ('SM' ,'Seminários'),
-	    ('TT' ,'Tertúlias'),
-	    ('OE' ,'Outras Atividades (Ensino)'),
-	    ('OC' ,'Outras Atividades (Culturais)'),
-	    ('OD' ,'Outras Atividades (Desportivas)'),
-	    ('EX' ,'Exposições'),
-	    ('PS' ,'Passeios'),
-	    ('OU' ,'Outras Atividades'),
-    )
-    tipo_atividade = models.CharField(
-        max_length=2,
-        choices=TIPO_ATIVIDADE_CHOICES
-    )
+    tipo_atividade = models.ForeignKey(TipoAtividade, on_delete=models.PROTECT, null=True)
     publico_alvo = models.ManyToManyField(PublicoAlvo, related_name='publico_alvo')
     data = models.DateField(default=datetime.date.today)
     faculdade = models.ForeignKey(Faculdade, on_delete=models.CASCADE, null=True)
@@ -174,8 +206,10 @@ class Atividade(models.Model):
     edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE, null=True, blank=True)
     sala = models.ForeignKey(Sala, on_delete=models.CASCADE, null=True, blank=True)
     tipo_local = models.CharField(max_length=255, null=True, blank=True)
+    responsavel = models.ForeignKey(Utilizador, on_delete=models.PROTECT, null=True, blank=True)
     #Métodos
-
+    class Meta:
+        db_table='Atividade'
     def get_tipo(self):
         return self.tipo_atividade
 
@@ -190,7 +224,8 @@ class MaterialQuantidade(models.Model):
     atividade = models.ForeignKey('Atividade', related_name='material_quantidade', on_delete=models.CASCADE, null=True)
     material = models.CharField(max_length=255, null=True)
     quantidade = models.IntegerField(null=True, blank=True)
-
+    class Meta:
+        db_table='MaterialQuantidade'
     def __str__(self):
         return self.material
 
@@ -200,6 +235,7 @@ class SessaoAtividade(models.Model):
     dia = models.DateField(null=True)
     numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
     class Meta:
+        db_table='SessaoAtividade'
         unique_together = (("atividade", "sessao", "dia"),) 
     def __str__(self):
         return self.atividade.nome
@@ -208,6 +244,7 @@ class AtividadeForm(ModelForm):
      class Meta:
          model = Atividade
          fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'faculdade', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
+
 
 class Tarefa(models.Model):
      
@@ -242,7 +279,7 @@ class Tarefa(models.Model):
         default=ATIVIDADE
     )
     descricao = models.CharField(max_length=255, null=True)
-    atividade = models.ForeignKey('Atividade', related_name='tarefa_atividade', on_delete=models.CASCADE, null=True,blank=True)
+    atividade = models.ForeignKey(Atividade, related_name='tarefa_atividade', on_delete=models.CASCADE, null=True,blank=True)
     localizacao_grupo = models.CharField(max_length=255, null=True)
     destino = models.CharField(max_length=255, null=True)
     horario = models.TimeField(null=True)
@@ -252,4 +289,6 @@ class Tarefa(models.Model):
 
     def str(self):
         return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao
-
+    class Meta:
+        db_table='Tarefa'
+        managed=True
