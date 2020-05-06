@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma-radio-checkbox.css' %}">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+    <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
+    <script src="{% static 'diaabertoapp/dist/bulma-steps.js' %}"></script>
     <meta charset="utf-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
@@ -102,7 +104,10 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
+                    <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
+                    <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
+                    <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
+                
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -152,24 +157,28 @@
                                 </button>
                             </div>
                             <div class="background" style="display: none;" aria-hidden="true"></div>
-                            <div class="dropdown-menu" style="display: none; " aria-hidden="true">
+                            <div class="dropdown-menu"  aria-hidden="true">
                                 <div role="list" class="dropdown-content">
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Colaborador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-active">Administrador</a>
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
+                                    <hr />
+                                    {% if user.is_authenticated %}
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
+                                    <hr />
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
+                                    {% endif %}
+                                    
                                 </div>
                             </div>
                         </div>
-                        <button data-v-a67fe1ba="" type="button" class="button">
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
                             <span class="icon is-small">
                                 <i class="mdi mdi-logout-variant"></i>
                             </span>
                             <span> Sair </span>
                             <!---->
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -187,8 +196,11 @@
                                 <li>
                                     <a href="/" class="router-link-active">Início</a>
                                 </li>
+                                <li>
+                                    <a href="/configuraratividades/" class="router-link-active">Configuração das Atividades</a>
+                                </li>
                                 <li class="is-active">
-                                    <a href="/administrador/configuraratividades/tipoatividade" class="">Tipos de Atividades</a>
+                                    <a href="/configuraratividades/tipoatividade/" class="">Tipos de Atividades</a>
                                 </li>
                             </ul>
                         </nav>
@@ -266,7 +278,7 @@
 
                                     <div class="level">
                                         <div class="level-left">
-                                            <a href="/administrador/configuraratividades" class="button is-danger is-outlined" type="button">
+                                            <a href="/configuraratividades/" class="button is-danger is-outlined" type="button">
                                                 <span class="icon is-small">
                                                     <i class="mdi mdi-close mdi-24px"></i>
                                                 </span>

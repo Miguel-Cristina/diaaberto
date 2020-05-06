@@ -1,5 +1,5 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, Sala, Tematica, Atividade, MaterialQuantidade, Faculdade, Departamento, PublicoAlvo, Sessao, SessaoAtividade, TipoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante
+from diaabertoapp.models import Edificio, Campus, Sala, Tematica, Atividade, MaterialQuantidade, UnidadeOrganica, Departamento, PublicoAlvo, Sessao, SessaoAtividade, TipoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante
 #LocalAtividade,Local
 from django.utils.safestring import mark_safe
 # Register your models here.
@@ -29,7 +29,7 @@ admin.site.register(TipoAtividade)
 
 admin.site.register(MaterialQuantidade)
 
-admin.site.register(Faculdade)
+admin.site.register(UnidadeOrganica)
 
 admin.site.register(Departamento)
 

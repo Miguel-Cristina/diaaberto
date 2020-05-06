@@ -155,24 +155,28 @@
                                 </button>
                             </div>
                             <div class="background" style="display: none;" aria-hidden="true"></div>
-                            <div class="dropdown-menu" style="display: none; " aria-hidden="true">
+                            <div class="dropdown-menu"  aria-hidden="true">
                                 <div role="list" class="dropdown-content">
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Colaborador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Administrador</a>
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
+                                    <hr />
+                                    {% if user.is_authenticated %}
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
+                                    <hr />
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
+                                    {% endif %}
+                                    
                                 </div>
                             </div>
                         </div>
-                        <button data-v-a67fe1ba="" type="button" class="button">
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
                             <span class="icon is-small">
                                 <i class="mdi mdi-logout-variant"></i>
                             </span>
                             <span> Sair </span>
                             <!---->
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -268,6 +272,31 @@
                                         {% csrf_token %}
                                         <div class="step-item stepcontent" style="">
                                             <div style="padding: 1rem 2vw 0px;">
+                                                {{ form.non_field_errors }}
+                                                {% if form.errors %}
+                                                    <p class="help is-danger">ERRO: Verifique os campos!</p>
+                                                {% endif %}
+                                                {% if form2.errors %}
+                                                    {% for field in form2 %}
+                                                        {% for error in field.errors %}
+                                                        <article class="message is-danger">
+                                                          <div class="message-body">
+                                                           <p class="help is-danger">ERRO: Verifique o campo {{ error }} nos Materiais.</p>
+                                                          </div>
+                                                        </article>
+                                                            
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if form3.errors %}
+                                                    
+                                                    {% for field in form3 %}
+                                                        {% for error in field.errors %}
+                                                            <p class="help is-danger">Verifique o campo {{ error }} nas Sessões.</p>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
+
                                                 <hr>
                                                 <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação de atividade </h2>
                                                 <div class="columns">
@@ -291,6 +320,9 @@
                                                                     {{ form.tipo_atividade }}
                                                                 </span>
                                                             </div>
+                                                            {% for error in form.tipo_atividade.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -301,6 +333,9 @@
                                                         {{ form.descricao }}
                                                         <p class="help counter" id="charNum"></p>
                                                     </div>
+                                                    {% for error in form.descricao.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                    {% endfor %}
                                                     <!---->
                                                 </div> 
                                                 <div class="columns">
@@ -327,6 +362,9 @@
                                                                     </button>
                                                                 </p>
                                                             </div>
+                                                            {% for error in form.limite_participantes.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                     <div class="column">
@@ -352,6 +390,9 @@
                                                                     </button>
                                                                 </p>
                                                             </div>
+                                                            {% for error in form.duracao.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                             <!--<p class="help">Em minutos</p>-->
                                                         </div>
                                                     </div>
@@ -367,6 +408,9 @@
                                                             </div>
                                                             <p class="help">Clique CTRL + Clique para selecionar múltiplos temas</p>
                                                         </div>
+                                                        {% for error in form.tematicas.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                        {% endfor %}
                                                     </div>
                                                     <div class="column">
                                                         <div class="field">
@@ -378,6 +422,9 @@
                                                             </div>
                                                             <p class="help">Clique CTRL + Clique para selecionar múltiplos públicos-alvos</p>
                                                         </div>
+                                                        {% for error in form.publico_alvo.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -391,25 +438,42 @@
                                                 <div class="tabs is-toggle is-fullwidth tab" >
                                                     <ul>
                                                         <li>
-                                                            <a class="tabdlinks active" onclick="openDep(event, 'meuDepartamento')">
+                                                            {%  if form.departamento.value == departamentos.id %}
+                                                                <a class="button tabdlinks active" onclick="openDep(event, 'meuDepartamento')">
+                                                            {% else %}
+                                                                <a class="button tabdlinks is-static" onclick="openDep(event, 'meuDepartamento')">
+                                                            {% endif %}
+                                                            
                                                             <span class="icon is-small "><i class="mdi mdi-account-check" aria-hidden="true"></i></span>
                                                             <span>Esta atividade pertence ao meu departamento</span>
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="tabdlinks" onclick="openDep(event, 'escolherDepartamento')">
+                                                            {%  if form.departamento.value == departamentos.id %}
+                                                                <a class="button tabdlinks" onclick="openDep(event, 'escolherDepartamento')">
+                                                            {% else %}
+                                                                <a class="button tabdlinks active" onclick="openDep(event, 'escolherDepartamento')">
+                                                            {% endif %}
+                                                            
                                                             <span class="icon is-small tablinks" ><i class="mdi mdi-tooltip-edit" aria-hidden="true"></i></span>
                                                             <span>Esta atividade pertence a outro departamento</span>
                                                             </a>
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <div class="tabdcontent" id="meuDepartamento">
+
+                                                {%  if form.departamento.value == departamentos.id %}
+                                                            <div class="tabdcontent" id="meuDepartamento" style="display:block">
+                                                {% else %}
+                                                            <div class="tabdcontent" id="meuDepartamento" style="display:none">
+                                                {% endif %}
+                                                
                                                     <div class="field">
-                                                        <label class="label">Faculdade</label>
+                                                        <label class="label">Unidade Orgânica</label>
                                                         <div class="control is-fullwidth">
-                                                                {{ faculdades }}
+                                                                {{ organicas }}
                                                         </div>
+
                                                     </div>
                                                     <div class="field">
                                                         <label class="label">Departamento</label>
@@ -418,13 +482,21 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="columns tabdcontent" style="display:none" id="escolherDepartamento">
+                                                {%  if form.departamento.value == departamentos.id %}
+                                                            <div class="columns tabdcontent"  style="display:none" id="escolherDepartamento">
+                                                {% else %}
+                                                            <div class="columns tabdcontent" id="escolherDepartamento" style="display:block">
+                                                {% endif %}
+                                                
                                                     <div class="column">
                                                         <div class="field">
-                                                            <label class="label">Faculdade</label>
+                                                            <label class="label">Unidade Orgânica</label>
                                                             <div class="control is-fullwidth">
-                                                                    {{ form.faculdade }}
+                                                                    {{ form.unidadeorganica }}
                                                             </div>
+                                                            {% for error in form.unidadeorganica.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                     <div class="column">
@@ -433,6 +505,9 @@
                                                             <div class="control is-fullwidth">
                                                                     {{ form.departamento }}
                                                             </div>
+                                                            {% for error in form.departamento.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -440,19 +515,19 @@
                                                     <ul>
                                                         <li>
                                                             {% if form.sala.value %}
-                                                            <a class="tablinks" onclick="openLocal(event,'tipoLocal')">
+                                                            <a class="button tablinks" onclick="openLocal(event,'tipoLocal')">
                                                             {% else %}
-                                                            <a class="tablinks active" onclick="openLocal(event,'tipoLocal')">
+                                                            <a class="button tablinks active" onclick="openLocal(event,'tipoLocal')">
                                                             {% endif %}
                                                                 <span class="icon is-small "><i class="mdi mdi-shuffle-variant" aria-hidden="true"></i></span>
-                                                                <span>Qualquer sala com as minhas especificações</span>
+                                                                <span>Local com as minhas especificações</span>
                                                             </a>
                                                         </li>
                                                         <li>
                                                             {%  if form.sala.value %}
-                                                            <a class="tablinks active" id="blueBarEscolher" onclick="openLocal(event, 'escolherLocal')">
+                                                            <a class="button tablinks active" id="blueBarEscolher" onclick="openLocal(event, 'escolherLocal')">
                                                             {% else %}
-                                                            <a class="tablinks" id="blueBarEscolher" onclick="openLocal(event, 'escolherLocal')">
+                                                            <a class="button tablinks" id="blueBarEscolher" onclick="openLocal(event, 'escolherLocal')">
                                                             {% endif %}
                                                                 <span class="icon is-small tablinks"><i class="mdi mdi-crosshairs-gps" aria-hidden="true"></i></span>
                                                                 <span>Tenho preferência numa sala especifica</span>
@@ -466,11 +541,14 @@
                                                 <div id="tipoLocal" class="tabcontent" style="display:block">
                                                 {% endif %}
                                                 <div class="field">
-                                                    <label class="label">Tipo de local a requisitar</label>
+                                                    <label class="label">Local a requisitar</label>
                                                     <div class="control is-clearfix">
                                                         {{ form.tipo_local }}
                                                         
                                                     </div>
+                                                    {% for error in form.tipo_local.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                    {% endfor %}
                                                 </div>
                                                 </div>
                                                 {% if form.sala.value %}
@@ -483,18 +561,27 @@
                                                         <div class="control is-expanded ">
                                                             {{ form.campus }}
                                                         </div>
+                                                        {% for error in form.campus.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                        {% endfor %}
                                                     </div>
                                                     <div class="field">
                                                         <label class="label">Edificio</label>
                                                         <div class="control is-expanded ">
                                                             {{ form.edificio }}
                                                         </div>
+                                                        {% for error in form.edificio.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                        {% endfor %}
                                                     </div>
                                                     <div class="field">
                                                         <label class="label">Sala</label>
                                                         <div class="control is-expanded ">
                                                             {{ form.sala }}
                                                         </div>
+                                                        {% for error in form.sala.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -526,6 +613,9 @@
                                                                             <div class="control is-expanded ">
                                                                                 {{ frm2.material }}
                                                                             </div>
+                                                                            {% for error in frm2.material.errors %}
+                                                                                <p class="help is-danger">{{ error }}</p>
+                                                                            {% endfor %}
                                                                         </div>
                                                                     </div>
                                                                     <div class="column is-3">
@@ -533,6 +623,9 @@
                                                                             <div class="control is-expanded">
                                                                                 {{ frm2.quantidade }}
                                                                             </div>
+                                                                            {% for error in frm2.quantidade.errors %}
+                                                                                <p class="help is-danger">{{ error }}</p>
+                                                                            {% endfor %}
                                                                         </div>
                                                                     </div>
                                                                     <div class="column is-2">
@@ -613,15 +706,21 @@
                                                                     <div class="control is-expanded">
                                                                     {{ frm3.dia }}    
                                                                     </div>
+                                                                    {% for error in frm3.dia.errors %}
+                                                                        <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                             <div class="column is-3">
                                                                 <div class="field">
                                                                     <div class="control is-expanded ">
                                                                         <span class="select is-fullwidth">
-                                                                    {{ frm3.sessao }}        
+                                                                        {{ frm3.sessao }}        
                                                                         </span>
                                                                     </div>
+                                                                    {% for error in frm3.sessao.errors %}
+                                                                        <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                             <div class="column is-3">
@@ -629,6 +728,9 @@
                                                                     <div class="control is-expanded">
                                                                     {{ frm3.numero_colaboradores }}    
                                                                     </div>
+                                                                    {% for error in frm3.numero_colaboradores.errors %}
+                                                                        <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                             <div class="column is-2">
@@ -968,12 +1070,13 @@
         if ( x.classList.contains("active")==true )
         {
             tabinputs = document.getElementsByClassName("tipoLocalInput");
-                for (h = 0; h < tabinputs.length; h++)
-                {
-                    tabinputs[h].required = false;
-                }
+            for (h = 0; h < tabinputs.length; h++)
+            {
+                tabinputs[h].required = false;
+            }
         }
     </script>
+
     {{ form.media.js }}
 </body>
 

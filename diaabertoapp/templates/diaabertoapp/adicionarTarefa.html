@@ -86,9 +86,14 @@
                                         class="dropdown-item">Coordenador</a><a data-v-a67fe1ba="" role="listitem"
                                         tabindex="0" class="dropdown-item">Administrador</a></div>
                             </div>
-                        </div><button data-v-a67fe1ba="" type="button" class="button"><span class="icon is-small"><i
-                                    class="mdi mdi-logout-variant"></i></span> <span> Sair </span>
-                            <!----></button>
+                        </div>
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
+                            <span class="icon is-small">
+                                <i class="mdi mdi-logout-variant"></i>
+                            </span>
+                            <span> Sair </span>
+                            <!---->
+                        </a>
                     </div>
                 </div>
             </div>

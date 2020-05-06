@@ -117,7 +117,9 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="#" class="navbar-item is-tab router-link"> Configuração das Atividades </a>
+                    <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
+                    <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
+                    <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -178,13 +180,13 @@
                                 </div>
                             </div>
                         </div>
-                        <button data-v-a67fe1ba="" type="button" class="button">
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
                             <span class="icon is-small">
                                 <i class="mdi mdi-logout-variant"></i>
                             </span>
                             <span> Sair </span>
                             <!---->
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -206,10 +208,10 @@
                         <nav aria-label="breadcrumbs" class="breadcrumb">
                             <ul>
                                 <li>
-                                    <a href="/administrador" class="router-link-active">Início</a>
+                                    <a href="/index/" class="router-link-active">Início</a>
                                 </li>
                                 <li class="is-active">
-                                    <a href="/administrador/configuraratividades" class="">Configuração das Atividades</a>
+                                    <a href="/configuraratividades/" class="">Configuração das Atividades</a>
                                 </li>
                             </ul>
                         </nav>
@@ -227,7 +229,7 @@
                                             <div class="level-right">
                                                 <div class="level-item">
 
-                                                    <a  href="/administrador/configuraratividades/tipoatividade"  class="button is-success is-outlined  is-small">
+                                                    <a  href="/configuraratividades/tipoatividade/"  class="button is-success is-outlined is-small" onclick="addClassByClick(this)"> 
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-settings"></i>
                                                         </span>
@@ -298,7 +300,7 @@
                                             <div class="level-right">
                                                 <div class="level-item">
 
-                                                    <a href="/administrador/configuraratividades/tematicas" class="button is-success is-outlined  is-small">
+                                                    <a href="/configuraratividades/tematicas/" class="button is-success is-outlined  is-small" onclick="addClassByClick(this)">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-settings"></i>
                                                         </span>
@@ -367,7 +369,7 @@
                                             <div class="level-right">
                                                 <div class="level-item">
 
-                                                    <a href="/administrador/configuraratividades/publicoalvo" class="button is-success is-outlined  is-small">
+                                                    <a href="/configuraratividades/publicoalvo/" class="button is-success is-outlined  is-small" onclick="addClassByClick(this)">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-settings"></i>
                                                         </span>
@@ -436,7 +438,7 @@
                                             <div class="level-right">
                                                 <div class="level-item">
 
-                                                    <a href="/administrador/configuraratividades/sessoes" class="button is-success is-outlined is-small">
+                                                    <a href="/configuraratividades/sessoes/" class="button is-success is-outlined is-small" onclick="addClassByClick(this)">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-settings"></i>
                                                         </span>
@@ -517,7 +519,11 @@
         // Timeout is 3 sec, you can change it
 
     </script>
-
+    <script>
+        function addClassByClick(button){
+          $(button).addClass("is-loading")
+        }
+    </script>
 </body>
 
 </html>

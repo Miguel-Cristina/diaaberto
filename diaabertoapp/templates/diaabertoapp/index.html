@@ -23,6 +23,18 @@
         * {
             outline: none;
         }
+        .notices{
+            position: fixed;
+            display: flex;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8em;
+            overflow: hidden;
+            z-index: 1000;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -43,10 +55,11 @@
             <div class="navbar-menu">
                 <div class="navbar-start">
                     <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
-                    <a data-v-a67fe1ba="" href="/inscricoes" class="navbar-item is-tab router-link"> Inscrições </a>
-                    <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link"> Transportes </a>
-                    <a data-v-a67fe1ba="" href="/almocos" class="navbar-item is-tab router-link"> Almoços </a>
-                    <a data-v-a67fe1ba="" href="/diaaberto/sessoes" class="navbar-item is-tab router-link"> Configuração do Dia Aberto </a>
+                    {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
+                        <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
+                        <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
+                        <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
+                    {% endif %}
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -97,24 +110,28 @@
                                 </button>
                             </div>
                             <div aria-hidden="true" class="background" style="display: none;"></div>
-                            <div class="dropdown-menu" style="">
+                            <div class="dropdown-menu"  aria-hidden="true">
                                 <div role="list" class="dropdown-content">
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Participante Individual</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Colaborador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-active">Coordenador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item" href="/administrador/">Administrador</a>
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
+                                    <hr />
+                                    {% if user.is_authenticated %}
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
+                                    <hr />
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
+                                    {% endif %}
+                                    
                                 </div>
                             </div>
                         </div>
-                        <button data-v-a67fe1ba="" type="button" class="button">
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
                             <span class="icon is-small">
                                 <i class="mdi mdi-logout-variant"></i>
                             </span>
                             <span> Sair </span>
                             <!---->
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -123,6 +140,11 @@
             <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
         </div>
         <div data-v-8716d23a="" id="page-content">
+        {% if messages %}
+            {% for message in messages %}
+            <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
+            {% endfor %}
+        {% endif %}
             <div data-v-8716d23a="" class="card">
                 <div data-v-8716d23a="" class="card-content">
                     <div data-v-8716d23a="">
@@ -167,7 +189,16 @@
             <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
         </footer>
     </div>
+    <script>
+        // suppose the `id` attribute of element is `message_container`.
+        var message_ele = document.getElementById("message_container");
 
+        setTimeout(function(){ 
+           message_ele.style.display = "none"; 
+        }, 4000);
+        // Timeout is 3 sec, you can change it
+
+    </script>
 
 </body>
 

@@ -14,7 +14,7 @@
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
     <title>Dia Aberto</title>
- 
+    {{ form.media.css }}
     <style>
         body,
         html {
@@ -105,9 +105,9 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
-                    <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
-                    <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
+                    <a data-v-a67fe1ba="" href="/administrador/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
+                    <a data-v-a67fe1ba="" href="/administrador/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
+                    <a data-v-a67fe1ba="" href="/administrador/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -193,13 +193,16 @@
                         <nav aria-label="breadcrumbs" class="breadcrumb">
                             <ul>
                                 <li>
-                                    <a href="/index/" class="router-link-active">Início</a>
+                                    <a href="/index" class="router-link-active">Início</a>
                                 </li>
                                 <li>
-                                    <a href="/configurarespacos" class="">Configuração dos Espaços</a>
+                                    <a href="/configurarorganicasdepartamentos/" class="">Configuração das Unidades Orgânicas e Departamentos</a>
+                                </li>
+                                <li>
+                                    <a href="/configurarorganicasdepartamentos/organicas" class="">Unidades Orgânicas</a>
                                 </li>
                                 <li class="is-active">
-                                    <a href="/configurarespacos/campus" class="router-link-exact-active router-link-active">Configurar Campus</a>
+                                    <a href="/configurarespacos/edificios" class="router-link-exact-active router-link-active">Editar</a>
                                 </li>
                             </ul>
                         </nav>
@@ -212,7 +215,7 @@
                                             <div class="level">
                                                 <div class="level-left">
                                                     <div class="level-item">
-                                                        <p class="menu-label">Configuração dos Campus</p>
+                                                        <p class="menu-label">Editar unidade orgânica</p>
                                                     </div>
                                                 </div>
                                                 <div class="level-right">
@@ -221,115 +224,27 @@
                                                 </div>
                                             </div>
                                             <hr />
-                                        <div class="control is-clearfix" id="form_set">
+                                        <div class="control is-clearfix" id="form_set_material">
                                         <div class="columns">
-                                            <div class="column is-one-quarter">
-                                                <label class="label">Campus</label>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <label class="label">Morada</label>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <label class="label">Contacto</label>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <label class="label">Excluir?</label>
+                                            <div class="column">
+                                                <label class="label">Unidade Orgânica</label>
                                             </div>
                                         </div>
-                                        {{ form.management_form }}
-                                            {% for frm in form %}
-                                                {{ frm.id }}
-
                                         <div class="columns">
-                                            <div class="column is-one-quarter">
-                                                <div class="field">
-                                                    <div class="control is-expanded">
-                                                        {{ frm.nome }}
-                                                    </div>
-                                                    {% for error in frm.nome.errors %} 
-                                                    <p class="help is-danger">{{ error }}</p>
+                                                {% csrf_token %}
+                                                <div class="column">
+                                                    {{ form.nome }}
+                                                    {% for error in form.nome.errors %} 
+                                                        <p class="help is-danger">{{ error }}</p>
                                                     {% endfor %}
                                                 </div>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <div class="field">
-                                                    <div class="control is-expanded">
-                                                        {{ frm.morada }}
-                                                    </div>
-                                                    {% for error in frm.morada.errors %} 
-                                                    <p class="help is-danger">{{ error }}</p>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <div class="field">
-                                                    <div class="control is-expanded">
-                                                        {{ frm.contacto }}
-                                                    </div>
-                                                    {% for error in frm.contacto.errors %} 
-                                                    <p class="help is-danger">{{ error }}</p>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <div class="field">
-                                                    <div class="control is-expanded ">
-                                                    {{ frm.DELETE }}
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
-                                        {% endfor %}
-                                    </div>
-                                    <div id="empty_form" style="display:none">
-                                        {{ form.empty_form.id }}  
-                                        <div class="columns">
-                                            <div class="column is-one-quarter">
-                                                <div class="field">
-                                                    <div class="control is-expanded">
-                                                    {{ form.empty_form.nome }}    
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <div class="field">
-                                                    <div class="control is-expanded">
-                                                    {{ form.empty_form.morada }}    
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <div class="field">
-                                                    <div class="control is-expanded">
-                                                    {{ form.empty_form.contacto }}    
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="column is-one-quarter">
-                                                <div class="field">
-                                                    <div class="control is-expanded"> 
-                                                        {{ form.empty_form.DELETE }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="has-text-left">
-                                        <button type="button" id="add_more" class="button is-success">
-                                            <!---->
-                                            <span class="icon is-small">
-                                                <i class="mdi mdi-plus mdi-24px"></i>
-                                            </span>
-                                            <span> Adicionar campus </span>
-                                        </button>
-                                    </div>
                                     <hr />
                                     <br />
 
                                     <div class="level">
                                         <div class="level-left">
-                                            <a href="/configurarespacos" class="button is-danger is-outlined" type="button">
+                                            <a href="/configurarorganicasdepartamentos/organicas" class="button is-danger is-outlined" type="button">
                                                 <span class="icon is-small">
                                                     <i class="mdi mdi-close mdi-24px"></i>
                                                 </span>
@@ -349,6 +264,7 @@
                                         </div>
                                     </div>
 
+                                     </div>
                                 </div>
                             </form>
                             
@@ -588,13 +504,8 @@
             $('#id_mq-TOTAL_FORMS').val(parseInt(form_idx) + 1);
         });
     </script>
-    <script>
-        $('#add_more_material').click(function() {
-           $("#form_set_material").scrollTop($("#form_set_material")[0].scrollHeight);
-        });
-        
-    </script>
- 
+
+ {{ form.media.js }}
 </body>
 
 </html>

@@ -116,8 +116,7 @@
                     <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
                     <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
                     <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
-                
-                </div>
+                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
                         <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
@@ -209,17 +208,16 @@
                         <nav aria-label="breadcrumbs" class="breadcrumb">
                             <ul>
                                 <li>
-                                    <a href="/index/" class="router-link-active">Início</a>
+                                    <a href="/index" class="router-link-active">Início</a>
                                 </li>
                                 <li class="is-active">
-                                    <a href="/configuraratividades" class="">Configuração dos Espaços</a>
+                                    <a href="/configurarorganicas" class="">Configuração das Unidades Orgânicas e Departamentos</a>
                                 </li>
                             </ul>
                         </nav>
                         <div style="padding: 3rem 2vw 1rem;">
-                            <div class="columns">
-                                
-                                <div class="column is-3 tile"> 
+                            <div class="columns">        
+                                <div class="column is-one-quarter"> 
                                     <div class="container box">
                                         <div class="level">
                                             <div class="level-left">
@@ -232,15 +230,15 @@
                                         <form method="GET" action=".">                                           
                                             <div class="field has-addons">
                                                 <!---->
-                                                {% if not campusquery|length > 0 %}
+                                                {% if not organicaquery|length > 0 %}
                                                 <div class="control is-expanded ">
                                                     <span class="select is-fullwidth is-empty">
-                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                        <select  id="organicaSearch" name="organica"><!--onchange="searchByType()"-->
                                                             <option disabled="disabled" hidden="hidden" selected>
-                                                                Campus
+                                                                Unidade Orgânica
                                                             </option>
-                                                            {% for Camp in campus %}
-                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
+                                                            {% for organica in organicas %}
+                                                                <option value="{{ organica.id }}">{{ organica.nome }}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </span>
@@ -254,9 +252,9 @@
                                                 {% else %}
                                                 <div class="control is-expanded ">
                                                     <span class="select is-fullwidth is-empty">
-                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
-                                                            {% for Camp in campus %}
-                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
+                                                        <select  id="organicaSearch" name="organica"><!--onchange="searchByType()"-->
+                                                            {% for organica in organicas %}
+                                                                <option value="{{ organica.id }}">{{ organica.nome }}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </span>
@@ -266,7 +264,7 @@
                                                 </div>
                                                 <!---->
                                                 <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                    <button class="button is-danger" onclick="document.getElementById('organicaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
                                                   </div>
                                                 {% endif %}
                                             </div>
@@ -275,7 +273,7 @@
                                             {% if not nomesquery|length > 0 %}
                                                 <div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input"><!--onkeyup="searchByName()"-->
+                                                        <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do departamento" class="input"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -289,7 +287,7 @@
                                                   </div>
                                             {% else %}<div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
+                                                        <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do departamento" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -315,66 +313,52 @@
                                             </div>
                                         </div>
                                         <hr />
-                                            <a href="/configurarespacos/campus/" class="button is-info is-outlined is-fullwidth">
+                                        <div class="buttons are-normal">
+                                            <a href="/configurarorganicasdepartamentos/organicas" class="button is-info is-outlined is-fullwidth">
                                                 <span class="icon is-small">
                                                     <i class="mdi mdi-settings"></i>
                                                 </span>
-                                                <span>Configurar Campus</span>
+                                                <span>Unidades Orgânicas</span>
                                                 <!---->
                                             </a>
-                                        <br />
-                                            <a href="/configurarespacos/edificios/" class="button is-info is-outlined is-fullwidth" onclick="addClassByClick(this)">
+                                            <a href="/configurarorganicasdepartamentos/departamentos" class="button is-info is-outlined is-fullwidth" onclick="addClassByClick(this)">
                                                 <span class="icon is-small">
                                                     <i class="mdi mdi-settings"></i>
                                                 </span>
-                                                <span>Configurar Edifícios</span>
+                                                <span>Departamentos</span>
                                                 <!---->
                                             </a>
-                                        <br />
-                                            <a href="/configurarespacos/salas/" class="button is-info is-outlined is-fullwidth" onclick="addClassByClick(this)">
-                                                <span class="icon is-small">
-                                                    <i class="mdi mdi-settings"></i>
-                                                </span>
-                                                <span>Configurar Salas</span>
-                                                <!---->
-                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="column is-9 tile">
+                                <div class="column">
                                     <div class="container box">
                                         <div class="level">
                                             <div class="level-left">
                                                 <div class="level-item">
-                                                    <p class="menu-label">Espaços</p>
+                                                    <p class="menu-label">Unidades Orgânicas e Departamentos</p>
                                                 </div>
                                             </div>
                                             <div class="level-right">
+
                                                 <div class="level-item">
+                                                    <div class="field is-grouped">
+                                                    <p class="control">
                                                     <a href="?campus=true" class="button is-success is-outlined  is-small">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-eye"></i>
                                                         </span>
-                                                        <span>Campus</span>
+                                                        <span>Unidade Orgânica</span>
                                                         <!---->
                                                     </a>
-                                                </div>
-                                                <div class="level-item">
                                                     <a href="?edificios=true" class="button is-success is-outlined  is-small">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-eye"></i>
                                                         </span>
-                                                        <span>Edifícios</span>
+                                                        <span>Departamento</span>
                                                         <!---->
                                                     </a>
-                                                </div>
-                                                <div class="level-item">
-                                                    <a href="?salas=true" class="button is-success is-outlined  is-small">
-                                                        <span class="icon is-small">
-                                                            <i class="mdi mdi-eye"></i>
-                                                        </span>
-                                                        <span>Salas</span>
-                                                        <!---->
-                                                    </a>
+                                                    </p></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -385,16 +369,11 @@
                                                     <div class="control is-expanded">
                                                         <span class="select is-fullwidth">
                                                             <select>
-                                                                <!---->
-                                                                <!---->
                                                                 <option value="[object Object]">
-                                                                    Campus
+                                                                    Unidade Orgânica
                                                                 </option>
                                                                 <option value="[object Object]">
-                                                                    Edifício
-                                                                </option>
-                                                                <option value="[object Object]">
-                                                                    Sala
+                                                                    Departamento
                                                                 </option>
                                                             </select>
                                                         </span>
@@ -415,28 +394,29 @@
                                                 <table id="activitiesTable" class="table has-mobile-cards is-hoverable">
                                                     <thead>
                                                         <tr>
-                                                            <th width="40px"></th>
                                                             <!---->
                                                             <th class="is-sortable" style="width: 300px;">
-                                                                {% if order_by == 'campus' and sort == 'asc' %}
-                                                                <a href="?order_by=campus&sort=desc">
-                                                                    <div class="th-wrap">Campus
+                                                                {% if order_by == 'organica' and sort == 'asc' %}
+                                                                <a href="?order_by=organica&sort=desc">
+                                                                    <div class="th-wrap">Unidade Orgânica
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
-                                                                {% elif order_by == 'campus' and sort == 'desc' %}
-                                                                <a href="?order_by=campus&sort=asc">
-                                                                    <div class="th-wrap">Campus
+                                                                {% elif order_by == 'organica' and sort == 'desc' %}
+                                                                <a href="?order_by=organica&sort=asc">
+                                                                    <div class="th-wrap">
+                                                                        Unidade Orgânica
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-down"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% else %}
-                                                                <a href="?order_by=campus&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Campus
+                                                                <a href="?order_by=organica&sort=asc" style="color: black">
+                                                                    <div class="th-wrap">
+                                                                        Unidade Orgânica
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
@@ -445,52 +425,25 @@
                                                                 {% endif %}
                                                             </th>
                                                             <th class="is-sortable">
-                                                                {% if order_by == 'edificio' and sort == 'asc' %}
-                                                                <a href="?order_by=edificio&sort=desc">
-                                                                    <div class="th-wrap">Edifício
+                                                                {% if order_by == 'departamento' and sort == 'asc' %}
+                                                                <a href="?order_by=departamento&sort=desc">
+                                                                    <div class="th-wrap">Departamento
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
-                                                                {% elif order_by == 'edificio' and sort == 'desc' %}
-                                                                <a href="?order_by=edificio&sort=asc">
-                                                                    <div class="th-wrap">Edifício
+                                                                {% elif order_by == 'departamento' and sort == 'desc' %}
+                                                                <a href="?order_by=departamento&sort=asc">
+                                                                    <div class="th-wrap">Departamento
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-down"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% else %}
-                                                                <a href="?order_by=edificio&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Edifício
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-swap"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
-                                                            </th>
-                                                            <th class="is-sortable">
-                                                                {% if order_by == 'sala' and sort == 'asc' %}
-                                                                <a href="?order_by=sala&sort=desc">
-                                                                    <div class="th-wrap">Sala
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-up"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% elif order_by == 'sala' and sort == 'desc' %}
-                                                                <a href="?order_by=sala&sort=asc">
-                                                                    <div class="th-wrap">Sala
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-down"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=sala&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Sala
+                                                                <a href="?order_by=departamento&sort=asc" style="color: black">
+                                                                    <div class="th-wrap">Departamento
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
@@ -504,35 +457,14 @@
                                                         <!---->
                                                     </thead>
                                                     <tbody>
-                                                        {% for espaco in espacos %}
+                                                        {% for departamento in departamentos %}
                                                         <tr draggable="false" class="header">
-                                                            <td class="chevron-cell">
-                                                                <a class="collapsible">
-                                                                    <span class="icon">
-                                                                        <i class="mdi mdi-chevron-right mdi-24px"></i>
-                                                                    </span>
-                                                                </a>
-                                                            </td>
                                                             <!---->
-                                                            <td data-label="Campus" id="activityName" class=""> {{ espaco.edificio.campus.nome }} </td>
-                                                            <td data-label="Edifício" class=""> {{ espaco.edificio.nome }} </td>
-                                                            <td data-label="Sala" class=""> {{ espaco }} </td>
+                                                            <td data-label="Unidade Orgânica" id="activityName" class=""> {{ departamento.unidadeorganica }} </td>
+                                                            <td data-label="Departamento" class=""> {{ departamento.nome }} </td>
                                                             <!---->
                                                         </tr>
                                                         <!---->
-                                                        <tr class="detail" style="display:none">
-                                                            <td colspan="5">
-
-                                                                <div class="content">
-                                                                    <div class="section" style="font-size: 15px;">                                                                     
-                                                                        <p>
-                                                                            <strong>Morada:</strong> {{ espaco.edificio.campus.morada }} </p>
-                                                                        <p>
-                                                                            <strong>Contacto:</strong> {{ espaco.edificio.campus.contacto }} </p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
                                                         <!---->
                                                         {% endfor %}
                                                     </tbody>
@@ -540,21 +472,21 @@
                                                     <!---->
                                                 </table>
                                             </div>
-                                             {% if espacos.has_other_pages %}
+                                             {% if departamentos.has_other_pages %}
                                                 <div class="level">
                                                     <div class="level-left"></div>
                                                     <div class="level-right">
                                                         <div class="level-item">
                                                             <nav class="pagination">
-                                                                {% if espacos.has_previous %}
+                                                                {% if departamentos.has_previous %}
                                                                     {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ espacos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                                        <a role="button" href="?page={{ departamentos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
                                                                         <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                             </span>
                                                                         </a>
                                                                     {% else %}
-                                                                        <a role="button" href="?page={{ espacos.previous_page_number }}" class="pagination-link pagination-previous">
+                                                                        <a role="button" href="?page={{ departamentos.previous_page_number }}" class="pagination-link pagination-previous">
                                                                         <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                             </span>
@@ -567,15 +499,15 @@
                                                                     </span>
                                                                 </a>
                                                                 {% endif %}
-                                                                {% if espacos.has_next %}
+                                                                {% if departamentos.has_next %}
                                                                     {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ espacos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                                        <a role="button" href="?page={{ departamentos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
                                                                             <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                             </span>
                                                                         </a>
                                                                     {% else %}
-                                                                        <a role="button" href="?page={{ espacos.next_page_number }}" class="pagination-link pagination-next">
+                                                                        <a role="button" href="?page={{ departamentos.next_page_number }}" class="pagination-link pagination-next">
                                                                             <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                             </span>
@@ -591,8 +523,8 @@
                                                                 <ul class="pagination-list">
                                                                     <!---->
                                                                     <!---->
-                                                                    {% for i in espacos.paginator.page_range %}
-                                                                    {% if espacos.number == i %}
+                                                                    {% for i in departamentos.paginator.page_range %}
+                                                                    {% if departamentos.number == i %}
                                                                     <li>
                                                                         <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                                     </li>

@@ -5,7 +5,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">  
+    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
     <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
     <script src="{% static 'diaabertoapp/dist/bulma-steps.js' %}"></script>
@@ -14,6 +14,7 @@
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
     <title>Dia Aberto</title>
+ 
     <style>
         body,
         html {
@@ -35,6 +36,10 @@
           display: none;
           padding-left: .8em;
           padding-right: .8em;
+          /*border: 1px solid #ccc;
+          border-color: #dbdbdb;
+          border-radius: 4px;
+          border-top: none;*/
         }
         .tabdcontent {
           padding-left: .8em;
@@ -93,7 +98,6 @@
             z-index: 1000;
             pointer-events: none;
         }
-
     </style>
     
 </head>
@@ -113,7 +117,7 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
+                       <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
                     <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
                     <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
                 
@@ -195,13 +199,11 @@
         <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
             <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
         </div>
-
         {% if messages %}
             {% for message in messages %}
                 <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
             {% endfor %}
         {% endif %}
-
         <div data-v-8716d23a="" id="page-content">
             <div data-v-8716d23a="" class="card">
                 <div data-v-8716d23a="" class="card-content">
@@ -209,18 +211,22 @@
                         <nav aria-label="breadcrumbs" class="breadcrumb">
                             <ul>
                                 <li>
-                                    <a href="/index/" class="router-link-active">Início</a>
+                                    <a href="/index" class="router-link-active">Início</a>
+                                </li>
+                                <li>
+                                    <a href="/configurarorganicasdepartamentos/" class="">Configuração das Unidades Orgânicas e Departamentos</a>
                                 </li>
                                 <li class="is-active">
-                                    <a href="/configuraratividades" class="">Configuração dos Espaços</a>
+                                    <a href="/configurarorganicasdepartamentos/departamentos/" class="">Departamentos</a>
                                 </li>
+                                
                             </ul>
                         </nav>
-                        <div style="padding: 3rem 2vw 1rem;">
-                            <div class="columns">
-                                
-                                <div class="column is-3 tile"> 
-                                    <div class="container box">
+                        <div style="padding: 3rem 2vw 1rem; ">
+
+                                <div class="columns">
+                                    <div class="column tile is-3">
+                                        <div class="container box">
                                         <div class="level">
                                             <div class="level-left">
                                                 <div class="level-item">
@@ -232,15 +238,32 @@
                                         <form method="GET" action=".">                                           
                                             <div class="field has-addons">
                                                 <!---->
-                                                {% if not campusquery|length > 0 %}
+                                                {% if organicaquery|length > 0 %}
                                                 <div class="control is-expanded ">
                                                     <span class="select is-fullwidth is-empty">
-                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                        <select  id="organicaSearch" name="organica"><!--onchange="searchByType()"-->
+                                                            {% for organica in organicas %}
+                                                                <option value="{{ organica.id }}">{{ organica.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <!---->
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('organicaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                 </div>
+                                                {% else %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="organicaSearch" name="organica"><!--onchange="searchByType()"-->
                                                             <option disabled="disabled" hidden="hidden" selected>
-                                                                Campus
+                                                                Unidade Orgânica
                                                             </option>
-                                                            {% for Camp in campus %}
-                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
+                                                            {% for organica in organicas %}
+                                                                <option value="{{ organica.id }}">{{ organica.nome }}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </span>
@@ -251,23 +274,6 @@
                                                 <div class="control">
                                                     <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
                                                 </div>
-                                                {% else %}
-                                                <div class="control is-expanded ">
-                                                    <span class="select is-fullwidth is-empty">
-                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
-                                                            {% for Camp in campus %}
-                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </span>
-                                                    <!--<span class="icon is-left">
-                                                        <i class="mdi mdi-magnify mdi-24px"></i>
-                                                    </span>-->
-                                                </div>
-                                                <!---->
-                                                <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                  </div>
                                                 {% endif %}
                                             </div>
                                             <div class="field has-addons">
@@ -275,7 +281,7 @@
                                             {% if not nomesquery|length > 0 %}
                                                 <div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input"><!--onkeyup="searchByName()"-->
+                                                        <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do departamento" class="input"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -289,7 +295,7 @@
                                                   </div>
                                             {% else %}<div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
+                                                        <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do departamento" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -305,81 +311,31 @@
                                             <!---->
                                         </div>
                                         </form>
-                                        <br />
-                                        <br />
-                                        <div class="level">
-                                            <div class="level-left">
-                                                <div class="level-item">
-                                                    <p class="menu-label">Gestão</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                            <a href="/configurarespacos/campus/" class="button is-info is-outlined is-fullwidth">
-                                                <span class="icon is-small">
-                                                    <i class="mdi mdi-settings"></i>
-                                                </span>
-                                                <span>Configurar Campus</span>
-                                                <!---->
-                                            </a>
-                                        <br />
-                                            <a href="/configurarespacos/edificios/" class="button is-info is-outlined is-fullwidth" onclick="addClassByClick(this)">
-                                                <span class="icon is-small">
-                                                    <i class="mdi mdi-settings"></i>
-                                                </span>
-                                                <span>Configurar Edifícios</span>
-                                                <!---->
-                                            </a>
-                                        <br />
-                                            <a href="/configurarespacos/salas/" class="button is-info is-outlined is-fullwidth" onclick="addClassByClick(this)">
-                                                <span class="icon is-small">
-                                                    <i class="mdi mdi-settings"></i>
-                                                </span>
-                                                <span>Configurar Salas</span>
-                                                <!---->
-                                            </a>
+                                        
                                     </div>
-                                </div>
-                                <div class="column is-9 tile">
-                                    <div class="container box">
-                                        <div class="level">
-                                            <div class="level-left">
-                                                <div class="level-item">
-                                                    <p class="menu-label">Espaços</p>
+                                    </div>
+                                    <div class="column tile is-9">
+                                        <div class="container box">
+                                            <div class="level">
+                                                <div class="level-left">
+                                                    <div class="level-item">
+                                                        <p class="menu-label">Configuração dos Departamentos</p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-right">
+                                                    <div class="level-item">
+                                                        <a href="/configurarorganicasdepartamentos/adicionardepartamento" class="button is-success is-outlined  is-small">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-plus"></i>
+                                                        </span>
+                                                        <span>Adicionar departamento</span>
+                                                        <!---->
+                                                    </a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="level-right">
-                                                <div class="level-item">
-                                                    <a href="?campus=true" class="button is-success is-outlined  is-small">
-                                                        <span class="icon is-small">
-                                                            <i class="mdi mdi-eye"></i>
-                                                        </span>
-                                                        <span>Campus</span>
-                                                        <!---->
-                                                    </a>
-                                                </div>
-                                                <div class="level-item">
-                                                    <a href="?edificios=true" class="button is-success is-outlined  is-small">
-                                                        <span class="icon is-small">
-                                                            <i class="mdi mdi-eye"></i>
-                                                        </span>
-                                                        <span>Edifícios</span>
-                                                        <!---->
-                                                    </a>
-                                                </div>
-                                                <div class="level-item">
-                                                    <a href="?salas=true" class="button is-success is-outlined  is-small">
-                                                        <span class="icon is-small">
-                                                            <i class="mdi mdi-eye"></i>
-                                                        </span>
-                                                        <span>Salas</span>
-                                                        <!---->
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                         <div class="b-table ">
+                                            <hr />
+                                            <div class="b-table ">
                                             <div class="field table-mobile-sort">
                                                 <div class="field has-addons">
                                                     <div class="control is-expanded">
@@ -388,13 +344,10 @@
                                                                 <!---->
                                                                 <!---->
                                                                 <option value="[object Object]">
-                                                                    Campus
+                                                                    Unidade Orgânica
                                                                 </option>
                                                                 <option value="[object Object]">
-                                                                    Edifício
-                                                                </option>
-                                                                <option value="[object Object]">
-                                                                    Sala
+                                                                    Departamento
                                                                 </option>
                                                             </select>
                                                         </span>
@@ -415,28 +368,31 @@
                                                 <table id="activitiesTable" class="table has-mobile-cards is-hoverable">
                                                     <thead>
                                                         <tr>
-                                                            <th width="40px"></th>
+                                                            
                                                             <!---->
                                                             <th class="is-sortable" style="width: 300px;">
-                                                                {% if order_by == 'campus' and sort == 'asc' %}
-                                                                <a href="?order_by=campus&sort=desc">
-                                                                    <div class="th-wrap">Campus
+                                                                {% if order_by == 'unidadeorganica' and sort == 'asc' %}
+                                                                <a href="?order_by=unidadeorganica&sort=desc">
+                                                                    <div class="th-wrap">
+                                                                        Unidade Orgânica
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
-                                                                {% elif order_by == 'campus' and sort == 'desc' %}
-                                                                <a href="?order_by=campus&sort=asc">
-                                                                    <div class="th-wrap">Campus
+                                                                {% elif order_by == 'unidadeorganica' and sort == 'desc' %}
+                                                                <a href="?order_by=unidadeorganica&sort=asc">
+                                                                    <div class="th-wrap">
+                                                                        Unidade Orgânica
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-down"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% else %}
-                                                                <a href="?order_by=campus&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Campus
+                                                                <a href="?order_by=unidadeorganica&sort=asc" style="color: black">
+                                                                    <div class="th-wrap">
+                                                                        Unidade Orgânica
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
@@ -444,26 +400,29 @@
                                                                 </a>
                                                                 {% endif %}
                                                             </th>
-                                                            <th class="is-sortable">
-                                                                {% if order_by == 'edificio' and sort == 'asc' %}
-                                                                <a href="?order_by=edificio&sort=desc">
-                                                                    <div class="th-wrap">Edifício
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                {% if order_by == 'departamento' and sort == 'asc' %}
+                                                                <a href="?order_by=departamento&sort=desc">
+                                                                    <div class="th-wrap">
+                                                                        Departamento
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
-                                                                {% elif order_by == 'edificio' and sort == 'desc' %}
-                                                                <a href="?order_by=edificio&sort=asc">
-                                                                    <div class="th-wrap">Edifício
+                                                                {% elif order_by == 'departamento' and sort == 'desc' %}
+                                                                <a href="?order_by=departamento&sort=asc">
+                                                                    <div class="th-wrap">
+                                                                        Departamento
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-down"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% else %}
-                                                                <a href="?order_by=edificio&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Edifício
+                                                                <a href="?order_by=departamento&sort=asc" style="color: black">
+                                                                    <div class="th-wrap">
+                                                                        Departamento
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
@@ -471,68 +430,30 @@
                                                                 </a>
                                                                 {% endif %}
                                                             </th>
-                                                            <th class="is-sortable">
-                                                                {% if order_by == 'sala' and sort == 'asc' %}
-                                                                <a href="?order_by=sala&sort=desc">
-                                                                    <div class="th-wrap">Sala
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-up"></i>
-                                                                        </span>
+                                                            <th class="is-sortable" style="width:240px">
+                                                                <div class="th-wrap">Ações
                                                                     </div>
-                                                                </a>
-                                                                {% elif order_by == 'sala' and sort == 'desc' %}
-                                                                <a href="?order_by=sala&sort=asc">
-                                                                    <div class="th-wrap">Sala
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-down"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=sala&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Sala
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-swap"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
                                                             </th>
+
                                                             <!---->
                                                         </tr>
                                                         <!---->
                                                         <!---->
                                                     </thead>
                                                     <tbody>
-                                                        {% for espaco in espacos %}
+                                                        {% for departamento in departamentos %}
                                                         <tr draggable="false" class="header">
-                                                            <td class="chevron-cell">
-                                                                <a class="collapsible">
-                                                                    <span class="icon">
-                                                                        <i class="mdi mdi-chevron-right mdi-24px"></i>
-                                                                    </span>
-                                                                </a>
-                                                            </td>
+ 
                                                             <!---->
-                                                            <td data-label="Campus" id="activityName" class=""> {{ espaco.edificio.campus.nome }} </td>
-                                                            <td data-label="Edifício" class=""> {{ espaco.edificio.nome }} </td>
-                                                            <td data-label="Sala" class=""> {{ espaco }} </td>
+                                                            <td data-label="Unidade Organica" id="activityName" class=""> {{ departamento.unidadeorganica }} </td>
+                                                            <td data-label="Departamento" id="activityName" class=""> {{ departamento.nome }} </td>
+                                                            <td data-label="Editar" class="">                     
+                                                                <a class="button is-info is-small" href="{% url 'editardepartamento' departamento.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
+                                                                <a class="button is-danger is-small" href="{% url 'eliminardepartamento' departamento.id %}" onclick="return confirm('Tem a certeza que prentede eliminar o departamento?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a> 
+                                                            </td>
                                                             <!---->
                                                         </tr>
                                                         <!---->
-                                                        <tr class="detail" style="display:none">
-                                                            <td colspan="5">
-
-                                                                <div class="content">
-                                                                    <div class="section" style="font-size: 15px;">                                                                     
-                                                                        <p>
-                                                                            <strong>Morada:</strong> {{ espaco.edificio.campus.morada }} </p>
-                                                                        <p>
-                                                                            <strong>Contacto:</strong> {{ espaco.edificio.campus.contacto }} </p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
                                                         <!---->
                                                         {% endfor %}
                                                     </tbody>
@@ -540,21 +461,21 @@
                                                     <!---->
                                                 </table>
                                             </div>
-                                             {% if espacos.has_other_pages %}
+                                             {% if departamentos.has_other_pages %}
                                                 <div class="level">
                                                     <div class="level-left"></div>
                                                     <div class="level-right">
                                                         <div class="level-item">
                                                             <nav class="pagination">
-                                                                {% if espacos.has_previous %}
+                                                                {% if departamentos.has_previous %}
                                                                     {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ espacos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                                        <a role="button" href="?page={{ departamentos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
                                                                         <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                             </span>
                                                                         </a>
                                                                     {% else %}
-                                                                        <a role="button" href="?page={{ espacos.previous_page_number }}" class="pagination-link pagination-previous">
+                                                                        <a role="button" href="?page={{ departamentos.previous_page_number }}" class="pagination-link pagination-previous">
                                                                         <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                             </span>
@@ -567,15 +488,15 @@
                                                                     </span>
                                                                 </a>
                                                                 {% endif %}
-                                                                {% if espacos.has_next %}
+                                                                {% if departamentos.has_next %}
                                                                     {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ espacos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                                        <a role="button" href="?page={{ departamentos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
                                                                             <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                             </span>
                                                                         </a>
                                                                     {% else %}
-                                                                        <a role="button" href="?page={{ espacos.next_page_number }}" class="pagination-link pagination-next">
+                                                                        <a role="button" href="?page={{ departamentos.next_page_number }}" class="pagination-link pagination-next">
                                                                             <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                             </span>
@@ -591,8 +512,8 @@
                                                                 <ul class="pagination-list">
                                                                     <!---->
                                                                     <!---->
-                                                                    {% for i in espacos.paginator.page_range %}
-                                                                    {% if espacos.number == i %}
+                                                                    {% for i in departamentos.paginator.page_range %}
+                                                                    {% if departamentos.number == i %}
                                                                     <li>
                                                                         <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                                     </li>
@@ -618,15 +539,13 @@
                                             {% endif %}
                                         </div>
 
-
+                                        </div>
                                     </div>
-                                </div>
 
-                            </div>
+                                </div>
+                           
+                            
                         </div>
-                        <!--NOVA TABELA INICIO-->
-                       
-                        <!--NOVA TABELA FIM-->
                     </div>
                 </div>
             </div>
@@ -637,22 +556,8 @@
         <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
         <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
     </footer>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('tr.header').click(function () {
-                //$(this).find('span').find('i').toggleClass('fa-thumbs-down');
-                if ($(this).find('span').find('i').hasClass('mdi mdi-chevron-right mdi-24px')) {
-                    $(this).find('span').find('i').removeClass("mdi mdi-chevron-right mdi-24px").addClass("mdi mdi-chevron-down mdi-24px");
-                  }else{
-                       $(this).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
-                  }
-                $(this).nextUntil('tr.header').slideToggle(100, function(){
-                    });
-            });
-        });
-    </script>
-    <script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
         // suppose the `id` attribute of element is `message_container`.
         var message_ele = document.getElementById("message_container");
 
@@ -662,11 +567,7 @@
         // Timeout is 3 sec, you can change it
 
     </script>
-    <script>
-        function addClassByClick(button){
-          $(button).addClass("is-loading")
-        }
-    </script>
+
 </body>
 
 </html>

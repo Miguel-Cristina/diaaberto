@@ -122,7 +122,7 @@
                                         <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
                                         <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
                                     <hr />
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.faculdade }}</small></div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
                                         <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
                                     {% endif %}
                                     
@@ -144,10 +144,10 @@
             <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
         </div>
         {% if messages %}
-    {% for message in messages %}
-    <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
-    {% endfor %}
-{% endif %}
+            {% for message in messages %}
+            <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
+            {% endfor %}
+        {% endif %}
 
         <div data-v-8716d23a="" id="page-content">
             <div data-v-8716d23a="" class="card">
@@ -201,15 +201,15 @@
                                         </div>
                                             <div class="field has-addons">
                                             <!---->
-                                            {% if not faculdadequery|length > 0 %}
+                                            {% if not organicaquery|length > 0 %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select  id="faculdadeSearch" name="faculdade"><!--onchange="searchByType()"-->
+                                                    <select  id="organicaSearch" name="unidadeorganica"><!--onchange="searchByType()"-->
                                                         <option disabled="disabled" hidden="hidden" selected>
-                                                            Faculdade
+                                                            Unidade Orgânica
                                                         </option>
-                                                        {% for Faculdade in faculdades %}
-                                                            <option value="{{ Faculdade.id }}">{{ Faculdade.nome }}</option>
+                                                        {% for organica in organicas %}
+                                                            <option value="{{ organica.id }}">{{ organica.nome }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
@@ -223,9 +223,9 @@
                                             {% else %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select  id="faculdadeSearch" name="faculdade"><!--onchange="searchByType()"-->
-                                                        {% for Faculdade in faculdades %}
-                                                            <option value="{{ Faculdade.id }}">{{ Faculdade.nome }}</option>
+                                                    <select  id="organicaSearch" name="unidadeorganica"><!--onchange="searchByType()"-->
+                                                        {% for organica in organicas %}
+                                                            <option value="{{ organica.id }}">{{ organica.nome }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
@@ -235,7 +235,7 @@
                                             </div>
                                             <!---->
                                             <div class="control">
-                                                <button class="button is-danger" onclick="document.getElementById('faculdadeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                <button class="button is-danger" onclick="document.getElementById('organicaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
                                               </div>
                                             {% endif %}
                                         </div>
@@ -481,28 +481,6 @@
                                                 </div>
                                                 {% endif %}
                                             </div>
-                                                        <template>
-                                                            <b-field>
-                                                                <b-datepicker
-                                                                    placeholder="Submetido depois de..."
-                                                                    icon="calendar"
-                                                                    :min-date="minDate"
-                                                                    :max-date="maxDate"
-                                                                    editable>
-                                                                </b-datepicker>
-                                                            </b-field>
-                                                        </template>
-                                                        <template>
-                                                            <b-field>
-                                                                <b-datepicker
-                                                                    placeholder="Submetido antes de..."
-                                                                    icon="calendar"
-                                                                    :min-date="minDate"
-                                                                    :max-date="maxDate"
-                                                                    editable>
-                                                                </b-datepicker>
-                                                            </b-field>
-                                                        </template>
                                                     </b-menu-item>
                                             </b-menu>
                                         </template>
@@ -780,14 +758,14 @@
                         
             </div>
             <div class="column">
-                        <p><strong>Faculdade:</strong> {{ Atividade.faculdade }} </p>
+                        <p><strong>Unidade Orgânica:</strong> {{ Atividade.unidadeorganica }} </p>
                         <p><strong>Departamento:</strong> {{ Atividade.departamento }} </p>
                 {% if Atividade.campus and Atividade.edificio and Atividade.sala %}
                         <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
                         <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
                         <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
                 {% elif Atividade.tipo_local %}
-                        <p><strong>Tipo de local:</strong> {{ Atividade.tipo_local }}</p>
+                        <p><strong>Local:</strong> {{ Atividade.tipo_local }}</p>
                 {% else %}
                         <p><strong>Local:</strong> Não especificado</p>
                 {% endif %}

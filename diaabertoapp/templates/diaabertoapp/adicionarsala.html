@@ -105,7 +105,9 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
+                                        <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
+                    <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
+                    <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -155,24 +157,28 @@
                                 </button>
                             </div>
                             <div class="background" style="display: none;" aria-hidden="true"></div>
-                            <div class="dropdown-menu" style="display: none; " aria-hidden="true">
+                            <div class="dropdown-menu"  aria-hidden="true">
                                 <div role="list" class="dropdown-content">
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Colaborador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Administrador</a>
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
+                                    <hr />
+                                    {% if user.is_authenticated %}
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
+                                    <hr />
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
+                                    {% endif %}
+                                    
                                 </div>
                             </div>
                         </div>
-                        <button data-v-a67fe1ba="" type="button" class="button">
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
                             <span class="icon is-small">
                                 <i class="mdi mdi-logout-variant"></i>
                             </span>
                             <span> Sair </span>
                             <!---->
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -187,13 +193,16 @@
                         <nav aria-label="breadcrumbs" class="breadcrumb">
                             <ul>
                                 <li>
-                                    <a href="/administrador" class="router-link-active">Início</a>
+                                    <a href="/index/" class="router-link-active">Início</a>
                                 </li>
                                 <li>
-                                    <a href="/configurarespacos" class="">Configuração dos Espaços</a>
+                                    <a href="/configurarespacos/" class="">Configuração dos Espaços</a>
+                                </li>
+                                <li>
+                                    <a href="/configurarespacos/salas/" class="router-link-exact-active router-link-active">Salas</a>
                                 </li>
                                 <li class="is-active">
-                                    <a href="/configurarespacos/edificios" class="router-link-exact-active router-link-active">Configurar Edifícios</a>
+                                    <a href="/configurarespacos/adicionarsala" class="router-link-exact-active router-link-active">Adicionar</a>
                                 </li>
                             </ul>
                         </nav>
@@ -206,7 +215,7 @@
                                             <div class="level">
                                                 <div class="level-left">
                                                     <div class="level-item">
-                                                        <p class="menu-label">Configuração dos Campus</p>
+                                                        <p class="menu-label">Adicionar sala</p>
                                                     </div>
                                                 </div>
                                                 <div class="level-right">
@@ -217,44 +226,35 @@
                                             <hr />
                                         <div class="control is-clearfix" id="form_set_material">
                                         <div class="columns">
-                                            <div class="column is-5">
+                                            <div class="column is-4">
                                                 <label class="label">Campus</label>
+                                                {{ form.campus }}
+                                                
                                             </div>
-                                            <div class="column is-5">
+                                            <div class="column is-4">
                                                 <label class="label">Edifício</label>
-                                            </div>
-                                            <div class="column is-2">
-                                                <label class="label">Sala</label>
-                                            </div>
-                                        </div>
-                                        <div class="columns">
-                                                {% csrf_token %}
-                                                <div class="column is-4">
-                                                    {{ form.campus }}
-                                                </div>
-                                                <div class="column is-4">
-                                                    {{ form.edificio }}
+                                                {{ form.edificio }}
                                                 {% for error in form.edificio.errors %} 
                                                     <p class="help is-danger">{{ error }}</p>
                                                 {% endfor %}
-                                                </div>
-                                                <div class="column is-4">
-                                                    {{ form.identificacao }}
+                                            </div>
+                                            <div class="column is-4">
+                                                <label class="label">Sala</label>
+                                                {{ form.identificacao }}
                                                 {% for error in form.identificacao.errors %} 
                                                     <p class="help is-danger">{{ error }}</p>
                                                 {% endfor %}
                                                 {% for error in form.non_field_errors  %} 
                                                     <p class="help is-danger">{{ error }}</p>
                                                 {% endfor %}
-                                                </div>
-                                            
+                                            </div>
                                         </div>
                                     <hr />
                                     <br />
 
                                     <div class="level">
                                         <div class="level-left">
-                                            <a href="/administrador/configurarespacos" class="button is-danger is-outlined" type="button">
+                                            <a href="/configurarespacos" class="button is-danger is-outlined" type="button">
                                                 <span class="icon is-small">
                                                     <i class="mdi mdi-close mdi-24px"></i>
                                                 </span>

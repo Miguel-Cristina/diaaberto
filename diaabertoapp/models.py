@@ -4,19 +4,19 @@ from django.forms import ModelForm
 # Create your models here.
 
 
-class Faculdade(models.Model):
+class UnidadeOrganica(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100, unique=True)
     class Meta:
-        db_table='Faculdade'
+        db_table='UnidadeOrganica'
     def __str__(self):
         return self.nome
 class Departamento(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100, unique=True)
-    faculdade = models.ForeignKey(Faculdade, on_delete=models.CASCADE)
+    unidadeorganica = models.ForeignKey(UnidadeOrganica, on_delete=models.PROTECT)
     class Meta:
         db_table='Departamento'
     def __str__(self):
@@ -43,7 +43,7 @@ class Edificio(models.Model):
     # Campos
     id = models.AutoField(primary_key= True)
     nome = models.CharField(max_length=40)
-    campus = models.ForeignKey(Campus, on_delete=models.CASCADE,null=True)
+    campus = models.ForeignKey(Campus, on_delete=models.PROTECT,null=True)
     class Meta:
         db_table='Edificio'
         unique_together = (("nome", "campus"),) 
@@ -59,7 +59,7 @@ class Sala(models.Model):
     # Campos
     id = models.AutoField(primary_key= True)
     identificacao = models.CharField(max_length=40)
-    edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE,null=True)
+    edificio = models.ForeignKey(Edificio, on_delete=models.PROTECT,null=True)
     class Meta:
         db_table='Sala'
         unique_together = (("identificacao", "edificio"),) 
@@ -152,7 +152,7 @@ class Utilizador(models.Model):
     permitir_localizacao = models.IntegerField(null=True)
     utilizar_dados_pessoais = models.IntegerField(null=True)
     validado = models.IntegerField(null=True, blank=True)
-    faculdade = models.ForeignKey(Faculdade, on_delete=models.PROTECT, null=True)
+    unidadeorganica = models.ForeignKey(UnidadeOrganica, on_delete=models.PROTECT, null=True)
     departamento = models.ForeignKey(Departamento, on_delete=models.PROTECT, null=True)
     last_login = models.DateTimeField(null=True, blank=True)
 
@@ -186,8 +186,8 @@ class Atividade(models.Model):
     tipo_atividade = models.ForeignKey(TipoAtividade, on_delete=models.PROTECT, null=True)
     publico_alvo = models.ManyToManyField(PublicoAlvo, related_name='publico_alvo')
     data = models.DateField(default=datetime.date.today)
-    faculdade = models.ForeignKey(Faculdade, on_delete=models.CASCADE, null=True)
-    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, null=True)
+    unidadeorganica = models.ForeignKey(UnidadeOrganica, on_delete=models.PROTECT, null=True)
+    departamento = models.ForeignKey(Departamento, on_delete=models.PROTECT, null=True)
     REJEITADA = 'RJ'    #invalidada
     PENDENTE = 'PD'     #por validar
     VALIDADA = 'VD'     #validada
@@ -202,9 +202,9 @@ class Atividade(models.Model):
         default=PENDENTE,
     )
     tematicas = models.ManyToManyField(Tematica, related_name='temas')
-    campus = models.ForeignKey(Campus, on_delete=models.CASCADE, null=True, blank=True)
-    edificio = models.ForeignKey(Edificio, on_delete=models.CASCADE, null=True, blank=True)
-    sala = models.ForeignKey(Sala, on_delete=models.CASCADE, null=True, blank=True)
+    campus = models.ForeignKey(Campus, on_delete=models.PROTECT, null=True, blank=True)
+    edificio = models.ForeignKey(Edificio, on_delete=models.PROTECT, null=True, blank=True)
+    sala = models.ForeignKey(Sala, on_delete=models.PROTECT, null=True, blank=True)
     tipo_local = models.CharField(max_length=255, null=True, blank=True)
     responsavel = models.ForeignKey(Utilizador, on_delete=models.PROTECT, null=True, blank=True)
     #Métodos
@@ -231,7 +231,7 @@ class MaterialQuantidade(models.Model):
 
 class SessaoAtividade(models.Model):
     atividade = models.ForeignKey('Atividade', related_name='sessao_atividade', on_delete=models.CASCADE, null=True)
-    sessao = models.ForeignKey('Sessao',on_delete=models.SET_NULL, null=True)
+    sessao = models.ForeignKey('Sessao',on_delete=models.PROTECT, null=True)
     dia = models.DateField(null=True)
     numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
     class Meta:
@@ -243,7 +243,7 @@ class SessaoAtividade(models.Model):
 class AtividadeForm(ModelForm):
      class Meta:
          model = Atividade
-         fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'faculdade', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
+         fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'unidadeorganica', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
 
 
 class Tarefa(models.Model):

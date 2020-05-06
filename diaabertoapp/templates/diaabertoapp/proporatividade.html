@@ -166,13 +166,13 @@
                                 </div>
                             </div>
                         </div>
-                        <button data-v-a67fe1ba="" type="button" class="button">
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
                             <span class="icon is-small">
                                 <i class="mdi mdi-logout-variant"></i>
                             </span>
                             <span> Sair </span>
                             <!---->
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -406,9 +406,9 @@
                                                 </div>
                                                 <div class="tabdcontent" id="meuDepartamento">
                                                     <div class="field">
-                                                        <label class="label">Faculdade</label>
+                                                        <label class="label">Unidade Orgânica</label>
                                                         <div class="control is-fullwidth">
-                                                                {{ faculdades }}
+                                                                {{ organicas }}
                                                         </div>
                                                     </div>
                                                     <div class="field">
@@ -421,9 +421,9 @@
                                                 <div class="columns tabdcontent" style="display:none" id="escolherDepartamento">
                                                     <div class="column">
                                                         <div class="field">
-                                                            <label class="label">Faculdade</label>
+                                                            <label class="label">Unidade Orgânica</label>
                                                             <div class="control is-fullwidth">
-                                                                    {{ form.faculdade }}
+                                                                    {{ form.unidadeorganica }}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -441,7 +441,7 @@
                                                         <li>
                                                             <a class="tablinks active" onclick="openLocal(event,'tipoLocal')">
                                                             <span class="icon is-small "><i class="mdi mdi-shuffle-variant" aria-hidden="true"></i></span>
-                                                            <span>Qualquer sala com as minhas especificações</span>
+                                                            <span>Local com as minhas especificações</span>
                                                             </a>
                                                         </li>
                                                         <li>
@@ -454,7 +454,7 @@
                                                 </div>
                                                 <div id="tipoLocal" class="tabcontent" style="display:block">
                                                     <div class="field">
-                                                        <label class="label">Tipo de local a requisitar</label>
+                                                        <label class="label">Local a requisitar</label>
                                                         <div class="control is-clearfix">
                                                             <!--<input type="text" id="tipoLocalinput" class="input tipoLocalInput" placeholder="ex: Sala grande/Laboratório" name="tipo_local_atividade" required>-->
                                                             {{ form.tipo_local }}

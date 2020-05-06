@@ -117,8 +117,10 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
-                </div>
+                    <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
+                    <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
+                    <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
+                    </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
                         <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
@@ -167,24 +169,28 @@
                                 </button>
                             </div>
                             <div class="background" style="display: none;" aria-hidden="true"></div>
-                            <div class="dropdown-menu" style="display: none; " aria-hidden="true">
+                            <div class="dropdown-menu"  aria-hidden="true">
                                 <div role="list" class="dropdown-content">
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Colaborador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Administrador</a>
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
+                                    <hr />
+                                    {% if user.is_authenticated %}
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
+                                    <hr />
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
+                                    {% endif %}
+                                    
                                 </div>
                             </div>
                         </div>
-                        <button data-v-a67fe1ba="" type="button" class="button">
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
                             <span class="icon is-small">
                                 <i class="mdi mdi-logout-variant"></i>
                             </span>
                             <span> Sair </span>
                             <!---->
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -204,21 +210,149 @@
                         <nav aria-label="breadcrumbs" class="breadcrumb">
                             <ul>
                                 <li>
-                                    <a href="/administrador" class="router-link-active">Início</a>
+                                    <a href="/index/" class="router-link-active">Início</a>
                                 </li>
                                 <li>
-                                    <a href="/administrador/configurarespacos" class="">Configuração dos Espaços</a>
+                                    <a href="/configurarespacos" class="">Configuração dos Espaços</a>
                                 </li>
                                 <li class="is-active">
-                                    <a href="/configurarespacos/edificios" class="router-link-exact-active router-link-active">Configurar Salas</a>
+                                    <a href="/configurarespacos/edificios" class="router-link-exact-active router-link-active">Salas</a>
                                 </li>
                             </ul>
                         </nav>
                         <div style="padding: 3rem 2vw 1rem; ">
-                            <form action="" method="POST">
-                                {% csrf_token %}
+
                                 <div class="columns">
-                                    <div class="column tile">
+                                    <div class="column tile is-3">
+                                        <div class="container box">
+                                        <div class="level">
+                                            <div class="level-left">
+                                                <div class="level-item">
+                                                    <p class="menu-label">Filtros</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <form method="GET" action=".">                                           
+                                            <div class="field has-addons">
+                                                <!---->
+                                                {% if not campusquery|length > 0 %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                            <option disabled="disabled" hidden="hidden" selected>
+                                                                Campus
+                                                            </option>
+                                                            {% for Camp in campus %}
+                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                </div>
+                                                {% else %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                            {% for Camp in campus %}
+                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <!---->
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                  </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="field has-addons">
+                                                <!---->
+                                                {% if not edificioquery|length > 0 %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="edificioSearch" name="edificio"><!--onchange="searchByType()"-->
+                                                            <option disabled="disabled" hidden="hidden" selected>
+                                                                Edifício
+                                                            </option>
+                                                            {% for Edificio in edificios %}
+                                                                <option value="{{ Edificio.id }}">{{ Edificio.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                </div>
+                                                {% else %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="edificioSearch" name="edificio"><!--onchange="searchByType()"-->
+                                                            {% for Edificio in edificios %}
+                                                                <option value="{{ Edificio.id }}">{{ Edificio.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <!---->
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('edificioSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                  </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not nomesquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                  </div>
+                                            {% endif %}
+                                            <!---->
+                                        </div>
+                                        </form>
+                                        
+                                    </div>
+                                    </div>
+                                    <div class="column tile is-9">
                                         <div class="container box">
                                             <div class="level">
                                                 <div class="level-left">
@@ -228,7 +362,7 @@
                                                 </div>
                                                 <div class="level-right">
                                                     <div class="level-item">
-                                                        <a href="/administrador/configurarespacos/adicionarsala" class="button is-success is-outlined  is-small">
+                                                        <a href="/configurarespacos/adicionarsala" class="button is-success is-outlined  is-small">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-plus"></i>
                                                         </span>
@@ -275,7 +409,7 @@
                                                 <table id="activitiesTable" class="table has-mobile-cards is-hoverable">
                                                     <thead>
                                                         <tr>
-                                                            <th width="40px"></th>
+                                                            
                                                             <!---->
                                                             <th class="is-sortable" style="width: 300px;">
                                                                 {% if order_by == 'campus' and sort == 'asc' %}
@@ -371,13 +505,7 @@
                                                     <tbody>
                                                         {% for salas in salas %}
                                                         <tr draggable="false" class="header">
-                                                            <td class="chevron-cell">
-                                                                <a class="collapsible">
-                                                                    <span class="icon">
-                                                                        <i class="mdi mdi-chevron-right mdi-24px"></i>
-                                                                    </span>
-                                                                </a>
-                                                            </td>
+ 
                                                             <!---->
                                                             <td data-label="Campus" id="activityName" class=""> {{ salas.edificio.campus.nome }} </td>
                                                             <td data-label="Edifício" class=""> {{ salas.edificio.nome }} </td>
@@ -491,7 +619,7 @@
                                     </div>
 
                                 </div>
-                            </form>
+                           
                             
                         </div>
                     </div>
@@ -739,7 +867,7 @@
         // Timeout is 3 sec, you can change it
 
     </script>
- 
+
 </body>
 
 </html>

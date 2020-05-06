@@ -50,16 +50,39 @@
                     <div data-v-8716d23a="">
                         <section class="section">
                             <div class="container">
-                                <h3 class="subtitle has-text-centered">Entrar na conta</h3>
-                                <hr />
+                                <div class="columns is-centered">
+                                    <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+                                        <h3 class="subtitle has-text-centered is-spaced">ENTRAR NA CONTA</h3>
+                                        <hr />
                             
-                                <form action="" method="post">
-                                    {% csrf_token %}
-                                    <p>{{ form }}</p>
-                                    <br />
-                                    <button class="button is-success">Aceder</button>
-                                </form>
-                            
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <p>{{ form }}</p>
+                                            <br />
+                                            <button class="button is-fullwidth is-success is-rounded">Aceder</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <br />
+                                <article class="message">
+                                  <div class="message-body">
+                                      Os acessos da plataforma estão <strong>reservados</strong> ao tipo de utilizador. Algumas funcionalidades estão visiveis apenas a um determinado tipo de utilizadores/grupo de tipos de utilizador.
+                                  </div>
+                                </article>
+                                <article class="message is-primary">
+                                  <div class="message-body">
+                                    Os dados de login para acesso à plataforma:
+                                      <div class="columns">
+                                          <div class="column is-2"><em>tipo utilizador</em><p><strong>superadministrador</strong></p><p><strong>administrador</strong></p><p><strong>coordenador</strong></p><p><strong>coordenador</strong></p><p><strong>docente</strong></p><p><strong>docente</strong><p><strong>coordenador</strong></p><p><strong>docente</strong></p></div>
+                                          <div class="column is-2"><em>username</em><p>admin</p><p>a54375@ualg.pt</p><p>delrio@ualg.pt</p><p>jsantos@ualg.pt</p><p>fcastilho@ualg.pt</p><p>jsapinho@ualg.pt</p><p>glaranja@ualg.pt</p><p>fpinto@ualg.pt</p></div>
+                                          <div class="column is-2"><em>password</em><p>admin</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p></div>
+                                          <div class="column is-3"><em>nome</em><p>Administrador</p><p>Miguel Cristina</p><p>Alonso del Rio</p> <p>José dos Santos Ferreira</p><p>Fátima Castilho</p><p>Jéssica Sapinho</p><p>Guilherme Laranja</p><p>Filipe Pinto</p></div>
+                                          <div class="column is-3"><em>unidade orgânica</em><p>Faculdade de Ciências e Tecnologia</p><p>Faculdade de Ciências e Tecnologia</p><p>Faculdade de Ciências e Tecnologia</p><p>Faculdade de Artes e Letras</p><p>Faculdade de Artes e Letras</p><p>Faculdade de Artes e Letras</p><p>Faculdade de Economia</p><p>Faculdade de Economia</p></div>
+                                      </div>
+                                  </div>
+                                </article>
+
+
                             </div>
                         </section>
                         <br />

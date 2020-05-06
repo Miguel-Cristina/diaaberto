@@ -6,7 +6,7 @@
 
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
     <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
     <script src="{% static 'diaabertoapp/dist/bulma-steps.js' %}"></script>
     <meta charset="utf-8">
@@ -86,6 +86,18 @@
         .tabfields.invalid {
             background-color: #ffdddd;
         }
+        .notices{
+            position: fixed;
+            display: flex;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8em;
+            overflow: hidden;
+            z-index: 1000;
+            pointer-events: none;
+        }
     </style>
     
 </head>
@@ -105,8 +117,10 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
-                </div>
+                    <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
+                    <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
+                    <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
+                    </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
                         <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
@@ -155,24 +169,28 @@
                                 </button>
                             </div>
                             <div class="background" style="display: none;" aria-hidden="true"></div>
-                            <div class="dropdown-menu" style="display: none; " aria-hidden="true">
+                            <div class="dropdown-menu"  aria-hidden="true">
                                 <div role="list" class="dropdown-content">
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Colaborador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Administrador</a>
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
+                                    <hr />
+                                    {% if user.is_authenticated %}
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
+                                    <hr />
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
+                                    {% endif %}
+                                    
                                 </div>
                             </div>
                         </div>
-                        <button data-v-a67fe1ba="" type="button" class="button">
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
                             <span class="icon is-small">
                                 <i class="mdi mdi-logout-variant"></i>
                             </span>
                             <span> Sair </span>
                             <!---->
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -180,6 +198,11 @@
         <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
             <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
+            {% endfor %}
+        {% endif %}
         <div data-v-8716d23a="" id="page-content">
             <div data-v-8716d23a="" class="card">
                 <div data-v-8716d23a="" class="card-content">
@@ -187,154 +210,336 @@
                         <nav aria-label="breadcrumbs" class="breadcrumb">
                             <ul>
                                 <li>
-                                    <a href="/administrador" class="router-link-active">Início</a>
+                                    <a href="/index/" class="router-link-active">Início</a>
                                 </li>
                                 <li>
                                     <a href="/configurarespacos" class="">Configuração dos Espaços</a>
                                 </li>
                                 <li class="is-active">
-                                    <a href="/configurarespacos/edificios" class="router-link-exact-active router-link-active">Configurar Edifícios</a>
+                                    <a href="/configurarespacos/edificios" class="router-link-exact-active router-link-active">Edifícios</a>
                                 </li>
                             </ul>
                         </nav>
                         <div style="padding: 3rem 2vw 1rem; ">
-                            <form action="" method="POST">
-                                {% csrf_token %}
+
                                 <div class="columns">
-                                    <div class="column tile">
+                                    <div class="column tile is-3">
+                                        <div class="container box">
+                                        <div class="level">
+                                            <div class="level-left">
+                                                <div class="level-item">
+                                                    <p class="menu-label">Filtros</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <form method="GET" action=".">                                           
+                                            <div class="field has-addons">
+                                                <!---->
+                                                {% if not campusquery|length > 0 %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                            <option disabled="disabled" hidden="hidden" selected>
+                                                                Campus
+                                                            </option>
+                                                            {% for Camp in campus %}
+                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                </div>
+                                                {% else %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                            {% for Camp in campus %}
+                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <!---->
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                  </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not nomesquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                  </div>
+                                            {% endif %}
+                                            <!---->
+                                        </div>
+                                        </form>
+                                        
+                                    </div>
+                                    </div>
+                                    <div class="column tile is-9">
                                         <div class="container box">
                                             <div class="level">
                                                 <div class="level-left">
                                                     <div class="level-item">
-                                                        <p class="menu-label">Configuração dos Campus</p>
+                                                        <p class="menu-label">Configuração dos Edifícios</p>
                                                     </div>
                                                 </div>
                                                 <div class="level-right">
                                                     <div class="level-item">
+                                                        <a href="/configurarespacos/adicionaredificio" class="button is-success is-outlined  is-small">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-plus"></i>
+                                                        </span>
+                                                        <span>Adicionar edifício</span>
+                                                        <!---->
+                                                    </a>
                                                     </div>
                                                 </div>
                                             </div>
                                             <hr />
-                                        <div class="control is-clearfix" id="form_set_material">
-                                        <div class="columns">
-                                            <div class="column is-5">
-                                                <label class="label">Campus</label>
-                                            </div>
-                                            <div class="column is-5">
-                                                <label class="label">Edifício</label>
-                                            </div>
-                                            <div class="column is-2">
-                                                <label class="label">Excluir?</label>
-                                            </div>
-                                        </div>
-                                        {{ form.management_form }}
-                                            {% for frm in form %}
-                                                {{ frm.id }}
-
-                                        <div class="columns">
-                                            <div class="column is-5">
-                                                <div class="field">
-
+                                            <div class="b-table ">
+                                            <div class="field table-mobile-sort">
+                                                <div class="field has-addons">
                                                     <div class="control is-expanded">
-                                                        <span class="select is-fullwidth is-empty">
-                                                            {{ frm.campus }}
-                                                        </span>   
-                                                    </div>
-                                                    {% for error in frm.campus.errors %} 
-                                                    <p class="help is-danger">{{ error }}</p>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div class="column is-5">
-                                                <div class="field">
-
-                                                    <div class="control is-expanded">
-                                                        {{ frm.nome }}
-                                                    </div>
-                                                    {% for error in frm.nome.errors %} 
-                                                    <p class="help is-danger">{{ error }}</p>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div class="column is-2">
-                                                <div class="field">
-                                                    <div class="control is-expanded ">
-                                                    {{ frm.DELETE }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                            {% for error in frm.non_field_errors  %} 
-                                                    <p class="help is-danger">{{ error }}</p>
-                                            {% endfor %}
-                                        {% endfor %}
-                                    </div>
-                                    <div id="empty_form_material" style="display:none">
-                                        {{ form.empty_form.id }}  
-                                        <div class="columns">
-                                            <div class="column is-5">
-                                                <div class="field">
-                                                    <div class="control is-expanded">
-                                                        <span class="select is-fullwidth is-empty">
-                                                            {{ form.empty_form.campus }}
+                                                        <span class="select is-fullwidth">
+                                                            <select>
+                                                                <!---->
+                                                                <!---->
+                                                                <option value="[object Object]">
+                                                                    Campus
+                                                                </option>
+                                                                <option value="[object Object]">
+                                                                    Edifício
+                                                                </option>
+                                                                <option value="[object Object]">
+                                                                    Ações
+                                                                </option>
+                                                            </select>
                                                         </span>
+                                                        <!---->
+                                                    </div>
+                                                    <div class="control">
+                                                        <button class="button is-primary">
+                                                            <span class="icon is-small">
+                                                                <i class="mdi mdi-sort"></i>
+                                                            </span>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="column is-5">
-                                                <div class="field">
-                                                    <div class="control is-expanded">
-                                                    {{ form.empty_form.nome }}    
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="column is-2">
-                                                <div class="field">
-                                                    <div class="control is-expanded"> 
-                                                        {{ form.empty_form.DELETE }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="has-text-left">
-                                        <button type="button" id="add_more_material" class="button is-success">
                                             <!---->
-                                            <span class="icon is-small">
-                                                <i class="mdi mdi-plus mdi-24px"></i>
-                                            </span>
-                                            <span> Adicionar edifício </span>
-                                        </button>
-                                    </div>
-                                    <hr />
-                                    <br />
+                                            <br />
+                                            <div class="table-wrapper">
+                                                <table id="activitiesTable" class="table has-mobile-cards is-hoverable">
+                                                    <thead>
+                                                        <tr>
+                                                            
+                                                            <!---->
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                {% if order_by == 'campus' and sort == 'asc' %}
+                                                                <a href="?order_by=campus&sort=desc">
+                                                                    <div class="th-wrap">Campus
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% elif order_by == 'campus' and sort == 'desc' %}
+                                                                <a href="?order_by=campus&sort=asc">
+                                                                    <div class="th-wrap">Campus
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="?order_by=campus&sort=asc" style="color: black">
+                                                                    <div class="th-wrap">Campus
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-swap"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% endif %}
+                                                            </th>
+                                                            <th class="is-sortable">
+                                                                {% if order_by == 'edificio' and sort == 'asc' %}
+                                                                <a href="?order_by=edificio&sort=desc">
+                                                                    <div class="th-wrap">Edifício
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% elif order_by == 'edificio' and sort == 'desc' %}
+                                                                <a href="?order_by=edificio&sort=asc">
+                                                                    <div class="th-wrap">Edifício
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="?order_by=edificio&sort=asc" style="color: black">
+                                                                    <div class="th-wrap">Edifício
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-swap"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% endif %}
+                                                            </th>
+                                                            <th class="is-sortable" style="width:240px">
+                                                                <div class="th-wrap">Ações
+                                                                    </div>
+                                                            </th>
 
-                                    <div class="level">
-                                        <div class="level-left">
-                                            <a href="/administrador/configurarespacos" class="button is-danger is-outlined" type="button">
-                                                <span class="icon is-small">
-                                                    <i class="mdi mdi-close mdi-24px"></i>
-                                                </span>
-                                                <span> Cancelar </span>
-                                            </a>
-                                        </div>                     
-                                        <div class="level-right">
-                                            <button type="submit" class="button is-success is-outlined">
-                                                <!---->
-                                                <span> Submeter </span>
-                                                <span class="icon is-small">
-                                                    <i class="mdi mdi-check mdi-24px"></i>
-                                                </span>
-                                            </button>
+                                                            <!---->
+                                                        </tr>
+                                                        <!---->
+                                                        <!---->
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for edificio in edificios %}
+                                                        <tr draggable="false" class="header">
+ 
+                                                            <!---->
+                                                            <td data-label="Campus" id="activityName" class=""> {{ edificio.campus.nome }} </td>
+                                                            <td data-label="Edifício" class=""> {{ edificio.nome }} </td>
+                                                            <td data-label="Editar" class="">                     
+                                                                <a class="button is-info is-small" href="{% url 'editaredificio' edificio.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
+                                                                <a class="button is-danger is-small" href="{% url 'eliminaredificio' edificio.id %}" onclick="return confirm('Tem a certeza que prentede eliminar o edifício?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a> 
+                                                            </td>
+                                                            <!---->
+                                                        </tr>
+                                                        
+                                                        <!---->
+                                                        {% endfor %}
+                                                    </tbody>
+
+                                                    <!---->
+                                                </table>
+                                            </div>
+                                             {% if edificios.has_other_pages %}
+                                                <div class="level">
+                                                    <div class="level-left"></div>
+                                                    <div class="level-right">
+                                                        <div class="level-item">
+                                                            <nav class="pagination">
+                                                                {% if edificios.has_previous %}
+                                                                    {% if order_by is not None %}
+                                                                        <a role="button" href="?page={{ edificios.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                                        <span class="icon" aria-hidden="true">
+                                                                                <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                                            </span>
+                                                                        </a>
+                                                                    {% else %}
+                                                                        <a role="button" href="?page={{ edificios.previous_page_number }}" class="pagination-link pagination-previous">
+                                                                        <span class="icon" aria-hidden="true">
+                                                                                <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                                            </span>
+                                                                        </a>
+                                                                    {% endif %}
+                                                                {% else %}
+                                                                <a role="button" href="#" disabled="disabled" class="pagination-link pagination-previous">
+                                                                    <span class="icon" aria-hidden="true">
+                                                                        <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                                    </span>
+                                                                </a>
+                                                                {% endif %}
+                                                                {% if edificios.has_next %}
+                                                                    {% if order_by is not None %}
+                                                                        <a role="button" href="?page={{ edificios.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                                            <span class="icon" aria-hidden="true">
+                                                                                <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                            </span>
+                                                                        </a>
+                                                                    {% else %}
+                                                                        <a role="button" href="?page={{ edificios.next_page_number }}" class="pagination-link pagination-next">
+                                                                            <span class="icon" aria-hidden="true">
+                                                                                <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                            </span>
+                                                                        </a>
+                                                                    {% endif %}
+                                                                {% else %}
+                                                                <a role="button" href="#" disabled="disabled" class="pagination-link pagination-next">
+                                                                    <span class="icon" aria-hidden="true">
+                                                                        <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                    </span>
+                                                                </a>
+                                                                {% endif %}
+                                                                <ul class="pagination-list">
+                                                                    <!---->
+                                                                    <!---->
+                                                                    {% for i in edificios.paginator.page_range %}
+                                                                    {% if edificios.number == i %}
+                                                                    <li>
+                                                                        <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
+                                                                    </li>
+                                                                    {% else %}
+                                                                    {% if order_by is not None %}
+                                                                    <li>
+                                                                        <a role="button" href="?page={{ i }}&order_by={{ order_by }}&sort={{ sort }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+                                                                    </li>
+                                                                    {% else %}
+                                                                    <li>
+                                                                        <a role="button" href="?page={{ i }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+                                                                    </li>
+                                                                    {% endif %}
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                                    <!---->
+                                                                    <!---->
+                                                                </ul>
+                                                            </nav>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
                                         </div>
-                                    </div>
+
                                         </div>
                                     </div>
 
                                 </div>
-                            </form>
+                           
                             
                         </div>
                     </div>
@@ -572,8 +777,21 @@
             $('#id_mq-TOTAL_FORMS').val(parseInt(form_idx) + 1);
         });
     </script>
+        <script>
+        // suppose the `id` attribute of element is `message_container`.
+        var message_ele = document.getElementById("message_container");
 
- 
+        setTimeout(function(){ 
+           message_ele.style.display = "none"; 
+        }, 4000);
+        // Timeout is 3 sec, you can change it
+
+    </script>
+    <script>
+        function addClassByClick(button){
+          $(button).addClass("is-loading")
+        }
+    </script>
 </body>
 
 </html>
