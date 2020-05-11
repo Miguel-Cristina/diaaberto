@@ -13,7 +13,8 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
-
+def error_500(request):
+    return render(request, 'diaabertoapp/error_500.html')
  #Create your views here.
 def login_request(request):
     if request.method == "POST":

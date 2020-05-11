@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views
 from diaabertoapp.views import index, atividades, edificios
-from django.conf.urls import include
+from django.conf.urls import include, handler404, handler500
 
 urlpatterns = [
+    path('error_500/', views.error_500, name='error_500'),
     path('', views.index, name='index'),
     path('login/', views.login_request, name='login'),
     path('logout/', views.logout_request, name='logout'),
