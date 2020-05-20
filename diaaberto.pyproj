@@ -111,6 +111,8 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\error_500.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\login.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\listaratividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\sugeriralteracao.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\alteraratividade.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configuraratividades.html" />

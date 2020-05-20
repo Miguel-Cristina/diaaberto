@@ -289,14 +289,20 @@
                                                     {% endfor %}
                                                 {% endif %}
                                                 {% if form3.errors %}
-                                                    
                                                     {% for field in form3 %}
                                                         {% for error in field.errors %}
-                                                            <p class="help is-danger">Verifique o campo {{ error }} nas Sessões.</p>
+                                                            {% if error == '__all__' %}
+                                                                <p class="help is-danger">Verifique os campos introduzidos nas Sessões.</p>
+                                                            {% else %}
+                                                                <p class="help is-danger">Verifique o campo {{ error }} nas Sessões.</p>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for error in field.non_field_errors %}
+                                                                    <p class="help is-danger">{{ error }}.</p>
                                                         {% endfor %}
                                                     {% endfor %}
                                                 {% endif %}
-
+                                                
                                                 <hr>
                                                 <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação de atividade </h2>
                                                 <div class="columns">
@@ -700,47 +706,53 @@
                                                         {{ form3.management_form }}
                                                            {% for frm3 in form3 %}
                                                                 {{ frm3.id }}
-                                                        <div class="columns">
-                                                            <div class="column is-4">
-                                                                <div class="field">
-                                                                    <div class="control is-expanded">
-                                                                    {{ frm3.dia }}    
+                                                                <div class="columns">
+                                                                    <div class="column is-4">
+                                                                        <div class="field">
+                                                                            <div class="control is-expanded">
+                                                                            {{ frm3.dia }}    
+                                                                            </div>
+                                                                            {% for error in frm3.dia.errors %}
+                                                                                <p class="help is-danger">{{ error }}</p>
+                                                                            {% endfor %}
+                                                                        </div>
                                                                     </div>
-                                                                    {% for error in frm3.dia.errors %}
-                                                                        <p class="help is-danger">{{ error }}</p>
-                                                                    {% endfor %}
-                                                                </div>
-                                                            </div>
-                                                            <div class="column is-3">
-                                                                <div class="field">
-                                                                    <div class="control is-expanded ">
-                                                                        <span class="select is-fullwidth">
-                                                                        {{ frm3.sessao }}        
-                                                                        </span>
+                                                                    <div class="column is-3">
+                                                                        <div class="field">
+                                                                            <div class="control is-expanded ">
+                                                                                <span class="select is-fullwidth">
+                                                                                {{ frm3.sessao }}        
+                                                                                </span>
+                                                                            </div>
+                                                                            {% for error in frm3.sessao.errors %}
+                                                                                <p class="help is-danger">{{ error }}</p>
+                                                                            {% endfor %}
+                                                                        </div>
                                                                     </div>
-                                                                    {% for error in frm3.sessao.errors %}
-                                                                        <p class="help is-danger">{{ error }}</p>
-                                                                    {% endfor %}
-                                                                </div>
-                                                            </div>
-                                                            <div class="column is-3">
-                                                                <div class="field">
-                                                                    <div class="control is-expanded">
-                                                                    {{ frm3.numero_colaboradores }}    
+                                                                    <div class="column is-3">
+                                                                        <div class="field">
+                                                                            <div class="control is-expanded">
+                                                                            {{ frm3.numero_colaboradores }}    
+                                                                            </div>
+                                                                            {% for error in frm3.numero_colaboradores.errors %}
+                                                                                <p class="help is-danger">{{ error }}</p>
+                                                                            {% endfor %}
+                                                                        </div>
                                                                     </div>
-                                                                    {% for error in frm3.numero_colaboradores.errors %}
-                                                                        <p class="help is-danger">{{ error }}</p>
-                                                                    {% endfor %}
-                                                                </div>
-                                                            </div>
-                                                            <div class="column is-2">
-                                                                <div class="field">
-                                                                    <div class="control is-expanded">
-                                                                    {{ frm3.DELETE }}    
+                                                                    <div class="column is-2">
+                                                                        <div class="field">
+                                                                            <div class="control is-expanded">
+                                                                            {{ frm3.DELETE }}    
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
+                                                        {% if form3.errors %}
+                                                            {% for error in frm3.non_field_errors %}
+                                                                    <p class="help is-danger">{{ error }}.</p>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        
                                                         {% endfor %}
                                                     </div>
                                                     <div id="empty_form" style="display:none">
@@ -756,9 +768,10 @@
                                                                 <div class="field">
                                                                     <div class="control is-expanded ">
                                                                         <span class="select is-fullwidth">
-                                                                    {{ form3.empty_form.sessao }}    
+                                                                            {{ form3.empty_form.sessao }}    
                                                                         </span>
                                                                     </div>
+                                                                    
                                                                 </div>
                                                             </div>
                                                             <div class="column is-3">
@@ -776,6 +789,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        
                                                     </div>
                                                     <hr />
                                                     <div class="has-text-left">

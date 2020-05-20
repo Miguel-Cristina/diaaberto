@@ -63,30 +63,8 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                          Atividades
-                        </a>
-                        <div class="navbar-dropdown">
-                            {% if utilizador.utilizadortipo.tipo == 'Administrador' or utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Docente'   %}
-                            <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
-                            {% endif %}
-                            <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link">Consultar Atividades</a>
-                           
-                        </div>
-                    </div>
-                    {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                          Gestão de Configurações
-                        </a>
-                        <div class="navbar-dropdown">
-                            <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
-                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
-                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
-                        </div>
-                    </div>
-                    {% endif %}
+                    <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link router-link-exact-active router-link-active">
+                        Minhas Atividades </a>
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -95,9 +73,9 @@
                                 <span data-v-a67fe1ba="" role="button">
 
                                      {% if notificacoes %}
-                                        <button data-v-a67fe1ba="" type="button" data-badge=" {{ count_notificacoes }}" class="button has-badge-rounded has-badge-warning is-text" style="margin-right: 0.9rem;border-color:white">
+                                        <button data-v-a67fe1ba="" type="button" data-badge=" {{ count_notificacoes }}" class="button has-badge-rounded has-badge-warning is-text" style="margin-right: 0.9rem;">
                                     {% else %}
-                                        <button data-v-a67fe1ba="" type="button" class="button" style="margin-right: 0.9rem;border-color:white">
+                                        <button data-v-a67fe1ba="" type="button" class="button" style="margin-right: 0.9rem;">
                                     {% endif %}
                                         <!---->
                                         <span>
@@ -180,10 +158,6 @@
                                     <hr />
                                         <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
                                         <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
-                                    {% else %}
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">Convidado</div>
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>Utilizador Anónimo</small></div>
-                                        <hr />
                                     {% endif %}
                                     
                                 </div>
@@ -429,52 +403,53 @@
                                             <!---->
                                             <div class="control">
                                                 <button class="button is-danger" onclick="document.getElementById('publicoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                            </div>
+                                              </div>
                                             {% endif %}
                                         </div>
-                                        <div class="field has-addons">
-                                        <!---->
-                                        {% if not tipo_query|length > 0 %}
+
+                                         <div class="field has-addons">
+                                            <!---->
+                                            {% if not tipo_query|length > 0 %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
                                                     <select  id="tipoSearch" name="tipo"><!--onchange="searchByType()"-->
                                                         <option disabled="disabled" hidden="hidden" selected>
-                                                        Tipo de atividade
+                                                            Tipo de atividade
                                                         </option>
-                                                    {% for Tipo in tipoatividade %}
-                                                        <option value="{{ Tipo.id }}">{{ Tipo.tipo }}</option>
-                                                    {% endfor %}
+                                                        {% for Tipo in tipoatividade %}
+                                                            <option value="{{ Tipo.id }}">{{ Tipo.tipo }}</option>
+                                                        {% endfor %}
                                                     </select>
                                                 </span>
-                                            <!--<span class="icon is-left">
-                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                            </span>-->
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
                                             </div>
                                             <div class="control">
                                                 <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
                                             </div>
-                                        {% else %}
-                                        <div class="control is-expanded ">
-                                            <span class="select is-fullwidth is-empty">
-                                                <select  id="tipoSearch" name="tipo"><!--onchange="searchByType()"-->
-                                                    {% for Tipo in tipoatividade %}
-                                                        <option value="{{ Tipo.id }}">{{ Tipo.tipo }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </span>
-                                            <!--<span class="icon is-left">
-                                                <i class="mdi mdi-magnify mdi-24px"></i>
-                                            </span>-->
-                                        </div>
-                                        <!---->
-                                        <div class="control">
-                                            <button class="button is-danger" onclick="document.getElementById('tipoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="tipoSearch" name="tipo"><!--onchange="searchByType()"-->
+                                                        {% for Tipo in tipoatividade %}
+                                                            <option value="{{ Tipo.id }}">{{ Tipo.tipo }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
                                             </div>
-                                        {% endif %}
-                                        </div>
-                                        <div class="field has-addons">
                                             <!---->
-                                            {% if not nomesquery|length > 0 %}
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('tipoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                                                                    <div class="field has-addons">
+                                            <!---->
+                                        {% if not nomesquery|length > 0 %}
                                             <div class="control is-expanded">
                                                 <div class="control is-clearfix">
                                                     <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input"><!--onkeyup="searchByName()"-->
@@ -484,24 +459,25 @@
                                                     <!---->
                                                     <!---->
                                                 </div>
+                                                
                                             </div>
                                             <div class="control">
                                                 <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                            </div>
-                                            {% else %}
-                                            <div class="control is-expanded">
+                                              </div>
+                                        {% else %}<div class="control is-expanded">
                                                 <div class="control is-clearfix">
-                                                <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
+                                                    <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
                                                     <!--<span class="icon is-left">
                                                         <i class="mdi mdi-magnify mdi-24px"></i>
                                                     </span>-->
                                                     <!---->
                                                     <!---->
-                                                </div> 
+                                                </div>
+                                                
                                             </div>
                                             <div class="control">
                                                 <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                            </div>
+                                              </div>
                                         {% endif %}
                                             <!---->
                                         </div>
@@ -808,16 +784,10 @@
             <div class="column">
                         <p><strong>Unidade Orgânica:</strong> {{ Atividade.unidadeorganica }} </p>
                         <p><strong>Departamento:</strong> {{ Atividade.departamento }} </p>
-                {% if Atividade.campus or Atividade.edificio or Atividade.sala %}
-                        {% if Atividade.campus %}        
-                            <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
-                        {% endif %}
-                        {% if Atividade.edificio %}
-                                <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
-                        {% endif %}
-                        {% if Atividade.sala %}
-                                <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
-                        {% endif %}
+                {% if Atividade.campus and Atividade.edificio and Atividade.sala %}
+                        <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
+                        <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                        <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
                 {% elif Atividade.tipo_local %}
                         <p><strong>Local:</strong> {{ Atividade.tipo_local }}</p>
                 {% else %}
@@ -974,7 +944,7 @@
         <div class="level">
             <div class="level-left">
                 <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo_id == 4 and Atividade.validada != 'VD'%}
+                    {% if user.is_authenticated and utilizador.utilizadortipo_id == 4 %}
                         <form action="{% url 'aceitaratividade' Atividade.id %}" method=POST>
                             {% csrf_token %}
                             <button type="submit" class="button is-success" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede aceitar a proposta?');">
@@ -988,7 +958,7 @@
                     {% endif %}
                 </div>
                 <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo_id == 4 and Atividade.validada != 'RJ' %}
+                    {% if user.is_authenticated and utilizador.utilizadortipo_id == 4 %}
                         <form action="{% url 'rejeitaratividade' Atividade.id %}" method=POST>
                             {% csrf_token %}
                             <button type="submit" class="button is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede rejeitar a proposta?');">
@@ -996,17 +966,6 @@
                                     <i class="mdi mdi-window-close"></i>
                                 </span>
                                 <span>Rejeitar</span>
-                                <!---->
-                            </button>
-                        </form>
-                    {% elif user.is_authenticated and utilizador.utilizadortipo_id == 4 and Atividade.validada == 'RJ' %}
-                        <form action="{% url 'sugeriralteracao' Atividade.id %}" method=POST>
-                            {% csrf_token %}
-                            <button type="submit" class="button is-info" style="margin-right: 10px;">
-                                <span class="icon is-small">
-                                    <i class="mdi mdi-pencil"></i>
-                                </span>
-                                <span>Sugerir alteração</span>
                                 <!---->
                             </button>
                         </form>

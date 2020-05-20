@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 from django.forms import ModelForm
+from django.utils import timezone
 # Create your models here.
 
 
@@ -233,6 +234,7 @@ class SessaoAtividade(models.Model):
     atividade = models.ForeignKey('Atividade', related_name='sessao_atividade', on_delete=models.CASCADE, null=True)
     sessao = models.ForeignKey('Sessao',on_delete=models.PROTECT, null=True)
     dia = models.DateField(null=True)
+    #dia = models.ForeignKey('Dia',on_delete=models.PROTECT, null=True)
     numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
     class Meta:
         db_table='SessaoAtividade'
@@ -292,3 +294,26 @@ class Tarefa(models.Model):
     class Meta:
         db_table='Tarefa'
         managed=True
+
+class Notificacao(models.Model):
+    assunto = models.CharField(max_length=255, null=True, blank=True)
+    conteudo = models.CharField(max_length=255, null=True,  blank=True)
+    hora = models.DateTimeField(default=timezone.now)
+    prioridade = models.IntegerField(null=True, blank=True)
+    utilizador_recebe = models.ForeignKey('Utilizador',  related_name='utilizador_recebe', on_delete=models.CASCADE, null=True)
+    utilizador_envia = models.ForeignKey('Utilizador',  related_name='utilizador_envia', on_delete=models.PROTECT, null=True)
+    visto = models.BooleanField(default=False)
+    class Meta:
+        db_table='Notificacao'
+    def __str__(self):
+        return self.assunto
+
+class Dia(models.Model):
+    dia = models.DateField(null=True)
+    class Meta:
+        db_table='Dia'
+
+class DiaAberto(models.Model):
+    datas = models.ManyToManyField(Dia, related_name='datas')
+    class Meta:
+        db_table='DiaAberto'

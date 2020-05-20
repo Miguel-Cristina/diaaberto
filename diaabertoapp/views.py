@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect, get_object_or_404 
 from django.db.models import Count
-from .models import Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante
+from .models import Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao
 from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm ,SessaoAtividadeForm, MaterialFormSet, TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, SalaForm, UnidadeOrganicaForm, DepartamentoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
@@ -44,10 +44,17 @@ def logout_request(request):
 
 def index(request):
     utilizador = ''
+    notificacoes = Notificacao.objects.none()
     if request.user.is_authenticated:
         user_email = request.user.email
         utilizador = Utilizador.objects.get(email=user_email)
-    return render(request, 'diaabertoapp/index.html', {'utilizador':utilizador})
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+    count_notificacoes = 0 
+    for x in notificacoes:
+        if(x.visto == False):
+            count_notificacoes = count_notificacoes + 1
+    return render(request, 'diaabertoapp/index.html', {'count_notificacoes':count_notificacoes,'utilizador':utilizador,'notificacoes':notificacoes})
 
 def administrador(request):
     return render(request, 'diaabertoapp/administrador.html', {})
@@ -967,11 +974,13 @@ def tipoatividade(request):
 def minhasatividades(request):
     #minhasatividades = Atividade.objects.all()
     utilizador = ''
+    notificacoes = Notificacao.objects.none()
     atividade_list = Atividade.objects.all()
     if request.user.is_authenticated:
         user_email = request.user.email
         utilizador = Utilizador.objects.get(email=user_email)
         if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
             if utilizador.utilizadortipo.tipo == 'Docente':
                 atividade_list = Atividade.objects.filter(responsavel=utilizador.id)
             elif utilizador.utilizadortipo.tipo == 'Coordenador':
@@ -1053,10 +1062,12 @@ def minhasatividades(request):
     unique_sesaoatividade_obj = []
     sessao_query = request.GET.get('sessao')
     if sessao_query !='' and sessao_query is not None:
+
         atividades_sessions_id = sessoesatividade.filter(sessao=sessao_query)
         for x in atividades_sessions_id:
-            unique_sesaoatividade_obj.append(x.atividade)
-        atividade_list = unique_sesaoatividade_obj
+            unique_sesaoatividade_obj.append(x.atividade.id)
+
+        atividade_list = atividade_list.filter(id__in=unique_sesaoatividade_obj)
         sessoes = sessoes.filter(id=sessao_query)
     #END filter_by_sessao
 
@@ -1078,10 +1089,13 @@ def minhasatividades(request):
         if x.validada not in unique_valida_str:
             unique_valida_obj.append(x)
             unique_valida_str.append(x.validada)
-    #END tipo_utilizador and estados filter filter 
-
+    #END tipo_utilizador and estados filter filter
+    count_notificacoes = 0 
+    for x in notificacoes:
+        if(x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     #'tiposquery':tipo_query
-    return render(request, 'diaabertoapp/minhasatividades.html', {'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query, 'sessoes':sessoes, 'sessoesquery':sessao_query, 'sessoesatividade':sessoesatividade})
+    return render(request, 'diaabertoapp/minhasatividades.html', {'count_notificacoes':count_notificacoes, 'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query, 'sessoes':sessoes, 'sessoesquery':sessao_query, 'sessoesatividade':sessoesatividade})
 
 def proporatividade(request):
 
@@ -1208,15 +1222,54 @@ def alteraratividade(request,pk):
 
 def aceitaratividade(request,pk):
     object = Atividade.objects.get(pk=pk)
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            if not object.unidadeorganica == utilizador.unidadeorganica:
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
     object.validada = 'VD'
+    proposta = object.nome
+    responsavel = object.responsavel
     object.save()
+
+    notificacao_obj = Notificacao(assunto="Proposta aceite", conteudo="Proposta "+proposta+" aceite!", utilizador_recebe=responsavel, utilizador_envia=utilizador, prioridade=2)
+    notificacao_obj.save()
     messages.success(request, 'Atividade foi aceite!')
     return HttpResponseRedirect('/minhasatividades/')
 
 def rejeitaratividade(request,pk):
     object = Atividade.objects.get(pk=pk)
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            if not object.unidadeorganica == utilizador.unidadeorganica:
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+    
     object.validada = 'RJ'
+    proposta = object.nome
+    responsavel = object.responsavel
     object.save()
+    notificacao_obj = Notificacao(assunto="Proposta rejeitada", conteudo="Proposta "+proposta+" rejeitada!", utilizador_recebe=responsavel, utilizador_envia=utilizador, prioridade=2)
+    notificacao_obj.save()
     messages.success(request, 'Atividade foi rejeitada!')
     return HttpResponseRedirect('/minhasatividades/')
 
@@ -1334,3 +1387,189 @@ def rem_tarefa(request ,pk):
        obj = Tarefa.objects.filter(pk=pk).delete()
        return HttpResponseRedirect('/tarefas/')    
     return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
+
+def visto(request,pk):
+    object = Notificacao.objects.get(pk=pk)
+    object.visto = True
+    object.save()
+    #messages.success(request, 'Notificação vista!')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def sugeriralteracao(request,pk):
+    atividade = Atividade.objects.get(pk=pk)
+    utilizador = ''
+    notificacoes = Notificacao.objects.none()
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if utilizador.utilizadortipo.tipo == 'Coordenador':
+                utilizador_organica = utilizador.unidadeorganica
+      
+    materiais = MaterialQuantidade.objects.all()
+    sessoesatividade = SessaoAtividade.objects.all()
+    #messages.success(request, 'Notificação vista!')
+    count_notificacoes = 0 
+    for x in notificacoes:
+        if(x.visto == False):
+            count_notificacoes = count_notificacoes + 1
+
+    proposta = atividade.nome
+    responsavel = atividade.responsavel
+    if request.method == 'GET':
+        solicitacao = request.GET.get('alteracao')
+        if solicitacao:
+            notificacao_obj = Notificacao(assunto="Solicitação para alteração da proposta "+proposta, conteudo="Foi solicitado: "+solicitacao, utilizador_recebe=responsavel, utilizador_envia=utilizador, prioridade=2)
+            notificacao_obj.save()
+            messages.success(request, 'A solicitação foi enviada com sucesso!')
+            return HttpResponseRedirect('/minhasatividades/')
+        else:
+            messages.error(request, 'A solicitação não foi enviada! Tente novamente.')
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/minhasatividades/')
+
+    return render(request, 'diaabertoapp/sugeriralteracao.html', {'count_notificacoes':count_notificacoes, 'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'Atividade':atividade,'materiais':materiais,'sessoesatividade':sessoesatividade})
+
+
+def consultaratividades(request):
+    #minhasatividades = Atividade.objects.all()
+    utilizador = ''
+    notificacoes = Notificacao.objects.none()
+    atividade_list = Atividade.objects.filter(validada='VD')
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if utilizador.utilizadortipo.tipo == 'Coordenador':
+                utilizador_organica = utilizador.unidadeorganica
+        else:
+            atividade_list = Atividade.objects.filter(validada='VD')
+    else:
+        atividade_list = Atividade.objects.all()
+    campus_arr = Campus.objects.all()
+    organicas = UnidadeOrganica.objects.all()
+    departamentos = Departamento.objects.all()
+    tematicas = Tematica.objects.all()
+    materiais = MaterialQuantidade.objects.all()
+    publico_alvo = PublicoAlvo.objects.all()
+    sessoes = Sessao.objects.all()
+    sessoesatividade = SessaoAtividade.objects.all()
+    tipoatividade = TipoAtividade.objects.all()
+
+    #BEGIN order_by
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'nome':
+        if sort == 'asc':
+            atividade_list = atividade_list.order_by(order_by)
+        else:
+            sorter = '-' + order_by
+            atividade_list = atividade_list.order_by(sorter)
+    if order_by == 'tipo':
+        if sort == 'asc':
+            atividade_list = atividade_list.order_by('tipo_atividade__tipo')
+        else:
+            sorter = '-' + order_by
+            atividade_list = atividade_list.order_by('-tipo_atividade__tipo')
+    if order_by == 'organica':
+        if sort == 'asc':
+            atividade_list = atividade_list.order_by('unidadeorganica__nome')
+        else:
+            sorter = '-' + order_by
+            atividade_list = atividade_list.order_by('-unidadeorganica__nome')
+    if order_by == 'departamento':
+        if sort == 'asc':
+            atividade_list = atividade_list.order_by('departamento__nome')
+        else:
+            sorter = '-' + order_by
+            atividade_list = atividade_list.order_by('-departamento__nome')
+    #END order_by
+    #BEGIN filter_by_name
+    nome_query = request.GET.get('nome')
+    if nome_query !='' and nome_query is not None:
+        atividade_list = atividade_list.filter(nome__icontains=nome_query)
+    #END filter_by_name      
+    #BEGIN filter_by_campus
+    campus_query = request.GET.get('campus')
+    if campus_query !='' and campus_query is not None:
+        atividade_list = atividade_list.filter(campus=campus_query)
+        campus_arr = campus_arr.filter(id=campus_query)
+    #END filter_by_campus
+    #BEGIN filter_by_unidadeorganica
+    organica_query = request.GET.get('unidadeorganica')
+    if organica_query !='' and organica_query is not None:
+        atividade_list = atividade_list.filter(unidadeorganica=organica_query)
+        organicas = organicas.filter(id=organica_query)
+        departamentos = departamentos.filter(unidadeorganica=organica_query)
+    #END filter_by_unidadeorganica
+    #BEGIN filter_by_departamento
+    departamento_query = request.GET.get('departamento')
+    if departamento_query !='' and departamento_query is not None:
+        atividade_list = atividade_list.filter(departamento=departamento_query)
+        departamentos = departamentos.filter(id=departamento_query)
+    #END filter_by_departamento
+    #BEGIN filter_by_tematica
+    tematica_query = request.GET.get('tematica')
+    if tematica_query !='' and tematica_query is not None:
+        atividade_list = atividade_list.filter(tematicas=tematica_query)
+        tematicas = tematicas.filter(id=tematica_query)
+    #END filter_by_tematica
+    #BEGIN filter_by_publicoalvo
+    publico_query = request.GET.get('publico_alvo')
+    if publico_query !='' and publico_query is not None:
+        atividade_list = atividade_list.filter(publico_alvo=publico_query)
+        publico_alvo = publico_alvo.filter(id=publico_query)
+    #END filter_by_tematica
+    #BEGIN filter_by_estado
+    estado_query = request.GET.get('validada')
+    if estado_query !='' and estado_query is not None:
+        atividade_list = atividade_list.filter(validada__icontains=estado_query)
+    #END filter_by_estado
+    #BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query !='' and tipo_query is not None:
+        atividade_list = atividade_list.filter(tipo_atividade=tipo_query)
+        tipoatividade = tipoatividade.filter(id=tipo_query)
+    #END filter_by_tipo
+    #BEGIN filter_by_sessao
+    unique_sesaoatividade_obj = []
+    sessao_query = request.GET.get('sessao')
+    if sessao_query !='' and sessao_query is not None:
+
+        atividades_sessions_id = sessoesatividade.filter(sessao=sessao_query)
+        for x in atividades_sessions_id:
+            unique_sesaoatividade_obj.append(x.atividade.id)
+
+        atividade_list = atividade_list.filter(id__in=unique_sesaoatividade_obj)
+        sessoes = sessoes.filter(id=sessao_query)
+    #END filter_by_sessao
+
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(atividade_list, 5)
+    try:
+        atividades = paginator.page(page)
+    except PageNotAnInteger:
+        atividades = paginator.page(1)
+    except EmptyPage:
+        atividades = paginator.page(paginator.num_pages)
+    #END pagination
+    #BEGIN tipo_utilizador and estados filter 
+    unique_valida_obj = []
+    unique_valida_str = []
+    
+    for x in atividade_list:
+        if x.validada not in unique_valida_str:
+            unique_valida_obj.append(x)
+            unique_valida_str.append(x.validada)
+    #END tipo_utilizador and estados filter filter
+    count_notificacoes = 0 
+    for x in notificacoes:
+        if(x.visto == False):
+            count_notificacoes = count_notificacoes + 1
+    #'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/atividades.html', {'count_notificacoes':count_notificacoes, 'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query, 'sessoes':sessoes, 'sessoesquery':sessao_query, 'sessoesatividade':sessoesatividade})
