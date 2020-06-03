@@ -812,11 +812,16 @@
                         {% if Atividade.campus %}        
                             <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
                         {% endif %}
-                        {% if Atividade.edificio %}
-                                <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                        {% if Atividade.edificio and Atividade.sala  %}
+                            <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                        {% endif %}
+                        {% if Atividade.edificio and not Atividade.sala %}
+                            <p  style="margin-bottom:0px"><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                            <p><a id="open-modal" onclick="srcImage('{{ Atividade.edificio.mapa }}')"><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
                         {% endif %}
                         {% if Atividade.sala %}
-                                <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
+                            <p style="margin-bottom:0px"><strong>Sala:</strong> {{ Atividade.sala }}</p>
+                            <p><a id="open-modal" onclick="srcImage('{{ Atividade.sala.mapa }}')"><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
                         {% endif %}
                 {% elif Atividade.tipo_local %}
                         <p><strong>Local:</strong> {{ Atividade.tipo_local }}</p>
@@ -1138,7 +1143,16 @@
             <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
             <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
         </footer>
-        
+    <!---------------------------------------------------------------------------------------Inicio do Modal------------------------------------------------------------------------------------------------>
+        <div class="modal">
+          <div class="modal-background">
+          </div>
+          <div class="modal-content has-text-centered">   
+              <img id="modalImage" src="{% static 'diaabertoapp/maps/default.png' %}" alt="">
+          </div>
+          <button id="close-modal" class="modal-close is-large" aria-label="close"></button>
+        </div>
+    <!---------------------------------------------------------------------------------------Fim do Modal------------------------------------------------------------------------------------------------>
     <script src="https://unpkg.com/vue"></script>
     <!-- Full bundle -->
     <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
@@ -1175,6 +1189,25 @@
         // Timeout is 3 sec, you can change it
 
     </script>
+
+        <script>
+                function srcImage(p1){
+                
+                    event.preventDefault();
+                    var modal = document.querySelector('.modal');  // assuming you have only 1
+                    var html = document.querySelector('html');
+                    var modalcontent = document.querySelector('#modalImage');            
+                    modal.classList.add('is-active');
+                    html.classList.add('is-clipped');
+                    /*modalcontent.src="{% static "+p1+" %}";*/
+                    modalcontent.src="/static/"+p1;
+                    modal.querySelector('button#close-modal').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        modal.classList.remove('is-active');
+                        html.classList.remove('is-clipped');
+                    });
+                };
+        </script>
 </body>
 
 </html>

@@ -784,10 +784,20 @@
             <div class="column">
                         <p><strong>Unidade Orgânica:</strong> {{ Atividade.unidadeorganica }} </p>
                         <p><strong>Departamento:</strong> {{ Atividade.departamento }} </p>
-                {% if Atividade.campus and Atividade.edificio and Atividade.sala %}
-                        <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
-                        <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
-                        <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
+                {% if Atividade.campus or Atividade.edificio or Atividade.sala %}
+                        {% if Atividade.campus %}        
+                            <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
+                        {% endif %}
+                        {% if Atividade.edificio %}
+                            <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                        {% endif %}
+                        {% if Atividade.edificio and not Atividade.sala %}
+                            <p><a><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
+                        {% endif %}
+                        {% if Atividade.sala %}
+                            <p style="margin-bottom:0px"><strong>Sala:</strong> {{ Atividade.sala }}</p>
+                            <p><a><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
+                        {% endif %}
                 {% elif Atividade.tipo_local %}
                         <p><strong>Local:</strong> {{ Atividade.tipo_local }}</p>
                 {% else %}

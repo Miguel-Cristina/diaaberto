@@ -45,6 +45,7 @@ class Edificio(models.Model):
     id = models.AutoField(primary_key= True)
     nome = models.CharField(max_length=40)
     campus = models.ForeignKey(Campus, on_delete=models.PROTECT,null=True)
+    mapa = models.CharField(max_length=255, default='diaabertoapp/maps/default.png')
     class Meta:
         db_table='Edificio'
         unique_together = (("nome", "campus"),) 
@@ -61,6 +62,7 @@ class Sala(models.Model):
     id = models.AutoField(primary_key= True)
     identificacao = models.CharField(max_length=40)
     edificio = models.ForeignKey(Edificio, on_delete=models.PROTECT,null=True)
+    mapa = models.CharField(max_length=255, default='diaabertoapp/maps/default.png')
     class Meta:
         db_table='Sala'
         unique_together = (("identificacao", "edificio"),) 
