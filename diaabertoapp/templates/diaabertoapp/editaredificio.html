@@ -226,17 +226,24 @@
                                             <hr />
                                         <div class="control is-clearfix" id="form_set_material">
                                         <div class="columns">
-                                            <div class="column is-half">
+                                            <div class="column is-one-third">
                                                 
                                                 <label class="label">Campus</label>
                                                 <div class="select is-fullwidth">
                                                 {{ form.campus }}
                                                 </div>
                                             </div>
-                                            <div class="column is-half">
+                                            <div class="column is-one-third">
                                                 <label class="label">Edifício</label>
                                                 {{ form.nome }}
                                                 {% for error in form.nome.errors %} 
+                                                    <p class="help is-danger">{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="column is-one-third">
+                                                <label class="label">Mapa</label>
+                                                {{ form.mapa }}
+                                                {% for error in form.mapa.errors %} 
                                                     <p class="help is-danger">{{ error }}</p>
                                                 {% endfor %}
                                             </div>

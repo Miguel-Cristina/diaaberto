@@ -32,9 +32,11 @@ class CampusForm(forms.ModelForm):
 class EdificioForm(forms.ModelForm):
     campus = forms.ModelChoiceField(required=True, queryset=Campus.objects.all(), label="",widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}),error_messages={'unique_together':'Um edificio com esse nome já existe!','required':'Preencha este campo.','unique':'Um edificio com o mesmo nome já existe! Por favor coloque outro edificio.'})
     nome = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text",'placeholder':"Edifício"}),error_messages={'unique_together':'Um edificio com esse nome já existe!', 'required':'Preencha este campo.','unique': 'Um edificio com o mesmo nome já existe! Por favor coloque outro edificio.'})
+    mapa = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}))
+    
     class Meta:
         model = Edificio
-        fields = ('campus','nome',)
+        fields = ('campus','nome','mapa',)
         error_messages = {
 
             NON_FIELD_ERRORS: {
@@ -48,10 +50,11 @@ class SalaForm(forms.ModelForm):
     campus = forms.ModelChoiceField(required=True,queryset=Campus.objects.all(), label="",widget=ModelSelect2Widget(model=Campus,search_fields=['nome__icontains'],attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o campus..."}))
     edificio = forms.ModelChoiceField(required=True,queryset=Edificio.objects.all(), label="",widget=ModelSelect2Widget(model=Edificio,search_fields=['nome__icontains'],dependent_fields={'campus':'campus'},attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o edificio..."}))
     identificacao = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text",'placeholder':"Sala"}),error_messages={'unique': 'Uma sala com o mesmo nome já existe! Por favor coloque outra sala.'})
+    mapa = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}))
 
     class Meta:
         model = Sala
-        fields = ('campus','edificio', 'identificacao')
+        fields = ('campus','edificio', 'identificacao','mapa')
         error_messages = {
 
             NON_FIELD_ERRORS: {

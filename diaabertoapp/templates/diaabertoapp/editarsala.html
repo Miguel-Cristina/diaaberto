@@ -226,25 +226,32 @@
                                             <hr />
                                         <div class="control is-clearfix" id="form_set_material">
                                         <div class="columns">
-                                            <div class="column is-4">
+                                            <div class="column is-one-quarter">
                                                 <label class="label">Campus</label>
                                                 {{ form.campus }}
                                                 
                                             </div>
-                                            <div class="column is-4">
+                                            <div class="column is-one-quarter">
                                                 <label class="label">Edifício</label>
                                                 {{ form.edificio }}
                                                 {% for error in form.edificio.errors %} 
                                                     <p class="help is-danger">{{ error }}</p>
                                                 {% endfor %}
                                             </div>
-                                            <div class="column is-4">
+                                            <div class="column is-one-quarter">
                                                 <label class="label">Sala</label>
                                                 {{ form.identificacao }}
                                                 {% for error in form.identificacao.errors %} 
                                                     <p class="help is-danger">{{ error }}</p>
                                                 {% endfor %}
                                                 {% for error in form.non_field_errors  %} 
+                                                    <p class="help is-danger">{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="column is-one-quarter">
+                                                <label class="label">Mapa</label>
+                                                {{ form.mapa }}
+                                                {% for error in form.mapa.errors %} 
                                                     <p class="help is-danger">{{ error }}</p>
                                                 {% endfor %}
                                             </div>
