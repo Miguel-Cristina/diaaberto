@@ -235,8 +235,8 @@ class MaterialQuantidade(models.Model):
 class SessaoAtividade(models.Model):
     atividade = models.ForeignKey('Atividade', related_name='sessao_atividade', on_delete=models.CASCADE, null=True)
     sessao = models.ForeignKey('Sessao',on_delete=models.PROTECT, null=True)
-    dia = models.DateField(null=True)
-    #dia = models.ForeignKey('Dia',on_delete=models.PROTECT, null=True)
+    #dia = models.DateField(null=True)
+    dia = models.ForeignKey('Dia',on_delete=models.PROTECT, null=True)
     numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
     class Meta:
         db_table='SessaoAtividade'
@@ -312,10 +312,17 @@ class Notificacao(models.Model):
 
 class Dia(models.Model):
     dia = models.DateField(null=True)
+
+    def __str__(self):
+        return str(self.dia)
     class Meta:
         db_table='Dia'
 
+
+
 class DiaAberto(models.Model):
     datas = models.ManyToManyField(Dia, related_name='datas')
+    def __str__(self):
+        return self.datas
     class Meta:
         db_table='DiaAberto'

@@ -52,6 +52,7 @@
     <Compile Include="diaaberto\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="diaaberto - Web Deploy.pubxml" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma-radio-checkbox.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.css.map" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.min.css" />

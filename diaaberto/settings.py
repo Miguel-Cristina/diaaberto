@@ -93,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME' : 'ualg',
         'USER' : 'root',
-        'PASSWORD' : 'admin',
+        'PASSWORD' : 'miguelcristina',
         'HOST' : '127.0.0.1',
         'PORT' : '3306',
     }
@@ -118,11 +118,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'pt-pt'
+TIME_ZONE = 'Europe/Lisbon'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+DATE_INPUT_FORMATS = ('%d-%m-%Y')
+DATE_FORMAT = 'j F Y'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

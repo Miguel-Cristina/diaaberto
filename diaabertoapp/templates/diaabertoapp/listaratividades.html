@@ -932,7 +932,7 @@
                             {% ifequal Sessao.atividade.id Atividade.id %}
                             <tr draggable="false" class="">
                                 <!---->
-                                <td data-label="Dia" class=""> {{ Sessao.dia|date:'d-m-Y' }} </td>
+                                <td data-label="Dia" class=""> {{ Sessao.dia.dia|date:"d-m-Y" }} </td>
                                 <td data-label="Hora" class=""> {{ Sessao.sessao.hora|time:"H:i" }} </td>
                                 <td data-label="Duração" class=""> {{ Sessao.atividade.duracao }} minutos</td>
                                 <td data-label="Máximo de participantes" class=""> {{ Sessao.atividade.limite_participantes }} </td>
