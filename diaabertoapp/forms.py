@@ -113,7 +113,7 @@ MaterialFormSet = formset_factory(MaterialQuantidadeForm)
 
 class SessaoAtividadeForm(forms.ModelForm):
     #dia = forms.DateField(required=False, label="Dia", widget=forms.DateInput(attrs={'class': "input", 'type':"date", 'placeholder': "Dia"}))
-    dia = forms.ModelChoiceField(required=False, queryset=Dia.objects.all(), label="Dia",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes",'style':"width:100%"}))
+    dia = forms.ModelChoiceField(required=False, queryset=Dia.objects.all(), label="Dia",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%"}))
     sessao = forms.ModelChoiceField(required=False, queryset=Sessao.objects.all(), label="Sessao",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes",'style':"width:100%"}),error_messages={'unique': 'Uma sessão com a mesma hora já existe! Por favor coloque outra hora.'})
     numero_colaboradores = forms.IntegerField(required=False, initial=0,min_value=0, label="Colaboradores", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_colaboradores"}))
     class Meta:
@@ -129,6 +129,7 @@ class SessaoAtividadeForm(forms.ModelForm):
 
         }
 SessaoFormSet = formset_factory(SessaoAtividadeForm)
+
 
 class AtividadeForm(forms.ModelForm):
 

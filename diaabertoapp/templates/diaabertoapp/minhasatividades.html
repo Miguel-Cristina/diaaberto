@@ -547,7 +547,47 @@
                                 <div class="menu">
                                     <p class="menu-label">Filtros Sessão</p>
                                     <ul class="menu-list">
-                                        <form method="GET" action=".">  
+                                        <form method="GET" action=".">
+                                            <div class="field has-addons">
+                                                <!---->
+                                                {% if not diaquery|length > 0 %}
+                                                <div class="control is-expanded has-icons-left">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select id="diasSearch" name="dias"><!--onchange="searchByValidation()"-->
+                                                            <option disabled="disabled" hidden="hidden" selected>
+                                                                Dia
+                                                            </option>
+                                                            {% for Dia in dias %}
+                                                                <option value="{{ Dia.id }}">{{ Dia.dia|date:"d-m-Y" }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                <span class="icon is-small is-left">
+                                                    <i class="mdi mdi-calendar"></i>
+                                                 </span>
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                </div>
+                                                <!---->
+                                                {% else %}
+                                                <div class="control is-expanded has-icons-left">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select id="diasSearch" name="dias"><!--onchange="searchByValidation()"-->
+                                                            {% for Dia in dias %}
+                                                                <option value="{{ Dia.id }}">{{ Dia.dia|date:"d-m-Y" }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                <span class="icon is-small is-left">
+                                                    <i class="mdi mdi-calendar"></i>
+                                                </span>
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('diasSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                                {% endif %}
+                                            </div>
                                             <div class="field has-addons">
                                                 <!---->
                                                 {% if not sessoesquery|length > 0 %}
