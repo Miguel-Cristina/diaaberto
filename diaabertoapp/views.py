@@ -1135,11 +1135,19 @@ def proporatividade(request):
         utilizador = Utilizador.objects.get(email=user_email)
         organicas = UnidadeOrganica.objects.get(id=utilizador.unidadeorganica.id)
         departamentos = Departamento.objects.get(id=utilizador.departamento.id)
+
+        mFormSet = inlineformset_factory(Atividade, MaterialQuantidade, MaterialQuantidadeForm, fields=('material','quantidade',), extra=0, can_delete=False)
+        sFormSet = inlineformset_factory(Atividade, SessaoAtividade, SessaoAtividadeForm, fields=('dia','sessao','numero_colaboradores',), extra=1 , can_delete=False)
+
+
     if request.method == 'POST':
         #BEGIN FORMSET FORM
         aForm = AtividadeForm(request.POST,initial = {'unidadeorganica': utilizador.unidadeorganica.id,'departamento': utilizador.departamento.id })
-        mForm = MaterialFormSet(request.POST, prefix='mq')
-        sForm = SessaoFormSet(request.POST, prefix='sa')
+        
+        mForm = mFormSet(request.POST, prefix='mq')
+        sForm = sFormSet(request.POST, prefix='sa')
+        #mForm = MaterialFormSet(request.POST, prefix='mq')
+        #sForm = SessaoFormSet(request.POST, prefix='sa')
         if aForm.is_valid() and mForm.is_valid() and sForm.is_valid():
             atividade = aForm.save(commit=False)
             if request.user.is_authenticated:
@@ -1170,8 +1178,10 @@ def proporatividade(request):
         aForm = AtividadeForm(initial = {'unidadeorganica': utilizador.unidadeorganica.id,'departamento': utilizador.departamento.id })
         #mForm = [MaterialQuantidadeForm(prefix=str(x), instance=MaterialQuantidade()) for x in range(0,1)]
         #sForm = [SessaoAtividadeForm(prefix=str(y),instance=SessaoAtividade()) for y in range(0,1)]
-        mForm = MaterialFormSet(prefix='mq')
-        sForm = SessaoFormSet(prefix='sa')
+        #mForm = MaterialFormSet(prefix='mq')
+        #sForm = SessaoFormSet(prefix='sa')
+        mForm = mFormSet(prefix='mq')
+        sForm = sFormSet(prefix='sa')
     return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_atividade, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'organicas':organicas, 'form':aForm, 'form2':mForm, 'form3':sForm})
 
 def alteraratividade(request,pk):

@@ -3,7 +3,7 @@ from .models import Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, Pu
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
-from django.forms import formset_factory, modelformset_factory
+from django.forms import formset_factory, modelformset_factory, BaseFormSet
 from django.core.exceptions import NON_FIELD_ERRORS
 
 
@@ -113,8 +113,8 @@ MaterialFormSet = formset_factory(MaterialQuantidadeForm)
 
 class SessaoAtividadeForm(forms.ModelForm):
     #dia = forms.DateField(required=False, label="Dia", widget=forms.DateInput(attrs={'class': "input", 'type':"date", 'placeholder': "Dia"}))
-    dia = forms.ModelChoiceField(required=False, queryset=Dia.objects.all(), label="Dia",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%"}))
-    sessao = forms.ModelChoiceField(required=False, queryset=Sessao.objects.all(), label="Sessao",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes",'style':"width:100%"}),error_messages={'unique': 'Uma sessão com a mesma hora já existe! Por favor coloque outra hora.'})
+    dia = forms.ModelChoiceField(required=False, queryset=Dia.objects.all(), label="Dia",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%",'oninput':"$(this).removeClass('invalid');"}))
+    sessao = forms.ModelChoiceField(required=False, queryset=Sessao.objects.all(), label="Sessao",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%"}),error_messages={'unique': 'Uma sessão com a mesma hora já existe! Por favor coloque outra hora.'})
     numero_colaboradores = forms.IntegerField(required=False, initial=0,min_value=0, label="Colaboradores", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_colaboradores"}))
     class Meta:
         model = SessaoAtividade
@@ -136,7 +136,7 @@ class AtividadeForm(forms.ModelForm):
     nome = forms.CharField(label="", max_length=255, required=True,widget=forms.TextInput(attrs={'class': "input tabfields",'placeholder': "Ex: Nome da atividade",'oninput':"$(this).removeClass('invalid');"}))
     descricao = forms.CharField(label="", max_length=300, required=True, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea tabfields", 'id':"descricaoField",'onkeyup':"countChar(this)",'placeholder': "Ex: Descrição da atividade",'oninput':"$(this).removeClass('invalid');"}))
     limite_participantes = forms.IntegerField(required=True, initial=0, min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input tabfields",'id':"maxPersons_input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_participantes_atividade",'onchange':"$(this).removeClass('invalid');"}))
-    duracao = forms.IntegerField(required=True, initial=0, min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input tabfields",'id':"duracao_input",'step':"5", 'type':"number",'placeholder':"0",'name':"duracao_atividade",'onchange':"$(this).removeClass('invalid');"}))
+    duracao = forms.IntegerField(required=True, initial=0, min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input tabfields",'id':"duracao_input",'step':"1", 'type':"number",'placeholder':"0",'name':"duracao_atividade",'onchange':"$(this).removeClass('invalid');"}))
     #tematicas = forms.MultipleChoiceField(choices=( (x.id, x.tema) for x in Tematica.objects.all() ), label="",required=True, widget=forms.SelectMultiple(attrs={'class':"tabfields",'size':"4",'name':"tema_atividade",'oninput':"$(this).removeClass('invalid');"}))
     #publico_alvo = forms.MultipleChoiceField(choices=( (x.id, x.nome) for x in PublicoAlvo.objects.all() ), label="", required=True, widget=forms.SelectMultiple(attrs={'class':"tabfields",'size':"4",'name':"publico_alvo_atividade",'oninput':"$(this).removeClass('invalid');"}))
     tematicas = forms.ModelMultipleChoiceField(required=True, queryset=Tematica.objects.all(), label="", widget=forms.SelectMultiple(attrs={'class':"input tabfields",'oninput':"$(this).removeClass('invalid');"}))

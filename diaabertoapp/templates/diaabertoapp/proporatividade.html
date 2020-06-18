@@ -490,12 +490,19 @@
                                                 <div class="field">
                                                     <div class="control is-clearfix" id="form_set_material">
                                                         <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
-                                                       {{ form2.management_form }}
+                                                        <div class="columns">
+                                                            <div class="column">
+                                                                <label class="label">Material</label>
+                                                            </div>
+                                                            <div class="column">
+                                                                <label class="label">Quantidade</label>
+                                                            </div>
+                                                        </div>
+                                                        {{ form2.management_form }}
                                                         {% for frm2 in form2 %}
                                                         <div class="columns">
                                                             <div class="column">
                                                                 <div class="field">
-                                                                    <label class="label">Material</label>
                                                                     <div class="control is-expanded ">
                                                                     {{ frm2.material }}        
                                                                     </div>
@@ -503,7 +510,6 @@
                                                             </div>
                                                             <div class="column">
                                                                 <div class="field">
-                                                                    <label class="label">Quantidade</label>
                                                                     <div class="control is-expanded">
                                                                     {{ frm2.quantidade }}    
                                                                     </div>
@@ -636,7 +642,7 @@
                                         <div class="column is-8 is-offset-2">
                                             <div class="level">
                                                 <div class="level-left">
-                                                    <a href="/minhasatividades" class="button is-danger is-outlined" type="button">
+                                                    <a href="/minhasatividades" class="button is-danger is-outlined" type="button" onclick="return confirm('Tem a certeza que prentede cancelar? Os dados inseridos são descartados!');">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-close mdi-24px"></i>
                                                         </span>
