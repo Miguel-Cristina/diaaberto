@@ -1,5 +1,5 @@
 from django import forms
-from .models import Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, PublicoAlvo, UnidadeOrganica, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade, TipoAtividade
+from .models import Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, PublicoAlvo, UnidadeOrganica, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade, TipoAtividade, DiaAberto
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
@@ -112,8 +112,10 @@ class MaterialQuantidadeForm(forms.ModelForm):
 MaterialFormSet = formset_factory(MaterialQuantidadeForm)
 
 class SessaoAtividadeForm(forms.ModelForm):
-    #dia = forms.DateField(required=False, label="Dia", widget=forms.DateInput(attrs={'class': "input", 'type':"date", 'placeholder': "Dia"}))
-    dia = forms.ModelChoiceField(required=False, queryset=Dia.objects.all(), label="Dia",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%",'oninput':"$(this).removeClass('invalid');"}))
+    data_inicio = DiaAberto.objects.first().data_inicio
+    data_fim = DiaAberto.objects.first().data_fim
+    dia = forms.DateField(required=False, label="Dia", widget=forms.DateInput(attrs={'class': "input sessoes tabfields", 'type':"date", 'placeholder': "Dia", 'oninput':"$(this).removeClass('invalid');","min":data_inicio,"max":data_fim}))
+    #dia = forms.ModelChoiceField(required=False, queryset=Dia.objects.all(), label="Dia",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%",'oninput':"$(this).removeClass('invalid');"}))
     sessao = forms.ModelChoiceField(required=False, queryset=Sessao.objects.all(), label="Sessao",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%"}),error_messages={'unique': 'Uma sessão com a mesma hora já existe! Por favor coloque outra hora.'})
     numero_colaboradores = forms.IntegerField(required=False, initial=0,min_value=0, label="Colaboradores", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_colaboradores"}))
     class Meta:

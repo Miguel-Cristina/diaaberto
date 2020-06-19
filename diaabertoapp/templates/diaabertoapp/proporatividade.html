@@ -562,7 +562,7 @@
                                                             <div class="column">
                                                                 <div class="field">
                                                                     <label class="label">Dia</label>
-                                                                    <div class="select is-fullwidth">
+                                                                    <div class="control is-expanded">
                                                                     {{ frm3.dia }}    
                                                                     </div>
                                                                 </div>
@@ -592,7 +592,7 @@
                                                         <div class="columns">
                                                             <div class="column">
                                                                 <div class="field">
-                                                                    <div class="select is-fullwidth">
+                                                                    <div class="control is-expanded">
                                                                     {{ form3.empty_form.dia }}    
                                                                     </div>
                                                                 </div>
@@ -866,8 +866,8 @@
             }*/
             for (y = 0; y < w.length; y++)
             {
-
-                var strValue = w[y].options[w[y].selectedIndex].value;
+                //var strValue = w[y].options[w[y].selectedIndex].value;
+                var strValue = w[y].value;
                 arr[y] = strValue;
             }
             var tempA = 0;
@@ -878,6 +878,12 @@
             {
                 tempA = arr[i];
                 tempB = arr[i + 1];
+                if (tempA == 0 || tempB == 0)
+                {
+                    alert("É necessário introduzir todos os dados e pelo menos uma sessão!");
+                    valid = false;
+                    break;
+                }
                 for (h = i+2; h < arr.length-2; h += 2)
                 {
                     tempC = arr[h];

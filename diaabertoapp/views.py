@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect, get_object_or_404 
 from django.db.models import Count
-from .models import Dia, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao
+from .models import Dia, DiaAberto, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao
 from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm ,SessaoAtividadeForm, MaterialFormSet, TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, SalaForm, UnidadeOrganicaForm, DepartamentoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from datetime import date, timedelta
 
 def error_500(request):
     return render(request, 'diaabertoapp/error_500.html')
@@ -1000,7 +1001,20 @@ def minhasatividades(request):
     sessoes = Sessao.objects.all()
     sessoesatividade = SessaoAtividade.objects.all()
     tipoatividade = TipoAtividade.objects.all()
-    dias = Dia.objects.all()
+    #start_date = date(2008, 8, 15)   # start date
+    diaaberto = DiaAberto.objects.first()   # diaaberto configurations
+    if(diaaberto):
+        start_date = diaaberto.data_inicio
+        end_date = diaaberto.data_fim   # end date
+
+        delta = end_date - start_date       # as timedelta
+        dias_arr = []
+        for i in range(delta.days + 1):
+            day = start_date + timedelta(days=i)
+            dias_arr.append(day)
+        dias = dias_arr
+    else:
+        dias = ""
 
     #BEGIN order_by
     order_by = request.GET.get('order_by')
@@ -1060,18 +1074,25 @@ def minhasatividades(request):
         tipoatividade = tipoatividade.filter(id=tipo_query)
     #END filter_by_tipo
 
+
+
     #BEGIN filter_by_dia
     unique_sesaoatividade_obj = []
     dia_query = request.GET.get('dias')
     if dia_query !='' and dia_query is not None:
-
+        print(dia_query)
         atividades_sessions_id = sessoesatividade.filter(dia=dia_query)
         for x in atividades_sessions_id:
             unique_sesaoatividade_obj.append(x.atividade.id)
 
         atividade_list = atividade_list.filter(id__in=unique_sesaoatividade_obj)
-        dias = dias.filter(id=dia_query)
+
+
+        #dias = dias_arr
     #END filter_by_dia
+
+
+
 
     #BEGIN filter_by_sessao
     unique_sesaoatividade_obj = []
@@ -1090,6 +1111,9 @@ def minhasatividades(request):
         atividade_list = atividade_list.filter(id__in=unique_sesaoatividade_obj)
         sessoes = sessoes.filter(id=sessao_query)
     #END filter_by_sessao
+
+
+
 
     #BEGIN pagination
     page = request.GET.get('page', 1)
@@ -1115,7 +1139,7 @@ def minhasatividades(request):
         if(x.visto == False):
             count_notificacoes = count_notificacoes + 1
     #'tiposquery':tipo_query
-    return render(request, 'diaabertoapp/minhasatividades.html', {'count_notificacoes':count_notificacoes, 'dias':dias, 'diaquery':dia_query,'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query, 'sessoes':sessoes, 'sessoesquery':sessao_query, 'sessoesatividade':sessoesatividade})
+    return render(request, 'diaabertoapp/minhasatividades.html', {'sessoesatividade':sessoesatividade,'dias':dias, 'diaquery':dia_query,'sessoes':sessoes,'sessoesquery':sessao_query,'count_notificacoes':count_notificacoes,'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query})
 
 def proporatividade(request):
 

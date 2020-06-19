@@ -8,8 +8,7 @@ Replace this with more appropriate tests for your application.
 import pytest
 import django
 from django.test import TestCase
-from django.test.client import Client
-from diaabertoapp.models import Utilizador, Tematica, TipoAtividade, PublicoAlvo, Sessao, Atividade, SessaoAtividade, Campus, Edificio, Sala, MaterialQuantidade, UnidadeOrganica, Departamento, UtilizadorTipo, Dia
+from diaabertoapp.models import Utilizador, Tematica, TipoAtividade, PublicoAlvo, Sessao, Atividade, SessaoAtividade, Campus, Edificio, Sala, MaterialQuantidade, UnidadeOrganica, Departamento, UtilizadorTipo, DiaAberto
 from . import views
 # TODO: Configure your database in settings.py and sync before running tests.
 
@@ -374,13 +373,12 @@ class SessaoAtividadeTestCase(TestCase):
         self.objA.tematicas.add(self.tematicaB)
         self.objA.publico_alvo.add(self.publicoalvoA)
         self.objA.publico_alvo.add(self.publicoalvoB)
-        self.diaA = Dia.objects.create(dia="2020-01-20")
         self.sessaoA = Sessao.objects.create(hora="09:00")
-        self.sessaoatividadeObjA = SessaoAtividade.objects.create(atividade=self.objA, dia=self.diaA, sessao=self.sessaoA, numero_colaboradores="2")
+        self.sessaoatividadeObjA = SessaoAtividade.objects.create(atividade=self.objA, dia="2020-02-02", sessao=self.sessaoA, numero_colaboradores="2")
 
     def test_sessaoatividades(self):
 
-        self.assertEqual(self.sessaoatividadeObjA.dia.dia, "2020-01-20")
+        self.assertEqual(self.sessaoatividadeObjA.dia, "2020-02-02")
         self.assertEqual(self.sessaoatividadeObjA.sessao.hora, "09:00")
         self.assertEqual(self.sessaoatividadeObjA.numero_colaboradores, "2")
         self.assertEqual(self.sessaoatividadeObjA.atividade.nome, "Introdução à Matemática")

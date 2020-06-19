@@ -548,7 +548,7 @@
                                     <p class="menu-label">Filtros Sessão</p>
                                     <ul class="menu-list">
                                         <form method="GET" action=".">
-                                            <div class="field has-addons">
+                                                                                        <div class="field has-addons">
                                                 <!---->
                                                 {% if not diaquery|length > 0 %}
                                                 <div class="control is-expanded has-icons-left">
@@ -558,7 +558,7 @@
                                                                 Dia
                                                             </option>
                                                             {% for Dia in dias %}
-                                                                <option value="{{ Dia.id }}">{{ Dia.dia|date:"d-m-Y" }}</option>
+                                                                <option value="{{ Dia|date:"Y-m-d" }}">{{ Dia|date:"d-m-Y" }}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </span>
@@ -575,7 +575,7 @@
                                                     <span class="select is-fullwidth is-empty">
                                                         <select id="diasSearch" name="dias"><!--onchange="searchByValidation()"-->
                                                             {% for Dia in dias %}
-                                                                <option value="{{ Dia.id }}">{{ Dia.dia|date:"d-m-Y" }}</option>
+                                                                <option value="{{ Dia|date:"Y-m-d" }}">{{ Dia|date:"d-m-Y" }}</option>
                                                             {% endfor %}
                                                         </select>
                                                     </span>
@@ -997,7 +997,7 @@
                             {% ifequal Sessao.atividade.id Atividade.id %}
                             <tr draggable="false" class="">
                                 <!---->
-                                <td data-label="Dia" class=""> {{ Sessao.dia.dia|date:"d-m-Y" }} </td>
+                                <td data-label="Dia" class=""> {{ Sessao.dia|date:"d-m-Y" }} </td>
                                 <td data-label="Hora" class=""> {{ Sessao.sessao.hora|time:"H:i" }} </td>
                                 <td data-label="Duração" class=""> {{ Sessao.atividade.duracao }} minutos</td>
                                 <td data-label="Máximo de participantes" class=""> {{ Sessao.atividade.limite_participantes }} </td>

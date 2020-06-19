@@ -235,12 +235,12 @@ class MaterialQuantidade(models.Model):
 class SessaoAtividade(models.Model):
     atividade = models.ForeignKey('Atividade', related_name='sessao_atividade', on_delete=models.CASCADE, null=True)
     sessao = models.ForeignKey('Sessao',on_delete=models.PROTECT, null=True)
-    #dia = models.DateField(null=True)
-    dia = models.ForeignKey('Dia',on_delete=models.PROTECT, null=True)
+    dia = models.DateField(null=True)
+    #dia = models.ForeignKey('Dia',on_delete=models.PROTECT, null=True)
     numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
     class Meta:
         db_table='SessaoAtividade'
-        unique_together = (("atividade", "sessao", "dia"),) 
+        unique_together = (("atividade", "sessao","dia"),) 
     def __str__(self):
         return self.atividade.nome
 
@@ -321,8 +321,10 @@ class Dia(models.Model):
 
 
 class DiaAberto(models.Model):
-    datas = models.ManyToManyField(Dia, related_name='datas')
+    titulo = models.CharField(max_length=255, null=True)
+    data_inicio = models.DateField(null=True)
+    data_fim = models.DateField(null=True)
     def __str__(self):
-        return self.datas
+        return self.titulo
     class Meta:
         db_table='DiaAberto'
