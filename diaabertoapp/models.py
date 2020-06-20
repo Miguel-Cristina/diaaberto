@@ -29,7 +29,7 @@ class Campus(models.Model):
     nome = models.CharField(max_length=100, unique=True)
     morada = models.TextField(null=True)
     contacto = models.CharField(max_length=40)
-    
+    mapa_imagem = models.ImageField(upload_to='diaabertoapp/maps/',default='diaabertoapp/maps/default.png')
     #Métodos
     class Meta:
         db_table='Campus'
@@ -45,7 +45,8 @@ class Edificio(models.Model):
     id = models.AutoField(primary_key= True)
     nome = models.CharField(max_length=40)
     campus = models.ForeignKey(Campus, on_delete=models.PROTECT,null=True)
-    mapa = models.CharField(max_length=255, default='diaabertoapp/maps/default.png')
+    mapa = models.CharField(max_length=255, default='media/default.png')
+    mapa_imagem = models.ImageField(upload_to='diaabertoapp/maps/',default='diaabertoapp/maps/default.png')
     class Meta:
         db_table='Edificio'
         unique_together = (("nome", "campus"),) 
@@ -62,7 +63,8 @@ class Sala(models.Model):
     id = models.AutoField(primary_key= True)
     identificacao = models.CharField(max_length=40)
     edificio = models.ForeignKey(Edificio, on_delete=models.PROTECT,null=True)
-    mapa = models.CharField(max_length=255, default='diaabertoapp/maps/default.png')
+    mapa = models.CharField(max_length=255, default='media/diaabertoapp/maps/default.png',blank=True)
+    mapa_imagem = models.ImageField(upload_to='diaabertoapp/maps/',default='diaabertoapp/maps/default.png')
     class Meta:
         db_table='Sala'
         unique_together = (("identificacao", "edificio"),) 

@@ -113,6 +113,9 @@
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\navbar.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\notification.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\tabs.js" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\editarcampus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarcampus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\editaredificio.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\adicionaredificio.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\editarsala.html" />
@@ -141,7 +144,7 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\alteraratividade.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configuraratividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\campus.html" />
-    <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus1.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\tipoatividade.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\tematicas.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\publicoalvo.html" />

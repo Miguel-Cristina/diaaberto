@@ -27,16 +27,16 @@ class CampusForm(forms.ModelForm):
     
     class Meta:
         model = Campus
-        fields = ('morada','contacto','nome',)
+        fields = ('morada','contacto','nome','mapa_imagem',)
 
 class EdificioForm(forms.ModelForm):
     campus = forms.ModelChoiceField(required=True, queryset=Campus.objects.all(), label="",widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}),error_messages={'unique_together':'Um edificio com esse nome já existe!','required':'Preencha este campo.','unique':'Um edificio com o mesmo nome já existe! Por favor coloque outro edificio.'})
     nome = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text",'placeholder':"Edifício"}),error_messages={'unique_together':'Um edificio com esse nome já existe!', 'required':'Preencha este campo.','unique': 'Um edificio com o mesmo nome já existe! Por favor coloque outro edificio.'})
-    mapa = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}))
+    mapa = forms.CharField(required=False, label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}))
     
     class Meta:
         model = Edificio
-        fields = ('campus','nome','mapa',)
+        fields = ('campus','nome','mapa_imagem',)
         error_messages = {
 
             NON_FIELD_ERRORS: {
@@ -50,11 +50,11 @@ class SalaForm(forms.ModelForm):
     campus = forms.ModelChoiceField(required=True,queryset=Campus.objects.all(), label="",widget=ModelSelect2Widget(model=Campus,search_fields=['nome__icontains'],attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o campus..."}))
     edificio = forms.ModelChoiceField(required=True,queryset=Edificio.objects.all(), label="",widget=ModelSelect2Widget(model=Edificio,search_fields=['nome__icontains'],dependent_fields={'campus':'campus'},attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o edificio..."}))
     identificacao = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text",'placeholder':"Sala"}),error_messages={'unique': 'Uma sala com o mesmo nome já existe! Por favor coloque outra sala.'})
-    mapa = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}))
+    mapa = forms.CharField(required=False,label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}))
 
     class Meta:
         model = Sala
-        fields = ('campus','edificio', 'identificacao','mapa')
+        fields = ('campus','edificio', 'identificacao','mapa','mapa_imagem')
         error_messages = {
 
             NON_FIELD_ERRORS: {
@@ -112,9 +112,8 @@ class MaterialQuantidadeForm(forms.ModelForm):
 MaterialFormSet = formset_factory(MaterialQuantidadeForm)
 
 class SessaoAtividadeForm(forms.ModelForm):
-    data_inicio = DiaAberto.objects.first().data_inicio
-    data_fim = DiaAberto.objects.first().data_fim
-    dia = forms.DateField(required=False, label="Dia", widget=forms.DateInput(attrs={'class': "input sessoes tabfields", 'type':"date", 'placeholder': "Dia", 'oninput':"$(this).removeClass('invalid');","min":data_inicio,"max":data_fim}))
+
+    dia = forms.DateField(required=False, label="Dia", widget=forms.DateInput(attrs={'class': "input sessoes tabfields", 'type':"date", 'placeholder': "Dia", 'oninput':"$(this).removeClass('invalid');"}))
     #dia = forms.ModelChoiceField(required=False, queryset=Dia.objects.all(), label="Dia",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%",'oninput':"$(this).removeClass('invalid');"}))
     sessao = forms.ModelChoiceField(required=False, queryset=Sessao.objects.all(), label="Sessao",widget=forms.Select(attrs={'class':"select is-fullwidth sessoes tabfields",'style':"width:100%"}),error_messages={'unique': 'Uma sessão com a mesma hora já existe! Por favor coloque outra hora.'})
     numero_colaboradores = forms.IntegerField(required=False, initial=0,min_value=0, label="Colaboradores", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"numero_colaboradores"}))
@@ -130,6 +129,22 @@ class SessaoAtividadeForm(forms.ModelForm):
             }
 
         }
+    def __init__(self, *args, **kwargs):
+        super(SessaoAtividadeForm, self).__init__(*args, **kwargs)
+        try:
+            diaaberto = DiaAberto.objects.first()
+        except DiaAberto.DoesNotExist:
+            diaaberto = None
+        if diaaberto is not None:
+            data_inicio = diaaberto.data_inicio
+            data_fim = diaaberto.data_fim
+        else:
+            data_inicio = '2001-01-01'
+            data_fim = '2001-01-01'
+        self.fields['dia'].widget.attrs.update({
+                'min': data_inicio,
+                'max': data_fim
+            })
 SessaoFormSet = formset_factory(SessaoAtividadeForm)
 
 

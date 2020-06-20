@@ -198,15 +198,15 @@
                                     <a href="/configurarespacos/" class="">Configuração dos Espaços</a>
                                 </li>
                                 <li>
-                                    <a href="/configurarespacos/salas/" class="router-link-exact-active router-link-active">Edifícios</a>
+                                    <a href="/configurarespacos/edificios/" class="router-link-exact-active router-link-active">Edifícios</a>
                                 </li>
                                 <li class="is-active">
-                                    <a href="/configurarespacos/adicionarsala" class="router-link-exact-active router-link-active">Adicionar</a>
+                                    <a href="/configurarespacos/adicionaredificio" class="router-link-exact-active router-link-active">Adicionar</a>
                                 </li>
                             </ul>
                         </nav>
                         <div style="padding: 3rem 2vw 1rem; ">
-                            <form action="" method="POST">
+                            <form action="" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="columns">
                                     <div class="column tile">
@@ -244,8 +244,8 @@
                                             </div>
                                             <div class="column is-one-third">
                                                 <label class="label">Mapa</label>
-                                                {{ form.mapa }}
-                                                {% for error in form.mapa.errors %} 
+                                                {{ form.mapa_imagem }}
+                                                {% for error in form.mapa_imagem.errors %} 
                                                     <p class="help is-danger">{{ error }}</p>
                                                 {% endfor %}
                                             </div>

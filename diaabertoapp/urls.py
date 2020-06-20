@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from diaabertoapp.views import index, atividades, edificios
 from django.conf.urls import include, handler404, handler500
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('error_500/', views.error_500, name='error_500'),
@@ -42,6 +44,9 @@ urlpatterns = [
     path('configurarespacos/salas/',views.configurarsalas, name="configurarsalas"),
     path('configurarespacos/eliminarsala/<pk>/', views.eliminarsala, name="eliminarsala"),
     path('configurarespacos/editarsala/<pk>/', views.editarsala, name="editarsala"),
+    path('configurarespacos/adicionarcampus/', views.adicionarcampus, name="adicionarcampus"),
+    path('configurarespacos/eliminarcampus/<pk>/', views.eliminarcampus, name="eliminarcampus"),
+    path('configurarespacos/editarcampus/<pk>/', views.editarcampus, name="editarcampus"),
     path('configurarespacos/adicionarsala/', views.adicionarsala, name="adicionarsala"),
 
     path('configurarespacos/adicionaredificio/', views.adicionaredificio, name="adicionaredificio"),
@@ -56,3 +61,6 @@ urlpatterns = [
     path('configurarorganicasdepartamentos/adicionardepartamento/', views.adicionardepartamento, name="adicionardepartamento"),
     
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

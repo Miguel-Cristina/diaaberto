@@ -1,5 +1,6 @@
 from django.views.generic import ListView
-from django.shortcuts import render, redirect, get_object_or_404 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models.deletion import ProtectedError
 from django.db.models import Count
 from .models import Dia, DiaAberto, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao
 from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm ,SessaoAtividadeForm, MaterialFormSet, TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, SalaForm, UnidadeOrganicaForm, DepartamentoForm
@@ -344,6 +345,7 @@ def configurardepartamentos(request):
 
 
 def configurarcampus(request):
+
     utilizador = ''
     if request.user.is_authenticated:
         user_email = request.user.email
@@ -359,24 +361,42 @@ def configurarcampus(request):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
     campus = Campus.objects.all()
-    edificios = Edificio.objects.all()
-    salas = Sala.objects.all()
-    CampusFormSet = modelformset_factory(Campus, form=CampusForm, fields=('nome','morada','contacto',), can_delete=True, extra=0)
-
-
-
-    if request.method == "POST":
-        campusForm = CampusFormSet(request.POST, queryset=campus, prefix="sa")
-        if campusForm.is_valid():
-            campusForm.save()
-            messages.success(request, 'Campus configuradas com sucesso!')
-            return HttpResponseRedirect('/configurarespacos/')
+    #BEGIN filter_by_name
+    nome_query = request.GET.get('nome')
+    if nome_query !='' and nome_query is not None:
+        campus = campus.filter(nome__icontains=nome_query)
+    #END filter_by_name 
+    #BEGIN order_by
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'nome':
+        if sort == 'asc':
+            campus = campus.order_by('nome')
         else:
-            print(campusForm.errors)
-    else:
-        campusForm = CampusFormSet(queryset=campus, prefix="sa")
+            campus = campus.order_by('-nome')
+    elif order_by == 'morada':
+        if sort == 'asc':
+            campus = campus.order_by('morada')
+        else:
+            campus = campus.order_by('-morada')
+    elif order_by == 'contacto':
+        if sort == 'asc':
+            campus = campus.order_by('contacto')
+        else:
+            campus = campus.order_by('-contacto')
 
-    return render(request, 'diaabertoapp/configurarcampus.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios,'salas':salas,'form':campusForm})
+    #END order_by
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(campus, 12)
+    try:
+        campus = paginator.page(page)
+    except PageNotAnInteger:
+        campus = paginator.page(1)
+    except EmptyPage:
+        campus = paginator.page(paginator.num_pages)
+    #END pagination
+    return render(request, 'diaabertoapp/configurarcampus.html', {'utilizador':utilizador,'campus':campus,'order_by':order_by,'sort':sort,'nomesquery':nome_query})
 
 def configuraredificios(request):
     utilizador = ''
@@ -434,24 +454,6 @@ def configuraredificios(request):
     except EmptyPage:
         edificios = paginator.page(paginator.num_pages)
     #END pagination
-
-
-
-
-
-    EdificiosFormSet = modelformset_factory(Edificio, form=EdificioForm, fields=('campus','nome',), can_delete=True, extra=0)
-    #SessoesFormSet = modelformset_factory(Sessao, form=SessoesForm, fields=('hora',), can_delete=True, extra=0)
-
-    if request.method == "POST":
-        edificiosForm = EdificiosFormSet(request.POST, queryset=edificios, prefix="mq")
-        if edificiosForm.is_valid():
-            edificiosForm.save()
-            messages.success(request, 'Edificios configurados com sucesso!')
-            return HttpResponseRedirect('/configurarespacos/')
-        else:
-            print(edificiosForm.errors)
-    else:
-        edificiosForm = EdificiosFormSet(queryset=edificios, prefix="mq")
 
     return render(request, 'diaabertoapp/configuraredificios.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios,'order_by':order_by, 'sort':sort,'nomesquery':nome_query, 'campusquery':campus_query})
 
@@ -543,7 +545,7 @@ def editaredificio(request, pk):
     edificios = Edificio.objects.all()
     espaco = get_object_or_404(Edificio, pk=pk)
     if request.method == 'POST':
-        aForm = EdificioForm(request.POST, instance=espaco)
+        aForm = EdificioForm(request.POST, request.FILES, instance=espaco)
         if aForm.is_valid():
             aForm.save()
             messages.success(request, 'O edifício foi editado com sucesso!')
@@ -555,6 +557,37 @@ def editaredificio(request, pk):
         aForm = EdificioForm(initial = {'campus': espaco.campus.id },instance=espaco)
 
     return render(request, 'diaabertoapp/editaredificio.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios, 'form':aForm})
+
+def editarcampus(request, pk):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+    campus = Campus.objects.all()
+    espaco = get_object_or_404(Campus, pk=pk)
+    if request.method == 'POST':
+        aForm = CampusForm(request.POST, request.FILES, instance=espaco)
+        if aForm.is_valid():
+            aForm.save()
+            messages.success(request, 'O campus foi editado com sucesso!')
+            return HttpResponseRedirect('/configurarespacos/campus/')
+        else:
+            print(aForm.errors)
+    else:
+
+        aForm = CampusForm(instance=espaco)
+
+    return render(request, 'diaabertoapp/editarcampus.html', {'utilizador':utilizador,'campus':campus, 'form':aForm})
 
 def eliminaredificio(request, pk):
     utilizador = ''
@@ -572,9 +605,38 @@ def eliminaredificio(request, pk):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
     object = Edificio.objects.get(pk=pk)
-    object.delete()
-    messages.success(request, 'O edifício foi eliminado!')
+    try:
+        object.delete()
+        messages.success(request, 'O edifício foi eliminado!')
+    except ProtectedError:
+        messages.error(request, 'O edifício não pode ser eliminado! Outras dependências impedem que elimine o edifício.')
+    #messages.success(request, 'O edifício foi eliminado!')
     return HttpResponseRedirect('/configurarespacos/edificios/')
+
+def eliminarcampus(request, pk):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+    object = Campus.objects.get(pk=pk)
+    try:
+        object.delete()
+        messages.success(request, 'O campus foi eliminado!')
+    except ProtectedError:
+        messages.error(request, 'O campus não pode ser eliminado! Outras dependências impedem que elimine.')
+    #messages.success(request, 'O edifício foi eliminado!')
+    return HttpResponseRedirect('/configurarespacos/campus/')
+
 def editarsala(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -595,7 +657,7 @@ def editarsala(request, pk):
     salas = Sala.objects.all()
     espaco = get_object_or_404(Sala, pk=pk)
     if request.method == 'POST':
-        aForm = SalaForm(request.POST, instance=espaco)
+        aForm = SalaForm(request.POST, request.FILES, instance=espaco)
         if aForm.is_valid():
             aForm.save()
             messages.success(request, 'O espaço foi editado com sucesso!')
@@ -624,8 +686,12 @@ def eliminarsala(request, pk):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
     object = Sala.objects.get(pk=pk)
-    object.delete()
-    messages.success(request, 'O espaço foi eliminado!')
+    try:
+        object.delete()
+        messages.success(request, 'O espaço foi eliminado!')
+    except ProtectedError:
+        messages.error(request, 'O espaço não pode ser eliminado! Outras dependências impedem que elimine o espaço.')
+    #messages.success(request, 'O espaço foi eliminado!')
     return HttpResponseRedirect('/configurarespacos/salas/')
 
 def adicionarsala(request):
@@ -647,7 +713,7 @@ def adicionarsala(request):
     edificios = Edificio.objects.all()
     salas = Sala.objects.all()
     if request.method == 'POST':
-        aForm = SalaForm(request.POST)
+        aForm = SalaForm(request.POST, request.FILES)
         if aForm.is_valid():
             aForm.save()
             messages.success(request, 'O espaço foi adicionado!')
@@ -677,7 +743,7 @@ def adicionaredificio(request):
     campus = Campus.objects.all()
     edificios = Edificio.objects.all()
     if request.method == 'POST':
-        aForm = EdificioForm(request.POST)
+        aForm = EdificioForm(request.POST, request.FILES)
         if aForm.is_valid():
             aForm.save()
             messages.success(request, 'O edifício foi adicionado!')
@@ -688,6 +754,36 @@ def adicionaredificio(request):
         aForm = EdificioForm()
 
     return render(request, 'diaabertoapp/adicionaredificio.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios, 'form':aForm})
+
+def adicionarcampus(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+    campus = Campus.objects.all()
+   
+    if request.method == 'POST':
+        aForm = CampusForm(request.POST, request.FILES)
+        if aForm.is_valid():
+            aForm.save()
+            messages.success(request, 'O campus foi adicionado!')
+            return HttpResponseRedirect('/configurarespacos/campus/')
+        else:
+            print(aForm.errors)
+    else:
+        aForm = CampusForm()
+
+    return render(request, 'diaabertoapp/adicionarcampus.html', {'utilizador':utilizador,'campus':campus, 'form':aForm})
 
 def editarorganica(request, pk):
     utilizador = ''
@@ -735,8 +831,12 @@ def eliminarorganica(request, pk):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
     object = UnidadeOrganica.objects.get(pk=pk)
-    object.delete()
-    messages.success(request, 'A unidade orgânica foi eliminada com sucesso!')
+    try:
+        object.delete()
+        messages.success(request, 'A unidade orgânica foi eliminada com sucesso!')
+    except ProtectedError:
+        messages.error(request, 'A unidade orgânica não pode ser eliminada! Outras dependências impedem que elimine a unidade orgânica.')
+    #messages.success(request, 'A unidade orgânica foi eliminada com sucesso!')
     return HttpResponseRedirect('/configurarorganicasdepartamentos/organicas/')
 
 def adicionarorganica(request):
@@ -814,8 +914,12 @@ def eliminardepartamento(request, pk):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
     object = Departamento.objects.get(pk=pk)
-    object.delete()
-    messages.success(request, 'O departamento foi eliminado com sucesso!')
+    try:
+        object.delete()
+        messages.success(request, 'O departamento foi eliminado com sucesso!')
+    except ProtectedError:
+        messages.error(request, 'O departamento não pode ser eliminado! Outras dependências impedem que elimine o departamento.')
+    #messages.success(request, 'O departamento foi eliminado com sucesso!')
     return HttpResponseRedirect('/configurarorganicasdepartamentos/departamentos/')
 
 def adicionardepartamento(request):

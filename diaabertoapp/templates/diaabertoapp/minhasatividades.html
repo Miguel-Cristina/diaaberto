@@ -861,7 +861,9 @@
                         {% endif %}
                         {% if Atividade.sala %}
                             <p style="margin-bottom:0px"><strong>Sala:</strong> {{ Atividade.sala }}</p>
-                            <p><a id="open-modal" onclick="srcImage('{{ Atividade.sala.mapa }}')"><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
+                            {% if Atividade.sala.mapa_imagem %}
+                                <p><a id="open-modal" onclick="srcImage('{{ Atividade.sala.mapa_imagem.url }}')"><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
+                            {% endif %}
                         {% endif %}
                 {% elif Atividade.tipo_local %}
                         <p><strong>Local:</strong> {{ Atividade.tipo_local }}</p>
@@ -1240,7 +1242,7 @@
                     modal.classList.add('is-active');
                     html.classList.add('is-clipped');
                     /*modalcontent.src="{% static "+p1+" %}";*/
-                    modalcontent.src="/static/"+p1;
+                    modalcontent.src=p1;
                     modal.querySelector('button#close-modal').addEventListener('click', function(e) {
                         e.preventDefault();
                         modal.classList.remove('is-active');

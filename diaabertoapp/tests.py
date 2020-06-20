@@ -12,8 +12,7 @@ from diaabertoapp.models import Utilizador, Tematica, TipoAtividade, PublicoAlvo
 from . import views
 # TODO: Configure your database in settings.py and sync before running tests.
 
-
-
+@pytest.mark.django_db
 class ViewsTestCase(TestCase):
     """Tests for the application views."""
 
@@ -45,7 +44,7 @@ class ViewsTestCase(TestCase):
         #response.status_code
         #self.assertContains(response, 'Propor Atividade', 1, 200)
         #
-
+@pytest.mark.django_db
 class UnidadeOrganicaTestCase(TestCase):
     def setUp(self):
         self.objA = UnidadeOrganica.objects.create(nome="Faculdade de Ciências e Tecnologia")
@@ -54,8 +53,9 @@ class UnidadeOrganicaTestCase(TestCase):
     def test_unidadesorganicas(self):
         
         self.assertEquals(self.objA.nome, 'Faculdade de Ciências e Tecnologia')       
-        self.assertEquals(self.objB.nome, 'Faculdade de Economia')        
-
+        self.assertEquals(self.objB.nome, 'Faculdade de Economia')     
+        
+@pytest.mark.django_db
 class DepartamentoTestCase(TestCase):
     def setUp(self):
         self.unidadeorganicaA = UnidadeOrganica.objects.create(nome="Faculdade de Ciências e Tecnologia")
@@ -67,7 +67,7 @@ class DepartamentoTestCase(TestCase):
         self.assertEquals(self.objA.nome, 'Departamento de Informática') 
         self.assertEquals(self.objA.unidadeorganica.nome, 'Faculdade de Ciências e Tecnologia')       
 
-
+@pytest.mark.django_db
 class TematicaTestCase(TestCase):
     def setUp(self):
         self.objA = Tematica.objects.create(tema="Terapêutica")
@@ -88,7 +88,7 @@ class TematicaTestCase(TestCase):
         self.assertEquals(self.objF.tema, 'Ciências')     
         self.assertEquals(self.objG.tema, 'Biologia')
         self.assertEquals(self.objH.tema, 'Arte')
-
+@pytest.mark.django_db
 class TipoAtividadeTestCase(TestCase):
     def setUp(self):
         self.objA = TipoAtividade.objects.create(tipo="Atividades Experimentais")
@@ -123,7 +123,7 @@ class TipoAtividadeTestCase(TestCase):
         self.assertEquals(self.objM.tipo, 'Tertúlias')
         self.assertEquals(self.objN.tipo, 'Visitas Instalações')
         self.assertEquals(self.objO.tipo, 'Visitas Laboratórios')
-
+@pytest.mark.django_db
 class PublicoAlvoTestCase(TestCase):
     def setUp(self):
         self.objA = PublicoAlvo.objects.create(nome="10º ano")
@@ -144,7 +144,7 @@ class PublicoAlvoTestCase(TestCase):
         self.assertEquals(self.objF.nome, 'Ciências Socioeconómicas')     
         self.assertEquals(self.objG.nome, 'Artes')
         self.assertEquals(self.objH.nome, 'Todos')
-
+@pytest.mark.django_db
 class SessaoTestCase(TestCase):
     def setUp(self):
         self.objA = Sessao.objects.create(hora="09:00")
@@ -165,7 +165,7 @@ class SessaoTestCase(TestCase):
         self.assertEquals(self.objF.hora, '15:00')     
         self.assertEquals(self.objG.hora, '16:00')
         self.assertEquals(self.objH.hora, '17:00')
-
+@pytest.mark.django_db
 class CampusTestCase(TestCase):
     def setUp(self):
         self.objA = Campus.objects.create(nome="Campus das Gambelas", morada="Faro", contacto="289100100")
@@ -186,7 +186,7 @@ class CampusTestCase(TestCase):
         self.assertEquals(self.objA.contacto, '289100100')       
         self.assertEquals(self.objB.contacto, '289100101')        
         self.assertEquals(self.objC.contacto, '289100102') 
-
+@pytest.mark.django_db
 class EdificioTestCase(TestCase):
     def setUp(self):
 
@@ -216,7 +216,7 @@ class EdificioTestCase(TestCase):
         self.assertEquals(self.objA.mapa, 'diaabertoapp/maps/objA.png')  
         self.assertEquals(self.objB.mapa, 'diaabertoapp/maps/objB.png')     
         self.assertEquals(self.objC.mapa, 'diaabertoapp/maps/objC.png')     
-
+@pytest.mark.django_db
 class SalaTestCase(TestCase):
     def setUp(self):
 
@@ -253,7 +253,7 @@ class SalaTestCase(TestCase):
         self.assertEquals(self.objA.mapa, 'diaabertoapp/maps/salaA.png')  
         self.assertEquals(self.objB.mapa, 'diaabertoapp/maps/salaB.png')     
  
-
+@pytest.mark.django_db
 class AtividadeTestCase(TestCase):
     def setUp(self):
         self.publicoalvoA = PublicoAlvo.objects.create(nome="10º ano")
@@ -302,7 +302,7 @@ class AtividadeTestCase(TestCase):
         self.assertEqual(self.objA.publico_alvo.all()[1].nome, "11º ano")
         self.assertEqual(self.objA.tematicas.all()[0].tema, "Ciências")
         self.assertEqual(self.objA.tematicas.all()[1].tema, "Matemática")
-
+@pytest.mark.django_db
 class MaterialQuantidadeTestCase(TestCase):
 
     def setUp(self):
@@ -341,7 +341,7 @@ class MaterialQuantidadeTestCase(TestCase):
         self.assertEqual(self.materialObjA.quantidade, "10")
         self.assertEqual(self.materialObjA.atividade.nome, "Introdução à Matemática")
 
-
+@pytest.mark.django_db
 class SessaoAtividadeTestCase(TestCase):
 
     def setUp(self):
@@ -377,6 +377,7 @@ class SessaoAtividadeTestCase(TestCase):
         self.sessaoatividadeObjA = SessaoAtividade.objects.create(atividade=self.objA, dia="2020-02-02", sessao=self.sessaoA, numero_colaboradores="2")
 
     def test_sessaoatividades(self):
+
 
         self.assertEqual(self.sessaoatividadeObjA.dia, "2020-02-02")
         self.assertEqual(self.sessaoatividadeObjA.sessao.hora, "09:00")

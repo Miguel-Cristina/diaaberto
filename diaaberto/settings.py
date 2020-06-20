@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'diaaberto.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME' : 'ualg1',
+        'NAME' : 'ualg',
         'USER' : 'root',
         'PASSWORD' : 'miguelcristina',
         'HOST' : '127.0.0.1',
@@ -130,3 +130,6 @@ DATE_FORMAT = 'j F Y'
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
+
+MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
+MEDIA_URL ='/media/'
