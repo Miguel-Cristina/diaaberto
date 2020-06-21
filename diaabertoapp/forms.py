@@ -167,7 +167,7 @@ class AtividadeForm(forms.ModelForm):
     edificio = forms.ModelChoiceField(required=False,queryset=Edificio.objects.all(), label="",widget=ModelSelect2Widget(model=Edificio,search_fields=['nome__icontains'],dependent_fields={'campus':'campus'},attrs={'class':"tabinputs escolhidoLocal",'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o edificio..."}))
     sala = forms.ModelChoiceField(required=False,queryset=Sala.objects.all(), label="",widget=ModelSelect2Widget(model=Sala, search_fields=['identificacao__icontains'],dependent_fields={'edificio':'edificio'},attrs={'class':"tabinputs escolhidoLocal",'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione a sala..."}))
     
-    #material = forms.Mult
+
     class Meta:
         model = Atividade
         fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'unidadeorganica', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')

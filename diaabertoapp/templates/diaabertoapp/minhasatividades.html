@@ -646,7 +646,7 @@
                                 </ul>
                             </nav>
                            
-                            {% if user.is_authenticated and utilizador.utilizadortipo_id == 2 %}
+                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
                             <a href="/minhasatividades/propor" class="button is-success is-outlined" type="button" style="        margin-bottom: 0.5rem;">
                                 <span class="icon is-small">
                                     <i class="mdi mdi-plus"></i>
@@ -1021,7 +1021,7 @@
         <div class="level">
             <div class="level-left">
                 <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo_id == 4 and Atividade.validada != 'VD'%}
+                    {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Coordenador' and Atividade.validada != 'VD'%}
                         <form action="{% url 'aceitaratividade' Atividade.id %}" method=POST>
                             {% csrf_token %}
                             <button type="submit" class="button is-success" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede aceitar a proposta?');">
@@ -1035,7 +1035,7 @@
                     {% endif %}
                 </div>
                 <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo_id == 4 and Atividade.validada != 'RJ' %}
+                    {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Coordenador' and Atividade.validada != 'RJ' %}
                         <form action="{% url 'rejeitaratividade' Atividade.id %}" method=POST>
                             {% csrf_token %}
                             <button type="submit" class="button is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede rejeitar a proposta?');">
@@ -1046,7 +1046,7 @@
                                 <!---->
                             </button>
                         </form>
-                    {% elif user.is_authenticated and utilizador.utilizadortipo_id == 4 and Atividade.validada == 'RJ' %}
+                    {% elif user.is_authenticated and utilizador.utilizadortipo.tipo == 'Coordenador' and Atividade.validada == 'RJ' %}
                         <form action="{% url 'sugeriralteracao' Atividade.id %}" method=POST>
                             {% csrf_token %}
                             <button type="submit" class="button is-info" style="margin-right: 10px;">
@@ -1062,7 +1062,7 @@
             </div>
             <div class="level-right">
                 <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo_id == 2 %}
+                    {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
                         <a class="button is-info" href="{% url 'alteraratividade' Atividade.id %}"><i class="mdi mdi-pencil">&nbsp;</i> Editar</a>
                     {% endif %}
                 </div>

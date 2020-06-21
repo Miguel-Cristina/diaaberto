@@ -8,8 +8,11 @@ Replace this with more appropriate tests for your application.
 import pytest
 import django
 from django.test import TestCase
+from django.test.client import Client
 from diaabertoapp.models import Utilizador, Tematica, TipoAtividade, PublicoAlvo, Sessao, Atividade, SessaoAtividade, Campus, Edificio, Sala, MaterialQuantidade, UnidadeOrganica, Departamento, UtilizadorTipo, DiaAberto
+from diaabertoapp.forms import CampusForm,EdificioForm, SalaForm, UnidadeOrganicaForm, DepartamentoForm, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, SessoesForm, AtividadeForm, MaterialQuantidadeForm, SessaoAtividadeForm
 from . import views
+import datetime
 # TODO: Configure your database in settings.py and sync before running tests.
 
 @pytest.mark.django_db
@@ -22,6 +25,8 @@ class ViewsTestCase(TestCase):
         def setUpClass(cls):
             super(ViewsTestCase, cls).setUpClass()
             django.setup()
+            c = Client()
+            c.login(username='admin',password="admin")
 
     def test_home(self):
         """Tests the home page."""
@@ -33,17 +38,6 @@ class ViewsTestCase(TestCase):
         response = self.client.get('/minhasatividades/')
         self.assertContains(response, 'Minhas Atividades', 2, 200)
 
-    def test_proporatividade(self):
-        """Tests the home page."""
-        #c = Client()
-        #self.unidadeorganicaA = UnidadeOrganica.objects.create(nome="Faculdade de Ciências e Tecnologia")
-        #self.departamentoA = Departamento.objects.create(nome="Departamento de Informática", unidadeorganica=self.unidadeorganicaA)
-        #self.utilizadorTipoA = UtilizadorTipo.objects.create(tipo="Docente")
-        #self.utilizadorA = Utilizador.objects.create(nome="Paulo Águas", email="paguas@ualg.pt", utilizadortipo=self.utilizadorTipoA, unidadeorganica=self.unidadeorganicaA, departamento=self.departamentoA)
-        #response = c.get('/minhasatividades/propor/', {'utilizador': self.utilizadorA, 'unidadeorganica':self.unidadeorganicaA})
-        #response.status_code
-        #self.assertContains(response, 'Propor Atividade', 1, 200)
-        #
 @pytest.mark.django_db
 class UnidadeOrganicaTestCase(TestCase):
     def setUp(self):
@@ -383,3 +377,138 @@ class SessaoAtividadeTestCase(TestCase):
         self.assertEqual(self.sessaoatividadeObjA.sessao.hora, "09:00")
         self.assertEqual(self.sessaoatividadeObjA.numero_colaboradores, "2")
         self.assertEqual(self.sessaoatividadeObjA.atividade.nome, "Introdução à Matemática")
+
+
+@pytest.mark.django_db
+class FormsTestCase(TestCase):
+
+    def setUp(self):
+        self.campusA = Campus.objects.create(nome='Campus das Gambelas', morada='Gambelas',contacto='289100100')
+        self.edificioA = Edificio.objects.create(nome='Complexo 1', campus=self.campusA)
+        self.salaA = Sala.objects.create(identificacao='Sala 2', edificio=self.edificioA)
+        self.unidadeorganicaA = UnidadeOrganica.objects.create(nome='Faculdade de Literatura')
+        self.departamentoA = Departamento.objects.create(nome='Departamento de Direitos Humanos', unidadeorganica=self.unidadeorganicaA)
+        self.tematicaA=Tematica.objects.create(tema="Cozinha")
+        self.tipoatividadeA=TipoAtividade.objects.create(tipo="Seminário")
+        self.publicoalvoA = PublicoAlvo.objects.create(nome='Alunos do Basico')
+        self.sessaoA = Sessao.objects.create(hora="13:50")
+        self.utilizadorTipoA = UtilizadorTipo.objects.create(tipo="Docente")
+        self.utilizadorA = Utilizador.objects.create(nome="Paulo Águas", email="paguas@ualg.pt", utilizadortipo=self.utilizadorTipoA,)
+        self.atividadeA = Atividade.objects.create(
+            nome="Introdução à Matemática", 
+            descricao="Vem descobrir o mundo da matemática financeira com o curso de Licenciatura com Mestrado Integrado de Matemática Financeira",
+            duracao="50",
+            limite_participantes="20",
+            tipo_atividade=self.tipoatividadeA,
+            unidadeorganica=self.departamentoA.unidadeorganica,
+            departamento=self.departamentoA,
+            campus=self.salaA.edificio.campus,
+            edificio=self.salaA.edificio,
+            sala=self.salaA,
+            responsavel = self.utilizadorA)
+    def test_CampusForm(self):
+        nome = 'Campus de Olhão'
+        morada = 'Olhão'
+        contacto = '289123456'
+        form = CampusForm(data={'nome': nome,'morada' : morada, 'contacto' : contacto})
+        self.assertTrue(form.is_valid())
+
+    def test_CampusRepetido(self):
+        nome = 'Campus das Gambelas'
+        morada = 'Gambelas'
+        contacto = '289100100'
+        form = CampusForm(data={'nome': nome,'morada' : morada, 'contacto' : contacto})
+        self.assertFalse(form.is_valid())
+    
+    def test_EdificioForm(self):
+        nome = 'Complexo 7'
+        form = EdificioForm(data={'nome': nome,'campus': self.campusA.id})
+        self.assertTrue(form.is_valid())
+
+    def test_EdificioRepetida(self):
+        nome = 'Complexo 1'
+        form = EdificioForm(data={'nome': nome,'campus': self.campusA.id})
+        self.assertFalse(form.is_valid())
+
+    def test_SalaForm(self):
+        identificacao = 'Sala 1'
+        form = SalaForm(data={'identificacao': identificacao,'campus': self.edificioA.campus.id, 'edificio': self.edificioA.id})
+        self.assertTrue(form.is_valid())
+
+    def test_SalaRepetida(self):
+        identificacao = 'Sala 2'
+        form = SalaForm(data={'identificacao': identificacao,'campus': self.edificioA.campus.id, 'edificio': self.edificioA.id})
+        self.assertFalse(form.is_valid())
+
+    def test_UnidadeOrganicaForm(self):
+        nome = 'Faculdade de Direito'
+        form = UnidadeOrganicaForm(data={'nome': nome})
+        self.assertTrue(form.is_valid())
+
+    def test_UnidadeOrganicaRepetido(self):
+        nome = 'Faculdade de Literatura'
+        form = UnidadeOrganicaForm(data={'nome': nome})
+        self.assertFalse(form.is_valid())
+
+    def test_DepartamentoForm(self):
+        nome = 'Departamento de Direito'
+        form = DepartamentoForm(data={'nome': nome, 'unidadeorganica':self.unidadeorganicaA.id})
+        self.assertTrue(form.is_valid())
+
+    def test_DepartamentoRepetido(self):
+        nome = 'Departamento de Direitos Humanos'
+        form = DepartamentoForm(data={'nome': nome, 'unidadeorganica':self.unidadeorganicaA.id})
+        self.assertFalse(form.is_valid())
+
+    def test_TematicasForm(self):
+        tema = 'Linguas'
+        form = TematicasForm(data={'tema': tema})
+        self.assertTrue(form.is_valid())
+
+
+    def test_TipoAtividadeForm(self):
+        tipo = 'Aula'
+        form = TipoAtividadeForm(data={'tipo':tipo})
+        self.assertTrue(form.is_valid())
+
+    def test_TipoAtividadeRepetido(self):
+        tipo = 'Seminário'
+        form = TipoAtividadeForm(data={'tipo':tipo})
+        self.assertFalse(form.is_valid())
+
+    def test_PublicoAlvoForm(self):
+        nome = 'Alunos do Profissional'
+        form = PublicoAlvoForm(data={'nome':nome})
+        self.assertTrue(form.is_valid())
+
+    def test_PublicoAlvoRepetido(self):
+        nome = 'Alunos do Basico'
+        form = PublicoAlvoForm(data={'nome':nome})
+        self.assertFalse(form.is_valid())
+
+    def test_SessoesForm(self):
+        hora = '09:00'
+        form = SessoesForm(data={'hora':hora})
+        self.assertTrue(form.is_valid())
+
+    def test_SessoesRepetido(self):
+        hora = '13:50'
+        form = SessoesForm(data={'hora':hora})
+        self.assertFalse(form.is_valid())
+
+    def test_AtividadeForm(self):
+
+        form = AtividadeForm(data={'nome':"Atividade Teste", 'descricao':"Descricao da atividade teste.",
+                                  'tipo_atividade': self.tipoatividadeA.id, 'limite_participantes':"25",
+                                  'tematicas':[self.tematicaA], 'publico_alvo':[self.publicoalvoA], 'duracao':"45", 
+                                  'unidadeorganica':self.departamentoA.unidadeorganica.id, 'departamento':self.departamentoA.id,
+                                  'campus':self.salaA.edificio.campus.id, 'edificio':self.salaA.edificio.id, 'sala':self.salaA.id, 'data':"2020-01-01", 'validada':"PD", 'tipo_local':""})
+        self.assertTrue(form.is_valid())
+
+    def test_MaterialQuantidade(self):
+        form = MaterialQuantidadeForm(data={'material':'Computador', 'quantidade':'10', 'atividade':self.atividadeA})
+        self.assertTrue(form.is_valid())
+
+    def test_SessaoAtividade(self):
+        form = SessaoAtividadeForm(data={'dia':'2020-01-02', 'sessao':self.sessaoA.id, 'numero_colaboradores':'1', 'atividade':self.atividadeA.id})
+        self.assertTrue(form.is_valid())
