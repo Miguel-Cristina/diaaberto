@@ -274,7 +274,15 @@
                                             <div style="padding: 1rem 2vw 0px;">
                                                 {{ form.non_field_errors }}
                                                 {% if form.errors %}
-                                                    <p class="help is-danger">ERRO: Verifique os campos!</p>
+                                                    {% for field in form %}
+                                                            {% for error in field.errors %}
+                                                            <article class="message is-danger">
+                                                              <div class="message-body">
+                                                               <p class="help is-danger">ERRO: Verifique o campo {{ field.name }}.</p>
+                                                              </div>
+                                                            </article>
+                                                            {% endfor %}
+                                                    {% endfor %}
                                                 {% endif %}
                                                 {% if form2.errors %}
                                                     {% for field in form2 %}

@@ -15,9 +15,17 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from datetime import date, timedelta
 
+#========================================================================================================================
+#Erro 500 
+#========================================================================================================================
 def error_500(request):
     return render(request, 'diaabertoapp/error_500.html')
- #Create your views here.
+
+#========================================================================================================================
+#Login request
+#Reedireciona para a pagina login.html se nenhum utilizador estiver autentificado
+#Reedireciona para a pagina index.html se o utilizador autentificar com sucesso
+#========================================================================================================================
 def login_request(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
@@ -39,11 +47,19 @@ def login_request(request):
     form.fields['password'].widget.attrs['class'] = "input"
     return render(request, 'diaabertoapp/login.html', {"form": form})
 
+#========================================================================================================================
+#Logout request
+#Termina a sessao do utilizador
+#Reedireciona para o login
+#========================================================================================================================
 def logout_request(request):
     logout(request)
     messages.info(request, "Sessão terminada. Até breve!")
     return redirect('/login')
-
+#========================================================================================================================
+#Index
+#Reedireciona para a pagina inicial
+#========================================================================================================================
 def index(request):
     utilizador = ''
     notificacoes = Notificacao.objects.none()
@@ -57,10 +73,17 @@ def index(request):
         if(x.visto == False):
             count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/index.html', {'count_notificacoes':count_notificacoes,'utilizador':utilizador,'notificacoes':notificacoes})
-
+#========================================================================================================================
+#Administrador
+#Reedireciona para a pagina do administrador e das configurações
+#========================================================================================================================
 def administrador(request):
     return render(request, 'diaabertoapp/administrador.html', {})
-
+#========================================================================================================================
+#Configuracao das atividades
+#Reedireciona para a pagina das configuracoes das atividades se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def configuraratividades(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -111,7 +134,11 @@ def configuraratividades(request):
     #END order_by
 
     return render(request, 'diaabertoapp/configuraratividades.html', {'utilizador':utilizador,'sessoes':sessoes, 'temas':temas, 'tipos':tipos, 'publicos':publicos,'order_by':order_by, 'sort':sort})
-
+#========================================================================================================================
+#Configuracao das espacos
+#Reedireciona para a pagina das configuracoes dos espacos se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def configurarespacos(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -181,7 +208,11 @@ def configurarespacos(request):
     #END pagination
     
     return render(request, 'diaabertoapp/configurarespacos.html', {'utilizador':utilizador,'campus':campus, 'nomesquery':nome_query, 'campusquery':campus_query,'edificioquery':edificio_query, 'edificios':edificios, 'salas':salas, 'espacos':salas,'order_by':order_by, 'sort':sort})
-
+#========================================================================================================================
+#Configuracao das unidades organicas e departamentos
+#Reedireciona para a pagina das configuracoes das unidades organicas e departamentos se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def configurarorganicasdepartamentos(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -239,9 +270,11 @@ def configurarorganicasdepartamentos(request):
     
     return render(request, 'diaabertoapp/configurarorganicasdepartamentos.html', {'utilizador':utilizador,'nomesquery':nome_query, 'organicaquery':organica_query, 'organicas':organicas, 'departamentos':departamentos, 'order_by':order_by, 'sort':sort})
 
-def atividades(request):
-    return render(request, 'diaabertoapp/atividades.html', {})
-
+#========================================================================================================================
+#Configuracao das unidades organicas
+#Reedireciona para a pagina das configuracoes das unidades organicas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def configurarorganicas(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -285,7 +318,11 @@ def configurarorganicas(request):
         organicas = paginator.page(paginator.num_pages)
     #END pagination
     return render(request, 'diaabertoapp/configurarorganicas.html', {'utilizador':utilizador,'nomesquery':nome_query,'organicas':organicas, 'order_by':order_by, 'sort':sort})
-
+#========================================================================================================================
+#Configuracao dos departamentos
+#Reedireciona para a pagina das configuracoes dos departamentos se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def configurardepartamentos(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -343,7 +380,11 @@ def configurardepartamentos(request):
     print(organica_query)
     return render(request, 'diaabertoapp/configurardepartamentos.html', {'utilizador':utilizador,'nomesquery':nome_query,'organicas':organicas, 'departamentos':departamentos, 'organicaquery':organica_query, 'order_by':order_by, 'sort':sort})
 
-
+#========================================================================================================================
+#Configuracao dos campus
+#Reedireciona para a pagina das configuracoes dos campus se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def configurarcampus(request):
 
     utilizador = ''
@@ -397,7 +438,11 @@ def configurarcampus(request):
         campus = paginator.page(paginator.num_pages)
     #END pagination
     return render(request, 'diaabertoapp/configurarcampus.html', {'utilizador':utilizador,'campus':campus,'order_by':order_by,'sort':sort,'nomesquery':nome_query})
-
+#========================================================================================================================
+#Configuracao dos edificios
+#Reedireciona para a pagina das configuracoes dos edificios se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def configuraredificios(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -456,7 +501,11 @@ def configuraredificios(request):
     #END pagination
 
     return render(request, 'diaabertoapp/configuraredificios.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios,'order_by':order_by, 'sort':sort,'nomesquery':nome_query, 'campusquery':campus_query})
-
+#========================================================================================================================
+#Configuracao das salas
+#Reedireciona para a pagina das configuracoes das salas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def configurarsalas(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -526,6 +575,11 @@ def configurarsalas(request):
     #END pagination
 
     return render(request, 'diaabertoapp/configurarsalas.html', {'utilizador':utilizador,'campus':campus,'nomesquery':nome_query, 'campusquery':campus_query,'edificioquery':edificio_query,'edificios':edificios, 'salas':salas, 'espacos':salas,'order_by':order_by, 'sort':sort})
+#========================================================================================================================
+#Editar os edificios
+#Reedireciona para a pagina de editar os edificios se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def editaredificio(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -557,7 +611,11 @@ def editaredificio(request, pk):
         aForm = EdificioForm(initial = {'campus': espaco.campus.id },instance=espaco)
 
     return render(request, 'diaabertoapp/editaredificio.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios, 'form':aForm})
-
+#========================================================================================================================
+#Editar os campus
+#Reedireciona para a pagina de editar os campus se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def editarcampus(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -588,7 +646,11 @@ def editarcampus(request, pk):
         aForm = CampusForm(instance=espaco)
 
     return render(request, 'diaabertoapp/editarcampus.html', {'utilizador':utilizador,'campus':campus, 'form':aForm})
-
+#========================================================================================================================
+#Eliminar os edificios
+#Reedireciona para a pagina de eliminar os edificios se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def eliminaredificio(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -612,7 +674,11 @@ def eliminaredificio(request, pk):
         messages.error(request, 'O edifício não pode ser eliminado! Outras dependências impedem que elimine o edifício.')
     #messages.success(request, 'O edifício foi eliminado!')
     return HttpResponseRedirect('/configurarespacos/edificios/')
-
+#========================================================================================================================
+#Eliminar os campus
+#Reedireciona para a pagina de eliminar os campus se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def eliminarcampus(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -636,7 +702,11 @@ def eliminarcampus(request, pk):
         messages.error(request, 'O campus não pode ser eliminado! Outras dependências impedem que elimine.')
     #messages.success(request, 'O edifício foi eliminado!')
     return HttpResponseRedirect('/configurarespacos/campus/')
-
+#========================================================================================================================
+#Editar as salas
+#Reedireciona para a pagina de editar as salas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def editarsala(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -669,7 +739,11 @@ def editarsala(request, pk):
         aForm = SalaForm(initial = {'campus': espaco.edificio.campus.id },instance=espaco)
 
     return render(request, 'diaabertoapp/editarsala.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios,'salas':salas, 'form':aForm})
-
+#========================================================================================================================
+#Eliminar as salas
+#Reedireciona para a pagina de eliminar as salas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def eliminarsala(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -693,7 +767,11 @@ def eliminarsala(request, pk):
         messages.error(request, 'O espaço não pode ser eliminado! Outras dependências impedem que elimine o espaço.')
     #messages.success(request, 'O espaço foi eliminado!')
     return HttpResponseRedirect('/configurarespacos/salas/')
-
+#========================================================================================================================
+#Adicionar as salas
+#Reedireciona para a pagina de adicionar as salas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def adicionarsala(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -724,7 +802,11 @@ def adicionarsala(request):
         aForm = SalaForm()
 
     return render(request, 'diaabertoapp/adicionarsala.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios,'salas':salas, 'form':aForm})
-
+#========================================================================================================================
+#Adicionar os edificios
+#Reedireciona para a pagina de adiciionar os edificios se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def adicionaredificio(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -754,7 +836,11 @@ def adicionaredificio(request):
         aForm = EdificioForm()
 
     return render(request, 'diaabertoapp/adicionaredificio.html', {'utilizador':utilizador,'campus':campus,'edificios':edificios, 'form':aForm})
-
+#========================================================================================================================
+#Adicionar os campus
+#Reedireciona para a pagina de adicionar os campus se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def adicionarcampus(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -784,7 +870,11 @@ def adicionarcampus(request):
         aForm = CampusForm()
 
     return render(request, 'diaabertoapp/adicionarcampus.html', {'utilizador':utilizador,'campus':campus, 'form':aForm})
-
+#========================================================================================================================
+#Editar as unidades organicas
+#Reedireciona para a pagina de editar as unidades organicas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def editarorganica(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -814,7 +904,11 @@ def editarorganica(request, pk):
         aForm = UnidadeOrganicaForm(instance=organica)
 
     return render(request, 'diaabertoapp/editarorganica.html', {'utilizador':utilizador,'organica':organica,'form':aForm})
-
+#========================================================================================================================
+#Eliminar as unidades organicas
+#Reedireciona para a pagina de eliminar as unidades organicas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def eliminarorganica(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -838,7 +932,11 @@ def eliminarorganica(request, pk):
         messages.error(request, 'A unidade orgânica não pode ser eliminada! Outras dependências impedem que elimine a unidade orgânica.')
     #messages.success(request, 'A unidade orgânica foi eliminada com sucesso!')
     return HttpResponseRedirect('/configurarorganicasdepartamentos/organicas/')
-
+#========================================================================================================================
+#Adicionar as unidades organicas
+#Reedireciona para a pagina de adicionar as unidades organicas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def adicionarorganica(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -867,7 +965,11 @@ def adicionarorganica(request):
         aForm = UnidadeOrganicaForm()
 
     return render(request, 'diaabertoapp/adicionarorganica.html', {'organica':organica, 'utilizador':utilizador, 'form':aForm})
-
+#========================================================================================================================
+#Editar os departamentos
+#Reedireciona para a pagina de editar os departamentos se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def editardepartamento(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -897,7 +999,11 @@ def editardepartamento(request, pk):
         aForm = DepartamentoForm(instance=departamento)
 
     return render(request, 'diaabertoapp/editardepartamento.html', {'utilizador':utilizador,'departamento':departamento,'form':aForm})
-
+#========================================================================================================================
+#Eliminar os departamentos
+#Reedireciona para a pagina de eliminar os departamentos se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def eliminardepartamento(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
@@ -921,7 +1027,11 @@ def eliminardepartamento(request, pk):
         messages.error(request, 'O departamento não pode ser eliminado! Outras dependências impedem que elimine o departamento.')
     #messages.success(request, 'O departamento foi eliminado com sucesso!')
     return HttpResponseRedirect('/configurarorganicasdepartamentos/departamentos/')
-
+#========================================================================================================================
+#Adicionar os departamentos
+#Reedireciona para a pagina de adicionar os departamentos se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def adicionardepartamento(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -951,7 +1061,11 @@ def adicionardepartamento(request):
         aForm = DepartamentoForm()
 
     return render(request, 'diaabertoapp/adicionardepartamento.html', {'utilizador':utilizador,'departamentos':departamentos, 'organicas':organicas,'form':aForm})
-
+#========================================================================================================================
+#Configuracao das sessoes
+#Reedireciona para a pagina de configuracao das sessoes se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def sessoes(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -982,7 +1096,11 @@ def sessoes(request):
         sessoesForm = SessoesFormSet(queryset=sessoes, prefix="sa")
 
     return render(request, 'diaabertoapp/sessoes.html', {'utilizador':utilizador, 'sessoes':sessoes,'form':sessoesForm})
-
+#========================================================================================================================
+#Configuracao do publico-alvo
+#Reedireciona para a pagina de configuracao do publico-alvo se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def publicoalvo(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -1013,7 +1131,11 @@ def publicoalvo(request):
         publicoAlvoForm = PublicoAlvoFormSet(queryset=publicos, prefix="sa")
 
     return render(request, 'diaabertoapp/publicoalvo.html', {'utilizador':utilizador, 'publicos':publicos,'form':publicoAlvoForm})
-
+#========================================================================================================================
+#Configuracao das tematicas
+#Reedireciona para a pagina de configuracao das tematicas se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def tematicas(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -1044,7 +1166,11 @@ def tematicas(request):
         tematicasForm = TematicasFormSet(queryset=tematicas, prefix="sa")
 
     return render(request, 'diaabertoapp/tematicas.html', {'utilizador':utilizador,'tematicas':tematicas,'form':tematicasForm})
-
+#========================================================================================================================
+#Configuracao dos tipos de atividades
+#Reedireciona para a pagina de configuracao dos tipos de atividades se o utilizador for do tipo administrador
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
+#========================================================================================================================
 def tipoatividade(request):
     utilizador = ''
     if request.user.is_authenticated:
@@ -1075,7 +1201,11 @@ def tipoatividade(request):
         tipoatividadeForm = TipoAtividadeFormSet(queryset=tipos, prefix="sa")
 
     return render(request, 'diaabertoapp/tipoatividade.html', {'utilizador':utilizador,'tematicas':tipos,'form':tipoatividadeForm})
-
+#========================================================================================================================
+#Minhas atividades
+#Reedireciona para a pagina das atividades se o utilizador for do tipo administrador, coordenador ou docente
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador, coordenador ou docente
+#========================================================================================================================
 def minhasatividades(request):
     #minhasatividades = Atividade.objects.all()
     utilizador = ''
@@ -1106,8 +1236,11 @@ def minhasatividades(request):
     sessoesatividade = SessaoAtividade.objects.all()
     tipoatividade = TipoAtividade.objects.all()
     #start_date = date(2008, 8, 15)   # start date
-    diaaberto = DiaAberto.objects.first()   # diaaberto configurations
-    if(diaaberto):
+    try:
+        diaaberto = DiaAberto.objects.first() # diaaberto configurations
+    except DiaAberto.DoesNotExist:
+        diaaberto = None   
+    if(diaaberto is not None):
         start_date = diaaberto.data_inicio
         end_date = diaaberto.data_fim   # end date
 
@@ -1244,7 +1377,11 @@ def minhasatividades(request):
             count_notificacoes = count_notificacoes + 1
     #'tiposquery':tipo_query
     return render(request, 'diaabertoapp/minhasatividades.html', {'sessoesatividade':sessoesatividade,'dias':dias, 'diaquery':dia_query,'sessoes':sessoes,'sessoesquery':sessao_query,'count_notificacoes':count_notificacoes,'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query})
-
+#========================================================================================================================
+#Propor atividade
+#Reedireciona para a pagina de propor atividade se o utilizador for do tipo docente
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo docente
+#========================================================================================================================
 def proporatividade(request):
 
     tipos_atividade = TipoAtividade.objects.all()
@@ -1311,7 +1448,11 @@ def proporatividade(request):
         mForm = mFormSet(prefix='mq')
         sForm = sFormSet(prefix='sa')
     return render(request, 'diaabertoapp/proporatividade.html', {'tipos':tipos_atividade, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'organicas':organicas, 'form':aForm, 'form2':mForm, 'form3':sForm})
-
+#========================================================================================================================
+#Alterar/Editar atividade
+#Reedireciona para a pagina de alterar atividade se o utilizador for do tipo docente
+#Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo docente
+#========================================================================================================================
 def alteraratividade(request,pk):
 
 
@@ -1377,7 +1518,10 @@ def alteraratividade(request,pk):
         mForm = mFormSet(instance=atividade, prefix='mq')
         sForm = sFormSet(instance=atividade, prefix='sa')
     return render(request, 'diaabertoapp/alteraratividade.html', {'utilizador':utilizador,'tipos':tipos_atividade, 'tematicas':temas_atividade, 'publicosalvo':publico_alvo, 'campi':campi, 'edificios':edificios, 'salas':salas, 'departamentos':departamentos, 'organicas':organicas, 'form':aForm, 'form2':mForm, 'form3':sForm})
-
+#========================================================================================================================
+#Aceitar atividade
+#Utilizador do tipo coordenador da mesma unidade organica do docente da atividade pode aceitar a atividade
+#========================================================================================================================
 def aceitaratividade(request,pk):
     object = Atividade.objects.get(pk=pk)
     utilizador = ''
@@ -1404,7 +1548,10 @@ def aceitaratividade(request,pk):
     notificacao_obj.save()
     messages.success(request, 'Atividade foi aceite!')
     return HttpResponseRedirect('/minhasatividades/')
-
+#========================================================================================================================
+#Rejeitar atividade
+#Utilizador do tipo coordenador da mesma unidade organica do docente da atividade pode rejeitar a atividade
+#========================================================================================================================
 def rejeitaratividade(request,pk):
     object = Atividade.objects.get(pk=pk)
     utilizador = ''
@@ -1430,129 +1577,29 @@ def rejeitaratividade(request,pk):
     notificacao_obj.save()
     messages.success(request, 'Atividade foi rejeitada!')
     return HttpResponseRedirect('/minhasatividades/')
-
+#========================================================================================================================
+#Eliminar atividade
+#O docente responsavel pela atividade pode eliminar a atividade
+#========================================================================================================================
 def eliminaratividade(request,pk):
     object = Atividade.objects.get(pk=pk)
     object.delete()
     messages.success(request, 'Atividade foi eliminada!')
     return HttpResponseRedirect('/minhasatividades/')
-
-
-def get_atividade(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = CreateAtividade(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/thanks/')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = CreateAtividade()
-
-    return render(request, 'proporatividade.html', {'form': form})
-
-
-def edificios(request):
-    edificios = Edificio.objects.all()
-    return render(request, 'diaabertoapp/edificios.html', {'edificios':edificios})
-
-def get_campus(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = CampusForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            messages.success(request, 'The form is valid.')
-        else:
-            messages.error(request, 'The form is invalid.')
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/admin/')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = CampusForm()
-
-    return render(request, 'proporatividade.html', {'form': form})
-
-
-def get_edificios(request, campus_id):
-    campus = Campus.objects.get(pk=campus_id)
-    edificios = Edificio.objects.filter(campus=campus)
-    edificio_dict = {}
-    for edificio in edificios:
-        edificio_dict[edificio.id] = edificio.nome
-    return HttpResponse(json.dumps(edificio_dict), mimetype="application/json")
-
-def get_salas(request, edificio_id):
-    edificio = Edificio.objects.get(pk=edificio_id)
-    salas = Sala.objects.filter(edificio=edificio)
-    sala_dict = {}
-    for sala in salas:
-        sala_dict[sala.id] = sala.identificacao
-    return HttpResponse(json.dumps(sala_dict), mimetype="application/json")
-
-def get_tarefas(request):
-    tarefas_1 = Tarefa.objects.all()
-     #BEGIN pagination
-    page = request.GET.get('page', 1)
-    paginator = Paginator(tarefas_1, 5)
-    try:
-        tarefas = paginator.page(page)
-    except PageNotAnInteger:
-        tarefas = paginator.page(1)
-    except EmptyPage:
-        tarefas = paginator.page(paginator.num_pages)
-    #END pagination
-
-    return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
-
-def add_tarefa(request):
-    if request.method == 'POST':
-        aForm = TarefaForm(request.POST)
-        if aForm.is_valid():
-            tarefa = aForm.save()
-            return HttpResponseRedirect('/tarefas/')
-        else:
-            aForm.errors
-    else:
-        aForm = TarefaForm()
-     
-    return render(request, 'diaabertoapp/adicionartarefa.html', {'form':aForm, 'atividades': atividades})
-    
-def rem_tarefa(request ,pk):
-    tarefas_1 = Tarefa.objects.all()
-    
-   #BEGIN pagination
-    page = request.GET.get('page', 1)
-    paginator = Paginator(tarefas_1, 5)
-    try:
-        tarefas = paginator.page(page)
-    except PageNotAnInteger:
-        tarefas = paginator.page(1)
-    except EmptyPage:
-        tarefas = paginator.page(paginator.num_pages)
-    #END pagination
-    print("entrei")
-    if request.method == 'POST':
-       obj = Tarefa.objects.filter(pk=pk).delete()
-       return HttpResponseRedirect('/tarefas/')    
-    return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
-
+#========================================================================================================================
+#Visto (dar visto/lido nas notificacoes recebidas
+#O utilizador que recebe a notificacao pode dar visto na notificacao
+#========================================================================================================================
 def visto(request,pk):
     object = Notificacao.objects.get(pk=pk)
     object.visto = True
     object.save()
     #messages.success(request, 'Notificação vista!')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
+#========================================================================================================================
+#Sugerir alteracao (na proposta de atividade)
+#O coordenador pode sugerir alteracao ao docente responsavel pela atividade 
+#========================================================================================================================
 def sugeriralteracao(request,pk):
     atividade = Atividade.objects.get(pk=pk)
     utilizador = ''
@@ -1591,6 +1638,10 @@ def sugeriralteracao(request,pk):
 
     return render(request, 'diaabertoapp/sugeriralteracao.html', {'count_notificacoes':count_notificacoes, 'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'Atividade':atividade,'materiais':materiais,'sessoesatividade':sessoesatividade})
 
+#========================================================================================================================
+#Consulta das atividades (validadas)
+#Reedireciona para a pagina da consulta das atividades
+#========================================================================================================================
 
 def consultaratividades(request):
     #minhasatividades = Atividade.objects.all()
@@ -1731,3 +1782,81 @@ def consultaratividades(request):
             count_notificacoes = count_notificacoes + 1
     #'tiposquery':tipo_query
     return render(request, 'diaabertoapp/atividades.html', {'count_notificacoes':count_notificacoes, 'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query, 'sessoes':sessoes, 'sessoesquery':sessao_query, 'sessoesatividade':sessoesatividade})
+
+
+
+
+
+
+
+
+
+
+
+#========================================================================================================================
+#VIEWS DE OUTRAS COMPONENTES
+#========================================================================================================================
+
+def get_edificios(request, campus_id):
+    campus = Campus.objects.get(pk=campus_id)
+    edificios = Edificio.objects.filter(campus=campus)
+    edificio_dict = {}
+    for edificio in edificios:
+        edificio_dict[edificio.id] = edificio.nome
+    return HttpResponse(json.dumps(edificio_dict), mimetype="application/json")
+
+def get_salas(request, edificio_id):
+    edificio = Edificio.objects.get(pk=edificio_id)
+    salas = Sala.objects.filter(edificio=edificio)
+    sala_dict = {}
+    for sala in salas:
+        sala_dict[sala.id] = sala.identificacao
+    return HttpResponse(json.dumps(sala_dict), mimetype="application/json")
+
+def get_tarefas(request):
+    tarefas_1 = Tarefa.objects.all()
+     #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(tarefas_1, 5)
+    try:
+        tarefas = paginator.page(page)
+    except PageNotAnInteger:
+        tarefas = paginator.page(1)
+    except EmptyPage:
+        tarefas = paginator.page(paginator.num_pages)
+    #END pagination
+
+    return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
+
+def add_tarefa(request):
+    if request.method == 'POST':
+        aForm = TarefaForm(request.POST)
+        if aForm.is_valid():
+            tarefa = aForm.save()
+            return HttpResponseRedirect('/tarefas/')
+        else:
+            aForm.errors
+    else:
+        aForm = TarefaForm()
+     
+    return render(request, 'diaabertoapp/adicionartarefa.html', {'form':aForm, 'atividades': atividades})
+    
+def rem_tarefa(request ,pk):
+    tarefas_1 = Tarefa.objects.all()
+    
+   #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(tarefas_1, 5)
+    try:
+        tarefas = paginator.page(page)
+    except PageNotAnInteger:
+        tarefas = paginator.page(1)
+    except EmptyPage:
+        tarefas = paginator.page(paginator.num_pages)
+    #END pagination
+    print("entrei")
+    if request.method == 'POST':
+       obj = Tarefa.objects.filter(pk=pk).delete()
+       return HttpResponseRedirect('/tarefas/')    
+    return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
+

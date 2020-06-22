@@ -6,7 +6,9 @@ from django_select2.forms import ModelSelect2Widget
 from django.forms import formset_factory, modelformset_factory, BaseFormSet
 from django.core.exceptions import NON_FIELD_ERRORS
 
-
+#========================================================================================================================
+# form do model Tarefa
+#========================================================================================================================
 class TarefaForm(forms.ModelForm):
      descricao =forms.CharField(label="", max_length=255, widget = forms.TextInput(attrs = {'class': "input", 'placeholder': "Descrição..."}))    
      localizacao_grupo = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Localização"}))
@@ -19,7 +21,9 @@ class TarefaForm(forms.ModelForm):
      class Meta:
         model = Tarefa
         fields = ('descricao', 'localizacao_grupo' , 'destino' ,'horario_inicio', 'horario_fim', 'cordenador', 'coolaborador')
-
+#========================================================================================================================
+# form do model Campus
+#========================================================================================================================
 class CampusForm(forms.ModelForm):
     nome = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text",'placeholder':"Campus"}),error_messages={'unique': 'Um campus com o mesmo nome já existe! Por favor coloque outro campus.'})
     morada = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text",'placeholder':"Morada"}))
@@ -28,7 +32,9 @@ class CampusForm(forms.ModelForm):
     class Meta:
         model = Campus
         fields = ('morada','contacto','nome','mapa_imagem',)
-
+#========================================================================================================================
+# form do model Edificio
+#========================================================================================================================
 class EdificioForm(forms.ModelForm):
     campus = forms.ModelChoiceField(required=True, queryset=Campus.objects.all(), label="",widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}),error_messages={'unique_together':'Um edificio com esse nome já existe!','required':'Preencha este campo.','unique':'Um edificio com o mesmo nome já existe! Por favor coloque outro edificio.'})
     nome = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text",'placeholder':"Edifício"}),error_messages={'unique_together':'Um edificio com esse nome já existe!', 'required':'Preencha este campo.','unique': 'Um edificio com o mesmo nome já existe! Por favor coloque outro edificio.'})
@@ -45,7 +51,9 @@ class EdificioForm(forms.ModelForm):
             }
 
         }
-
+#========================================================================================================================
+# form do model Sala
+#========================================================================================================================
 class SalaForm(forms.ModelForm):
     campus = forms.ModelChoiceField(required=True,queryset=Campus.objects.all(), label="",widget=ModelSelect2Widget(model=Campus,search_fields=['nome__icontains'],attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o campus..."}))
     edificio = forms.ModelChoiceField(required=True,queryset=Edificio.objects.all(), label="",widget=ModelSelect2Widget(model=Edificio,search_fields=['nome__icontains'],dependent_fields={'campus':'campus'},attrs={'style':"width:100%",'data-minimum-input-length':"0",'data-placeholder':"Selecione o edificio..."}))
@@ -63,45 +71,59 @@ class SalaForm(forms.ModelForm):
             }
 
         }
-
+#========================================================================================================================
+# form do model UnidadeOrganica
+#========================================================================================================================
 class UnidadeOrganicaForm(forms.ModelForm):
     nome = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}),error_messages={'unique': 'Uma unidade orgânica com o mesmo nome já existe! Por favor coloque outra unidade orgânica.'})
     class Meta:
         model = UnidadeOrganica
         fields = ('nome',)
-
+#========================================================================================================================
+# form do model Departamento
+#========================================================================================================================
 class DepartamentoForm(forms.ModelForm):
     unidadeorganica = forms.ModelChoiceField(required=False, queryset=UnidadeOrganica.objects.all(), label="",widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%",'placeholder':"Selecione a unidade orgânica..."}))
     nome = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}),error_messages={'unique': 'Uma unidade orgânica com o mesmo nome já existe! Por favor coloque outra unidade orgânica.'})
     class Meta:
         model = Departamento
         fields = ('unidadeorganica','nome',)
-
+#========================================================================================================================
+# form do model PublicoAlvo
+#========================================================================================================================
 class PublicoAlvoForm(forms.ModelForm):
     nome = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}),error_messages={'unique': 'Um público-alvo com o mesmo nome já existe! Por favor coloque outro público-alvo.'})
     class Meta:
         model = PublicoAlvo
         fields = ('nome',)
         
-
+#========================================================================================================================
+# form do model Tematicas
+#========================================================================================================================
 class TematicasForm(forms.ModelForm):
     tema = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}),error_messages={'unique': 'Um tema com o mesmo nome já existe! Por favor coloque outro tema.'})
     class Meta:
         model = PublicoAlvo
         fields = ('tema',)
-
+#========================================================================================================================
+# form do model TipoAtividade
+#========================================================================================================================
 class TipoAtividadeForm(forms.ModelForm):
     tipo = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}),error_messages={'unique': 'Um tipo de atividade com o mesmo nome já existe! Por favor coloque outro tipo de atividade.'})
     class Meta:
         model = TipoAtividade
         fields = ('tipo',)
-
+#========================================================================================================================
+# form do model Sessao
+#========================================================================================================================
 class SessoesForm(forms.ModelForm):
     hora = forms.TimeField(label="", widget=forms.TimeInput(attrs ={'class':"input timepicker control",'type':"time"}),error_messages={'unique': 'Uma sessão com a mesma hora já existe! Por favor coloque outra hora.'})
     class Meta:
         model = Sessao
         fields = ('hora',)
-
+#========================================================================================================================
+# form do model MaterialQuantidade
+#========================================================================================================================
 class MaterialQuantidadeForm(forms.ModelForm):
     material = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Material a requisitar..."}))
     quantidade = forms.IntegerField(min_value=1, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"quantidade_material"}))
@@ -110,7 +132,9 @@ class MaterialQuantidadeForm(forms.ModelForm):
         exclude =  ('atividade',)
 
 MaterialFormSet = formset_factory(MaterialQuantidadeForm)
-
+#========================================================================================================================
+# form do model SessaoAtividade
+#========================================================================================================================
 class SessaoAtividadeForm(forms.ModelForm):
 
     dia = forms.DateField(required=False, label="Dia", widget=forms.DateInput(attrs={'class': "input sessoes tabfields", 'type':"date", 'placeholder': "Dia", 'oninput':"$(this).removeClass('invalid');"}))
@@ -147,7 +171,9 @@ class SessaoAtividadeForm(forms.ModelForm):
             })
 SessaoFormSet = formset_factory(SessaoAtividadeForm)
 
-
+#========================================================================================================================
+# form do model Atividade
+#========================================================================================================================
 class AtividadeForm(forms.ModelForm):
 
     nome = forms.CharField(label="", max_length=255, required=True,widget=forms.TextInput(attrs={'class': "input tabfields",'placeholder': "Ex: Nome da atividade",'oninput':"$(this).removeClass('invalid');"}))

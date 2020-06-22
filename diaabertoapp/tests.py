@@ -34,9 +34,10 @@ class ViewsTestCase(TestCase):
         self.assertContains(response, 'Página Inicial', 1, 200)
 
     def test_minhasatividades(self):
-        """Tests the home page."""
+
         response = self.client.get('/minhasatividades/')
         self.assertContains(response, 'Minhas Atividades', 2, 200)
+
 
 @pytest.mark.django_db
 class UnidadeOrganicaTestCase(TestCase):
@@ -185,10 +186,10 @@ class EdificioTestCase(TestCase):
     def setUp(self):
 
         self.campusA = Campus.objects.create(nome="Campus das Gambelas", morada="Faro", contacto="289100100")
-        self.objA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa="diaabertoapp/maps/objA.png")
+        self.objA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa_imagem="diaabertoapp/maps/objA.png")
         self.campusB = Campus.objects.create(nome="Campus da Penha", morada="Penha", contacto="289100101")
-        self.objB = Edificio.objects.create(nome="Serviços Académicos", campus=self.campusB, mapa="diaabertoapp/maps/objB.png")
-        self.objC = Edificio.objects.create(nome="C1", campus=self.campusA, mapa="diaabertoapp/maps/objC.png")
+        self.objB = Edificio.objects.create(nome="Serviços Académicos", campus=self.campusB, mapa_imagem="diaabertoapp/maps/objB.png")
+        self.objC = Edificio.objects.create(nome="C1", campus=self.campusA, mapa_imagem="diaabertoapp/maps/objC.png")
         
     def test_edificio(self):
         
@@ -207,20 +208,20 @@ class EdificioTestCase(TestCase):
 
     def test_mapa(self):
         
-        self.assertEquals(self.objA.mapa, 'diaabertoapp/maps/objA.png')  
-        self.assertEquals(self.objB.mapa, 'diaabertoapp/maps/objB.png')     
-        self.assertEquals(self.objC.mapa, 'diaabertoapp/maps/objC.png')     
+        self.assertEquals(self.objA.mapa_imagem, 'diaabertoapp/maps/objA.png')  
+        self.assertEquals(self.objB.mapa_imagem, 'diaabertoapp/maps/objB.png')     
+        self.assertEquals(self.objC.mapa_imagem, 'diaabertoapp/maps/objC.png')     
 @pytest.mark.django_db
 class SalaTestCase(TestCase):
     def setUp(self):
 
         self.campusA = Campus.objects.create(nome="Campus das Gambelas", morada="Faro", contacto="289100100")
-        self.edificioA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa="diaabertoapp/maps/objA.png")
-        self.objA = Sala.objects.create(identificacao="1.55",edificio = self.edificioA, mapa="diaabertoapp/maps/salaA.png")
+        self.edificioA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa_imagem="diaabertoapp/maps/objA.png")
+        self.objA = Sala.objects.create(identificacao="1.55",edificio = self.edificioA, mapa_imagem="diaabertoapp/maps/salaA.png")
 
         self.campusB = Campus.objects.create(nome="Campus da Penha", morada="Penha", contacto="289100101")
-        self.edificioB = Edificio.objects.create(nome="Serviços Académicos", campus=self.campusB, mapa="diaabertoapp/maps/objB.png")
-        self.objB = Sala.objects.create(identificacao="Anfiteatro A",edificio = self.edificioB, mapa="diaabertoapp/maps/salaB.png")
+        self.edificioB = Edificio.objects.create(nome="Serviços Académicos", campus=self.campusB, mapa_imagem="diaabertoapp/maps/objB.png")
+        self.objB = Sala.objects.create(identificacao="Anfiteatro A",edificio = self.edificioB, mapa_imagem="diaabertoapp/maps/salaB.png")
 
         
     def test_salas(self):
@@ -244,8 +245,8 @@ class SalaTestCase(TestCase):
 
     def test_mapa(self):
         
-        self.assertEquals(self.objA.mapa, 'diaabertoapp/maps/salaA.png')  
-        self.assertEquals(self.objB.mapa, 'diaabertoapp/maps/salaB.png')     
+        self.assertEquals(self.objA.mapa_imagem, 'diaabertoapp/maps/salaA.png')  
+        self.assertEquals(self.objB.mapa_imagem, 'diaabertoapp/maps/salaB.png')     
  
 @pytest.mark.django_db
 class AtividadeTestCase(TestCase):
@@ -258,8 +259,8 @@ class AtividadeTestCase(TestCase):
         self.tematicaA=Tematica.objects.create(tema="Ciências")
         self.tematicaB=Tematica.objects.create(tema="Matemática")
         self.campusA = Campus.objects.create(nome="Campus das Gambelas", morada="Faro", contacto="289100100")
-        self.edificioA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa="diaabertoapp/maps/objA.png")
-        self.salaA = Sala.objects.create(identificacao="1.55",edificio = self.edificioA, mapa="diaabertoapp/maps/salaA.png")
+        self.edificioA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa_imagem="diaabertoapp/maps/objA.png")
+        self.salaA = Sala.objects.create(identificacao="1.55",edificio = self.edificioA, mapa_imagem="diaabertoapp/maps/salaA.png")
         self.utilizadorTipoA = UtilizadorTipo.objects.create(tipo="Docente")
         self.utilizadorA = Utilizador.objects.create(nome="Paulo Águas", email="paguas@ualg.pt", utilizadortipo=self.utilizadorTipoA)
         self.objA = Atividade.objects.create(
@@ -308,8 +309,8 @@ class MaterialQuantidadeTestCase(TestCase):
         self.tematicaA=Tematica.objects.create(tema="Ciências")
         self.tematicaB=Tematica.objects.create(tema="Matemática")
         self.campusA = Campus.objects.create(nome="Campus das Gambelas", morada="Faro", contacto="289100100")
-        self.edificioA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa="diaabertoapp/maps/objA.png")
-        self.salaA = Sala.objects.create(identificacao="1.55",edificio = self.edificioA, mapa="diaabertoapp/maps/salaA.png")
+        self.edificioA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa_imagem="diaabertoapp/maps/objA.png")
+        self.salaA = Sala.objects.create(identificacao="1.55",edificio = self.edificioA, mapa_imagem="diaabertoapp/maps/salaA.png")
         self.utilizadorTipoA = UtilizadorTipo.objects.create(tipo="Docente")
         self.utilizadorA = Utilizador.objects.create(nome="Paulo Águas", email="paguas@ualg.pt", utilizadortipo=self.utilizadorTipoA,)
         self.objA = Atividade.objects.create(
@@ -347,8 +348,8 @@ class SessaoAtividadeTestCase(TestCase):
         self.tematicaA=Tematica.objects.create(tema="Ciências")
         self.tematicaB=Tematica.objects.create(tema="Matemática")
         self.campusA = Campus.objects.create(nome="Campus das Gambelas", morada="Faro", contacto="289100100")
-        self.edificioA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa="diaabertoapp/maps/objA.png")
-        self.salaA = Sala.objects.create(identificacao="1.55",edificio = self.edificioA, mapa="diaabertoapp/maps/salaA.png")
+        self.edificioA = Edificio.objects.create(nome="Complexo Pedagógico", campus=self.campusA, mapa_imagem="diaabertoapp/maps/objA.png")
+        self.salaA = Sala.objects.create(identificacao="1.55",edificio = self.edificioA, mapa_imagem="diaabertoapp/maps/salaA.png")
         self.utilizadorTipoA = UtilizadorTipo.objects.create(tipo="Docente")
         self.utilizadorA = Utilizador.objects.create(nome="Paulo Águas", email="paguas@ualg.pt", utilizadortipo=self.utilizadorTipoA,)
         self.objA = Atividade.objects.create(

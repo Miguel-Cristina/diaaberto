@@ -268,6 +268,44 @@
                                         {% csrf_token %}
                                         <div class="step-item stepcontent" style="">
                                             <div style="padding: 1rem 2vw 0px;">
+                                                {{ form.non_field_errors }}
+                                                {% if form.errors %}
+                                                    {% for field in form %}
+                                                            {% for error in field.errors %}
+                                                            <article class="message is-danger">
+                                                              <div class="message-body">
+                                                               <p class="help is-danger">ERRO: Verifique o campo {{ field.name }}.</p>
+                                                              </div>
+                                                            </article>
+                                                            {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if form2.errors %}
+                                                    {% for field in form2 %}
+                                                        {% for error in field.errors %}
+                                                        <article class="message is-danger">
+                                                          <div class="message-body">
+                                                           <p class="help is-danger">ERRO: Verifique o campo {{ error }} nos Materiais.</p>
+                                                          </div>
+                                                        </article>
+                                                            
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if form3.errors %}
+                                                    {% for field in form3 %}
+                                                        {% for error in field.errors %}
+                                                            {% if error == '__all__' %}
+                                                                <p class="help is-danger">Verifique os campos introduzidos nas Sessões.</p>
+                                                            {% else %}
+                                                                <p class="help is-danger">Verifique o campo {{ error }} nas Sessões.</p>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for error in field.non_field_errors %}
+                                                                    <p class="help is-danger">{{ error }}.</p>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
                                                 <hr>
                                                 <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;"> Informação de atividade </h2>
                                                 <div class="columns">
@@ -291,6 +329,9 @@
                                                                     {{ form.tipo_atividade }}
                                                                 </span>
                                                             </div>
+                                                            {% for error in form.tipo_atividade.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -301,6 +342,9 @@
                                                         {{ form.descricao }}
                                                         <p class="help counter" id="charNum"></p>
                                                     </div>
+                                                    {% for error in form.descricao.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                    {% endfor %}
                                                     <!---->
                                                 </div> 
                                                 <div class="columns">
@@ -327,6 +371,9 @@
                                                                     </button>
                                                                 </p>
                                                             </div>
+                                                            {% for error in form.limite_participantes.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                     <div class="column">
@@ -352,6 +399,9 @@
                                                                     </button>
                                                                 </p>
                                                             </div>
+                                                            {% for error in form.duracao.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                             <!--<p class="help">Em minutos</p>-->
                                                         </div>
                                                     </div>
@@ -361,22 +411,28 @@
                                                         <div class="field">
                                                             <label class="label">Tema(s) da atividade</label>
                                                             <div class="control is-expanded">
-                                                                    <div class="select is-multiple is-fullwidth is-expanded">
-                                                                        {{ form.tematicas }}
-                                                                    </div>
+                                                                <div class="select is-multiple is-fullwidth is-expanded">
+                                                                    {{ form.tematicas }}
+                                                                </div>
                                                             </div>
                                                             <p class="help">Clique CTRL + Clique para selecionar múltiplos temas</p>
+                                                            {% for error in form.tematicas.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                     <div class="column">
                                                         <div class="field">
                                                             <label class="label">Público(s)-alvo(s)</label>
                                                             <div class="control is-expanded">
-                                                                    <div class="select is-multiple is-fullwidth is-expanded">
-                                                                        {{ form.publico_alvo }}
-                                                                    </div>
+                                                                <div class="select is-multiple is-fullwidth is-expanded">
+                                                                    {{ form.publico_alvo }}
+                                                                </div>
                                                             </div>
                                                             <p class="help">Clique CTRL + Clique para selecionar múltiplos públicos-alvos</p>
+                                                            {% for error in form.publico_alvo.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -423,16 +479,22 @@
                                                         <div class="field">
                                                             <label class="label">Unidade Orgânica</label>
                                                             <div class="control is-fullwidth">
-                                                                    {{ form.unidadeorganica }}
+                                                                {{ form.unidadeorganica }}
                                                             </div>
+                                                            {% for error in form.unidadeorganica.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                     <div class="column">
                                                         <div class="field">
                                                             <label class="label">Departamento</label>
                                                             <div class="control is-fullwidth">
-                                                                    {{ form.departamento }}
+                                                                {{ form.departamento }}
                                                             </div>
+                                                            {% for error in form.departamento.errors %}
+                                                            <p class="help is-danger">{{ error }}</p>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -506,6 +568,9 @@
                                                                     <div class="control is-expanded ">
                                                                     {{ frm2.material }}        
                                                                     </div>
+                                                                    {% for error in frm2.material.errors %}
+                                                                    <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                             <div class="column">
@@ -513,6 +578,9 @@
                                                                     <div class="control is-expanded">
                                                                     {{ frm2.quantidade }}    
                                                                     </div>
+                                                                    {% for error in frm2.quantidade.errors %}
+                                                                    <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -525,6 +593,9 @@
                                                                     <div class="control is-expanded ">
                                                                     {{ form2.empty_form.material }}        
                                                                     </div>
+                                                                    {% for error in frm2.empty_form.material.errors %}
+                                                                    <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                             <div class="column">
@@ -532,6 +603,9 @@
                                                                     <div class="control is-expanded">
                                                                     {{ form2.empty_form.quantidade }}    
                                                                     </div>
+                                                                    {% for error in frm2.empty_form.quantidade.errors %}
+                                                                    <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -564,8 +638,10 @@
                                                                     <label class="label">Dia</label>
                                                                     <div class="control is-expanded">
                                                                     {{ frm3.dia }}    
-                                                                        
                                                                     </div>
+                                                                    {% for error in frm3.dia.errors %}
+                                                                    <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                             <div class="column">
@@ -576,6 +652,9 @@
                                                                     {{ frm3.sessao }}        
                                                                         </span>
                                                                     </div>
+                                                                    {% for error in frm3.sessao.errors %}
+                                                                    <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                             <div class="column">
@@ -584,6 +663,9 @@
                                                                     <div class="control is-expanded">
                                                                     {{ frm3.numero_colaboradores }}    
                                                                     </div>
+                                                                    {% for error in frm3.numero_colaboradores.errors %}
+                                                                    <p class="help is-danger">{{ error }}</p>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -955,6 +1037,7 @@
             $('#id_mq-TOTAL_FORMS').val(parseInt(form_idx) + 1);
         });
     </script>
+
     {{ form.media.js }}
 </body>
 

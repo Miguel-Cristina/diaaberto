@@ -4,7 +4,9 @@ from django.forms import ModelForm
 from django.utils import timezone
 # Create your models here.
 
-
+#========================================================================================================================
+# model UnidadeOrganica
+#========================================================================================================================
 class UnidadeOrganica(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -13,6 +15,10 @@ class UnidadeOrganica(models.Model):
         db_table='UnidadeOrganica'
     def __str__(self):
         return self.nome
+
+#========================================================================================================================
+# model Departamento
+#========================================================================================================================
 class Departamento(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -23,6 +29,9 @@ class Departamento(models.Model):
     def __str__(self):
         return self.nome
 
+#========================================================================================================================
+# model Campus
+#========================================================================================================================
 class Campus(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -39,13 +48,14 @@ class Campus(models.Model):
     def __str__(self):
         return self.nome
 
-
+#========================================================================================================================
+# model Edificio
+#========================================================================================================================
 class Edificio(models.Model):
     # Campos
     id = models.AutoField(primary_key= True)
     nome = models.CharField(max_length=40)
     campus = models.ForeignKey(Campus, on_delete=models.PROTECT,null=True)
-    mapa = models.CharField(max_length=255, default='media/default.png')
     mapa_imagem = models.ImageField(upload_to='diaabertoapp/maps/',default='diaabertoapp/maps/default.png')
     class Meta:
         db_table='Edificio'
@@ -58,12 +68,14 @@ class Edificio(models.Model):
     def __str__(self):
         return self.nome
 
+#========================================================================================================================
+# model Sala
+#========================================================================================================================
 class Sala(models.Model):
     # Campos
     id = models.AutoField(primary_key= True)
     identificacao = models.CharField(max_length=40)
     edificio = models.ForeignKey(Edificio, on_delete=models.PROTECT,null=True)
-    mapa = models.CharField(max_length=255, default='media/diaabertoapp/maps/default.png',blank=True)
     mapa_imagem = models.ImageField(upload_to='diaabertoapp/maps/',default='diaabertoapp/maps/default.png')
     class Meta:
         db_table='Sala'
@@ -75,7 +87,9 @@ class Sala(models.Model):
     def __str__(self):
         return self.identificacao
 
-
+#========================================================================================================================
+# model Tematica
+#========================================================================================================================
 class Tematica(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -89,6 +103,9 @@ class Tematica(models.Model):
     def __str__(self):
         return self.tema
 
+#========================================================================================================================
+# model TipoAtividade
+#========================================================================================================================
 class TipoAtividade(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -102,6 +119,9 @@ class TipoAtividade(models.Model):
     def __str__(self):
         return self.tipo
 
+#========================================================================================================================
+# model PublicoAlvo
+#========================================================================================================================
 class PublicoAlvo(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -114,6 +134,10 @@ class PublicoAlvo(models.Model):
 
     def __str__(self):
         return self.nome
+
+#========================================================================================================================
+# model Sessao
+#========================================================================================================================
 class Sessao(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -126,6 +150,9 @@ class Sessao(models.Model):
     def __str__(self):
         return str(self.hora)
 
+#========================================================================================================================
+# model Material (desativado)
+#========================================================================================================================
 class Material(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -136,6 +163,9 @@ class Material(models.Model):
     def __str__(self):
         return self.nome
 
+#========================================================================================================================
+# model UtilizadorTipo
+#========================================================================================================================
 class UtilizadorTipo(models.Model):
     id = models.AutoField(primary_key=True)
     tipo = models.CharField(max_length=255)
@@ -144,6 +174,9 @@ class UtilizadorTipo(models.Model):
     def __str__(self):
         return self.tipo
 
+#========================================================================================================================
+# model Utilizador
+#========================================================================================================================
 class Utilizador(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -167,6 +200,9 @@ class Utilizador(models.Model):
     def __str__(self):
         return self.nome
 
+#========================================================================================================================
+# model UtilizadorParticipante
+#========================================================================================================================
 class UtilizadorParticipante(models.Model):
     id = models.AutoField(primary_key=True)
     utilizador = models.ForeignKey(Utilizador, on_delete=models.PROTECT, null=True)
@@ -180,7 +216,9 @@ class UtilizadorParticipante(models.Model):
     def __str__(self):
         return self.utilizador.nome
 
-
+#========================================================================================================================
+# model Atividade
+#========================================================================================================================
 class Atividade(models.Model):
     # Campos
     id = models.AutoField(primary_key=True)
@@ -224,6 +262,9 @@ class Atividade(models.Model):
     def __str__(self):
         return self.nome
 
+#========================================================================================================================
+# model MaterialQuantidade
+#========================================================================================================================
 class MaterialQuantidade(models.Model):
 
     atividade = models.ForeignKey('Atividade', related_name='material_quantidade', on_delete=models.CASCADE, null=True)
@@ -234,6 +275,9 @@ class MaterialQuantidade(models.Model):
     def __str__(self):
         return self.material
 
+#========================================================================================================================
+# model SessaoAtividade
+#========================================================================================================================
 class SessaoAtividade(models.Model):
     atividade = models.ForeignKey('Atividade', related_name='sessao_atividade', on_delete=models.CASCADE, null=True)
     sessao = models.ForeignKey('Sessao',on_delete=models.PROTECT, null=True)
@@ -246,12 +290,17 @@ class SessaoAtividade(models.Model):
     def __str__(self):
         return self.atividade.nome
 
+#========================================================================================================================
+# model AtividadeForm
+#========================================================================================================================
 class AtividadeForm(ModelForm):
      class Meta:
          model = Atividade
          fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'unidadeorganica', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
 
-
+#========================================================================================================================
+# model Tarefa
+#========================================================================================================================
 class Tarefa(models.Model):
      
     id = models.AutoField(primary_key=True)
@@ -299,6 +348,9 @@ class Tarefa(models.Model):
         db_table='Tarefa'
         managed=True
 
+#========================================================================================================================
+# model Notificacao
+#========================================================================================================================
 class Notificacao(models.Model):
     assunto = models.CharField(max_length=255, null=True, blank=True)
     conteudo = models.CharField(max_length=255, null=True,  blank=True)
@@ -312,6 +364,9 @@ class Notificacao(models.Model):
     def __str__(self):
         return self.assunto
 
+#========================================================================================================================
+# model Dia
+#========================================================================================================================
 class Dia(models.Model):
     dia = models.DateField(null=True)
 
@@ -321,7 +376,9 @@ class Dia(models.Model):
         db_table='Dia'
 
 
-
+#========================================================================================================================
+# model DiaAberto
+#========================================================================================================================
 class DiaAberto(models.Model):
     titulo = models.CharField(max_length=255, null=True)
     data_inicio = models.DateField(null=True)

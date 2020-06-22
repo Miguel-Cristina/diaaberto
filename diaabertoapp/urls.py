@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from diaabertoapp.views import index, atividades, edificios
+from diaabertoapp.views import index
 from django.conf.urls import include, handler404, handler500
 from django.conf.urls.static import static
 from django.conf import settings
@@ -12,11 +12,11 @@ urlpatterns = [
     path('logout/', views.logout_request, name='logout'),
     path('index/', views.index, name='index'),
     path('administrador/', views.administrador, name='administrador'),
-    path('atividades/', views.atividades, name='atividades'),
+    #path('atividades/', views.atividades, name='atividades'),
     path('minhasatividades/', views.minhasatividades, name='minhasatividades'),
     path('consultaratividades/', views.consultaratividades, name='consultaratividades'),
     path('minhasatividades/propor/', views.proporatividade, name='proporatividade'),
-    path('gestaoedificios/', views.edificios, name='gestaoedificios'),
+    #path('gestaoedificios/', views.edificios, name='gestaoedificios'),
     path('select2/', include('django_select2.urls')),
     path('tarefas/', views.get_tarefas, name='tarefas'),
     path('adicionartarefa/', views.add_tarefa, name='adicionartarefa'),
