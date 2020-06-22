@@ -4,6 +4,7 @@ from diaabertoapp.views import index
 from django.conf.urls import include, handler404, handler500
 from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import include
 
 urlpatterns = [
     path('error_500/', views.error_500, name='error_500'),
@@ -13,15 +14,10 @@ urlpatterns = [
     path('logout/', views.logout_request, name='logout'),
     path('index/', views.index, name='index'),
     path('administrador/', views.administrador, name='administrador'),
-    #path('atividades/', views.atividades, name='atividades'),
     path('minhasatividades/', views.minhasatividades, name='minhasatividades'),
     path('consultaratividades/', views.consultaratividades, name='consultaratividades'),
     path('minhasatividades/propor/', views.proporatividade, name='proporatividade'),
-    #path('gestaoedificios/', views.edificios, name='gestaoedificios'),
     path('select2/', include('django_select2.urls')),
-    path('tarefas/', views.get_tarefas, name='tarefas'),
-    path('adicionartarefa/', views.add_tarefa, name='adicionartarefa'),
-    path('tarefas/delete/<pk>',views.rem_tarefa, name='delete_tarefa'),
     path(r'^aceitaratividade/(?P<pk>[0-9]+)/$', views.aceitaratividade, name="aceitaratividade"),
     path(r'^rejeitaratividade/(?P<pk>[0-9]+)/$', views.rejeitaratividade, name="rejeitaratividade"),
     path('eliminaratividade/<pk>/', views.eliminaratividade, name="eliminaratividade"),
@@ -60,6 +56,15 @@ urlpatterns = [
     path('configurarorganicasdepartamentos/eliminardepartamento/<pk>/', views.eliminardepartamento, name="eliminardepartamento"),
     path('configurarorganicasdepartamentos/editardepartamento/<pk>/', views.editardepartamento, name="editardepartamento"),
     path('configurarorganicasdepartamentos/adicionardepartamento/', views.adicionardepartamento, name="adicionardepartamento"),
+
+    path('tarefas/', views.get_tarefas, name='tarefas'),
+    path('adicionartarefa/', views.add_tarefa, name='adicionartarefa'),
+    path('tarefas/delete/<pk>',views.rem_tarefa, name='delete_tarefa'),
+    path('tarefas/edit/<pk>',views.edit_tarefa, name='edit_tarefa'),
+    path('tarefas/atribuir/<pk>',views.atribuir_tarefa, name='atribuir_tarefa'),
+    path('tarefas/reatribuir/<pk>',views.remove_colab, name='remove_colab'),
+    path(r'^ajax/grupos_switch/$', views.grupos_switch, name='grupos_switch'),
+    path(r'^ajax/user_switch/$', views.user_switch, name='user_switch'),
     
 ]
 

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, PublicoAlvo, UnidadeOrganica, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade, TipoAtividade, DiaAberto
+from .models import Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, PublicoAlvo, UnidadeOrganica, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade, TipoAtividade, DiaAberto, Utilizador, Inscricao
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
@@ -10,17 +10,22 @@ from django.core.exceptions import NON_FIELD_ERRORS
 # form do model Tarefa
 #========================================================================================================================
 class TarefaForm(forms.ModelForm):
-     descricao =forms.CharField(label="", max_length=255, widget = forms.TextInput(attrs = {'class': "input", 'placeholder': "Descrição..."}))    
-     localizacao_grupo = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Localização"}))
-     destino = forms.CharField(label="", max_length=255, widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Material a requisitar..."}))
-     horario_inicio = forms.DateTimeField()
-     horario_fim = forms.DateTimeField()
-     cordenador = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"id_cordenadore"}))
-     coolaborador = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"id_colaboradore"}))
+
+     nome =forms.CharField(label="", max_length=255, widget = forms.TextInput(attrs = {'id':"nome",'class': "input", 'placeholder': "Insira um nome para a Tarefa"}))
+     tipo_tarefa = forms.CharField(required = False, label ="",max_length=255, widget= forms.TextInput(attrs ={'class': 'input','type':'hidden','id':'tipo_tarefa'}))
+     descricao =forms.CharField(required = False,label="", max_length=255, widget = forms.Textarea(attrs = {'id':"descricao",'class': "textarea", 'placeholder': "Descrição..."}))    
+     localizacao_grupo = forms.ModelChoiceField(required=False, queryset=Sala.objects.all(), label="",widget=forms.Select(attrs={'id':'salaSearchEnc','class':"select is-fullwidth",'style':"width:100%"}))
+     destino = forms.ModelChoiceField(required=False, queryset=Sala.objects.all(), label="",widget=forms.Select(attrs={'id':'salaSearchDesct','class':"select is-fullwidth",'style':"width:100%"}))
+     dia = forms.DateField(required = False, label ="", widget= forms.TextInput(attrs ={'class': 'input','type':'date','id':'data'}))
+     horario= forms.TimeField(required = False, label ="", widget= forms.TextInput(attrs ={'class': 'input','type':'time','id':'horas'}))
+     atividade = forms.ModelChoiceField(required=False, queryset=Atividade.objects.all(), label="",widget=forms.Select(attrs={'id':'atividade','class':"select is-fullwidth",'style':"width:100%"}))
+     coolaborador =forms.ModelMultipleChoiceField(required=False, queryset=Utilizador.objects.filter(utilizadortipo = 3),widget=forms.SelectMultiple(attrs={'id':'colaborador_id','class':"select is-multiple is-fullwidth",'style':"width:100%"}))
+     grupo = forms.ModelMultipleChoiceField(required=False, queryset=Inscricao.objects.all(),widget=forms.SelectMultiple(attrs={'id':'gruposSelect','class':"select is-multiple is-fullwidth",'style':"width:100%",'label':"Grupo"}))
+     duracao = forms.IntegerField(required=False, widget = forms.TextInput(attrs = {'class':'input','type':'number','step':'5','min':'0'}))
      
      class Meta:
         model = Tarefa
-        fields = ('descricao', 'localizacao_grupo' , 'destino' ,'horario_inicio', 'horario_fim', 'cordenador', 'coolaborador')
+        fields = ('nome','descricao','tipo_tarefa','duracao', 'localizacao_grupo' , 'destino' ,'horario', 'atividade','dia','grupo','coolaborador')
 #========================================================================================================================
 # form do model Campus
 #========================================================================================================================

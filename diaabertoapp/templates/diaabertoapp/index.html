@@ -66,6 +66,19 @@
                            
                         </div>
                     </div>
+                    {% if utilizador.utilizadortipo.tipo == 'Coordenador' %}
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Tarefas
+                        </a>
+                        <div class="navbar-dropdown">
+                            {% if utilizador.utilizadortipo.tipo == 'Administrador' or utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Colaborador'   %}
+                            <a data-v-a67fe1ba="" href="/tarefas" class="navbar-item is-tab router-link"> Minhas Tarefas </a>
+                            {% endif %}
+                           
+                        </div>
+                    </div>
+                    {% endif %}
                     {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">

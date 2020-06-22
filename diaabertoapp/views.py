@@ -2,19 +2,19 @@ from django.views.generic import ListView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models.deletion import ProtectedError
 from django.db.models import Count
-from .models import Dia, DiaAberto, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao
+from .models import Dia, DiaAberto, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao, Colaboracao
 from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm ,SessaoAtividadeForm, MaterialFormSet, TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, SalaForm, UnidadeOrganicaForm, DepartamentoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.contrib import messages
+from django.http import JsonResponse
 from django.forms import formset_factory, modelformset_factory, inlineformset_factory
 from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from datetime import date, timedelta
-
+#from django.db import connection
 #========================================================================================================================
 #Erro 500 
 #========================================================================================================================
@@ -1842,24 +1842,106 @@ def consultaratividades(request):
 #VIEWS DE OUTRAS COMPONENTES
 #========================================================================================================================
 
-def get_edificios(request, campus_id):
-    campus = Campus.objects.get(pk=campus_id)
-    edificios = Edificio.objects.filter(campus=campus)
-    edificio_dict = {}
-    for edificio in edificios:
-        edificio_dict[edificio.id] = edificio.nome
-    return HttpResponse(json.dumps(edificio_dict), mimetype="application/json")
-
-def get_salas(request, edificio_id):
-    edificio = Edificio.objects.get(pk=edificio_id)
-    salas = Sala.objects.filter(edificio=edificio)
-    sala_dict = {}
-    for sala in salas:
-        sala_dict[sala.id] = sala.identificacao
-    return HttpResponse(json.dumps(sala_dict), mimetype="application/json")
 
 def get_tarefas(request):
+    
     tarefas_1 = Tarefa.objects.all()
+     
+    utilizador = Utilizador.objects.filter(utilizadortipo = 3).order_by("nome")
+
+    aform = TarefaForm()
+
+
+#BEGIN filter_by_name
+    nome_colab_query = request.GET.get('nomeColaborador')
+    if nome_colab_query !='' and nome_colab_query is not None:
+        tarefas_1 = tarefas_1.filter(coolaborador__nome__icontains=nome_colab_query)
+#END filter_by_name
+
+
+#BEGIN filter_by_name
+    nome_query = request.GET.get('nome')
+    if nome_query !='' and nome_query is not None:
+        tarefas_1 = tarefas_1.filter(nome__icontains=nome_query)
+#END filter_by_name
+
+#BEGIN tipo_utilizador and estados filter 
+    unique_valida_obj = []
+    unique_valida_str = []
+
+    for x in tarefas_1:
+        if x.tipo_tarefa not in unique_valida_str:
+            unique_valida_obj.append(x)
+            unique_valida_str.append(x.tipo_tarefa)
+    #END tipo_utilizador and estados filter filter
+        
+    ##BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query !='' and tipo_query is not None:
+        tarefas_1 = tarefas_1.filter(tipo_tarefa=tipo_query)
+
+    #END filter_by_tipo
+    
+    #BEGIN filter_by_campus
+    campus_arr = Campus.objects.all()
+    campus_query = request.GET.get('campus')
+    if campus_query !='' and campus_query is not None:
+       users = Utilizadores.object.filter()
+       tarefas_1 = tarefas_1.filter(campus=campus_query)
+       campus_arr = campus_arr.filter(id=campus_query)
+    #END filter_by_campus
+   # 
+   # #BEGIN filter_by_UnidadeOrganica
+   # UnidadeOrganica_query = request.GET.get('UnidadeOrganica')
+   # if UnidadeOrganica_query !='' and UnidadeOrganica_query is not None:
+   #     tarefas_1 = tarefas_1.filter(UnidadeOrganica=UnidadeOrganica_query)
+   #     UnidadeOrganicas = UnidadeOrganicas.filter(id=UnidadeOrganica_query)
+   #     departamentos = departamentos.filter(UnidadeOrganica=UnidadeOrganica_query)
+   # #END filter_by_UnidadeOrganica
+   # 
+   # #BEGIN filter_by_departamento
+   # departamento_query = request.GET.get('departamento')
+   # if departamento_query !='' and departamento_query is not None:
+   #     tarefas_1 = tarefas_1.filter(departamento=departamento_query)
+   #     departamentos = departamentos.filter(id=departamento_query)
+   # #END filter_by_departamento
+    
+
+    #BEGIN order_by
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'dia':
+        if sort == 'asc':
+            tarefas_1 = tarefas_1.order_by('dia')
+        else:
+            tarefas_1 = tarefas_1.order_by('-dia')
+    elif order_by == 'horario':
+        if sort == 'asc':
+            tarefas_1 = tarefas_1.order_by('horario')
+        else:
+            tarefas_1 = tarefas_1.order_by('-horario')
+    elif order_by == 'nome':
+        if sort == 'asc':
+            tarefas_1 = tarefas_1.order_by('nome')
+        else:
+            tarefas_1 = tarefas_1.order_by('-nome')
+    elif order_by == 'tipo':
+        if sort == 'asc':
+            tarefas_1 = tarefas_1.order_by('tipo_tarefa')
+        else:
+            tarefas_1 = tarefas_1.order_by('-tipo_tarefa')
+    elif order_by == 'estado':
+        if sort == 'asc':
+            tarefas_1 = tarefas_1.order_by('estado')
+        else:
+            tarefas_1 = tarefas_1.order_by('-estado')
+    #END order_by
+   
+    
+   
+    
+
+    
      #BEGIN pagination
     page = request.GET.get('page', 1)
     paginator = Paginator(tarefas_1, 5)
@@ -1870,38 +1952,200 @@ def get_tarefas(request):
     except EmptyPage:
         tarefas = paginator.page(paginator.num_pages)
     #END pagination
-
-    return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
+    #,'campuss': campus_arr, 'campusquery':campus_query ,'UnidadeOrganicas':UnidadeOrganicas,'UnidadeOrganicaquery':UnidadeOrganica_query,'departamentos':departamentos,'departamentoquery':departamento_query,
+    return render(request, 'diaabertoapp/tarefas.html',{'campuss': campus_arr, 'campusquery':campus_query,'form':aform,'tipo_query':tipo_query, 'tarefas': tarefas, 'utilizadores':utilizador,'tiposs':unique_valida_obj,'nomesquery':nome_query,'nomesColaboradorQuery':nome_colab_query,'order_by':order_by, 'sort':sort})
 
 def add_tarefa(request):
+    atividades = Atividade.objects.all()
+    salas = Sala.objects.all()
+    
+    
     if request.method == 'POST':
         aForm = TarefaForm(request.POST)
         if aForm.is_valid():
-            tarefa = aForm.save()
+            tarefa = aForm.save(commit = False)
+            if(tarefa.tipo_tarefa == 'PE'):
+                tarefa.duracao = 15
+            if(tarefa.tipo_tarefa == 'AV'):
+                tarefa.duracao = tarefa.atividade.duracao
+            tarefa.save()
+
             return HttpResponseRedirect('/tarefas/')
         else:
-            aForm.errors
+            print(aForm.errors)
     else:
         aForm = TarefaForm()
      
-    return render(request, 'diaabertoapp/adicionartarefa.html', {'form':aForm, 'atividades': atividades})
+    return render(request, 'diaabertoapp/adicionartarefa.html', {'form':aForm, 'atividades': atividades, 'salas':salas})
     
 def rem_tarefa(request ,pk):
     tarefas_1 = Tarefa.objects.all()
-    
-   #BEGIN pagination
-    page = request.GET.get('page', 1)
-    paginator = Paginator(tarefas_1, 5)
-    try:
-        tarefas = paginator.page(page)
-    except PageNotAnInteger:
-        tarefas = paginator.page(1)
-    except EmptyPage:
-        tarefas = paginator.page(paginator.num_pages)
-    #END pagination
-    print("entrei")
     if request.method == 'POST':
        obj = Tarefa.objects.filter(pk=pk).delete()
-       return HttpResponseRedirect('/tarefas/')    
+       return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))    
     return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas})
 
+
+
+def atribuir_tarefa(request,pk):
+    
+    tarefas_1 = Tarefa.objects.all()
+    colaboradorids = request.POST.getlist('colaborador_id')
+        
+    if(len(colaboradorids) != 0):
+        tarefa_obj = Tarefa.objects.get(pk=pk)
+        tarefa_obj.coolaborador.clear()
+        tarefa_obj.coolaborador.add(*colaboradorids)
+        tarefa_obj.estado = 'AT'
+        tarefa_obj.save()               
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas_1})
+
+    
+def remove_colab(request,pk):
+    
+    tarefa_obj = Tarefa.objects.get(pk=pk)
+    tarefa_obj.coolaborador.clear()
+    tarefa_obj.estado = 'PA'
+    tarefa_obj.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    
+
+def edit_tarefa(request, pk):
+    
+    
+    tipo_tarefa = {
+        ('AV', 'Atividade'),
+        ('PE' , 'Percurso'),
+        ('OT', 'Outra'),
+        }
+
+    
+    tarefa = get_object_or_404(Tarefa, pk=pk)
+    atividades = Atividade.objects.all()
+    salas = Sala.objects.all()
+    
+
+    if request.method == "POST":
+       
+        aForm = TarefaForm(request.POST, instance=tarefa)
+       #aForm = AtividadeForm(request.POST,initial = {'unidadeorganica': utilizador.unidadeorganica.id,'departamento': utilizador.departamento.id })
+        
+        if aForm.is_valid():
+            tarefa = aForm.save(commit=False)
+            tarefa.estado = 'PA'
+            tarefa.save()
+            
+            messages.success(request, 'Tarefa editada com sucesso!')
+            return HttpResponseRedirect('/tarefas/')
+        else:
+            print(aForm.errors)
+    else:
+        aForm = TarefaForm(instance=tarefa)
+       
+    return render(request, 'diaabertoapp/editTarefa.html', {'form':aForm,'atividades': atividades, 'salas':salas, 'tipo_tarefa':tipo_tarefa})
+
+
+def grupos_switch(request):
+    data = request.GET.get('data', None)
+    horas = request.GET.get('horas',None)
+    sala  = request.GET.get('sala',None)    
+  
+    
+    
+    inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora = horas , sessaoAtividade__atividade__sala = sala, sessaoAtividade__dia = data).values_list('inscricao', flat=True).order_by('id')
+    
+    dados = {
+       'idinscricao' : list(inscricaoid)
+     }
+
+    return JsonResponse(dados)
+
+def user_switch(request):
+   
+    
+
+    userlist = []
+    usernamelist = []
+    tarefa = Tarefa.objects.get(pk =request.GET.get('tarefa',None))
+    utilizadores = Utilizador.objects.filter(utilizadortipo = 3).order_by("nome")
+    #print(tarefa.duracao)
+    #print(tarefa.horario)
+    d = datetime.timedelta(seconds=(tarefa.duracao*60))
+    tarefa_inicio = datetime.timedelta(seconds = ((tarefa.horario.hour*3600)+(tarefa.horario.minute*60)+tarefa.horario.second))
+    tarefa_fim = d + tarefa_inicio
+    data_tarefa = tarefa.dia
+
+    if(tarefa.estado == 'PA'):
+
+        #     print(tarefa)
+        #     print(utilizadores)
+        #     print(len(utilizadores))
+        
+        for utilizador in utilizadores:
+            colaboracoes = Colaboracao.objects.filter(colaborador = utilizador)
+   
+            if(len(colaboracoes) != 0):
+                for colaboracao in colaboracoes:
+                    data_colaboracao  = colaboracao.data_colaboracao 
+                    
+                    hora_inicio_colab = datetime.timedelta(seconds = ((colaboracao.hora_inicio_colab.hour*3600)+(colaboracao.hora_inicio_colab.minute*60)+(colaboracao.hora_inicio_colab.second)))
+                    hora_fim_colab    = datetime.timedelta(seconds = ((colaboracao.hora_fim_colab.hour*3600)+(colaboracao.hora_fim_colab.minute*60)+(colaboracao.hora_fim_colab.second)))
+                     
+                   # print("---------------------------------")
+                   # print("Tarefa: ")
+                   # print(data_tarefa)
+                   # print("Colaboracao: " )
+                   # print(data_colaboracao)
+                    if(data_colaboracao == data_tarefa and hora_inicio_colab <= tarefa_inicio and hora_fim_colab >= tarefa_fim ):
+                       # print("---------------------")
+                       # print(utilizador)  
+                       # print("Colaboracao: " )
+                       # print(hora_inicio_colab)
+                       # print(hora_fim_colab)
+                       # print(data_colaboracao)
+                       # print("Tarefa: ")
+                       # print(tarefa_inicio)
+                       # print(tarefa_fim)
+                       # print(data_colaboracao)
+                       # print("-----------------------")
+
+                        tarefa_atribuida = Tarefa.objects.filter(coolaborador = utilizador.id)
+                        if(len(tarefa_atribuida)!=0):
+                            for task in tarefa_atribuida:
+                            #    print(task.nome)
+                            #    print("*********************")
+                                duracao_task = datetime.timedelta(seconds=(task.duracao*60))
+                                task_inicio = datetime.timedelta(seconds = ((task.horario.hour*3600)+(task.horario.minute*60)+task.horario.second))
+                                task_fim = duracao_task + task_inicio
+                                data_task = task.dia
+
+
+                                if(data_task == data_tarefa ):
+                                    if(( tarefa_inicio < task_inicio and tarefa_fim <= tarefa_inicio ) or (tarefa_fim > task_fim and tarefa_inicio >= task_fim)):
+                                        userlist.append(utilizador.id)
+                                        usernamelist.append(utilizador.nome)
+                                    else:
+                                        break
+                                else:
+                                    userlist.append(utilizador.id)
+                                    usernamelist.append(utilizador.nome)
+                        else:
+                            userlist.append(utilizador.id)
+                            usernamelist.append(utilizador.nome)
+   
+        #print("****************")
+        #print(userlist)
+        #print("****************")
+        
+        #inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora = horas , sessaoAtividade__atividade__sala = sala, sessaoAtividade__dia = data).values_list('inscricao', flat=True).order_by('id')
+        #inscricaoid = {1,2}
+
+        dados = {
+            'usernamelist' : usernamelist,
+            'userlist' : userlist
+         }
+
+    return JsonResponse(dados)
