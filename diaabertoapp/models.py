@@ -291,62 +291,12 @@ class SessaoAtividade(models.Model):
         return self.atividade.nome
 
 #========================================================================================================================
-# model AtividadeForm
+# modelform AtividadeForm
 #========================================================================================================================
 class AtividadeForm(ModelForm):
      class Meta:
          model = Atividade
          fields = ('nome', 'descricao', 'duracao', 'limite_participantes', 'tipo_atividade','publico_alvo', 'data', 'unidadeorganica', 'departamento', 'validada', 'tematicas', 'campus','edificio','sala', 'tipo_local')
-
-#========================================================================================================================
-# model Tarefa
-#========================================================================================================================
-class Tarefa(models.Model):
-     
-    id = models.AutoField(primary_key=True)
-     
-    REJEITADA =   'RJ'
-    PORATRIBUIR = 'PA'
-    ATRIBUIDA =   'AT'
-    VALIDACAO_CHOICES = [
-        ('RJ', 'Rejeitada'),
-        ('PA', 'Por Atribuir'),
-        ('AT', 'Atribuida'),
-    ]
-    estado = models.CharField(
-        max_length=2,
-        choices=VALIDACAO_CHOICES,
-        default=PORATRIBUIR,
-    )
-
-    ATIVIDADE = 'ATV' 
-    PERCURSO =  'PE'   
-    OUTRA    =  'OT'
-
-    TIPO_TAREFAS_CHOICES = (
-        ('AV', 'Atividade'),
-        ('PE' , 'Percurso'),
-        ('OT', 'Outra'),
-    )
-    tipo_tarefa = models.CharField(
-        max_length=2,
-        choices=TIPO_TAREFAS_CHOICES,
-        default=ATIVIDADE
-    )
-    descricao = models.CharField(max_length=255, null=True)
-    atividade = models.ForeignKey(Atividade, related_name='tarefa_atividade', on_delete=models.CASCADE, null=True,blank=True)
-    localizacao_grupo = models.CharField(max_length=255, null=True)
-    destino = models.CharField(max_length=255, null=True)
-    horario = models.TimeField(null=True)
-    dia = models.DateField(default=datetime.date.today)
-    cordenador = models.IntegerField(default = 2)
-    coolaborador = models.IntegerField(default = 3)
-
-    def str(self):
-        return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao
-    class Meta:
-        db_table='Tarefa'
-        managed=True
 
 #========================================================================================================================
 # model Notificacao
@@ -387,3 +337,112 @@ class DiaAberto(models.Model):
         return self.titulo
     class Meta:
         db_table='DiaAberto'
+#========================================================================================================================
+# model Escola
+#========================================================================================================================
+
+class Escola(models.Model):
+    nome = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    morada = models.TextField(blank=True, null=True)
+    codigo_postal = models.CharField(max_length=255, blank=True, null=True)
+    contacto = models.IntegerField(blank=True, null=True)
+    localidade = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        
+        db_table = 'escola'
+
+    def __str__(self):
+        return self.nome
+
+#========================================================================================================================
+# model Inscricao
+#========================================================================================================================
+
+class Inscricao(models.Model):
+    dia = models.DateField(default=datetime.date.today)
+    escola = models.ForeignKey(Escola, models.DO_NOTHING, blank=True, null=True)
+    hora_check_in = models.TimeField()
+    unidadeorganica_checkin = models.ForeignKey(UnidadeOrganica, models.DO_NOTHING, db_column='unidadeorganica_checkin', blank=True, null=True)
+    check_in = models.IntegerField(default=0)
+    area_estudos = models.CharField(max_length=45)
+    ano_estudos = models.IntegerField()
+    utilizador = models.ForeignKey(Utilizador, models.DO_NOTHING, db_column='utilizador')
+
+    class Meta:
+        
+        db_table = 'inscricao'
+
+    def __str__(self):
+        return self.id.__str__()
+
+
+
+    
+#========================================================================================================================
+# model Colaboracao
+#========================================================================================================================
+class Colaboracao(models.Model):
+    colaborador = models.ForeignKey('Utilizador', models.DO_NOTHING)
+    data_colaboracao = models.DateField()
+    hora_inicio_colab = models.TimeField()
+    hora_fim_colab = models.TimeField()
+    percurso = models.IntegerField(blank=True,null=True)
+    sala_de_aula = models.IntegerField(blank=True,null=True)
+    tarefa_atribuida = models.IntegerField(blank=True,null=True)
+
+    class Meta:
+        
+        db_table = 'colaboracao'
+
+#========================================================================================================================
+# model Tarefa
+#========================================================================================================================
+class Tarefa(models.Model):
+     
+    id = models.AutoField(primary_key=True)
+     
+    REJEITADA =   'RJ'
+    PORATRIBUIR = 'PA'
+    ATRIBUIDA =   'AT'
+    VALIDACAO_CHOICES = [
+        ('RJ', 'Rejeitada'),
+        ('PA', 'Por Atribuir'),
+        ('AT', 'Atribuida'),
+    ]
+    estado = models.CharField(
+        max_length=2,
+        choices=VALIDACAO_CHOICES,
+        default=PORATRIBUIR,
+    )
+
+    ATIVIDADE = 'AV' 
+    PERCURSO =  'PE'   
+    OUTRA    =  'OT'
+
+    TIPO_TAREFAS_CHOICES = (
+        ('AV', 'Atividade'),
+        ('PE' , 'Percurso'),
+        ('OT', 'Outra'),
+    )
+    tipo_tarefa = models.CharField(
+        max_length=2,
+        choices=TIPO_TAREFAS_CHOICES,
+        default=ATIVIDADE
+    )
+    nome = models.CharField(max_length=255, null=True)
+    descricao = models.CharField(max_length=255, null=True)
+    localizacao_grupo = models.ForeignKey( Sala , related_name='tarefa_localizacao_grupo', on_delete=models.CASCADE, null=True,blank=True)
+    atividade = models.ForeignKey( Atividade , related_name='tarefa_atividade', on_delete=models.CASCADE, null=True,blank=True)
+    duracao = models.IntegerField(null = True)
+    #duracao = models.TimeField(null=True)
+    destino = models.ForeignKey( Sala , related_name='tarefa_destino', on_delete=models.CASCADE, null=True,blank=True)
+    horario = models.TimeField(null=True)
+    dia = models.DateField(default=datetime.date.today)
+    cordenador = models.ForeignKey( Utilizador , related_name='gestor_tarefa', on_delete=models.CASCADE, null=True,blank=True)
+    #coolaborador = models.ForeignKey( Utilizador , related_name='atribuicao_tarefa', on_delete=models.CASCADE, null=True,blank=True)
+    coolaborador = models.ManyToManyField(Utilizador, related_name='tarefa_coolaborador')
+    grupo = models.ManyToManyField(Inscricao, related_name='percurso_grupoM')
+    def str(self):
+        return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao +coolaborador
+

@@ -135,6 +135,8 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\edificios.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\edificioSelect.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\administrador.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\editTarefa.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\error_404.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\error_500.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\login.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />

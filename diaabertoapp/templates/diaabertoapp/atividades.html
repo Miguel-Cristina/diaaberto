@@ -12,7 +12,7 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
-    <title>Dia Aberto</title>
+    <title>Consultar Atividades - Dia Aberto</title>
     <style>
         body,
         html {
@@ -63,8 +63,30 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link router-link-exact-active router-link-active">
-                        Consultar Atividades </a>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Atividades
+                        </a>
+                        <div class="navbar-dropdown">
+                            {% if utilizador.utilizadortipo.tipo == 'Administrador' or utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Docente'   %}
+                            <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
+                            {% endif %}
+                            <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link">Consultar Atividades</a>
+                           
+                        </div>
+                    </div>
+                     {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                              Gestão de Configurações
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
+                                <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
+                                <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -198,7 +220,7 @@
         {% endif %}
 
         <div data-v-8716d23a="" id="page-content">
-            <div data-v-8716d23a="" class="card">
+            <div data-v-8716d23a="" class="card" style="margin-bottom:6em">
                 <div data-v-8716d23a="" class="card-content">
                     <div data-v-8716d23a="" class="columns">
                         <div class="column is-3">
@@ -490,7 +512,47 @@
                                 <div class="menu">
                                     <p class="menu-label">Filtros Sessão</p>
                                     <ul class="menu-list">
-                                        <form method="GET" action=".">  
+                                        <form method="GET" action=".">
+                                            <div class="field has-addons">
+                                                <!---->
+                                                {% if not diaquery|length > 0 %}
+                                                <div class="control is-expanded has-icons-left">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select id="diasSearch" name="dias"><!--onchange="searchByValidation()"-->
+                                                            <option disabled="disabled" hidden="hidden" selected>
+                                                                Dia
+                                                            </option>
+                                                            {% for Dia in dias %}
+                                                                <option value="{{ Dia|date:"Y-m-d" }}">{{ Dia|date:"d-m-Y" }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                <span class="icon is-small is-left">
+                                                    <i class="mdi mdi-calendar"></i>
+                                                 </span>
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                </div>
+                                                <!---->
+                                                {% else %}
+                                                <div class="control is-expanded has-icons-left">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select id="diasSearch" name="dias"><!--onchange="searchByValidation()"-->
+                                                            {% for Dia in dias %}
+                                                                <option value="{{ Dia|date:"Y-m-d" }}">{{ Dia|date:"d-m-Y" }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                <span class="icon is-small is-left">
+                                                    <i class="mdi mdi-calendar"></i>
+                                                </span>
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('diasSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                                {% endif %}
+                                            </div>
                                             <div class="field has-addons">
                                                 <!---->
                                                 {% if not sessoesquery|length > 0 %}
@@ -741,24 +803,35 @@
                                                                     <div class="column">
                                                                                 <p><strong>Unidade Orgânica:</strong> {{ Atividade.unidadeorganica }} </p>
                                                                                 <p><strong>Departamento:</strong> {{ Atividade.departamento }} </p>
-                                                                        {% if Atividade.campus or Atividade.edificio or Atividade.sala %}
-                                                                                {% if Atividade.campus %}        
-                                                                                    <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
-                                                                                {% endif %}
-                                                                                {% if Atividade.edificio %}
-                                                                                        <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
-                                                                                {% endif %}
-                                                                                {% if Atividade.sala %}
-                                                                                    <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
-                                                                                    {% if Atividade.sala.mapa_imagem %}
-                                                                                        <p><a id="open-modal" onclick="srcImage('{{ Atividade.sala.mapa_imagem.url }}')"><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
-                                                                                    {% endif %}
-                                                                                {% endif %}
-                                                                        {% elif Atividade.tipo_local %}
-                                                                                <p><strong>Local:</strong> {{ Atividade.tipo_local }}</p>
-                                                                        {% else %}
-                                                                                <p><strong>Local:</strong> Não especificado</p>
+                                                                      {% if Atividade.campus or Atividade.edificio or Atividade.sala %}
+                                                                        {% if Atividade.campus %}        
+                                                                            <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
                                                                         {% endif %}
+                                                                        {% if Atividade.campus and not Atividade.edificio and not Atividade.sala %}        
+                                                                            {% if Atividade.campus.mapa_imagem %}                
+                                                                                <p><a id="open-modal" onclick="srcImage('{{ Atividade.campus.mapa_imagem.url }}')"><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
+                                                                            {% endif %}            
+                                                                        {% endif %}
+                                                                        {% if Atividade.edificio and Atividade.sala  %}
+                                                                            <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                                                                        {% endif %}
+                                                                        {% if Atividade.edificio and not Atividade.sala %}
+                                                                            <p  style="margin-bottom:0px"><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                                                                            {% if Atividade.edificio.mapa_imagem %}
+                                                                                <p><a id="open-modal" onclick="srcImage('{{ Atividade.edificio.mapa_imagem.url }}')"><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
+                                                                            {% endif %}            
+                                                                        {% endif %}
+                                                                        {% if Atividade.sala %}
+                                                                            <p style="margin-bottom:0px"><strong>Sala:</strong> {{ Atividade.sala }}</p>
+                                                                            {% if Atividade.sala.mapa_imagem %}
+                                                                                <p><a id="open-modal" onclick="srcImage('{{ Atividade.sala.mapa_imagem.url }}')"><small>Ver no mapa<i class="mdi mdi-open-in-new"></i></small></a></p>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    {% elif Atividade.tipo_local %}
+                                                                        <p><strong>Local:</strong> {{ Atividade.tipo_local }}</p>
+                                                                    {% else %}
+                                                                        <p><strong>Local:</strong> Não especificado</p>
+                                                                    {% endif %}
 
                                                                     </div>
                                                                     <div class="column">

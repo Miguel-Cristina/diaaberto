@@ -7,6 +7,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('error_500/', views.error_500, name='error_500'),
+    path('error_404/', views.error_404, name='error_404'),
     path('', views.index, name='index'),
     path('login/', views.login_request, name='login'),
     path('logout/', views.logout_request, name='logout'),

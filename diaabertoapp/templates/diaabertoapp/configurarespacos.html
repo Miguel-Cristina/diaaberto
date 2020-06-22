@@ -13,7 +13,7 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
-    <title>Dia Aberto</title>
+    <title>Configurar Espaços - Dia Aberto</title>
     <style>
         body,
         html {
@@ -113,10 +113,28 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
-                    <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
-                    <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
-                
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Atividades
+                        </a>
+                        <div class="navbar-dropdown">
+                            {% if utilizador.utilizadortipo.tipo == 'Administrador' or utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Docente'   %}
+                            <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
+                            {% endif %}
+                            <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link">Consultar Atividades</a>
+                           
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Gestão de Configurações
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
+                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
+                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -203,7 +221,7 @@
         {% endif %}
 
         <div data-v-8716d23a="" id="page-content">
-            <div data-v-8716d23a="" class="card">
+            <div data-v-8716d23a="" class="card" style="margin-bottom:6em">
                 <div data-v-8716d23a="" class="card-content">
                     <div data-v-8716d23a="" id="top">
                         <nav aria-label="breadcrumbs" class="breadcrumb">
@@ -267,6 +285,46 @@
                                                 <!---->
                                                 <div class="control">
                                                     <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                  </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="field has-addons">
+                                                <!---->
+                                                {% if not edificioquery|length > 0 %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="edificioSearch" name="edificio"><!--onchange="searchByType()"-->
+                                                            <option disabled="disabled" hidden="hidden" selected>
+                                                                Edifício
+                                                            </option>
+                                                            {% for Edificio in edificios %}
+                                                                <option value="{{ Edificio.id }}">{{ Edificio.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                </div>
+                                                {% else %}
+                                                <div class="control is-expanded ">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select  id="edificioSearch" name="edificio"><!--onchange="searchByType()"-->
+                                                            {% for Edificio in edificios %}
+                                                                <option value="{{ Edificio.id }}">{{ Edificio.nome }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                    <!--<span class="icon is-left">
+                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                    </span>-->
+                                                </div>
+                                                <!---->
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('edificioSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
                                                   </div>
                                                 {% endif %}
                                             </div>
@@ -348,35 +406,17 @@
                                                     <p class="menu-label">Espaços</p>
                                                 </div>
                                             </div>
-                                            <div class="level-right">
+                                    <!----><div class="level-right">
                                                 <div class="level-item">
-                                                    <a href="?campus=true" class="button is-success is-outlined  is-small">
-                                                        <span class="icon is-small">
-                                                            <i class="mdi mdi-eye"></i>
-                                                        </span>
-                                                        <span>Campus</span>
-                                                        <!---->
-                                                    </a>
-                                                </div>
-                                                <div class="level-item">
-                                                    <a href="?edificios=true" class="button is-success is-outlined  is-small">
-                                                        <span class="icon is-small">
-                                                            <i class="mdi mdi-eye"></i>
-                                                        </span>
-                                                        <span>Edifícios</span>
-                                                        <!---->
-                                                    </a>
-                                                </div>
-                                                <div class="level-item">
-                                                    <a href="?salas=true" class="button is-success is-outlined  is-small">
+                                                    <a class="button is-success is-outlined  is-small">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-eye"></i>
                                                         </span>
                                                         <span>Salas</span>
-                                                        <!---->
+                                                       
                                                     </a>
                                                 </div>
-                                            </div>
+                                            </div><!---->
                                         </div>
                                         <hr />
                                          <div class="b-table ">
@@ -444,6 +484,7 @@
                                                                 </a>
                                                                 {% endif %}
                                                             </th>
+                                                            
                                                             <th class="is-sortable">
                                                                 {% if order_by == 'edificio' and sort == 'asc' %}
                                                                 <a href="?order_by=edificio&sort=desc">
@@ -517,6 +558,7 @@
                                                             <td data-label="Campus" id="activityName" class=""> {{ espaco.edificio.campus.nome }} </td>
                                                             <td data-label="Edifício" class=""> {{ espaco.edificio.nome }} </td>
                                                             <td data-label="Sala" class=""> {{ espaco }} </td>
+                                                            
                                                             <!---->
                                                         </tr>
                                                         <!---->

@@ -22,6 +22,12 @@ def error_500(request):
     return render(request, 'diaabertoapp/error_500.html')
 
 #========================================================================================================================
+#Erro 404
+#========================================================================================================================
+def error_404(request):
+    return render(request, 'diaabertoapp/error_404.html')
+
+#========================================================================================================================
 #Login request
 #Reedireciona para a pagina login.html se nenhum utilizador estiver autentificado
 #Reedireciona para a pagina index.html se o utilizador autentificar com sucesso
@@ -164,12 +170,12 @@ def configurarespacos(request):
         campus = campus.filter(id=campus_query)
         edificios = edificios.filter(campus=campus_query)
     #END filter_by_campus
-    #BEGIN filter_by_campus
+    #BEGIN filter_by_edificio
     edificio_query = request.GET.get('edificio')
     if edificio_query !='' and edificio_query is not None:
         salas = salas.filter(edificio=edificio_query)
         edificios = edificios.filter(id=edificio_query)
-    #END filter_by_campus
+    #END filter_by_edificio
     #BEGIN filter_by_name
     nome_query = request.GET.get('nome')
     if nome_query !='' and nome_query is not None:
@@ -206,7 +212,7 @@ def configurarespacos(request):
     except EmptyPage:
         salas = paginator.page(paginator.num_pages)
     #END pagination
-    
+
     return render(request, 'diaabertoapp/configurarespacos.html', {'utilizador':utilizador,'campus':campus, 'nomesquery':nome_query, 'campusquery':campus_query,'edificioquery':edificio_query, 'edificios':edificios, 'salas':salas, 'espacos':salas,'order_by':order_by, 'sort':sort})
 #========================================================================================================================
 #Configuracao das unidades organicas e departamentos
@@ -1668,7 +1674,22 @@ def consultaratividades(request):
     sessoes = Sessao.objects.all()
     sessoesatividade = SessaoAtividade.objects.all()
     tipoatividade = TipoAtividade.objects.all()
+    try:
+        diaaberto = DiaAberto.objects.first() # diaaberto configurations
+    except DiaAberto.DoesNotExist:
+        diaaberto = None   
+    if(diaaberto is not None):
+        start_date = diaaberto.data_inicio
+        end_date = diaaberto.data_fim   # end date
 
+        delta = end_date - start_date       # as timedelta
+        dias_arr = []
+        for i in range(delta.days + 1):
+            day = start_date + timedelta(days=i)
+            dias_arr.append(day)
+        dias = dias_arr
+    else:
+        dias = ""
     #BEGIN order_by
     order_by = request.GET.get('order_by')
     sort = request.GET.get('sort')
@@ -1744,18 +1765,42 @@ def consultaratividades(request):
         atividade_list = atividade_list.filter(tipo_atividade=tipo_query)
         tipoatividade = tipoatividade.filter(id=tipo_query)
     #END filter_by_tipo
-    #BEGIN filter_by_sessao
+    #BEGIN filter_by_dia
     unique_sesaoatividade_obj = []
-    sessao_query = request.GET.get('sessao')
-    if sessao_query !='' and sessao_query is not None:
-
-        atividades_sessions_id = sessoesatividade.filter(sessao=sessao_query)
+    dia_query = request.GET.get('dias')
+    if dia_query !='' and dia_query is not None:
+        print(dia_query)
+        atividades_sessions_id = sessoesatividade.filter(dia=dia_query)
         for x in atividades_sessions_id:
             unique_sesaoatividade_obj.append(x.atividade.id)
 
         atividade_list = atividade_list.filter(id__in=unique_sesaoatividade_obj)
+
+
+        #dias = dias_arr
+    #END filter_by_dia
+
+
+
+
+    #BEGIN filter_by_sessao
+    unique_sesaoatividade_obj = []
+    sessao_query = request.GET.get('sessao')
+    if sessao_query !='' and sessao_query is not None:
+        if dia_query !='' and dia_query is not None:
+            atividades_sessions_id = sessoesatividade.filter(dia=dia_query).filter(sessao=sessao_query)
+            for x in atividades_sessions_id:
+                unique_sesaoatividade_obj.append(x.atividade.id)
+        else:
+
+            atividades_sessions_id = sessoesatividade.filter(sessao=sessao_query)
+            for x in atividades_sessions_id:
+                unique_sesaoatividade_obj.append(x.atividade.id)
+
+        atividade_list = atividade_list.filter(id__in=unique_sesaoatividade_obj)
         sessoes = sessoes.filter(id=sessao_query)
     #END filter_by_sessao
+
 
     #BEGIN pagination
     page = request.GET.get('page', 1)
@@ -1781,7 +1826,7 @@ def consultaratividades(request):
         if(x.visto == False):
             count_notificacoes = count_notificacoes + 1
     #'tiposquery':tipo_query
-    return render(request, 'diaabertoapp/atividades.html', {'count_notificacoes':count_notificacoes, 'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query, 'sessoes':sessoes, 'sessoesquery':sessao_query, 'sessoesatividade':sessoesatividade})
+    return render(request, 'diaabertoapp/atividades.html', {'dias':dias, 'diaquery':dia_query,'count_notificacoes':count_notificacoes, 'notificacoes':notificacoes,'utilizador':utilizador,'user':request.user,'atividades':atividades,'order_by':order_by,'sort':sort,'campuss': campus_arr, 'campusquery':campus_query ,'organicas':organicas,'organicaquery':organica_query,'departamentos':departamentos,'departamentoquery':departamento_query,'tematicas':tematicas,'tematicaquery':tematica_query,'tipoatividade':tipoatividade,'tipo_query':tipo_query,'estados':unique_valida_obj, 'estadosquery':estado_query, 'nomesquery':nome_query, 'materiais':materiais, 'publicoalvo':publico_alvo, 'publicoquery':publico_query, 'sessoes':sessoes, 'sessoesquery':sessao_query, 'sessoesatividade':sessoesatividade})
 
 
 

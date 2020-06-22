@@ -13,7 +13,7 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
-    <title>Dia Aberto</title>
+    <title>Configurar Atividades - Dia Aberto</title>
     <style>
         body,
         html {
@@ -117,9 +117,28 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab router-link">Configuração das Atividades</a>
-                    <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab router-link"> Configuração dos Espaços </a>
-                    <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab router-link"> Configuração das Unidades Orgânicas e Departamentos </a>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Atividades
+                        </a>
+                        <div class="navbar-dropdown">
+                            {% if utilizador.utilizadortipo.tipo == 'Administrador' or utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Docente'   %}
+                            <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
+                            {% endif %}
+                            <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link">Consultar Atividades</a>
+                           
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Gestão de Configurações
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
+                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
+                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -202,7 +221,7 @@
         {% endif %}
 
         <div data-v-8716d23a="" id="page-content">
-            <div data-v-8716d23a="" class="card">
+            <div data-v-8716d23a="" class="card" style="margin-bottom:6em">
                 <div data-v-8716d23a="" class="card-content">
                     <div data-v-8716d23a="" id="top">
                         <nav aria-label="breadcrumbs" class="breadcrumb">
@@ -216,9 +235,9 @@
                             </ul>
                         </nav>
                         <div style="padding: 3rem 2vw 1rem;">
-                            <div class="columns">
-                                
-                                <div class="column tile"> 
+
+                                <h5 class="subtitle is-5 has-text-centered">Configuração das Atividades</h5>
+                                <div class="tile"> 
                                     <div class="container box">
                                         <div class="level">
                                             <div class="level-left">
@@ -239,9 +258,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr />
                                         
-                                            <div class="table-container" style="overflow-y:scroll;height:600px">
+                                            <div class="table-container" style="overflow-y:scroll;height:250px">
                                                 <table id="activitiesTable" class="table has-mobile-cards is-hoverable is-fullwidth">
                                                     <thead>
                                                         <tr>
@@ -289,7 +307,8 @@
                                         
                                     </div>
                                 </div>
-                                <div class="column tile">
+                                <br />
+                                <div class="tile">
                                     <div class="container box">
                                         <div class="level">
                                             <div class="level-left">
@@ -310,8 +329,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr />
-                                        <div class="table-container" style="overflow-y:scroll;height:600px">
+                                        <div class="table-container" style="overflow-y:scroll;height:250px">
                                             <table id="activitiesTable" class="table has-mobile-cards is-hoverable is-fullwidth">
                                                 <thead>
                                                     <tr>
@@ -358,7 +376,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="column tile">
+                                <br />
+                                <div class="tile">
                                     <div class="container box">
                                         <div class="level">
                                             <div class="level-left">
@@ -379,8 +398,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr />
-                                        <div class="table-container" style="overflow-y:scroll;height:600px">
+                                        <div class="table-container" style="overflow-y:scroll;height:250px">
                                             <table id="activitiesTable" class="table has-mobile-cards is-hoverable  is-fullwidth">
                                                 <thead>
                                                     <tr>
@@ -427,7 +445,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="column tile">
+                                <br />
+                                <div class="tile">
                                     <div class="container box">
                                         <div class="level">
                                             <div class="level-left">
@@ -448,12 +467,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr />
-                                        <div class="table-container" style="overflow-y:scroll;height:600px">
+                                        <div class="table-container" style="overflow-y:scroll;height:300px">
                                             <table id="activitiesTable" class="table has-mobile-cards is-hoverable  is-fullwidth">
                                                 <thead>
                                                     <tr>
-                                                        <th class="is-sortable" style="width: 300px;">
+                                                        <th class="is-sortable" style="width: 250px;">
                                                             {% if order_by == 'sessao' and sort == 'asc' %}
                                                                 <a href="?order_by=sessao&sort=desc">
                                                                     <div class="th-wrap">Hora
@@ -496,7 +514,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
