@@ -284,7 +284,7 @@ class SessaoAtividade(models.Model):
     dia = models.DateField(null=True)
     #dia = models.ForeignKey('Dia',on_delete=models.PROTECT, null=True)
     numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
-    n_alunos = models.IntegerField(blank=True, null=True)
+    #n_alunos = models.IntegerField(blank=True, null=True)
     class Meta:
         db_table='SessaoAtividade'
         unique_together = (("atividade", "sessao","dia"),) 

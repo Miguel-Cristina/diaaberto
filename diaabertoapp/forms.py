@@ -88,7 +88,7 @@ class UnidadeOrganicaForm(forms.ModelForm):
 # form do model Departamento
 #========================================================================================================================
 class DepartamentoForm(forms.ModelForm):
-    unidadeorganica = forms.ModelChoiceField(required=False, queryset=UnidadeOrganica.objects.all(), label="",widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%",'placeholder':"Selecione a unidade orgânica..."}))
+    unidadeorganica = forms.ModelChoiceField(queryset=UnidadeOrganica.objects.all(), label="",widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%",'placeholder':"Selecione a unidade orgânica..."}))
     nome = forms.CharField(label="", widget=forms.TextInput(attrs ={'class':"input",'type':"text"}),error_messages={'unique': 'Uma unidade orgânica com o mesmo nome já existe! Por favor coloque outra unidade orgânica.'})
     class Meta:
         model = Departamento

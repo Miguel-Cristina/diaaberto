@@ -28,6 +28,7 @@ class ViewsTestCase(TestCase):
             c = Client()
             c.login(username='admin',password="admin")
 
+
     def test_home(self):
         """Tests the home page."""
         response = self.client.get('/')
