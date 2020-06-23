@@ -45,6 +45,8 @@
             z-index: 1000;
             pointer-events: none;
         }
+
+
     </style>
 </head>
 
@@ -87,6 +89,19 @@
                         </div>
                     </div>
                     {% endif %}
+                    {% if utilizador.utilizadortipo.tipo == 'Coordenador' %}
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Tarefas
+                        </a>
+                        <div class="navbar-dropdown">
+                            {% if utilizador.utilizadortipo.tipo == 'Administrador' or utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Colaborador'   %}
+                            <a data-v-a67fe1ba="" href="/tarefas" class="navbar-item is-tab router-link"> Minhas Tarefas </a>
+                            {% endif %}
+                           
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -116,13 +131,13 @@
                                         <strong data-v-a67fe1ba="">Notificações</strong>
                                     </div>
                                     <hr data-v-a67fe1ba="" class="dropdown-divider" style="margin-bottom:0px">
-                                    <div data-v-a67fe1ba="">
+                                    <div data-v-a67fe1ba="" style="max-height:260px;overflow-y: scroll;">
                                         {% if notificacoes %}
                                             {% for notificacao in notificacoes %}
                                                 {% if notificacao.visto == False %}
-                                                    <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item has-background-white-ter" style="border-bottom: 1px solid #dbdbdb;border-left: 1px solid #f5f5f5;border-right: 1px solid #f5f5f5;">
+                                                    <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item has-background-white-ter" style="font-size: 75%;border-bottom: 1px solid #dbdbdb;border-left: 1px solid #f5f5f5;border-right: 1px solid #f5f5f5;">
                                                         <div data-v-a67fe1ba="" class="has-text-black has-text-left has-text-weight-semibold"> {{ notificacao.assunto }}  </div>
-                                                        <div data-v-a67fe1ba="" class="is-small has-text-grey has-text-left"> <small style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;">{{ notificacao.conteudo }} </small> </div>
+                                                        <div data-v-a67fe1ba="" class="is-small has-text-grey has-text-left"> <small>{{ notificacao.conteudo }} </small> </div> <!--style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"-->
                                                         <div class="level">
                                                             <div class="level-item"><a href="" class="is-small"><i class="mdi mdi-open-in-new mdi-12px"></i></a></div>
                                                             <div class="level-item"><a href="{% url 'visto' notificacao.id %}" class="is-small"><i class="mdi mdi-check mdi-12px"></i></a></div>
@@ -1208,6 +1223,7 @@
     <!-- Individual components -->
     <script src="https://unpkg.com/buefy/dist/components/table"></script>
     <script src="https://unpkg.com/buefy/dist/components/input"></script>
+
     <script>
         $(document).ready(function () {
             $('tr.header').click(function () {

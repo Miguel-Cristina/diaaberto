@@ -96,6 +96,7 @@ def configuraratividades(request):
         user_email = request.user.email
         utilizador = Utilizador.objects.get(email=user_email)
         if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
@@ -139,7 +140,7 @@ def configuraratividades(request):
 
     #END order_by
 
-    return render(request, 'diaabertoapp/configuraratividades.html', {'utilizador':utilizador,'sessoes':sessoes, 'temas':temas, 'tipos':tipos, 'publicos':publicos,'order_by':order_by, 'sort':sort})
+    return render(request, 'diaabertoapp/configuraratividades.html', {'notificacoes':notificacoes,'utilizador':utilizador,'sessoes':sessoes, 'temas':temas, 'tipos':tipos, 'publicos':publicos,'order_by':order_by, 'sort':sort})
 #========================================================================================================================
 #Configuracao das espacos
 #Reedireciona para a pagina das configuracoes dos espacos se o utilizador for do tipo administrador
