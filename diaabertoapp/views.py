@@ -1845,9 +1845,30 @@ def consultaratividades(request):
 
 
 def get_tarefas(request):
-    
-    tarefas_1 = Tarefa.objects.all()
-     
+    tarefas_1 = Tarefa.objects.none()
+    aut_utilizador = ''
+    #tarefas_1 = Tarefa.objects.all()
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        aut_utilizador = Utilizador.objects.get(email=user_email)
+        if aut_utilizador is not None:
+            if aut_utilizador.utilizadortipo.tipo == 'Colaborador':
+                tarefas_1 = Tarefa.objects.filter(coolaborador=aut_utilizador.id)
+            elif aut_utilizador.utilizadortipo.tipo == 'Coordenador':
+                utilizador_organica = aut_utilizador.unidadeorganica
+                coordenadores = Utilizador.objects.filter(unidadeorganica=utilizador_organica)
+                tarefas_1 = Tarefa.objects.filter(cordenador__in=coordenadores)
+            elif aut_utilizador.utilizadortipo.tipo == 'Administrador':
+                tarefas_1 = Tarefa.objects.all()
+            else:
+                messages.error(request, "Não tem permissões para aceder a este conteúdo.")
+                return HttpResponseRedirect('/index/')
+        else:
+            messages.error(request, "É necessário login.")
+            return HttpResponseRedirect('/login/')
+    else:
+        messages.error(request, "Não está autentificado. Aguarde um pouco, se o erro persistir, contacte o suporte.")
+        return HttpResponseRedirect('/login/')
     utilizador = Utilizador.objects.filter(utilizadortipo = 3).order_by("nome")
 
     aform = TarefaForm()
@@ -1954,9 +1975,32 @@ def get_tarefas(request):
         tarefas = paginator.page(paginator.num_pages)
     #END pagination
     #,'campuss': campus_arr, 'campusquery':campus_query ,'UnidadeOrganicas':UnidadeOrganicas,'UnidadeOrganicaquery':UnidadeOrganica_query,'departamentos':departamentos,'departamentoquery':departamento_query,
-    return render(request, 'diaabertoapp/tarefas.html',{'campuss': campus_arr, 'campusquery':campus_query,'form':aform,'tipo_query':tipo_query, 'tarefas': tarefas, 'utilizadores':utilizador,'tiposs':unique_valida_obj,'nomesquery':nome_query,'nomesColaboradorQuery':nome_colab_query,'order_by':order_by, 'sort':sort})
+    return render(request, 'diaabertoapp/tarefas.html',{'utilizador':aut_utilizador,'campuss': campus_arr, 'campusquery':campus_query,'form':aform,'tipo_query':tipo_query, 'tarefas': tarefas, 'utilizadores':utilizador,'tiposs':unique_valida_obj,'nomesquery':nome_query,'nomesColaboradorQuery':nome_colab_query,'order_by':order_by, 'sort':sort})
 
 def add_tarefa(request):
+
+    #tarefas_1 = Tarefa.objects.none()
+    aut_utilizador = ''
+    editable = False
+    #tarefas_1 = Tarefa.objects.all()
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        aut_utilizador = Utilizador.objects.get(email=user_email)
+        if aut_utilizador is not None:
+            if aut_utilizador.utilizadortipo.tipo == 'Coordenador':
+                editable = True
+            elif aut_utilizador.utilizadortipo.tipo == 'Administrador':
+                editable = True
+            else:
+                messages.error(request, "Não tem permissões para aceder a este conteúdo.")
+                return HttpResponseRedirect('/index/')
+        else:
+            messages.error(request, "É necessário login.")
+            return HttpResponseRedirect('/login/')
+    else:
+        messages.error(request, "Não está autentificado. Aguarde um pouco, se o erro persistir, contacte o suporte.")
+        return HttpResponseRedirect('/login/')
+
     atividades = Atividade.objects.all()
     salas = Sala.objects.all()
     
@@ -1965,6 +2009,7 @@ def add_tarefa(request):
         aForm = TarefaForm(request.POST)
         if aForm.is_valid():
             tarefa = aForm.save(commit = False)
+            tarefa.cordenador = aut_utilizador
             if(tarefa.tipo_tarefa == 'PE'):
                 tarefa.duracao = 15
             if(tarefa.tipo_tarefa == 'AV'):
@@ -1977,10 +2022,31 @@ def add_tarefa(request):
     else:
         aForm = TarefaForm()
      
-    return render(request, 'diaabertoapp/adicionartarefa.html', {'form':aForm, 'atividades': atividades, 'salas':salas})
+    return render(request, 'diaabertoapp/adicionartarefa.html', {'form':aForm, 'atividades': atividades, 'salas':salas, 'utilizador':aut_utilizador})
     
 def rem_tarefa(request ,pk):
     tarefas_1 = Tarefa.objects.all()
+    aut_utilizador = ''
+    editable = False
+    #tarefas_1 = Tarefa.objects.all()
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        aut_utilizador = Utilizador.objects.get(email=user_email)
+        if aut_utilizador is not None:
+            if aut_utilizador.utilizadortipo.tipo == 'Coordenador':
+                editable = True
+            elif aut_utilizador.utilizadortipo.tipo == 'Administrador':
+                editable = True
+            else:
+                messages.error(request, "Não tem permissões para aceder a este conteúdo.")
+                return HttpResponseRedirect('/index/')
+        else:
+            messages.error(request, "É necessário login.")
+            return HttpResponseRedirect('/login/')
+    else:
+        messages.error(request, "Não está autentificado. Aguarde um pouco, se o erro persistir, contacte o suporte.")
+        return HttpResponseRedirect('/login/')
+
     if request.method == 'POST':
        obj = Tarefa.objects.filter(pk=pk).delete()
        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))    
@@ -1990,6 +2056,27 @@ def rem_tarefa(request ,pk):
 
 def atribuir_tarefa(request,pk):
     
+    aut_utilizador = ''
+    editable = False
+    #tarefas_1 = Tarefa.objects.all()
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        aut_utilizador = Utilizador.objects.get(email=user_email)
+        if aut_utilizador is not None:
+            if aut_utilizador.utilizadortipo.tipo == 'Coordenador':
+                editable = True
+            elif aut_utilizador.utilizadortipo.tipo == 'Administrador':
+                editable = True
+            else:
+                messages.error(request, "Não tem permissões para aceder a este conteúdo.")
+                return HttpResponseRedirect('/index/')
+        else:
+            messages.error(request, "É necessário login.")
+            return HttpResponseRedirect('/login/')
+    else:
+        messages.error(request, "Não está autentificado. Aguarde um pouco, se o erro persistir, contacte o suporte.")
+        return HttpResponseRedirect('/login/')
+
     tarefas_1 = Tarefa.objects.all()
     colaboradorids = request.POST.getlist('colaborador_id')
         
@@ -2005,7 +2092,26 @@ def atribuir_tarefa(request,pk):
 
     
 def remove_colab(request,pk):
-    
+    aut_utilizador = ''
+    editable = False
+    #tarefas_1 = Tarefa.objects.all()
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        aut_utilizador = Utilizador.objects.get(email=user_email)
+        if aut_utilizador is not None:
+            if aut_utilizador.utilizadortipo.tipo == 'Coordenador':
+                editable = True
+            elif aut_utilizador.utilizadortipo.tipo == 'Administrador':
+                editable = True
+            else:
+                messages.error(request, "Não tem permissões para aceder a este conteúdo.")
+                return HttpResponseRedirect('/index/')
+        else:
+            messages.error(request, "É necessário login.")
+            return HttpResponseRedirect('/login/')
+    else:
+        messages.error(request, "Não está autentificado. Aguarde um pouco, se o erro persistir, contacte o suporte.")
+        return HttpResponseRedirect('/login/')
     tarefa_obj = Tarefa.objects.get(pk=pk)
     tarefa_obj.coolaborador.clear()
     tarefa_obj.estado = 'PA'
@@ -2015,8 +2121,33 @@ def remove_colab(request,pk):
     
 
 def edit_tarefa(request, pk):
-    
-    
+
+    tarefa = get_object_or_404(Tarefa, pk=pk)
+    aut_utilizador = ''
+    editable = False
+    #tarefas_1 = Tarefa.objects.all()
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        aut_utilizador = Utilizador.objects.get(email=user_email)
+        if aut_utilizador is not None:
+            if aut_utilizador.utilizadortipo.tipo == 'Coordenador':
+                if tarefa.cordenador == aut_utilizador.id:
+                    editable = True
+                else:
+                    messages.error(request, "Não tem permissões para aceder a este conteúdo.")
+                    return HttpResponseRedirect('/index/')
+            elif aut_utilizador.utilizadortipo.tipo == 'Administrador':
+                editable = True
+            else:
+                messages.error(request, "Não tem permissões para aceder a este conteúdo.")
+                return HttpResponseRedirect('/index/')
+        else:
+            messages.error(request, "É necessário login.")
+            return HttpResponseRedirect('/login/')
+    else:
+        messages.error(request, "Não está autentificado. Aguarde um pouco, se o erro persistir, contacte o suporte.")
+        return HttpResponseRedirect('/login/')
+
     tipo_tarefa = {
         ('AV', 'Atividade'),
         ('PE' , 'Percurso'),
@@ -2024,7 +2155,7 @@ def edit_tarefa(request, pk):
         }
 
     
-    tarefa = get_object_or_404(Tarefa, pk=pk)
+    
     atividades = Atividade.objects.all()
     salas = Sala.objects.all()
     

@@ -117,9 +117,9 @@
                                         <div data-v-1513178e="" class="menu" style="margin-bottom: 1rem;">
                                             <p data-v-1513178e="" class="menu-label">Filtros Tarefa</p>
                                 
-                                          
+                                            {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
                                             <div class="field has-addons">
-                                                {% if not campusquery|length > 0 %}
+                                            {% if not campusquery|length > 0 %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
                                                     <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
@@ -200,7 +200,7 @@
                                             {% endif %}
 
                                             </div>
-                                           
+                                           {% endif %}
                                           
 
                                         <div class="field has-addons">
@@ -356,10 +356,13 @@
                                 <li class="is-active"><a href="/tarefas"
                                         class="router-link-exact-active router-link-active">Tarefas</a></li>
                             </ul>
-                        </nav><a href="/adicionartarefa" class="button is-success is-outlined" type="button"
+                        </nav>
+                        {% if utilizador.utilizadortipo.tipo == "Coordenador" or utilizador.utilizadortipo.tipo == 'Administrador' %}
+                        <a href="/adicionartarefa" class="button is-success is-outlined" type="button"
                             style="margin-bottom: 1rem; margin-right: 20px;"><span class="icon is-small"><i
                                     class="mdi mdi-plus"></i></span> <span>Adicionar Tarefa</span>
-                            <!----></a>
+                        </a>
+                        {% endif %}
                         <div>
                             <div class="b-table">
                                 <div class="field table-mobile-sort">
@@ -597,18 +600,23 @@
                                                     <div class="columns is-gapless">
                                                      
                                                         <div class="column ">
-                                                           <a href="{% url 'edit_tarefa' tarefa.pk %}" class="button has-text-white is-small" ><span
+                                                            {% if utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Administrador' %}
+                                                            <a href="{% url 'edit_tarefa' tarefa.pk %}" class="button has-text-white is-small" ><span
                                                                     class="icon is-small has-text-grey"><i
-                                                                        class=" has-text-red mdi mdi-pencil-box mdi-36px"></i></span></a>
+                                                                        class=" has-text-red mdi mdi-pencil-box mdi-36px"></i></span>
+                                                            </a>
+                                                            {% endif %}
                                                        
                                                        </div>
                                                        
                                                         
                                                             
                                                       <div class="column is-8"> 
+                                                          {% if utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Administrador' %}
                                                             <form action ="{% url 'delete_tarefa' tarefa.pk %}" method="POST"><in>{% csrf_token %}<button class="button has-text-white is-small" onclick="return confirm('Tem a certeza que prentede eliminar a tarefa?');"><span
                                                                     class="icon is-small has-text-danger"><i
                                                                         class=" has-text-red mdi mdi-close-box mdi-36px"></i></span></button></form>
+                                                          {% endif %}
                                                        </div>
                                                     </div>                                                  
                                                     
@@ -645,7 +653,7 @@
                                                                 <div>
                                                                   {% if tarefa.estado == "PA" %}
                                                                 
-                                                                   
+                                                                    {% if utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Administrador' %}
                                                                     <form action ="{% url 'atribuir_tarefa' tarefa.pk  %}" method="POST"><in>{% csrf_token %}                                                                
                                                                       <div class="columns">
                                                                         <div class="column">
@@ -678,6 +686,8 @@
                                                                       </div>
                                                                       </div>
                                                                   </form>
+                                                                    {% endif %}
+
                                                                 
                                                                 
                                                               </div>
@@ -707,11 +717,13 @@
                                                                 <div class="level">
                                                                     <div class="level-left"></div>
                                                                     <div class="level-right">
+                                                                        {% if utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Administrador' %}
                                                                         <form action ="{% url 'remove_colab' tarefa.pk  %}" method="POST"><in>{% csrf_token %} 
                                                                                    <button type="submit" class="button is-danger is-outlined" onclick="return confirm('Tem a certeza que prentede eliminar a atribuição da tarefa?');"><span
                                                                                         class="icon is-small "><i  
                                                                                     class=" mdi mdi-account-arrow-right"></i></span><span>Reatribuir Tarefa</span></button>
                                                                         </form>
+                                                                        {% endif %}
                                                                     </div>
                                                                 </div>
                                                               {% endif %}
