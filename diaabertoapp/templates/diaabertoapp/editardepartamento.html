@@ -105,16 +105,29 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                   <div class="navbar-item has-dropdown is-hoverable">
+                                       <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                           Atividades
                         </a>
                         <div class="navbar-dropdown">
-                            {% if utilizador.utilizadortipo.tipo == 'Administrador' or utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Docente'   %}
                             <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
-                            {% endif %}
                             <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link">Consultar Atividades</a>
-                           
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Tarefas
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/tarefas" class="navbar-item is-tab router-link"> Minhas Tarefas </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Transportes
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link"> Meus Transportes </a>
                         </div>
                     </div>
                     <div class="navbar-item has-dropdown is-hoverable">
@@ -124,7 +137,11 @@
                         <div class="navbar-dropdown">
                             <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
                             <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
-                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
+                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab is-active"> Configuração das Unidades Orgânicas e Departamentos </a>
+                            <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab router-link-exact-active router-link-active">Configuração dos Transportes</a>
+                            <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab">Configuração dos Percursos</a>
+                            <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab">Configuração dos Horários</a>
+                            <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab">Configuração dos Menus</a>
                         </div>
                     </div>
                 </div>

@@ -553,17 +553,20 @@
                                                     <div class="control is-clearfix" id="form_set_material">
                                                         <!--<input type="text" class="input" name="nome_atividade" placeholder="ex: Exemplo de Atividade" required>-->
                                                         <div class="columns">
-                                                            <div class="column">
+                                                            <div class="column is-two-fifths">
                                                                 <label class="label">Material</label>
                                                             </div>
-                                                            <div class="column">
+                                                            <div class="column is-two-fifths">
                                                                 <label class="label">Quantidade</label>
+                                                            </div>
+                                                            <div class="column">
+                                                                <label class="label">Excluir</label>
                                                             </div>
                                                         </div>
                                                         {{ form2.management_form }}
                                                         {% for frm2 in form2 %}
                                                         <div class="columns">
-                                                            <div class="column">
+                                                            <div class="column is-two-fifths">
                                                                 <div class="field">
                                                                     <div class="control is-expanded ">
                                                                     {{ frm2.material }}        
@@ -573,7 +576,7 @@
                                                                     {% endfor %}
                                                                 </div>
                                                             </div>
-                                                            <div class="column">
+                                                            <div class="column is-two-fifths">
                                                                 <div class="field">
                                                                     <div class="control is-expanded">
                                                                     {{ frm2.quantidade }}    
@@ -583,12 +586,19 @@
                                                                     {% endfor %}
                                                                 </div>
                                                             </div>
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <div class="control is-expanded">
+                                                                    {{ frm2.DELETE }}    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                     <div id="empty_form_material" style="display:none">
-                                                        <div class="columns">
-                                                            <div class="column">
+                                                        <div class="columns"> 
+                                                            <div class="column is-two-fifths">
                                                                 <div class="field">
                                                                     <div class="control is-expanded ">
                                                                     {{ form2.empty_form.material }}        
@@ -598,7 +608,7 @@
                                                                     {% endfor %}
                                                                 </div>
                                                             </div>
-                                                            <div class="column">
+                                                            <div class="column is-two-fifths">
                                                                 <div class="field">
                                                                     <div class="control is-expanded">
                                                                     {{ form2.empty_form.quantidade }}    
@@ -606,6 +616,13 @@
                                                                     {% for error in frm2.empty_form.quantidade.errors %}
                                                                     <p class="help is-danger">{{ error }}</p>
                                                                     {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="column">
+                                                                <div class="field">
+                                                                    <div class="control is-expanded">
+                                                                    {{ form2.empty_form.DELETE }}    
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -633,7 +650,7 @@
                                                         {{ form3.management_form }}
                                                            {% for frm3 in form3 %}
                                                         <div class="columns">
-                                                            <div class="column">
+                                                            <div class="column is-4">
                                                                 <div class="field">
                                                                     <label class="label">Dia</label>
                                                                     <div class="control is-expanded">
@@ -644,7 +661,7 @@
                                                                     {% endfor %}
                                                                 </div>
                                                             </div>
-                                                            <div class="column">
+                                                            <div class="column is-3">
                                                                 <div class="field">
                                                                     <label class="label">Hora da Sessão</label>
                                                                     <div class="control is-expanded ">
@@ -657,7 +674,7 @@
                                                                     {% endfor %}
                                                                 </div>
                                                             </div>
-                                                            <div class="column">
+                                                            <div class="column is-3">
                                                                 <div class="field">
                                                                     <label class="label">Número de Colaboradores</label>
                                                                     <div class="control is-expanded">
@@ -668,19 +685,25 @@
                                                                     {% endfor %}
                                                                 </div>
                                                             </div>
+                                                            <div class="column is-2">
+                                                                <div class="field">
+                                                                    <label class="label">Excluir</label>
+                                                                    <input type="checkbox" class="disabled" disabled="">
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         {% endfor %}
                                                     </div>
                                                     <div id="empty_form" style="display:none">
                                                         <div class="columns">
-                                                            <div class="column">
+                                                            <div class="column is-4">
                                                                 <div class="field">
                                                                     <div class="control is-expanded">
                                                                     {{ form3.empty_form.dia }}    
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="column">
+                                                            <div class="column is-3">
                                                                 <div class="field">
                                                                     <div class="control is-expanded ">
                                                                         <span class="select is-fullwidth">
@@ -689,10 +712,17 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="column">
+                                                            <div class="column is-3">
                                                                 <div class="field">
                                                                     <div class="control is-expanded">
                                                                     {{ form3.empty_form.numero_colaboradores }}    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="column is-2">
+                                                                <div class="field">
+                                                                    <div class="control is-expanded">
+                                                                    {{ form3.empty_form.DELETE }}    
                                                                     </div>
                                                                 </div>
                                                             </div>

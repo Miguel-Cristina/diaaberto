@@ -284,7 +284,7 @@ class SessaoAtividade(models.Model):
     dia = models.DateField(null=True)
     #dia = models.ForeignKey('Dia',on_delete=models.PROTECT, null=True)
     numero_colaboradores = models.PositiveSmallIntegerField(default=0,blank=True)
-    #n_alunos = models.IntegerField(blank=True, null=True)
+    n_alunos = models.IntegerField(blank=True, null=True)
     class Meta:
         db_table='SessaoAtividade'
         unique_together = (("atividade", "sessao","dia"),) 
@@ -331,9 +331,13 @@ class Dia(models.Model):
 # model DiaAberto
 #========================================================================================================================
 class DiaAberto(models.Model):
-    titulo = models.CharField(max_length=255, null=True)
+    titulo = models.CharField(max_length=255,null=True)
+    email = models.CharField(max_length=255,null=True)
+    contacto = models.IntegerField(null=True)
     data_inicio = models.DateField(null=True)
     data_fim = models.DateField(null=True)
+    descricao = models.TextField(null=True)
+
     def __str__(self):
         return self.titulo
     class Meta:
@@ -447,3 +451,76 @@ class Tarefa(models.Model):
     def str(self):
         return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao +coolaborador
 
+#========================================================================================================================
+# model Transporte
+#========================================================================================================================
+class Transporte(models.Model):
+    tipo_transporte = models.CharField(max_length=255)
+    numero = models.IntegerField()
+    capacidade = models.IntegerField()
+
+    class Meta:
+        #managed = False
+        db_table = 'transporte'
+
+    def __str__(self):
+        return ('Numero={0},Tipo Transporte={1}, Capacidade={2}').format(str(self.numero), str(self.tipo_transporte), str(self.capacidade))
+    
+class Percurso(models.Model):
+    origem = models.CharField(max_length=255)
+    destino = models.CharField(max_length=255)
+
+    class Meta:
+        #managed = False
+        db_table = 'percurso'
+
+
+    def __str__(self):
+        return ('Origem={0}, Destino={1}').format(str(self.origem), str(self.destino))
+
+class Horario(models.Model):
+    hora_chegada = models.TimeField()
+    hora_partida = models.TimeField()
+    data = models.DateField()
+
+    class Meta:
+        #managed = False
+        db_table = 'horario'
+        
+    def __str__(self):
+        return ('Hora chegada={0}, Hora partida={1}, Data={2}').format(str(self.hora_chegada), str(self.hora_partida), str(self.data))
+
+class Prato(models.Model):
+    nome = models.CharField(max_length=255)
+    tipo = models.CharField(max_length=255)
+    sopa = models.CharField(max_length=255, blank=True)
+    sobremesa = models.CharField(max_length=255, blank=True)
+    descricao = models.TextField()
+
+    class Meta:
+        #managed = False
+        db_table = 'prato'
+
+    def __str__(self):
+        return ('Nome={0}, Tipo={1}, Sopa={2}, Sobremesa={3}').format(str(self.nome), str(self.tipo), str(self.sopa), str(self.sobremesa))
+ 
+class Ementa(models.Model):
+    dia = models.DateField()
+    preco_aluno_economico = models.DecimalField(max_digits=4, decimal_places=2)
+    preco_aluno_normal = models.DecimalField(max_digits=4, decimal_places=2)
+    preco_outro_economico = models.DecimalField(max_digits=4, decimal_places=2)
+    preco_outro = models.DecimalField(max_digits=4, decimal_places=2)
+    prato = models.ForeignKey(Prato, models.DO_NOTHING)
+
+    class Meta:
+        #managed = False
+        db_table = 'ementa'
+
+class TransporteUniversitarioHorario(models.Model):
+    horario = models.ForeignKey(Horario, models.DO_NOTHING)
+    percurso = models.ForeignKey(Percurso, models.DO_NOTHING)
+    transporte_universitario = models.ForeignKey(Transporte, models.DO_NOTHING)
+
+    class Meta:
+        #managed = False
+        db_table = 'transporte_universitario-horario'

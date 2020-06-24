@@ -2,8 +2,8 @@ from django.views.generic import ListView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models.deletion import ProtectedError
 from django.db.models import Count
-from .models import Dia, DiaAberto, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao, Colaboracao
-from .forms import CampusForm, AtividadeForm, MaterialQuantidadeForm ,SessaoAtividadeForm, MaterialFormSet, TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, SalaForm, UnidadeOrganicaForm, DepartamentoForm
+from .models import Dia, Prato, Ementa, DiaAberto, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, Percurso, Transporte, TransporteUniversitarioHorario, Horario, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao, Colaboracao
+from .forms import CampusForm, AtividadeForm, EmentaForm, PratoForm, MaterialQuantidadeForm ,DiaabertoForm, TransporteUniversitarioHorarioForm, SessaoAtividadeForm, TransporteForm, PercursoForm, HorarioForm, MaterialFormSet, TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, SalaForm, UnidadeOrganicaForm, DepartamentoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -74,11 +74,17 @@ def index(request):
         utilizador = Utilizador.objects.get(email=user_email)
         if utilizador is not None:
             notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+
     count_notificacoes = 0 
     for x in notificacoes:
         if(x.visto == False):
             count_notificacoes = count_notificacoes + 1
-    return render(request, 'diaabertoapp/index.html', {'count_notificacoes':count_notificacoes,'utilizador':utilizador,'notificacoes':notificacoes})
+
+    diaaberto = DiaAberto.objects.first()
+    if diaaberto is None:
+        return HttpResponseRedirect('/configurardiaaberto')
+
+    return render(request, 'diaabertoapp/index.html', {'count_notificacoes':count_notificacoes,'utilizador':utilizador,'notificacoes':notificacoes,'diaaberto':diaaberto})
 #========================================================================================================================
 #Administrador
 #Reedireciona para a pagina do administrador e das configurações
@@ -1229,10 +1235,17 @@ def minhasatividades(request):
                 utilizador_organica = utilizador.unidadeorganica
                 #utilizador_departamento = utilizador.departamento
                 atividade_list = Atividade.objects.filter(unidadeorganica=utilizador_organica)
+            elif utilizador.utilizadortipo.tipo == 'Administrador':
+                atividade_list = Atividade.objects.all()
+            else:
+                messages.error(request, 'Não tem permissões para aceder à pagina!')
+                return HttpResponseRedirect('/index/')
         else:
-            atividade_list = Atividade.objects.all()
+            messages.error(request, 'Não tem permissões para aceder à pagina!')
+            return HttpResponseRedirect('/index/')
     else:
-        atividade_list = Atividade.objects.all()
+        messages.error(request, 'Não tem permissões para aceder à pagina! É necessário efetuar o login!')
+        return HttpResponseRedirect('/login/')
     campus_arr = Campus.objects.all()
     organicas = UnidadeOrganica.objects.all()
     departamentos = Departamento.objects.all()
@@ -1407,9 +1420,15 @@ def proporatividade(request):
         utilizador = Utilizador.objects.get(email=user_email)
         organicas = UnidadeOrganica.objects.get(id=utilizador.unidadeorganica.id)
         departamentos = Departamento.objects.get(id=utilizador.departamento.id)
+        if utilizador is None or utilizador.utilizadortipo.tipo != 'Docente':
+            messages.error(request, 'Não tem permissões para aceder à pagina!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina! É necessário autentificar-se.')
+        return HttpResponseRedirect('/index')
 
-        mFormSet = inlineformset_factory(Atividade, MaterialQuantidade, MaterialQuantidadeForm, fields=('material','quantidade',), extra=0, can_delete=False)
-        sFormSet = inlineformset_factory(Atividade, SessaoAtividade, SessaoAtividadeForm, fields=('dia','sessao','numero_colaboradores',), extra=1 , can_delete=False)
+    mFormSet = inlineformset_factory(Atividade, MaterialQuantidade, MaterialQuantidadeForm, fields=('material','quantidade',), extra=0, can_delete=True)
+    sFormSet = inlineformset_factory(Atividade, SessaoAtividade, SessaoAtividadeForm, fields=('dia','sessao','numero_colaboradores',), extra=1 , can_delete=True)
 
 
     if request.method == 'POST':
@@ -1430,13 +1449,14 @@ def proporatividade(request):
             aForm.save_m2m()
             for mFs in mForm:
                 material = mFs.save(commit=False)
-                if material.material is not None:
+                if material.material is not None and mFs.cleaned_data.get('DELETE') is not True:
                     material.atividade = atividade
                     material.save()
             for sFs in sForm:
                 sessao = sFs.save(commit=False)
-                if sessao.dia is not None and sessao.sessao is not None and sessao.numero_colaboradores is not None:
+                if sessao.dia is not None and sessao.sessao is not None and sessao.numero_colaboradores is not None and sFs.cleaned_data.get('DELETE') is not True:
                     sessao.atividade = atividade
+                    sessao.n_alunos = atividade.limite_participantes
                     sessao.save()
             messages.success(request, 'Proposta de atividade criada com sucesso!')
             return HttpResponseRedirect('/minhasatividades/')
@@ -1590,6 +1610,21 @@ def rejeitaratividade(request,pk):
 #========================================================================================================================
 def eliminaratividade(request,pk):
     object = Atividade.objects.get(pk=pk)
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            if not object.responsavel.id == utilizador.id:
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+    
     object.delete()
     messages.success(request, 'Atividade foi eliminada!')
     return HttpResponseRedirect('/minhasatividades/')
@@ -1840,7 +1875,7 @@ def consultaratividades(request):
 
 
 #========================================================================================================================
-#VIEWS DE OUTRAS COMPONENTES
+#Tarefas Nugas
 #========================================================================================================================
 
 
@@ -2281,3 +2316,907 @@ def user_switch(request):
          }
 
     return JsonResponse(dados)
+
+#========================================================================================================================
+#Transporte Rui
+#========================================================================================================================
+def configurartransporte(request):
+
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+    transporte_list = Transporte.objects.all()
+       
+    #BEGIN filter_by_numero
+    numero_query = request.GET.get('numero')
+    if numero_query !='' and numero_query is not None:
+        transporte_list = transporte_list.filter(numero=numero_query)
+    #END filter_by_numero
+
+    #BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query !='' and tipo_query is not None:
+        transporte_list = transporte_list.filter(tipo_transporte__icontains=tipo_query)
+    #END filter_by_tipo
+
+    #BEGIN filter_by_transporte
+    capacidade_query = request.GET.get('capacidade')
+    if capacidade_query !='' and capacidade_query is not None:
+        transporte_list = transporte_list.filter(capacidade=capacidade_query)
+    #END filter_by_tipo
+
+        #ORDER
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'tipo':
+        if sort == 'asc':
+            transporte_list = transporte_list.order_by('tipo_transporte')
+        else:
+            transporte_list = transporte_list.order_by('-tipo_transporte')
+    elif order_by == 'numero':
+        if sort == 'asc':
+            transporte_list = transporte_list.order_by('numero')
+        else:
+            transporte_list = transporte_list.order_by('-numero')
+    elif order_by == 'capacidade':
+        if sort == 'asc':
+            transporte_list = transporte_list.order_by('capacidade')
+        else:
+            transporte_list = transporte_list.order_by('-capacidade')
+
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(transporte_list, 5)
+    try:
+        transportes = paginator.page(page)
+    except PageNotAnInteger:
+        transportes = paginator.page(1)
+    except EmptyPage:
+        transportes = paginator.page(paginator.num_pages)
+    #END pagination
+
+    #'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/configurartransporte.html', {'transportes':transportes, 'numeroquery':numero_query, 'tipoquery':tipo_query, 'capacidadequery':capacidade_query, 'order_by':order_by, 'sort':sort})
+
+def adicionartransporte(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    if request.method == 'POST':
+        form = TransporteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/configurarhorario/')
+    else:
+        form = TransporteForm()
+    return render(request, 'diaabertoapp/proportransporte.html', {'form':form})
+
+def editartransporte(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    transporte = Transporte.objects.get(pk=id)
+    if request.method == 'POST':
+        form=TransporteForm(request.POST, instance=transporte)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'O transporte foi editado com sucesso!')
+            return HttpResponseRedirect('/configurartransporte/')
+        else:
+            print(form.errors)
+    else:
+        form = TransporteForm(instance=transporte)
+
+    return render(request, 'diaabertoapp/proportransporte.html', {'form':form})
+
+def eliminartransporte(request, id):
+    object = Transporte.objects.get(pk=id)
+    object.delete()
+    return HttpResponseRedirect('/configurartransporte/')
+
+
+
+def configurarpercurso(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    percursos_list = Percurso.objects.all()
+
+    #BEGIN filter_by_origem
+    origem_query = request.GET.get('origem')
+    if origem_query !='' and origem_query is not None:
+        percursos_list = percursos_list.filter(origem__icontains=origem_query)
+    #END filter_by_origem
+
+    #BEGIN filter_by_destino
+    destino_query = request.GET.get('destino')
+    if destino_query !='' and destino_query is not None:
+        percursos_list = percursos_list.filter(destino__icontains=destino_query)
+    #END filter_by_destino
+
+
+
+
+    #ORDER
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'origem':
+        if sort == 'asc':
+            percursos_list = percursos_list.order_by('origem')
+        else:
+            percursos_list = percursos_list.order_by('-origem')
+    elif order_by == 'destino':
+        if sort == 'asc':
+            percursos_list = percursos_list.order_by('destino')
+        else:
+            percursos_list = percursos_list.order_by('-destino')
+
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(percursos_list, 5)
+    try:
+        percursos = paginator.page(page)
+    except PageNotAnInteger:
+        percursos = paginator.page(1)
+    except EmptyPage:
+        percursos = paginator.page(paginator.num_pages)
+    #END pagination
+
+    #'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/configurarpercurso.html', {'percursos':percursos, 'origemquery':origem_query, 'destinoquery':destino_query, 'order_by':order_by, 'sort':sort})
+
+def adicionarpercurso(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    if request.method == 'POST':
+        form = PercursoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/configurarpercurso/')
+    else:
+        form = PercursoForm()
+    return render(request, 'diaabertoapp/adicionarpercurso.html', {'form':form})
+
+def editarpercurso(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    percurso = Percurso.objects.get(pk=id)
+    if request.method == 'POST':
+        form=PercursoForm(request.POST, instance=percurso)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'O percurso foi editado com sucesso!')
+            return HttpResponseRedirect('/configurarpercurso/')
+        else:
+            print(form.errors)
+    else:
+        form = PercursoForm(instance=percurso)
+
+    return render(request, 'diaabertoapp/adicionarpercurso.html', {'form':form})
+
+def eliminarpercurso(request, id):
+    object = Percurso.objects.get(pk=id)
+    object.delete()
+    return HttpResponseRedirect('/configurarpercurso/')
+
+def configurarhorario(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    horarios_list = Horario.objects.all()
+
+    #BEGIN hora partida
+    horachegada_query = request.GET.get('horachegada')
+    if horachegada_query !='' and horachegada_query is not None:
+        horarios_list = horarios_list.filter(hora_chegada__icontains=horachegada_query)
+    #END hora partida
+
+    #BEGIN hora chegada
+    horapartida_query = request.GET.get('horapartida')
+    if horapartida_query !='' and horapartida_query is not None:
+        horarios_list = horarios_list.filter(hora_partida__icontains=horapartida_query)
+    #END hora chegada
+
+     #BEGIN data
+    data_query = request.GET.get('data')
+    if data_query !='' and data_query is not None:
+        horarios_list = horarios_list.filter(data=data_query)
+    #END data
+
+    #ORDER
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'horachegada':
+        if sort == 'asc':
+            horarios_list = horarios_list.order_by('hora_chegada')
+        else:
+            horarios_list = horarios_list.order_by('-hora_chegada')
+    elif order_by == 'horapartida':
+        if sort == 'asc':
+            horarios_list = horarios_list.order_by('hora_partida')
+        else:
+            horarios_list = horarios_list.order_by('-hora_partida')
+    elif order_by == 'data':
+        if sort == 'asc':
+            horarios_list = horarios_list.order_by('data')
+        else:
+            horarios_list = horarios_list.order_by('-data')
+    #ENDORDER
+
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(horarios_list, 5)
+    try:
+        horarios = paginator.page(page)
+    except PageNotAnInteger:
+        horarios = paginator.page(1)
+    except EmptyPage:
+        horarios = paginator.page(paginator.num_pages)
+    #END pagination
+
+    #'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/configurarhorario.html', {'horarios':horarios, 'horachegadaquery':horachegada_query, 'horapartidaquery':horapartida_query, 'dataquery':data_query, 'order_by':order_by, 'sort':sort})
+
+def adicionarhorario(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    if request.method == 'POST':
+        form = HorarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/configurarhorario/')
+    else:
+        form = HorarioForm()
+    return render(request, 'diaabertoapp/adicionarhorario.html', {'form':form})
+
+def editarhorario(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    horario = Horario.objects.get(pk=id)
+    if request.method == 'POST':
+        form=HorarioForm(request.POST, instance=horario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'O horario foi editado com sucesso!')
+            return HttpResponseRedirect('/configurarhorario/')
+        else:
+            print(form.errors)
+    else:
+        form = HorarioForm(instance=horario)
+
+    return render(request, 'diaabertoapp/adicionarhorario.html', {'form':form})
+
+def eliminarhorario(request, id):
+    object = Horario.objects.get(pk=id)
+    object.delete()
+    return HttpResponseRedirect('/configurarhorario/')
+
+def configurarprato(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    pratos_list = Prato.objects.all()
+
+    #BEGIN filter_by_nome
+    nome_query = request.GET.get('nome')
+    if nome_query !='' and nome_query is not None:
+        pratos_list = pratos_list.filter(nome__icontains=nome_query)
+    #END filter_by_nome
+
+    #BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query !='' and tipo_query is not None:
+        pratos_list = pratos_list.filter(tipo__icontains=tipo_query)
+    #END filter_by_tipo
+
+    #BEGIN filter_by_sopa
+    sopa_query = request.GET.get('sopa')
+    if sopa_query !='' and sopa_query is not None:
+        pratos_list = pratos_list.filter(sopa__icontains=sopa_query)
+    #END filter_by_sopa
+
+    #BEGIN filter_by_sobremesa
+    sobremesa_query = request.GET.get('sobremesa')
+    if sobremesa_query !='' and sobremesa_query is not None:
+        pratos_list = pratos_list.filter(sobremesa__icontains=sobremesa_query)
+    #END filter_by_sobremesa
+
+    #ORDER
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'nome':
+        if sort == 'asc':
+            pratos_list = pratos_list.order_by('nome')
+        else:
+            pratos_list = pratos_list.order_by('-nome')
+    elif order_by == 'tipo':
+        if sort == 'asc':
+            pratos_list = pratos_list.order_by('tipo')
+        else:
+            pratos_list = pratos_list.order_by('-tipo')
+    elif order_by == 'sopa':
+        if sort == 'asc':
+            pratos_list = pratos_list.order_by('sopa')
+        else:
+            pratos_list = pratos_list.order_by('-sopa')
+    elif order_by == 'sobremesa':
+        if sort == 'asc':
+            pratos_list = pratos_list.order_by('sobremesa')
+        else:
+            pratos_list = pratos_list.order_by('-sobremesa')
+
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(pratos_list, 5)
+    try:
+        pratos = paginator.page(page)
+    except PageNotAnInteger:
+        pratos = paginator.page(1)
+    except EmptyPage:
+        pratos = paginator.page(paginator.num_pages)
+    #END pagination
+
+    #'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/configurarprato.html', {'pratos':pratos, 'order_by':order_by, 'sort':sort, 'nomequery':nome_query, 'sopaquery':sopa_query, 'sobremesaquery':sobremesa_query, 'tipoquery':tipo_query})
+
+def adicionarprato(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    if request.method == 'POST':
+        form = PratoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/configurarprato/')
+    else:
+        form = PratoForm()
+    return render(request, 'diaabertoapp/adicionarprato.html', {'form':form})
+
+def editarprato(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    prato = Prato.objects.get(pk=id)
+    if request.method == 'POST':
+        form=PratoForm(request.POST, instance=prato)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'O prato foi editado com sucesso!')
+            return HttpResponseRedirect('/configurarprato/')
+        else:
+            print(form.errors)
+    else:
+        form = PratoForm(instance=prato)
+
+    return render(request, 'diaabertoapp/adicionarprato.html', {'form':form})
+
+def eliminarprato(request, id):
+    object = Prato.objects.get(pk=id)
+    object.delete()
+    return HttpResponseRedirect('/configurarprato/')
+
+def almocos(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    ementas_list = Ementa.objects.all()
+    pratos_list = Prato.objects.all()
+
+
+    #BEGIN filter_by_nome
+    nome_query = request.GET.get('nome')
+    if nome_query !='' and nome_query is not None:
+        pratos_list = pratos_list.filter(nome__icontains=nome_query)
+        ementas_list = ementas_list.filter(prato__in=pratos_list)
+    #END filter_by_nome
+
+    #BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query !='' and tipo_query is not None:
+        pratos_list = pratos_list.filter(tipo__icontains=tipo_query)
+        ementas_list = ementas_list.filter(prato__in=pratos_list)
+    #END filter_by_tipo
+
+    #BEGIN filter_by_sopa
+    sopa_query = request.GET.get('sopa')
+    if sopa_query !='' and sopa_query is not None:
+        pratos_list = pratos_list.filter(sopa__icontains=sopa_query)
+        ementas_list = ementas_list.filter(prato__in=pratos_list)
+    #END filter_by_sopa
+
+    #BEGIN filter_by_sobremesa
+    sobremesa_query = request.GET.get('sobremesa')
+    if sobremesa_query !='' and sobremesa_query is not None:
+        pratos_list = pratos_list.filter(sobremesa__icontains=sobremesa_query)
+        ementas_list = ementas_list.filter(prato__in=pratos_list)
+    #END filter_by_sobremesa
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(ementas_list, 5)
+    try:
+        ementas = paginator.page(page)
+    except PageNotAnInteger:
+        ementas = paginator.page(1)
+    except EmptyPage:
+        ementas = paginator.page(paginator.num_pages)
+    #END pagination
+    return render(request, 'diaabertoapp/almocos.html', {'ementas':ementas, 'nomequery':nome_query, 'sopaquery':sopa_query, 'sobremesaquery':sobremesa_query, 'tipoquery':tipo_query})
+
+
+def editarementa(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    ementa = Ementa.objects.get(pk=id)
+    if request.method == 'POST':
+        form=EmentaForm(request.POST, instance=ementa)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'O almoço foi editado com sucesso!')
+            return HttpResponseRedirect('/almocos/')
+        else:
+            print(form.errors)
+    else:
+        form = EmentaForm(instance=ementa)
+
+    return render(request, 'diaabertoapp/adicionarementa.html', {'form':form})
+
+def eliminarementa(request, id):
+    object = Ementa.objects.get(pk=id)
+    object.delete()
+    return HttpResponseRedirect('/almocos/')
+
+def adicionarementa(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    if request.method == 'POST':
+        form = EmentaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/almocos/')
+    else:
+        form = EmentaForm()
+    return render(request, 'diaabertoapp/adicionarementa.html', {'form':form})
+
+def transportes(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    transporte_list = TransporteUniversitarioHorario.objects.all()
+    percurso_list = Percurso.objects.all()
+    horarios_list = Horario.objects.all()
+    transportes_list = Transporte.objects.all()
+
+    #BEGIN filter_by_origem
+    origem_query = request.GET.get('origem')
+    if origem_query !='' and origem_query is not None:
+        percurso_list = percurso_list.filter(origem__icontains=origem_query)
+        transporte_list = transporte_list.filter(percurso__in=percurso_list)
+    #END filter_by_origem 
+
+    #BEGIN filter_by_destino
+    destino_query = request.GET.get('destino')
+    if destino_query !='' and destino_query is not None:
+        percurso_list = percurso_list.filter(destino__icontains=destino_query)
+        transporte_list = transporte_list.filter(percurso__in=percurso_list)
+    #END filter_by_destino
+
+   #BEGIN filter_by_numero
+    numero_query = request.GET.get('numero')
+    if numero_query !='' and numero_query is not None:
+        transportes_list = transportes_list.filter(numero=numero_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    #END filter_by_numero
+
+    #BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query !='' and tipo_query is not None:
+        transportes_list = transportes_list.filter(tipo_transporte__icontains=tipo_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    #END filter_by_tipo
+
+    #BEGIN filter_by_transporte
+    capacidade_query = request.GET.get('capacidade')
+    if capacidade_query !='' and capacidade_query is not None:
+        transportes_list = transportes_list.filter(capacidade=capacidade_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    #END filter_by_tipo
+
+    #BEGIN hora partida
+    horachegada_query = request.GET.get('horachegada')
+    if horachegada_query !='' and horachegada_query is not None:
+        horarios_list = horarios_list.filter(hora_chegada__icontains=horachegada_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    #END hora partida
+
+    #BEGIN hora chegada
+    horapartida_query = request.GET.get('horapartida')
+    if horapartida_query !='' and horapartida_query is not None:
+        horarios_list = horarios_list.filter(hora_partida__icontains=horapartida_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    #END hora chegada
+
+     #BEGIN data
+    data_query = request.GET.get('data')
+    if data_query !='' and data_query is not None:
+        horarios_list = horarios_list.filter(data=data_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    #END data
+
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(transporte_list, 5)
+    try:
+        transportes = paginator.page(page)
+    except PageNotAnInteger:
+        transportes = paginator.page(1)
+    except EmptyPage:
+        transportes = paginator.page(paginator.num_pages)
+    #END pagination
+
+    #'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/transportes.html', {'transportes':transportes, 'origemquery':origem_query, 'destinoquery':destino_query, 'numeroquery':numero_query, 'tipoquery':tipo_query, 'capacidadequery':capacidade_query, 'horachegadaquery':horachegada_query, 'horapartidaquery':horapartida_query, 'dataquery':data_query})
+
+
+
+def adicionartransporteuniversitario(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    if request.method == 'POST':
+        form = TransporteUniversitarioHorarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/transportes/')
+    else:
+        form = TransporteUniversitarioHorarioForm()
+    return render(request, 'diaabertoapp/adicionartransporteUniversitario.html', {'form':form})
+
+def editartransporteuniversitario(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    transporteuniversitario = TransporteUniversitarioHorario.objects.get(pk=id)
+    if request.method == 'POST':
+        form=TransporteUniversitarioHorarioForm(request.POST, instance=transporteuniversitario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'O transporte Universitario foi editado com sucesso!')
+            return HttpResponseRedirect('/transportes/')
+        else:
+            print(form.errors)
+    else:
+        form = TransporteUniversitarioHorarioForm(instance=transporteuniversitario)
+
+    return render(request, 'diaabertoapp/adicionartransporteuniversitario.html', {'form':form})
+
+def eliminartransporteuniversitario(request, id):
+    object = TransporteUniversitarioHorario.objects.get(pk=id)
+    object.delete()
+    return HttpResponseRedirect('/transportes/')
+
+def diaaberto(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    diaabertos_list = DiaAberto.objects.all()
+
+    #BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(diaabertos_list, 5)
+    try:
+        diaabertos = paginator.page(page)
+    except PageNotAnInteger:
+        diaabertos = paginator.page(1)
+    except EmptyPage:
+        diaabertos = paginator.page(paginator.num_pages)
+    #END pagination
+    return render(request, 'diaabertoapp/configurardiaaberto.html', {'diaabertos':diaabertos, 'diaabertos_list':diaabertos_list})
+
+def adicionardiaaberto(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    if request.method == 'POST':
+        form = DiaabertoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/configurardiaaberto/')
+    else:
+        form = DiaabertoForm()
+    return render(request, 'diaabertoapp/adicionarconfigurardiaaberto.html', {'form':form})
+
+def editardiaaberto(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_recebe=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    diaaberto = DiaAberto.objects.get(pk=id)
+    if request.method == 'POST':
+        form=DiaabertoForm(request.POST, instance=diaaberto)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Configuraçao editada com sucesso!')
+            return HttpResponseRedirect('/configurardiaaberto/')
+        else:
+            print(form.errors)
+    else:
+        form = DiaabertoForm(instance=diaaberto)
+
+    return render(request, 'diaabertoapp/adicionarconfigurardiaaberto.html', {'form':form})

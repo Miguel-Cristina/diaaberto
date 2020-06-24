@@ -60,7 +60,43 @@ urlpatterns = [
     path('tarefas/reatribuir/<pk>',views.remove_colab, name='remove_colab'),
     path(r'^ajax/grupos_switch/$', views.grupos_switch, name='grupos_switch'),
     path(r'^ajax/user_switch/$', views.user_switch, name='user_switch'),
+
+    path('configurartransporte/', views.configurartransporte, name='configurartransporte'),
+    path('adicionartransporte/', views.adicionartransporte, name='adicionartransporte'),
+    path('editartransporte/<int:id>/', views.editartransporte, name='editartransporte'),
+    path('eliminartransporte/<int:id>/', views.eliminartransporte, name='eliminartransporte'),
+
+    path('configurarpercurso/', views.configurarpercurso, name='configurarpercurso'),
+    path('adicionarpercurso/', views.adicionarpercurso, name='adicionarpercurso'),
+    path('editarpercurso/<int:id>/', views.editarpercurso, name='editarpercurso'),
+    path('eliminarpercurso/<int:id>/', views.eliminarpercurso, name='eliminarpercurso'),
+
+    path('configurarhorario/', views.configurarhorario, name='configurarhorario'),
+    path('adicionarhorario/', views.adicionarhorario, name='adicionarhorario'),
+    path('editarhorario/<int:id>/', views.editarhorario, name='editarhorario'),
+    path('eliminarhorario/<int:id>/', views.eliminarhorario, name='eliminarhorario'),
+
+    path('configurarprato/', views.configurarprato, name='configurarprato'),
+    path('adicionarprato/', views.adicionarprato, name='adicionarprato'),
+    path('editarprato/<int:id>/', views.editarprato, name='editarprato'),
+    path('eliminarprato/<int:id>/', views.eliminarprato, name='eliminarprato'),
     
+    path('almocos/', views.almocos, name='almocos'),
+    path('adicionarementa/', views.adicionarementa, name='adicionarementa'),
+    path('editarementa/<int:id>/', views.editarementa, name='editarementa'),
+    path('eliminarementa/<int:id>/', views.eliminarementa, name='eliminarementa'),
+
+    path('transportes/', views.transportes, name='transportes'),
+    path('adicionartransporteuniversitario/', views.adicionartransporteuniversitario, name='adicionartransporteuniversitario'),
+    path('editartransporteuniversitario/<int:id>/', views.editartransporteuniversitario, name='editartransporteuniversitario'),
+    path('eliminartransporteuniversitario/<int:id>/', views.eliminartransporteuniversitario, name='eliminartransporteuniversitario'),
+
+    path('configurardiaaberto/', views.diaaberto, name='configurardiaaberto'),
+    path('adicionarconfigurardiaaberto/', views.adicionardiaaberto, name='adicionarconfigurardiaaberto'),
+    path('editarconfigurardiaaberto/<int:id>/', views.editardiaaberto, name='editarconfigurardiaaberto'),
+
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #if settings.DEBUG:

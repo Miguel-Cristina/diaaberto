@@ -1,5 +1,5 @@
 from django import forms
-from .models import Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, PublicoAlvo, UnidadeOrganica, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade, TipoAtividade, DiaAberto, Utilizador, Inscricao
+from .models import Prato, Ementa, Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, TransporteUniversitarioHorario, Transporte, Percurso, Horario, PublicoAlvo, UnidadeOrganica, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade, TipoAtividade, DiaAberto, Utilizador, Inscricao
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
@@ -216,5 +216,75 @@ class AtividadeForm(forms.ModelForm):
 
 #MaterialQuantidadeFormSet = inlineformset_factory(Atividade, MaterialQuantidade, form=MaterialQuantidadeForm)   
 
+class TransporteForm(forms.ModelForm):
+    tipo_transporte = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Tipo de Transporte"}))
+    numero = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"Numero"}))
+    capacidade = forms.IntegerField(min_value=1, widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"Numero"}))
+    class Meta:
+        model = Transporte
+        fields = ('tipo_transporte', 'numero', 'capacidade')
+
+class PercursoForm(forms.ModelForm):
+    origem = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Origem do transporte"}))
+    destino = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Destino do transporte"}))
+    
+    class Meta:
+        model = Percurso
+        fields = ('origem', 'destino')
+
+class HorarioForm(forms.ModelForm):
+    hora_chegada = forms.TimeField(widget= forms.TimeInput(attrs ={'class': 'input','type':'time'}))
+    hora_partida = forms.TimeField(widget= forms.TimeInput(attrs ={'class': 'input','type':'time'}))
+    data = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
+    
+    class Meta:
+        model = Horario
+        fields = ('hora_chegada', 'hora_partida', 'data')
+
+class EmentaForm(forms.ModelForm):
+    prato = forms.ModelChoiceField(queryset=Prato.objects.all(), widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}))
+    dia = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
+    preco_aluno_normal = forms.DecimalField(max_digits=4, decimal_places=2)
+    preco_aluno_economico = forms.DecimalField(max_digits=4, decimal_places=2)
+    preco_outro = forms.DecimalField(max_digits=4, decimal_places=2)
+    preco_outro_economico = forms.DecimalField(max_digits=4, decimal_places=2)
+
+    class Meta:
+        model = Ementa
+        fields=('prato', 'dia', 'preco_aluno_normal', 'preco_aluno_economico', 'preco_outro', 'preco_outro_economico')
+    
+class PratoForm(forms.ModelForm):
+    nome = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Nome do Prato"}))
+    tipo = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Tipo Prato"}))
+    descricao = forms.CharField(label="", max_length=300, required=True, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea tabfields", 'id':"descricaoField",'placeholder': "Ex: Descrição do Prato"}))
+    sopa = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Sopa"}))
+    sobremesa = tipo = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Sobremesa"}))
+
+    class Meta:
+        model = Prato
+        fields = ('nome', 'tipo', 'descricao', 'sopa', 'sobremesa')
+
+class DiaabertoForm(forms.ModelForm):
+    titulo = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Titulo"}))
+    email = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "email"}))
+    contacto = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"Numero"}))
+    data_inicio = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
+    data_fim = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
+    descricao = forms.CharField(label="", max_length=1200, required=True, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea tabfields", 'id':"descricaoField",'placeholder': "Ex: Descrição do Dia Aberto"}))
+    
+
+    class Meta:
+        model = DiaAberto
+        fields = ('titulo', 'email', 'contacto', 'data_inicio', 'data_fim', 'descricao')
+
+class TransporteUniversitarioHorarioForm(forms.ModelForm):
+    percurso = forms.ModelChoiceField(queryset=Percurso.objects.all(), widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}))
+    horario = forms.ModelChoiceField(queryset=Horario.objects.all(), widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}))
+    transporte_universitario = forms.ModelChoiceField(queryset=Transporte.objects.all(), widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}))
+
+
+    class Meta:
+        model = TransporteUniversitarioHorario
+        fields = ('transporte_universitario', 'horario', 'percurso')
 
 

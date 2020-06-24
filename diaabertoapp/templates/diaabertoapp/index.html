@@ -66,7 +66,7 @@
                            
                         </div>
                     </div>
-                    {% if utilizador.utilizadortipo.tipo == 'Coordenador' %}
+                    {% if utilizador.utilizadortipo.tipo == 'Coordenador' or utilizador.utilizadortipo.tipo == 'Administrador' %}
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                           Tarefas
@@ -82,12 +82,24 @@
                     {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
+                          Transportes
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link"> Meus Transportes </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
                           Gestão de Configurações
                         </a>
                         <div class="navbar-dropdown">
                             <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
                             <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
-                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
+                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab "> Configuração das Unidades Orgânicas e Departamentos </a>
+                            <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab router-link-exact-active router-link-active">Configuração dos Transportes</a>
+                            <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab">Configuração dos Percursos</a>
+                            <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab">Configuração dos Horários</a>
+                            <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab">Configuração dos Menus</a>
                         </div>
                     </div>
                     {% endif %}
@@ -136,7 +148,7 @@
                                                     </div>
                                                     
                                                 {% else %}
-                                                    <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item" style="border-bottom: 1px solid #dbdbdb;border-left: 1px solid #f5f5f5;border-right: 1px solid #f5f5f5;">
+                                                    <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item" style="font-size: 75%;border-bottom: 1px solid #dbdbdb;border-left: 1px solid #f5f5f5;border-right: 1px solid #f5f5f5;">
                                                         <div data-v-a67fe1ba="" class="has-text-black"> {{ notificacao.assunto }} </div>
                                                         <div data-v-a67fe1ba="" class="is-small has-text-grey has-text-left"> <small>{{ notificacao.conteudo }} </small> </div>
                                                         <div class="level">
@@ -230,10 +242,9 @@
                         <div class="section">
                             <div class="columns">
                                 <div class="column is-7">
-                                    <h1 class="title has-text-centered">Nova plataforma</h1>
+                                    <h1 class="title has-text-centered">{{ diaaberto.titulo }}</h1>
                                     <h1 class="subtitle is-5 has-text-centered"> Simples, Intuitivo, Limpo. </h1>
-                                    <p> A plataforma online do Dia Aberto foi renovada pelos alunos em âmbito do curso de Licenciatura
-                                        de Engenharia Informática. </p>
+                                    <p> {{ diaaberto.descricao }} </p>
                                 </div>
                                 <div class="column is-4">
                                     <img alt="Logo" src="{% static "diaabertoapp/img/logo-large.png" %}">
@@ -244,12 +255,17 @@
                             <div class="hero-body">
                                 <div class="columns">
                                     <div class="column is-8">
-                                        <p>2019 Dia Aberto por
+                                        <p>{{ diaaberto.data_inicio|date:'Y' }} Dia Aberto por
                                             <a>Grupo 9</a>
                                         </p>
                                         <small> Contacto de suporte:
-                                            <a href="">suporte.dia.aberto@ualg.pt</a>
+                                            <a href="">{{ diaaberto.email }}</a>
                                         </small>
+                                        <p>
+                                        <small> Contacto telefónico:
+                                            <a href="">{{ diaaberto.contacto }}</a>
+                                        </small>
+                                        </p>
                                     </div>
                                     <div class="column">
                                         <img src="{% static "diaabertoapp/img/ualg-logo.png" %}" alt="Dia Aberto">
@@ -263,9 +279,8 @@
             </div>
         </div>
         <footer data-v-8716d23a="" class="footer">
-            <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
+            <div data-v-8716d23a="" style="float: left;">Universidade do Algarve </div>
             <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
-            <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
         </footer>
     </div>
     <script>

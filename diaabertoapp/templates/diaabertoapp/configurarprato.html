@@ -13,8 +13,8 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
-    <title>Configurar Salas - Dia Aberto</title>
- 
+    <title>Dia Aberto</title>
+
     <style>
         body,
         html {
@@ -26,47 +26,51 @@
         * {
             outline: none;
         }
-        .footer{
-          position: fixed;
-          bottom: 0;
-          width: 100%;
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
         /* Style the tab content */
         .tabcontent {
-          display: none;
-          padding-left: .8em;
-          padding-right: .8em;
-          /*border: 1px solid #ccc;
+            display: none;
+            padding-left: .8em;
+            padding-right: .8em;
+            /*border: 1px solid #ccc;
           border-color: #dbdbdb;
           border-radius: 4px;
           border-top: none;*/
         }
+
         .tabdcontent {
-          padding-left: .8em;
-          padding-right: .8em;
-          padding-bottom: .8em
+            padding-left: .8em;
+            padding-right: .8em;
+            padding-bottom: .8em
         }
         /* Style the tab */
         .tab {
-          /*overflow: hidden;*/
-          border: 0px solid #ccc;
-          /*background-color: #f1f1f1;*/
+            /*overflow: hidden;*/
+            border: 0px solid #ccc;
+            /*background-color: #f1f1f1;*/
         }
-        
-        .tab a {
-          border: none;
-          /*outline: none;*/
-          cursor: pointer;
-          transition: 0.3s;
-        }
-        /* Change background color of buttons on hover */
-        .tab a:hover {
-                /*background-color: #ddd;*/
-        }
-        .tab a.active {
-          background-color: #3273dc;
-          color: white;
-        }
+
+            .tab a {
+                border: none;
+                /*outline: none;*/
+                cursor: pointer;
+                transition: 0.3s;
+            }
+                /* Change background color of buttons on hover */
+                .tab a:hover {
+                    /*background-color: #ddd;*/
+                }
+
+                .tab a.active {
+                    background-color: #3273dc;
+                    color: white;
+                }
+
         .tabs {
             margin-bottom: 0px
             /*style="margin-bottom:0px"*/
@@ -80,13 +84,16 @@
             border-color: #23d160;
             color: white;
         }
+
         .b-steps .steps .step-items .step-item:after, .b-steps .steps .step-items .step-item:before {
             background: -webkit-gradient(linear,right top,left top,color-stop(50%,#23d160),color-stop(50%,#23d160));
         }
+
         .tabfields.invalid {
             background-color: #ffdddd;
         }
-        .notices{
+
+        .notices {
             position: fixed;
             display: flex;
             top: 0;
@@ -99,7 +106,7 @@
             pointer-events: none;
         }
     </style>
-    
+
 </head>
 
 <body>
@@ -117,7 +124,7 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <div class="navbar-item has-dropdown is-hoverable">
+                                        <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                           Atividades
                         </a>
@@ -148,15 +155,15 @@
                         </a>
                         <div class="navbar-dropdown">
                             <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
-                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab is-active"> Configuração dos Espaços </a>
-                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab "> Configuração das Unidades Orgânicas e Departamentos </a>
+                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
+                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
                             <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab router-link-exact-active router-link-active">Configuração dos Transportes</a>
                             <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab">Configuração dos Percursos</a>
                             <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab">Configuração dos Horários</a>
-                            <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab">Configuração dos Menus</a>
+                            <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab is-active">Configuração dos Menus</a>
                         </div>
                     </div>
-                    </div>
+                </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
                         <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
@@ -205,28 +212,8 @@
                                 </button>
                             </div>
                             <div class="background" style="display: none;" aria-hidden="true"></div>
-                            <div class="dropdown-menu"  aria-hidden="true">
-                                <div role="list" class="dropdown-content">
-                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
-                                    <hr />
-                                    {% if user.is_authenticated %}
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
-                                    <hr />
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
-                                    {% endif %}
-                                    
-                                </div>
-                            </div>
                         </div>
-                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
-                            <span class="icon is-small">
-                                <i class="mdi mdi-logout-variant"></i>
-                            </span>
-                            <span> Sair </span>
-                            <!---->
-                        </a>
+
                     </div>
                 </div>
             </div>
@@ -234,13 +221,8 @@
         <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
             <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
         </div>
-        {% if messages %}
-            {% for message in messages %}
-                <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
-            {% endfor %}
-        {% endif %}
         <div data-v-8716d23a="" id="page-content">
-            <div data-v-8716d23a="" class="card" style="margin-bottom:6em">
+            <div data-v-8716d23a="" class="card">
                 <div data-v-8716d23a="" class="card-content">
                     <div data-v-8716d23a="" id="top">
                         <nav aria-label="breadcrumbs" class="breadcrumb">
@@ -248,19 +230,16 @@
                                 <li>
                                     <a href="/index/" class="router-link-active">Início</a>
                                 </li>
-                                <li>
-                                    <a href="/configurarespacos" class="">Configuração dos Espaços</a>
-                                </li>
                                 <li class="is-active">
-                                    <a href="/configurarespacos/edificios" class="router-link-exact-active router-link-active">Salas</a>
+                                    <a href="/configurarprato" class="">Configuração dos Menus</a>
                                 </li>
                             </ul>
                         </nav>
                         <div style="padding: 3rem 2vw 1rem; ">
 
-                                <div class="columns">
-                                    <div class="column tile is-3">
-                                        <div class="container box">
+                            <div class="columns">
+                                <div class="column tile is-3">
+                                    <div class="container box">
                                         <div class="level">
                                             <div class="level-left">
                                                 <div class="level-item">
@@ -268,94 +247,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr />
-                                        <form method="GET" action=".">                                           
-                                            <div class="field has-addons">
-                                                <!---->
-                                                {% if not campusquery|length > 0 %}
-                                                <div class="control is-expanded ">
-                                                    <span class="select is-fullwidth is-empty">
-                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
-                                                            <option disabled="disabled" hidden="hidden" selected>
-                                                                Campus
-                                                            </option>
-                                                            {% for Camp in campus %}
-                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </span>
-                                                    <!--<span class="icon is-left">
-                                                        <i class="mdi mdi-magnify mdi-24px"></i>
-                                                    </span>-->
-                                                </div>
-                                                <div class="control">
-                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                                </div>
-                                                {% else %}
-                                                <div class="control is-expanded ">
-                                                    <span class="select is-fullwidth is-empty">
-                                                        <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
-                                                            {% for Camp in campus %}
-                                                                <option value="{{ Camp.id }}">{{ Camp.nome }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </span>
-                                                    <!--<span class="icon is-left">
-                                                        <i class="mdi mdi-magnify mdi-24px"></i>
-                                                    </span>-->
-                                                </div>
-                                                <!---->
-                                                <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                  </div>
-                                                {% endif %}
-                                            </div>
-                                            <div class="field has-addons">
-                                                <!---->
-                                                {% if not edificioquery|length > 0 %}
-                                                <div class="control is-expanded ">
-                                                    <span class="select is-fullwidth is-empty">
-                                                        <select  id="edificioSearch" name="edificio"><!--onchange="searchByType()"-->
-                                                            <option disabled="disabled" hidden="hidden" selected>
-                                                                Edifício
-                                                            </option>
-                                                            {% for Edificio in edificios %}
-                                                                <option value="{{ Edificio.id }}">{{ Edificio.nome }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </span>
-                                                    <!--<span class="icon is-left">
-                                                        <i class="mdi mdi-magnify mdi-24px"></i>
-                                                    </span>-->
-                                                </div>
-                                                <div class="control">
-                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                                </div>
-                                                {% else %}
-                                                <div class="control is-expanded ">
-                                                    <span class="select is-fullwidth is-empty">
-                                                        <select  id="edificioSearch" name="edificio"><!--onchange="searchByType()"-->
-                                                            {% for Edificio in edificios %}
-                                                                <option value="{{ Edificio.id }}">{{ Edificio.nome }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </span>
-                                                    <!--<span class="icon is-left">
-                                                        <i class="mdi mdi-magnify mdi-24px"></i>
-                                                    </span>-->
-                                                </div>
-                                                <!---->
-                                                <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('edificioSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                  </div>
-                                                {% endif %}
-                                            </div>
+                                        <form method="GET" action=".">
                                             <div class="field has-addons">
                                             <!---->
-                                            {% if not nomesquery|length > 0 %}
+                                            {% if not nomequery|length > 0 %}
                                                 <div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input"><!--onkeyup="searchByName()"-->
+                                                        <input type="search" autocomplete="off" id="nomeSearch" name="nome"  placeholder="Nome" class="input"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -369,7 +267,7 @@
                                                   </div>
                                             {% else %}<div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do espaço" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
+                                                        <input type="text" autocomplete="off" id="nomeSearch" name="nome"  placeholder="Nome" class="input" value="{{ nomequery }}"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -379,37 +277,134 @@
                                                 
                                                 </div>
                                                 <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                  </div>
+                                                    <button class="button is-danger" onclick="document.getElementById('nomeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
                                             {% endif %}
+                                            </div>
+                                             <div class="field has-addons">
                                             <!---->
-                                        </div>
-                                        </form>
-                                        
-                                    </div>
-                                    </div>
-                                    <div class="column tile is-9">
-                                        <div class="container box">
-                                            <div class="level">
-                                                <div class="level-left">
-                                                    <div class="level-item">
-                                                        <p class="menu-label">Configuração das Salas</p>
+                                            {% if not tipoquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="tipoSearch" name="tipo"  placeholder="Tipo" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
                                                     </div>
                                                 </div>
-                                                <div class="level-right">
-                                                    <div class="level-item">
-                                                        <a href="/configurarespacos/salas/adicionar" class="button is-success is-outlined  is-small">
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="text" autocomplete="off" id="tipoSearch" name="tipo"  placeholder="Tipo" class="input" value="{{ tipoquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('tipoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+
+                                            </div>
+
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not sopaquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="sopaSearch" name="sopa"  placeholder="Sopa" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="text" autocomplete="off" id="sopaSearch" name="sopa"  placeholder="Sopa" class="input" value="{{ sopaquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('sopaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+
+                                            </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not sobremesaquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="sobremesaSearch" name="sobremesa"  placeholder="Sobremesa" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="text" autocomplete="off" id="sobremesaSearch" name="sobremesa"  placeholder="Sobremesa" class="input" value="{{ sobremesaquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('sobremesaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="column tile is-9">
+                                    <div class="container box">
+                                        <div class="level">
+                                            <div class="level-left">
+                                                <div class="level-item">
+                                                    <p class="menu-label">Configuração dos Menus</p>
+                                                </div>
+                                            </div>
+                                            <div class="level-right">
+                                                <div class="level-item">
+                                                    <a href="/adicionarprato" class="button is-success is-outlined  is-small">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-plus"></i>
                                                         </span>
-                                                        <span>Adicionar sala</span>
+                                                        <span>Adicionar menu</span>
                                                         <!---->
                                                     </a>
-                                                    </div>
                                                 </div>
                                             </div>
-                                            <hr />
-                                            <div class="b-table ">
+                                        </div>
+                                        <div class="b-table ">
                                             <div class="field table-mobile-sort">
                                                 <div class="field has-addons">
                                                     <div class="control is-expanded">
@@ -418,13 +413,10 @@
                                                                 <!---->
                                                                 <!---->
                                                                 <option value="[object Object]">
-                                                                    Campus
+                                                                    Nome
                                                                 </option>
                                                                 <option value="[object Object]">
-                                                                    Edifício
-                                                                </option>
-                                                                <option value="[object Object]">
-                                                                    Sala
+                                                                    Tipo
                                                                 </option>
                                                             </select>
                                                         </span>
@@ -445,28 +437,57 @@
                                                 <table id="activitiesTable" class="table has-mobile-cards is-hoverable">
                                                     <thead>
                                                         <tr>
-                                                            
+
                                                             <!---->
-                                                            <th class="is-sortable" style="width: 300px;">
-                                                                {% if order_by == 'campus' and sort == 'asc' %}
-                                                                <a href="?order_by=campus&sort=desc">
-                                                                    <div class="th-wrap">Campus
+                                                            <th class="is-sortable" style="width: 200px;">
+                                                                {% if order_by == 'nome' and sort == 'asc' %}
+                                                                <a href="?order_by=nome&sort=desc">
+                                                                    <div class="th-wrap">Nome
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
-                                                                {% elif order_by == 'campus' and sort == 'desc' %}
-                                                                <a href="?order_by=campus&sort=asc">
-                                                                    <div class="th-wrap">Campus
+                                                                {% elif order_by == 'nome' and sort == 'desc' %}
+                                                                <a href="?order_by=nome&sort=asc">
+                                                                    <div class="th-wrap">Nome
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="?order_by=nome&sort=desc">
+                                                                    <div class="th-wrap">Nome
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-swap"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% endif %}
+
+                                                            </th>
+
+                                                            <th class="is-sortable" style="width: 200px;">
+                                                                {% if order_by == 'tipo' and sort == 'asc' %}
+                                                                <a href="?order_by=tipo&sort=desc">
+                                                                    <div class="th-wrap">Tipo
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% elif order_by == 'tipo' and sort == 'desc' %}
+                                                                <a href="?order_by=tipo&sort=asc">
+                                                                    <div class="th-wrap">Tipo
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-down"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% else %}
-                                                                <a href="?order_by=campus&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Campus
+                                                                <a href="?order_by=tipo&sort=desc">
+                                                                    <div class="th-wrap">Tipo
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
@@ -474,63 +495,74 @@
                                                                 </a>
                                                                 {% endif %}
                                                             </th>
-                                                            <th class="is-sortable">
-                                                                {% if order_by == 'edificio' and sort == 'asc' %}
-                                                                <a href="?order_by=edificio&sort=desc">
-                                                                    <div class="th-wrap">Edifício
+
+                                                            <th class="is-sortable" style="width: 200px;">
+                                                                {% if order_by == 'sopa' and sort == 'asc' %}
+                                                                <a href="?order_by=sopa&sort=desc">
+                                                                    <div class="th-wrap">Sopa
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
-                                                                {% elif order_by == 'edificio' and sort == 'desc' %}
-                                                                <a href="?order_by=edificio&sort=asc">
-                                                                    <div class="th-wrap">Edifício
+                                                                {% elif order_by == 'sopa' and sort == 'desc' %}
+                                                                <a href="?order_by=sopa&sort=asc">
+                                                                    <div class="th-wrap">Sopa
                                                                         <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                            <i class="mdi mdi mdi-menu-down"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% else %}
-                                                                <a href="?order_by=edificio&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Edifício
+                                                                <a href="?order_by=sopa&sort=desc">
+                                                                    <div class="th-wrap">Sopa
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% endif %}
+
                                                             </th>
-                                                            <th class="is-sortable">
-                                                                {% if order_by == 'sala' and sort == 'asc' %}
-                                                                <a href="?order_by=sala&sort=desc">
-                                                                    <div class="th-wrap">Sala
+
+                                                            <th class="is-sortable" style="width: 200px;">
+                                                                {% if order_by == 'sobremesa' and sort == 'asc' %}
+                                                                <a href="?order_by=sobremesa&sort=desc">
+                                                                    <div class="th-wrap">Sobremesa
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
-                                                                {% elif order_by == 'sala' and sort == 'desc' %}
-                                                                <a href="?order_by=sala&sort=asc">
-                                                                    <div class="th-wrap">Sala
+                                                                {% elif order_by == 'sobremesa' and sort == 'desc' %}
+                                                                <a href="?order_by=sobremesa&sort=asc">
+                                                                    <div class="th-wrap">Sobremesa
                                                                         <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                            <i class="mdi mdi mdi-menu-down"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% else %}
-                                                                <a href="?order_by=sala&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Sala
+                                                                <a href="?order_by=sobremesa&sort=desc">
+                                                                    <div class="th-wrap">Sobremesa
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
                                                                     </div>
                                                                 </a>
                                                                 {% endif %}
+
                                                             </th>
-                                                            <th class="is-sortable" style="width:240px">
-                                                                <div class="th-wrap">Ações
+
+                                                            <th class="is-sortable" style="width: 200px;">
+                                                                    <div class="th-wrap">Acções
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                        </span>
                                                                     </div>
+                                                                
+                                                                
+
                                                             </th>
 
                                                             <!---->
@@ -539,33 +571,21 @@
                                                         <!---->
                                                     </thead>
                                                     <tbody>
-                                                        {% for salas in salas %}
+                                                        {% for prato in pratos %}
                                                         <tr draggable="false" class="header">
- 
-                                                            <!---->
-                                                            <td data-label="Campus" id="activityName" class=""> {{ salas.edificio.campus.nome }} </td>
-                                                            <td data-label="Edifício" class=""> {{ salas.edificio.nome }} </td>
-                                                            <td data-label="Sala" class=""> {{ salas }} </td>
-                                                            <td data-label="Editar" class="">                     
-                                                                <a class="button is-info is-small" href="{% url 'editarsala' salas.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
-                                                                <a class="button is-danger is-small" href="{% url 'eliminarsala' salas.id %}" onclick="return confirm('Tem a certeza que prentede eliminar a sala?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a> 
-                                                            </td>
-                                                            <!---->
-                                                        </tr>
-                                                        <!---->
-                                                        <tr class="detail" style="display:none">
-                                                            <td colspan="5">
 
-                                                                <div class="content">
-                                                                    <div class="section" style="font-size: 15px;">                                                                     
-                                                                        <p>
-                                                                            <strong>Morada:</strong> {{ salas.edificio.campus.morada }} </p>
-                                                                        <p>
-                                                                            <strong>Contacto:</strong> {{ salas.edificio.campus.contacto }} </p>
-                                                                    </div>
-                                                                </div>
+                                                            <!---->
+                                                            <td data-label="Nome" id="activityName" class=""> {{ prato.nome}} </td>
+                                                            <td data-label="Tipo" class=""> {{ prato.tipo }} </td>
+                                                            <td data-label="Sopa" class=""> {{ prato.sopa }} </td>
+                                                            <td data-label="Tipo" class=""> {{ prato.sobremesa }} </td>
+                                                            <td data-label="Accoes">
+                                                                <a class="button is-info is-small " href="{%url 'editarprato' prato.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
+                                                                <a class="button is-danger is-small" href="{%url 'eliminarprato' prato.id %}" onclick="return confirm('Tem a certeza que prentede eliminar este prato?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a>
                                                             </td>
+                                                            <!---->
                                                         </tr>
+
                                                         <!---->
                                                         {% endfor %}
                                                     </tbody>
@@ -573,90 +593,90 @@
                                                     <!---->
                                                 </table>
                                             </div>
-                                             {% if salas.has_other_pages %}
-                                                <div class="level">
-                                                    <div class="level-left"></div>
-                                                    <div class="level-right">
-                                                        <div class="level-item">
-                                                            <nav class="pagination">
-                                                                {% if salas.has_previous %}
-                                                                    {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ salas.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
-                                                                        <span class="icon" aria-hidden="true">
-                                                                                <i class="mdi mdi-chevron-left mdi-24px"></i>
-                                                                            </span>
-                                                                        </a>
-                                                                    {% else %}
-                                                                        <a role="button" href="?page={{ salas.previous_page_number }}" class="pagination-link pagination-previous">
-                                                                        <span class="icon" aria-hidden="true">
-                                                                                <i class="mdi mdi-chevron-left mdi-24px"></i>
-                                                                            </span>
-                                                                        </a>
-                                                                    {% endif %}
+                                            {% if pratos.has_other_pages %}
+                                            <div class="level">
+                                                <div class="level-left"></div>
+                                                <div class="level-right">
+                                                    <div class="level-item">
+                                                        <nav class="pagination">
+                                                            {% if pratos.has_previous %}
+                                                            {% if order_by is not None %}
+                                                            <a role="button" href="?page={{ pratos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                                <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                            {% else %}
+                                                            <a role="button" href="?page={{ pratos.previous_page_number }}" class="pagination-link pagination-previous">
+                                                                <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                            {% endif %}
+                                                            {% else %}
+                                                            <a role="button" href="#" disabled="disabled" class="pagination-link pagination-previous">
+                                                                <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                            {% endif %}
+                                                            {% if pratos.has_next %}
+                                                            {% if order_by is not None %}
+                                                            <a role="button" href="?page={{ pratos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                                <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                            {% else %}
+                                                            <a role="button" href="?page={{ pratos.next_page_number }}" class="pagination-link pagination-next">
+                                                                <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                            {% endif %}
+                                                            {% else %}
+                                                            <a role="button" href="#" disabled="disabled" class="pagination-link pagination-next">
+                                                                <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                            {% endif %}
+                                                            <ul class="pagination-list">
+                                                                <!---->
+                                                                <!---->
+                                                                {% for i in pratos.paginator.page_range %}
+                                                                {% if pratos.number == i %}
+                                                                <li>
+                                                                    <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
+                                                                </li>
                                                                 {% else %}
-                                                                <a role="button" href="#" disabled="disabled" class="pagination-link pagination-previous">
-                                                                    <span class="icon" aria-hidden="true">
-                                                                        <i class="mdi mdi-chevron-left mdi-24px"></i>
-                                                                    </span>
-                                                                </a>
-                                                                {% endif %}
-                                                                {% if salas.has_next %}
-                                                                    {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ salas.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
-                                                                            <span class="icon" aria-hidden="true">
-                                                                                <i class="mdi mdi-chevron-right mdi-24px"></i>
-                                                                            </span>
-                                                                        </a>
-                                                                    {% else %}
-                                                                        <a role="button" href="?page={{ salas.next_page_number }}" class="pagination-link pagination-next">
-                                                                            <span class="icon" aria-hidden="true">
-                                                                                <i class="mdi mdi-chevron-right mdi-24px"></i>
-                                                                            </span>
-                                                                        </a>
-                                                                    {% endif %}
+                                                                {% if order_by is not None %}
+                                                                <li>
+                                                                    <a role="button" href="?page={{ i }}&order_by={{ order_by }}&sort={{ sort }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+                                                                </li>
                                                                 {% else %}
-                                                                <a role="button" href="#" disabled="disabled" class="pagination-link pagination-next">
-                                                                    <span class="icon" aria-hidden="true">
-                                                                        <i class="mdi mdi-chevron-right mdi-24px"></i>
-                                                                    </span>
-                                                                </a>
+                                                                <li>
+                                                                    <a role="button" href="?page={{ i }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+                                                                </li>
                                                                 {% endif %}
-                                                                <ul class="pagination-list">
-                                                                    <!---->
-                                                                    <!---->
-                                                                    {% for i in salas.paginator.page_range %}
-                                                                    {% if salas.number == i %}
-                                                                    <li>
-                                                                        <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
-                                                                    </li>
-                                                                    {% else %}
-                                                                    {% if order_by is not None %}
-                                                                    <li>
-                                                                        <a role="button" href="?page={{ i }}&order_by={{ order_by }}&sort={{ sort }}" aria-current="true" class="pagination-link ">{{ i }}</a>
-                                                                    </li>
-                                                                    {% else %}
-                                                                    <li>
-                                                                        <a role="button" href="?page={{ i }}" aria-current="true" class="pagination-link ">{{ i }}</a>
-                                                                    </li>
-                                                                    {% endif %}
-                                                                    {% endif %}
-                                                                    {% endfor %}
-                                                                    <!---->
-                                                                    <!---->
-                                                                </ul>
-                                                            </nav>
-                                                        </div>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                                <!---->
+                                                                <!---->
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
+                                            </div>
                                             {% endif %}
                                         </div>
 
-                                        </div>
                                     </div>
-
                                 </div>
-                           
-                            
+
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -688,7 +708,7 @@
             $('#plus-btn2').click(function () {
                 if (!$('#duracao_input').val()) { $('#duracao_input').val(parseInt(0));}
                 if ($('#duracao_input').val() <= 0 || $('#duracao_input').val() > 0 || $('#duracao_input').val())  { $('#duracao_input').val(parseInt($('#duracao_input').val()) + 5 ); }
-    	    
+
     	        });
             $('#minus-btn2').click(function(){
     	    $('#duracao_input').val(parseInt($('#duracao_input').val()) - 5 );
@@ -813,7 +833,7 @@
                     {
                         x[i].className = x[i].className.replace("is-completed", "is-success");
                     }
-                    
+
                 }
             }
               // Otherwise, display the correct tab:
@@ -821,10 +841,10 @@
             }
         function validateForm()
         {
-            
+
               // This function deals with validation of the form fields
             var x, y, i, f, z, valid = true;
-            x = document.getElementsByClassName("stepcontent");    
+            x = document.getElementsByClassName("stepcontent");
             //y = x[currentTab].getElementsByTagName("input");
             z = x[currentTab].getElementsByClassName("tabfields");
             // A loop that checks every input field in the current tab:
@@ -837,12 +857,12 @@
                     valid = false;
                 }
             }*/
-            
+
             for (f = 0; f < z.length; f++) {
                 // If a field is empty...
                 const isValid = z[f].checkValidity();
                 if (!isValid) {
-                    
+
                     // add an "invalid" class to the field:
                     z[f].className += " invalid";
                     // and set the current valid status to false:
@@ -871,13 +891,13 @@
                 else
                 {
                     //x[i].className = x[i].className.replace("is-completed", "");
-                    x[i].className = x[i].className.replace("is-active", ""); 
+                    x[i].className = x[i].className.replace("is-active", "");
                 }
-                           
+
             }
              //... and adds the "active" class to the current step:
              x[n].className += " is-active";
-        }   
+        }
     </script>
     <script>
         $('#add_more').click(function() {
@@ -893,17 +913,21 @@
             $('#id_mq-TOTAL_FORMS').val(parseInt(form_idx) + 1);
         });
     </script>
-        <script>
+    <script>
         // suppose the `id` attribute of element is `message_container`.
         var message_ele = document.getElementById("message_container");
 
-        setTimeout(function(){ 
-           message_ele.style.display = "none"; 
+        setTimeout(function(){
+           message_ele.style.display = "none";
         }, 4000);
         // Timeout is 3 sec, you can change it
 
     </script>
-
+    <script>
+        function addClassByClick(button){
+          $(button).addClass("is-loading")
+        }
+    </script>
 </body>
 
 </html>

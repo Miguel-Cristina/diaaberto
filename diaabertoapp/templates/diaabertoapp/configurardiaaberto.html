@@ -5,7 +5,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">  
+    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
     <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
     <script src="{% static 'diaabertoapp/dist/bulma-steps.js' %}"></script>
@@ -13,7 +13,8 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
-    <title>Configurar Campus - Dia Aberto</title>
+    <title>Dia Aberto</title>
+ 
     <style>
         body,
         html {
@@ -35,6 +36,10 @@
           display: none;
           padding-left: .8em;
           padding-right: .8em;
+          /*border: 1px solid #ccc;
+          border-color: #dbdbdb;
+          border-radius: 4px;
+          border-top: none;*/
         }
         .tabdcontent {
           padding-left: .8em;
@@ -93,7 +98,6 @@
             z-index: 1000;
             pointer-events: none;
         }
-
     </style>
     
 </head>
@@ -113,46 +117,12 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                          Atividades
-                        </a>
-                        <div class="navbar-dropdown">
-                            <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
-                            <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link">Consultar Atividades</a>
-                        </div>
+                    <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab router-link">Configuração de Transportes</a>
+                    <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab router-link"> Configuração de Percursos </a>
+                    <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab router-link"> Configuração de Horarios </a>
+                    <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab router-link"> Configuração de Pratos </a>
+                    <a data-v-a67fe1ba="" href="/configurardiaaberto" class="navbar-item is-tab router-link"> Configuração Dia aberto </a>
                     </div>
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                          Tarefas
-                        </a>
-                        <div class="navbar-dropdown">
-                            <a data-v-a67fe1ba="" href="/tarefas" class="navbar-item is-tab router-link"> Minhas Tarefas </a>
-                        </div>
-                    </div>
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                          Transportes
-                        </a>
-                        <div class="navbar-dropdown">
-                            <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link"> Meus Transportes </a>
-                        </div>
-                    </div>
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                          Gestão de Configurações
-                        </a>
-                        <div class="navbar-dropdown">
-                            <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
-                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab is-active"> Configuração dos Espaços </a>
-                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab "> Configuração das Unidades Orgânicas e Departamentos </a>
-                            <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab router-link-exact-active router-link-active">Configuração dos Transportes</a>
-                            <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab">Configuração dos Percursos</a>
-                            <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab">Configuração dos Horários</a>
-                            <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab">Configuração dos Menus</a>
-                        </div>
-                    </div>
-                </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
                         <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
@@ -201,28 +171,8 @@
                                 </button>
                             </div>
                             <div class="background" style="display: none;" aria-hidden="true"></div>
-                            <div class="dropdown-menu"  aria-hidden="true">
-                                <div role="list" class="dropdown-content">
-                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
-                                    <hr />
-                                    {% if user.is_authenticated %}
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
-                                    <hr />
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
-                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
-                                    {% endif %}
-                                    
-                                </div>
-                            </div>
                         </div>
-                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
-                            <span class="icon is-small">
-                                <i class="mdi mdi-logout-variant"></i>
-                            </span>
-                            <span> Sair </span>
-                            <!---->
-                        </a>
+                        
                     </div>
                 </div>
             </div>
@@ -230,15 +180,8 @@
         <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
             <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
         </div>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
-            {% endfor %}
-        {% endif %}
-
         <div data-v-8716d23a="" id="page-content">
-            <div data-v-8716d23a="" class="card" style="margin-bottom:6em">
+            <div data-v-8716d23a="" class="card">
                 <div data-v-8716d23a="" class="card-content">
                     <div data-v-8716d23a="" id="top">
                         <nav aria-label="breadcrumbs" class="breadcrumb">
@@ -246,88 +189,36 @@
                                 <li>
                                     <a href="/index/" class="router-link-active">Início</a>
                                 </li>
-                                <li>
-                                    <a href="/configurarespacos" class="">Configuração dos Espaços</a>
-                                </li>
                                 <li class="is-active">
-                                    <a href="/configurarespacos/campus" class="">Campus</a>
+                                    <a href="/configurardiaaberto" class="router-link-exact-active router-link-active"> Configurar Dia aberto </a>
                                 </li>
                             </ul>
                         </nav>
-                        <div style="padding: 3rem 2vw 1rem;">
-                            <div class="columns">
-                                
-                                <div class="column is-3 tile"> 
-                                    <div class="container box">
-                                        <div class="level">
-                                            <div class="level-left">
-                                                <div class="level-item">
-                                                    <p class="menu-label">Filtros</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <form method="GET" action=".">                                           
+                        <div style="padding: 3rem 2vw 1rem; ">
 
-                                            <div class="field has-addons">
-                                            <!---->
-                                            {% if not nomesquery|length > 0 %}
-                                                <div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do campus" class="input"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                
-                                                </div>
-                                                <div class="control">
-                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                                  </div>
-                                            {% else %}<div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome do campus" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                
-                                                </div>
-                                                <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                  </div>
-                                            {% endif %}
-                                            <!---->
-                                        </div>
-                                        </form>
-
-                                    </div>
-                                </div>
+                                <div class="columns">
                                     <div class="column tile is-9">
                                         <div class="container box">
                                             <div class="level">
                                                 <div class="level-left">
                                                     <div class="level-item">
-                                                        <p class="menu-label">Configuração dos Campus</p>
+                                                        <p class="menu-label">Configuração do Dia aberto</p>
                                                     </div>
                                                 </div>
+                                                {% if diaabertos_list|length == 0 %}
                                                 <div class="level-right">
                                                     <div class="level-item">
-                                                        <a href="/configurarespacos/campus/adicionar" class="button is-success is-outlined  is-small">
+                                                        <a href="/adicionarconfigurardiaaberto" class="button is-success is-outlined  is-small">
                                                         <span class="icon is-small">
                                                             <i class="mdi mdi-plus"></i>
                                                         </span>
-                                                        <span>Adicionar campus</span>
+                                                        <span>Configurar</span>
                                                         <!---->
                                                     </a>
                                                     </div>
                                                 </div>
+                                                {% endif %}
                                             </div>
-                                            <hr />
                                             <div class="b-table ">
                                             <div class="field table-mobile-sort">
                                                 <div class="field has-addons">
@@ -337,16 +228,13 @@
                                                                 <!---->
                                                                 <!---->
                                                                 <option value="[object Object]">
-                                                                    Campus
+                                                                    Tipo de Transporte
                                                                 </option>
                                                                 <option value="[object Object]">
-                                                                    Morada
+                                                                    Numero
                                                                 </option>
                                                                 <option value="[object Object]">
-                                                                    Contacto
-                                                                </option>
-                                                                <option value="[object Object]">
-                                                                    Ações
+                                                                    Capacidade
                                                                 </option>
                                                             </select>
                                                         </span>
@@ -367,91 +255,50 @@
                                                 <table id="activitiesTable" class="table has-mobile-cards is-hoverable">
                                                     <thead>
                                                         <tr>
-                                                            
                                                             <!---->
+                                                            <th></th>
                                                             <th class="is-sortable" style="width: 300px;">
-                                                                {% if order_by == 'nome' and sort == 'asc' %}
-                                                                <a href="?order_by=nome&sort=desc">
-                                                                    <div class="th-wrap">Campus
+                                                                    <div class="th-wrap">Titulo
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
-                                                                </a>
-                                                                {% elif order_by == 'nome' and sort == 'desc' %}
-                                                                <a href="?order_by=nome&sort=asc">
-                                                                    <div class="th-wrap">Campus
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-down"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=nome&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Campus
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-swap"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
                                                             </th>
-                                                            <th class="is-sortable">
-                                                                {% if order_by == 'morada' and sort == 'asc' %}
-                                                                <a href="?order_by=morada&sort=desc">
-                                                                    <div class="th-wrap">Morada
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                    <div class="th-wrap">E-mail
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
-                                                                </a>
-                                                                {% elif order_by == 'morada' and sort == 'desc' %}
-                                                                <a href="?order_by=morada&sort=asc">
-                                                                    <div class="th-wrap">Morada
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-down"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=morada&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Morada
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-swap"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
                                                             </th>
-                                                            <th class="is-sortable">
-                                                                {% if order_by == 'contacto' and sort == 'asc' %}
-                                                                <a href="?order_by=contacto&sort=desc">
+                                                            <th class="is-sortable" style="width: 300px;">
                                                                     <div class="th-wrap">Contacto
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
-                                                                </a>
-                                                                {% elif order_by == 'contacto' and sort == 'desc' %}
-                                                                <a href="?order_by=contacto&sort=asc">
-                                                                    <div class="th-wrap">Contacto
+                                                            </th>
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                    <div class="th-wrap">Data inicio
                                                                         <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                            <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=contacto&sort=asc" style="color: black">
-                                                                    <div class="th-wrap">Contacto
+                                                            </th>
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                    <div class="th-wrap">Data final
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                        </span>
+                                                                    </div>
+                                                            </th>
+
+                                                            
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                    <div class="th-wrap">Accoes
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
-                                                            </th>
-                                                            <th class="is-sortable" style="width:240px">
-                                                                <div class="th-wrap">Ações
                                                                     </div>
                                                             </th>
 
@@ -461,18 +308,34 @@
                                                         <!---->
                                                     </thead>
                                                     <tbody>
-                                                        {% for campu in campus %}
+                                                        {% for diaabertos in diaabertos %}
                                                         <tr draggable="false" class="header">
- 
-                                                            <!---->
-                                                            <td data-label="Campus" id="activityName" class=""> {{ campu.nome }} </td>
-                                                            <td data-label="Morada" class=""> {{ campu.morada }} </td>
-                                                            <td data-label="Contacto" class=""> {{ campu.contacto }} </td>
-                                                            <td data-label="Editar" class="">                     
-                                                                <a class="button is-info is-small" href="{% url 'editarcampus' campu.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
-                                                                <a class="button is-danger is-small" href="{% url 'eliminarcampus' campu.id %}" onclick="return confirm('Tem a certeza que prentede eliminar o campus?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a> 
+                                                            <td class="chevron-cell">
+                                                                <a class="collapsible">
+                                                                    <span class="icon">
+                                                                        <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                    </span>
+                                                                </a>
                                                             </td>
                                                             <!---->
+                                                            <td data-label="Titulo" id="activityName" class=""> {{ diaabertos.titulo }} </td>
+                                                            <td data-label="E-mail" class=""> {{ diaabertos.email }} </td>
+                                                            <td data-label="contacto" class=""> {{ diaabertos.contacto }} </td>
+                                                            <td data-label="Data Inicio" class=""> {{ diaabertos.data_inicio }} </td>
+                                                            <td data-label="Data Final" class="">{{ diaabertos.data_fim }}</td>
+                                                            <td data-label="Accoes">
+                                                                <a class="button is-info is-small " href="{%url 'editarconfigurardiaaberto' diaabertos.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
+                                                            </td>
+                                                            <!---->
+                                                        </tr>
+                                                        <tr class="detail" style="display:none">
+                                                            <td colspan="6">
+                                                                <div class="content">
+                                                                    <div class="section" style="font-size: 15px;">
+                                                                        <p><strong>Descrição: </strong> {{ diaabertos.descricao }} </p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                         
                                                         <!---->
@@ -482,21 +345,21 @@
                                                     <!---->
                                                 </table>
                                             </div>
-                                             {% if edificios.has_other_pages %}
+                                             {% if diaabertos.has_other_pages %}
                                                 <div class="level">
                                                     <div class="level-left"></div>
                                                     <div class="level-right">
                                                         <div class="level-item">
                                                             <nav class="pagination">
-                                                                {% if edificios.has_previous %}
+                                                                {% if diaabertos.has_previous %}
                                                                     {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ edificios.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                                        <a role="button" href="?page={{ diaabertos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
                                                                         <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                             </span>
                                                                         </a>
                                                                     {% else %}
-                                                                        <a role="button" href="?page={{ edificios.previous_page_number }}" class="pagination-link pagination-previous">
+                                                                        <a role="button" href="?page={{ diaabertos.previous_page_number }}" class="pagination-link pagination-previous">
                                                                         <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                             </span>
@@ -509,15 +372,15 @@
                                                                     </span>
                                                                 </a>
                                                                 {% endif %}
-                                                                {% if edificios.has_next %}
+                                                                {% if diaabertos.has_next %}
                                                                     {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ edificios.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                                        <a role="button" href="?page={{ diaabertos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
                                                                             <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                             </span>
                                                                         </a>
                                                                     {% else %}
-                                                                        <a role="button" href="?page={{ edificios.next_page_number }}" class="pagination-link pagination-next">
+                                                                        <a role="button" href="?page={{ diaabertos.next_page_number }}" class="pagination-link pagination-next">
                                                                             <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                             </span>
@@ -533,8 +396,8 @@
                                                                 <ul class="pagination-list">
                                                                     <!---->
                                                                     <!---->
-                                                                    {% for i in edificios.paginator.page_range %}
-                                                                    {% if edificios.number == i %}
+                                                                    {% for i in diaabertos.paginator.page_range %}
+                                                                    {% if diaabertos.number == i %}
                                                                     <li>
                                                                         <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                                     </li>
@@ -563,11 +426,10 @@
                                         </div>
                                     </div>
 
-                            </div>
+                                </div>
+                           
+                            
                         </div>
-                        <!--NOVA TABELA INICIO-->
-                       
-                        <!--NOVA TABELA FIM-->
                     </div>
                 </div>
             </div>
@@ -579,7 +441,7 @@
         <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
     </footer>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script>
+        <script>
         $(document).ready(function () {
             $('tr.header').click(function () {
                 //$(this).find('span').find('i').toggleClass('fa-thumbs-down');
@@ -594,6 +456,230 @@
         });
     </script>
     <script>
+        $(document).ready(function(){
+            $('#plus-btn').click(function () {
+                if (!$('#maxPersons_input').val()) { $('#maxPersons_input').val(0); }
+    	    $('#maxPersons_input').val(parseInt($('#maxPersons_input').val()) + 1 );
+    	        });
+            $('#minus-btn').click(function(){
+    	    $('#maxPersons_input').val(parseInt($('#maxPersons_input').val()) - 1 );
+    	    if ($('#maxPersons_input').val() <= 0) {
+			    $('#maxPersons_input').val(0);
+		    }
+    	        });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('#plus-btn2').click(function () {
+                if (!$('#duracao_input').val()) { $('#duracao_input').val(parseInt(0));}
+                if ($('#duracao_input').val() <= 0 || $('#duracao_input').val() > 0 || $('#duracao_input').val())  { $('#duracao_input').val(parseInt($('#duracao_input').val()) + 5 ); }
+    	    
+    	        });
+            $('#minus-btn2').click(function(){
+    	    $('#duracao_input').val(parseInt($('#duracao_input').val()) - 5 );
+    	    if ($('#duracao_input').val() <= 0) {
+			    $('#duracao_input').val(0);
+		    }
+    	        });
+        });
+    </script>
+    <script>
+      function countChar(val) {
+        var len = val.value.length;
+        if (len > 300) {
+            val.value = val.value.substring(0, 300);
+        } else {
+          $('#charNum').text(300 - len).append(' caracteres restantes');
+        }
+      };
+    </script>
+    <script>
+        function openLocal(evt, localName) {
+            var i,g,h,j, tabcontent, tablinks, tabinputs, tabsinputs, changertabsinputs;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++)
+            {
+                tabcontent[i].style.display = "none";
+            }
+            //document.getElementById("tipoLocalinput").required = false;
+            tabinputs = document.getElementsByClassName("tipoLocalInput");
+            for (h = 0; h < tabinputs.length; h++)
+            {
+                tabinputs[h].required = false;
+                tabinputs[h].value = "";
+            }
+            tabsinputs = document.getElementsByClassName("escolherLocalInput");
+            for (g = 0; g < tabsinputs.length; g++)
+            {
+                tabsinputs[g].required = false;
+                tabsinputs[g].value = "";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(localName).style.display = "block";
+            evt.currentTarget.className += " active";
+            var inputLocalName = localName.concat('Input');
+            changertabsinputs = document.getElementsByClassName(inputLocalName);
+            for (j = 0; j < changertabsinputs.length; j++)
+            {
+                changertabsinputs[j].required = true;
+            }
+            document.getElementById(inputLocalName).required = true;
+        }
+    </script>
+    <script>
+        function openDep(evt, localName) {
+            var i,g,h,j, tabdcontent, tabdlinks, changertabsinputs;
+            tabdcontent = document.getElementsByClassName("tabdcontent");
+            for (i = 0; i < tabdcontent.length; i++)
+            {
+                tabdcontent[i].style.display = "none";
+            }
+
+            tabdlinks = document.getElementsByClassName("tabdlinks");
+            for (i = 0; i < tabdlinks.length; i++) {
+                tabdlinks[i].className = tabdlinks[i].className.replace(" active", "");
+            }
+            document.getElementById(localName).style.display = "block";
+            evt.currentTarget.className += " active";
+            var inputLocalName = localName.concat('Input');
+            //document.getElementById(inputLocalName).required = true;
+        }
+    </script>
+    <script>
+        var currentTab = 0; // Current tab is set to be the first tab (0)
+        showTab(currentTab); // Display the current tab
+
+        function showTab(n) {
+              // This function will display the specified tab of the form ...
+              var x = document.getElementsByClassName("stepcontent");
+              x[n].style.display = "block";
+              // ... and fix the Previous/Next buttons:
+              if (n == 0) {
+                  document.getElementById("prevBtn").style.display = "none";
+                  document.getElementById("submitBtn").style.display = "none";
+              } else {
+                document.getElementById("prevBtn").style.display = "";
+              }
+              if (n == (x.length - 1)) {
+                  document.getElementById("nextBtn").style.display = "none"; //display:block;
+                  document.getElementById("submitBtn").style.display = "";
+              } else {
+                  document.getElementById("nextBtn").style.display = "";
+                  document.getElementById("submitBtn").style.display = "none";
+                  document.getElementById("nextBtn").innerHTML = '<span> Próximo </span><span class="icon is-small"><i class="mdi mdi-arrow-right mdi-24px"></i></span>';
+              }
+              // ... and run a function that displays the correct step indicator:
+              fixStepIndicator(n)
+        }
+        function nextPrev(n) {
+              // This function will figure out which tab to display
+              var x = document.getElementsByClassName("stepcontent");
+              // Exit the function if any field in the current tab is invalid:
+              if (n == 1 && !validateForm()) return false;
+              // Hide the current tab:
+              x[currentTab].style.display = "none";
+              // Increase or decrease the current tab by 1:
+              currentTab = currentTab + n;
+              // if you have reached the end of the form... :
+            if (currentTab >= x.length) {
+                //...the form gets submitted:
+                //document.getElementById("atividadeForm").submit();
+                return false;
+            }
+            else if (currentTab < x.length) {
+                var  x = document.getElementsByClassName("link");
+                for (var i = currentTab; i < x.length; i++)
+                {
+                    //x[i].removeClass().addClass( "step-item link is-success" );
+                    while (x[i].className.includes("is-completed"))
+                    {
+                        x[i].className = x[i].className.replace("is-completed", "is-success");
+                    }
+                    
+                }
+            }
+              // Otherwise, display the correct tab:
+              showTab(currentTab);
+            }
+        function validateForm()
+        {
+            
+              // This function deals with validation of the form fields
+            var x, y, i, f, z, valid = true;
+            x = document.getElementsByClassName("stepcontent");    
+            //y = x[currentTab].getElementsByTagName("input");
+            z = x[currentTab].getElementsByClassName("tabfields");
+            // A loop that checks every input field in the current tab:
+            /*for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                if (y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    //y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }*/
+            
+            for (f = 0; f < z.length; f++) {
+                // If a field is empty...
+                const isValid = z[f].checkValidity();
+                if (!isValid) {
+                    
+                    // add an "invalid" class to the field:
+                    z[f].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+            // If the valid status is true, mark the step as finished and valid:
+            if (valid) {
+                document.getElementsByClassName("link")[currentTab].className.replace("is-success", "");
+                document.getElementsByClassName("link")[currentTab].className.replace("is-active","");
+                document.getElementsByClassName("link")[currentTab].className += " is-completed ";
+            }
+            return valid; // return the valid status
+        }
+        function fixStepIndicator(n)
+        {
+              // This function removes the "active" class of all steps...
+            var i, x = document.getElementsByClassName("link");
+            for (i = 0; i < x.length; i++)
+            {
+                if (i < n) {
+                    x[i].className = x[i].className.replace("is-success", "");
+                    x[i].className = x[i].className.replace("is-active", "");
+                    x[i].className = x[i].className += " is-completed ";
+                }
+                else
+                {
+                    //x[i].className = x[i].className.replace("is-completed", "");
+                    x[i].className = x[i].className.replace("is-active", ""); 
+                }
+                           
+            }
+             //... and adds the "active" class to the current step:
+             x[n].className += " is-active";
+        }   
+    </script>
+    <script>
+        $('#add_more').click(function() {
+            var form_idx = $('#id_sa-TOTAL_FORMS').val();
+            $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+            $('#id_sa-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    </script>
+    <script>
+        $('#add_more_material').click(function() {
+            var form_idx = $('#id_mq-TOTAL_FORMS').val();
+            $('#form_set_material').append($('#empty_form_material').html().replace(/__prefix__/g, form_idx));
+            $('#id_mq-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    </script>
+        <script>
         // suppose the `id` attribute of element is `message_container`.
         var message_ele = document.getElementById("message_container");
 

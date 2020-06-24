@@ -113,6 +113,18 @@
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\navbar.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\notification.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\tabs.js" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarconfigurardiaaberto.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarementa.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarhorario.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarpercurso.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarprato.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionartransporteuniversitario.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\almocos.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurardiaaberto.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarhorario.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarpercurso.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarprato.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurartransporte.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\editarcampus.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\adicionarcampus.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus.html" />
@@ -141,6 +153,7 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\login.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\listaratividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\proportransporte.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\sugeriralteracao.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\alteraratividade.html" />
@@ -153,6 +166,7 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\sessoes.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\proporatividade.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\tarefas.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\transportes.html" />
     <Content Include="pytest.ini">
       <SubType>Code</SubType>
     </Content>
