@@ -454,15 +454,15 @@
   </script>
         
 
-    <script>
-
+    
+        <script>
         $(document).ready(function () {
             $("#horas").change(function () {
                
-            
                var options = document.querySelectorAll('#gruposSelect option');
                options.forEach(o => o.remove());
                
+              
 
                 var horas = $("#horas").val();
                 var data = $("#data").val();
@@ -501,12 +501,11 @@
 
             }
 
-        );
             );
            }
+        );
 
     </script>
-
     <script>
         $(document).ready(function () {
             $("#salaSearchEnc").change(function () {

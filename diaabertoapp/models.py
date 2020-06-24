@@ -524,3 +524,15 @@ class TransporteUniversitarioHorario(models.Model):
     class Meta:
         #managed = False
         db_table = 'transporte_universitario-horario'
+
+class SessaoAtividadeInscricao(models.Model):
+    id = models.AutoField(primary_key=True)
+    sessaoAtividade = models.ForeignKey(SessaoAtividade, related_name='sessoes', on_delete=models.CASCADE)
+    inscricao = models.ForeignKey(Inscricao, related_name='inscricoes', on_delete=models.CASCADE)
+    numero_alunos = models.IntegerField()
+
+    class Meta:
+        db_table = 'SessaoAtividadeInscricao'
+
+    def str(self):
+        return str(self.id)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, Transporte, Percurso, TransporteUniversitarioHorario, Horario, Sala, Tematica, DiaAberto, Dia, Atividade, MaterialQuantidade, UnidadeOrganica, Departamento, PublicoAlvo, Sessao, SessaoAtividade, TipoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao, Tarefa, Colaboracao
+from diaabertoapp.models import SessaoAtividadeInscricao, Inscricao, Edificio, Campus, Transporte, Percurso, TransporteUniversitarioHorario, Horario, Sala, Tematica, DiaAberto, Dia, Atividade, MaterialQuantidade, UnidadeOrganica, Departamento, PublicoAlvo, Sessao, SessaoAtividade, TipoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao, Tarefa, Colaboracao
 #LocalAtividade,Local
 from django.utils.safestring import mark_safe
 # Register your models here.
@@ -22,6 +22,10 @@ class SalaAdmin(admin.ModelAdmin):
 admin.site.register(Sala, SalaAdmin)
 
 admin.site.register(Tematica)
+
+admin.site.register(Inscricao)
+
+admin.site.register(SessaoAtividadeInscricao)
 
 admin.site.register(Transporte)
 

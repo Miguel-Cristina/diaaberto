@@ -2,7 +2,7 @@ from django.views.generic import ListView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models.deletion import ProtectedError
 from django.db.models import Count
-from .models import Dia, Prato, Ementa, DiaAberto, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, Percurso, Transporte, TransporteUniversitarioHorario, Horario, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao, Colaboracao
+from .models import Dia,SessaoAtividadeInscricao, Prato, Ementa, DiaAberto, Edificio, Atividade, Campus, UnidadeOrganica, Departamento, Tematica, Percurso, Transporte, TransporteUniversitarioHorario, Horario, TipoAtividade,Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, UtilizadorParticipante, Notificacao, Colaboracao
 from .forms import CampusForm, AtividadeForm, EmentaForm, PratoForm, MaterialQuantidadeForm ,DiaabertoForm, TransporteUniversitarioHorarioForm, SessaoAtividadeForm, TransporteForm, PercursoForm, HorarioForm, MaterialFormSet, TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, SalaForm, UnidadeOrganicaForm, DepartamentoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 #from django.db import connection
 #========================================================================================================================
 #Erro 500 
@@ -2050,6 +2050,7 @@ def add_tarefa(request):
             if(tarefa.tipo_tarefa == 'AV'):
                 tarefa.duracao = tarefa.atividade.duracao
             tarefa.save()
+            aForm.save_m2m()
 
             return HttpResponseRedirect('/tarefas/')
         else:
@@ -2204,6 +2205,7 @@ def edit_tarefa(request, pk):
             tarefa = aForm.save(commit=False)
             tarefa.estado = 'PA'
             tarefa.save()
+            aForm.save_m2m()
             
             messages.success(request, 'Tarefa editada com sucesso!')
             return HttpResponseRedirect('/tarefas/')
@@ -2218,14 +2220,69 @@ def edit_tarefa(request, pk):
 def grupos_switch(request):
     data = request.GET.get('data', None)
     horas = request.GET.get('horas',None)
-    sala  = request.GET.get('sala',None)    
-  
-    
-    
-    inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora = horas , sessaoAtividade__atividade__sala = sala, sessaoAtividade__dia = data).values_list('inscricao', flat=True).order_by('id')
+    sala  = request.GET.get('sala',None)
+    tarefa  = request.GET.get('tarefa',None)   
+
+    print("--------------------------------------------------")
+    inscricaoids = []
+    if tarefa is None:
+        horas = horas + ":00"
+    print(horas)
+    novashoras = datetime.strptime(horas, '%H:%M:%S').time()
+    print(novashoras)
+    outrashoras = timedelta(seconds = ((novashoras.hour*3600)+(novashoras.minute*60)+novashoras.second))
+    print(outrashoras)
+    sessaoatividades = SessaoAtividade.objects.filter(atividade__sala__id = sala, dia = data)
+    print(sessaoatividades)
+    for sessaoatividade in sessaoatividades:
+        atividade = sessaoatividade.atividade
+        print(atividade)
+        hora_inicio = sessaoatividade.sessao.hora
+        hora_inicio_final = timedelta(seconds = ((hora_inicio.hour*3600)+(hora_inicio.minute*60)+hora_inicio.second))
+        print(hora_inicio_final)
+        atividade_duracao = timedelta(seconds=(atividade.duracao*60))
+        print(atividade_duracao)
+
+
+        tarefa_inicio = outrashoras - atividade_duracao
+
+        if tarefa_inicio == hora_inicio_final:
+            inscricaoid =  SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora = str(tarefa_inicio) , sessaoAtividade__atividade__sala = sala, sessaoAtividade__dia = data).values_list('inscricao', flat=True).order_by('id')
+            
+            for inscricao in inscricaoid:
+                inscricaoids.append(inscricao)
+                grupos = Tarefa.objects.filter(grupo=inscricao,localizacao_grupo=sala, dia=data, horario=horas)
+                print(grupos)
+                for grupo in grupos:
+                    print(grupo)
+                    print(grupo.grupo)
+                    grupinhos = grupo.grupo.all()
+                    print(grupinhos)
+                    for grupozinhos in grupinhos:
+                        if grupozinhos.id == inscricao:
+                            if tarefa != None:
+                                tarefa1 = Tarefa.objects.get(id=tarefa)
+                                if(grupo != tarefa1):
+                                    print("entrei")
+                                    inscricaoids.remove(inscricao)
+                            else:
+                                inscricaoids.remove(inscricao)
+
+
+    #sessaoatividade = SessaoAtividade.objects.filter(sessao__hora = horas, atividade__sala__id = sala, dia = data)
+    #print(sessaoatividade)
+    #atividade = sessaoatividade.atividade
+    #print(atividade)
+    #atividade_duracao = datetime.timedelta(seconds=(atividade.duracao*60))
+    #print(atividade_duracao)
+    #x = datetime.timedelta(seconds = ((horas.hour*3600)+(horas.minute*60)+horas.second))
+    #print(x)
+    #tarefa_inicio = x - atividade_duracao
+    #print(tarefa_inicio)
+    #inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora = tarefa_inicio , sessaoAtividade__atividade__sala = sala, sessaoAtividade__dia = data).values_list('inscricao', flat=True).order_by('id')
     
     dados = {
-       'idinscricao' : list(inscricaoid)
+       'idinscricao' : list(inscricaoids)
      }
 
     return JsonResponse(dados)
