@@ -540,6 +540,13 @@ class Horario(models.Model):
                                                                        str(self.data))
 
 
+class Ementa(models.Model):
+    preco_aluno_normal = models.DecimalField(max_digits=4, decimal_places=2)
+    preco_outro_normal = models.DecimalField(max_digits=4, decimal_places=2)
+
+    class Meta:
+        db_table = 'ementa'
+
 class Prato(models.Model):
     prato_carne = models.CharField(max_length=255)
     prato_peixe = models.CharField(max_length=255)
@@ -553,16 +560,6 @@ class Prato(models.Model):
     class Meta:
         db_table = 'prato'
 
-
-class Ementa(models.Model):
-    preco_aluno_normal = models.DecimalField(max_digits=4, decimal_places=2)
-    preco_outro_normal = models.DecimalField(max_digits=4, decimal_places=2)
-
-    class Meta:
-        db_table = 'ementa'
-
-    def __str__(self):
-        return "ementa"
 
 
 class TransporteUniversitarioHorario(models.Model):
