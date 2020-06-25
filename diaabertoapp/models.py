@@ -354,6 +354,9 @@ class Notificacao(models.Model):
     class Meta:
         db_table = 'Notificacao'
 
+        
+
+
 
 # ========================================================================================================================
 # model Dia
@@ -540,34 +543,26 @@ class Horario(models.Model):
                                                                        str(self.data))
 
 
-class Prato(models.Model):
-    nome = models.CharField(max_length=255)
-    tipo = models.CharField(max_length=255)
-    sopa = models.CharField(max_length=255, blank=True)
-    sobremesa = models.CharField(max_length=255, blank=True)
-    descricao = models.TextField()
-
-    class Meta:
-        db_table = 'prato'
-
-    def __str__(self):
-        return ('Nome={0}, Tipo={1}, Sopa={2}, Sobremesa={3}').format(str(self.nome), str(self.tipo), str(self.sopa),
-                                                                      str(self.sobremesa))
-
-
 class Ementa(models.Model):
-    dia = models.DateField()
-    preco_aluno_economico = models.DecimalField(max_digits=4, decimal_places=2)
     preco_aluno_normal = models.DecimalField(max_digits=4, decimal_places=2)
-    preco_outro_economico = models.DecimalField(max_digits=4, decimal_places=2)
     preco_outro_normal = models.DecimalField(max_digits=4, decimal_places=2)
-    prato = models.ForeignKey(Prato, models.DO_NOTHING)
 
     class Meta:
         db_table = 'ementa'
 
-    def __str__(self):
-        return "ementa"
+class Prato(models.Model):
+    prato_carne = models.CharField(max_length=255)
+    prato_peixe = models.CharField(max_length=255)
+    prato_vegan = models.CharField(max_length=255)
+    sopa = models.CharField(max_length=255, blank=True)
+    sobremesa = models.CharField(max_length=255, blank=True)
+    descricao = models.TextField()
+    dia = models.DateField()
+    ementa = models.ForeignKey(Ementa, models.DO_NOTHING)
+
+    class Meta:
+        db_table = 'prato'
+
 
 
 class TransporteUniversitarioHorario(models.Model):
