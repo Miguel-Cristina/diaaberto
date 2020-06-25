@@ -69,7 +69,10 @@ def index(request):
         utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
-
+        else:
+            return HttpResponseRedirect('/utilizadores/login')
+    else:
+        return HttpResponseRedirect('/utilizadores/login')
     count_notificacoes = 0
     for x in notificacoes:
         if (x.visto == False):
@@ -2013,9 +2016,10 @@ def get_tarefas(request):
     if request.user.is_authenticated:
         user_email = request.user.email
         aut_utilizador = Utilizador.objects.get(email=user_email)
+        aut_utilizadorid = AuthUser.objects.get(email=user_email)
         if aut_utilizador is not None:
             if aut_utilizador.utilizadortipo.tipo == 'Colaborador':
-                tarefas_1 = Tarefa.objects.filter(coolaborador=aut_utilizador.id)
+                tarefas_1 = Tarefa.objects.filter(coolaborador=aut_utilizadorid.utilizador)
             elif aut_utilizador.utilizadortipo.tipo == 'Coordenador':
                 utilizador_organica = aut_utilizador.unidadeorganica
                 coordenadores = Utilizador.objects.filter(unidadeorganica=utilizador_organica)
@@ -2031,7 +2035,7 @@ def get_tarefas(request):
     else:
         messages.error(request, "Não está autentificado. Aguarde um pouco, se o erro persistir, contacte o suporte.")
         return HttpResponseRedirect('/login/')
-    utilizador = Utilizador.objects.filter(utilizadortipo=3).order_by("nome")
+    utilizador = Utilizador.objects.filter(utilizadortipo__tipo='Colaborador').order_by("nome")
 
     aform = TarefaForm()
 
@@ -2188,13 +2192,19 @@ def rem_tarefa(request, pk):
     tarefas_1 = Tarefa.objects.all()
     aut_utilizador = ''
     editable = False
+    tarefa = Tarefa.objects.get(pk=pk)
     # tarefas_1 = Tarefa.objects.all()
     if request.user.is_authenticated:
         user_email = request.user.email
         aut_utilizador = Utilizador.objects.get(email=user_email)
+        aut_utilizadorid = AuthUser.objects.get(email=user_email)
         if aut_utilizador is not None:
             if aut_utilizador.utilizadortipo.tipo == 'Coordenador':
-                editable = True
+                if tarefa.cordenador == aut_utilizadorid.utilizador:
+                    editable = True
+                else:
+                    messages.error(request, "Não tem permissões para aceder a este conteúdo.")
+                    return HttpResponseRedirect('/tarefas/')
             elif aut_utilizador.utilizadortipo.tipo == 'Administrador':
                 editable = True
             else:
@@ -2216,6 +2226,7 @@ def rem_tarefa(request, pk):
 def atribuir_tarefa(request, pk):
     aut_utilizador = ''
     editable = False
+
     # tarefas_1 = Tarefa.objects.all()
     if request.user.is_authenticated:
         user_email = request.user.email
@@ -2287,13 +2298,14 @@ def edit_tarefa(request, pk):
     if request.user.is_authenticated:
         user_email = request.user.email
         aut_utilizador = Utilizador.objects.get(email=user_email)
+        aut_utilizadorid = AuthUser.objects.get(email=user_email)
         if aut_utilizador is not None:
             if aut_utilizador.utilizadortipo.tipo == 'Coordenador':
-                if tarefa.cordenador == aut_utilizador.id:
+                if tarefa.cordenador == aut_utilizadorid.utilizador:
                     editable = True
                 else:
                     messages.error(request, "Não tem permissões para aceder a este conteúdo.")
-                    return HttpResponseRedirect('/index/')
+                    return HttpResponseRedirect('/tarefas/')
             elif aut_utilizador.utilizadortipo.tipo == 'Administrador':
                 editable = True
             else:
@@ -2417,7 +2429,7 @@ def user_switch(request):
     colaboracaolist = []
     tarefa = Tarefa.objects.get(pk=request.GET.get('tarefa', None))
     tarefa_tipo = tarefa.tipo_tarefa
-    utilizadores = Utilizador.objects.filter(utilizadortipo=3).order_by("nome")
+    utilizadores = Utilizador.objects.filter(utilizadortipo__tipo='Colaborador').order_by("nome")
     # print(tarefa.duracao)
     # print(tarefa.horario)
     d = timedelta(seconds=(tarefa.duracao * 60))
