@@ -127,31 +127,31 @@
                                                 class="icon">
                                                     <i class="mdi mdi-chevron-right mdi-24px"></i></span></a></td>
                                         <!---->
-                                        <td data-label="Tipo de Utilizador" class="toggle pointer"> {{ instance.utilizadortipo.tipo }}
+                                        <td data-label="Tipo de Utilizador" class="toggle pointer"> {{ instance.utilizador.utilizadortipo.tipo }}
                                         </td>
                                         <td data-label="Nome" class="toggle pointer">
-                                            {{ instance.nome }}
+                                            {{ instance.utilizador.nome }}
                                         </td>
                                         <td data-label="Email" class="toggle pointer">
-                                            {{ instance.email }}
+                                            {{ instance.utilizador.email }}
                                         <td data-label="Unidade Organica" class="toggle pointer">
-                                            {% if instance.unidadeorganica == None %}
+                                            {% if instance.utilizador.unidadeorganica == None %}
                                             <option hidden></option>
                                             {% else %}
-                                            <p>{{instance.unidadeorganica.nome}}</p>
+                                            <p>{{instance.utilizador.unidadeorganica.nome}}</p>
                                             {% endif %}
                                         </td>
                                         <td data-label="Departamento" class="toggle pointer">
-                                            {% if instance.departamento == None %}
+                                            {% if instance.utilizador.departamento == None %}
                                             <option hidden></option>
                                             {% else %}
-                                            <p>{{instance.departamento.nome}}</p>
+                                            <p>{{instance.utilizador.departamento.nome}}</p>
                                             {% endif %}
                                         </td>
                                         {#------------------------------------------validar-----------------------------------#}
 
                                         <td data-label="Validar Utilizador" class="toggle pointer">
-                                            {% if instance.validado == None or instance.validado == 0  %}
+                                            {% if instance.utilizador.validado == None or instance.utilizador.validado == 0  %}
                                              <div class="field is-grouped">
                                             <p class="control">
                                                 <button class="button is-success is-outlined"
@@ -166,7 +166,7 @@
                                                 </button>
                                             </p>
                                             </div>
-                                            {% elif instance.validado == 1 %}
+                                            {% elif instance.utilizador.validado == 1 %}
                                             <div class="control">
                                             <button class="button is-outlined" title="Disabled button" disabled>
                                                 <p class=""
@@ -258,27 +258,27 @@
                                                                     <tr draggable="false" class="">
                                                                         <td class="chevron-cell toggle pointer">
 
-                                                                            {{ instance.data_nascimento }}
+                                                                            {{ instance.utilizador.data_nascimento }}
                                                                         </td>
 
                                                                         <td data-label="Numero de telemovel"
                                                                             class="">
-                                                                            {{ instance.numero_telemovel }}
+                                                                            {{ instance.utilizador.numero_telemovel }}
                                                                         </td>
                                                                         <td data-label="Cartão de cidadão"
                                                                             class="">
-                                                                            {{ instance.cartao_cidadao }}
+                                                                            {{ instance.utilizador.cartao_cidadao }}
                                                                         </td>
                                                                         <td data-label="Deficiencias" class="">
-                                                                            {% if instance.deficiencias == None %}
+                                                                            {% if instance.utilizador.deficiencias == None %}
                                                                             <p> Não</p>
                                                                             {% else %}
-                                                                            <p>{{ instance.deficiencias }}</p>
+                                                                            <p>{{ instance.utilizador.deficiencias }}</p>
                                                                             {% endif %}
                                                                         </td>
                                                                         <td data-label="Permitir localização"
                                                                             class="">
-                                                                            {% if instance.permitir_localizacao == 0 %}
+                                                                            {% if instance.utilizador.permitir_localizacao == 0 %}
                                                                             <p> Não</p>
                                                                             {% else %}
                                                                             <p>Sim</p>
@@ -286,7 +286,7 @@
                                                                         </td>
                                                                         <td data-label="Utilizar dados pessoais"
                                                                             class="">
-                                                                            {% if instance.utilizar_dados_pessoais == 0 %}
+                                                                            {% if instance.utilizador.utilizar_dados_pessoais == 0 %}
                                                                             <p>Não</p>
                                                                             {% else %}
                                                                             <p> Sim</p>
@@ -341,7 +341,7 @@
                                     </thead>
                                     <tbody>
                                     {% for instance in object_list %}
-                                    {% if instance.unidadeorganica == utilizador.unidadeorganica %}
+                                    {% if instance.utilizador.unidadeorganica == utilizador.unidadeorganica %}
                                     <tr draggable="false" class="">
                                         <td class="chevron-cell toggle pointer"
                                             onclick="expandAtividade('{{ instance.id }}')"><a
@@ -349,30 +349,30 @@
                                                 class="icon">
                                                     <i class="mdi mdi-chevron-right mdi-24px"></i></span></a></td>
                                         <!---->
-                                        <td data-label="Tipo de Utilizador" class=" toggle pointer"> {{ instance.utilizadortipo.tipo }}
+                                        <td data-label="Tipo de Utilizador" class=" toggle pointer"> {{ instance.utilizador.utilizadortipo.tipo }}
                                         </td>
                                         <td data-label="Nome" class="toggle pointer">
-                                            {{ instance.nome }}
+                                            {{ instance.utilizador.nome }}
                                         </td>
                                         <td data-label="Email" class="toggle pointer">
-                                            {{ instance.email }}
+                                            {{ instance.utilizador.email }}
                                         <td data-label="Unidade Organica" class="toggle pointer">
-                                            {% if instance.unidadeorganica == None %}
+                                            {% if instance.utilizador.unidadeorganica == None %}
                                             <option hidden></option>
                                             {% else %}
-                                            <p>{{instance.unidadeorganica.nome}}</p>
+                                            <p>{{instance.utilizador.unidadeorganica.nome}}</p>
                                             {% endif %}
                                         </td>
                                         <td data-label="Departamento" class="toggle pointer">
-                                            {% if instance.departamento == None %}
+                                            {% if instance.utilizador.departamento == None %}
                                             <option hidden></option>
                                             {% else %}
-                                            <p>{{instance.departamento.nome}}</p>
+                                            <p>{{instance.utilizador.departamento.nome}}</p>
                                             {% endif %}
                                         </td>
                                         {#------------------------------------------validado n validado-----------------------------------#}
                                         <td data-label="Validar Utilizador" class="toggle pointer">
-                                            {% if instance.validado == None or instance.validado == 0  %}
+                                            {% if instance.utilizador.validado == None or instance.utilizador.validado == 0  %}
                                              <div class="field is-grouped">
                                             <p class="control">
                                                 <button class="button is-success is-outlined"
@@ -387,7 +387,7 @@
                                                 </button>
                                             </p>
                                             </div>
-                                            {% elif instance.validado == 1 %}
+                                            {% elif instance.utilizador.validado == 1 %}
                                             <div class="control">
                                             <button class="button is-outlined" title="Disabled button" disabled>
                                                 <p class=""
@@ -478,27 +478,27 @@
                                                                     <tr draggable="false" class="">
                                                                         <td class="chevron-cell toggle pointer">
 
-                                                                            {{ instance.data_nascimento }}
+                                                                            {{ instance.utilizador.data_nascimento }}
                                                                         </td>
 
                                                                         <td data-label="Numero de telemovel"
                                                                             class="">
-                                                                            {{ instance.numero_telemovel }}
+                                                                            {{ instance.utilizador.numero_telemovel }}
                                                                         </td>
                                                                         <td data-label="Cartão de cidadão"
                                                                             class="">
-                                                                            {{ instance.cartao_cidadao }}
+                                                                            {{ instance.utilizador.cartao_cidadao }}
                                                                         </td>
                                                                         <td data-label="Deficiencias" class="">
-                                                                            {% if instance.deficiencias == None %}
+                                                                            {% if instance.utilizador.deficiencias == None %}
                                                                             <p> Não</p>
                                                                             {% else %}
-                                                                            <p>{{ instance.deficiencias }}</p>
+                                                                            <p>{{ instance.utilizador.deficiencias }}</p>
                                                                             {% endif %}
                                                                         </td>
                                                                         <td data-label="Permitir localização"
                                                                             class="">
-                                                                            {% if instance.permitir_localizacao == 0 %}
+                                                                            {% if instance.utilizador.permitir_localizacao == 0 %}
                                                                             <p> Não</p>
                                                                             {% else %}
                                                                             <p>Sim</p>
@@ -506,7 +506,7 @@
                                                                         </td>
                                                                         <td data-label="Utilizar dados pessoais"
                                                                             class="">
-                                                                            {% if instance.utilizar_dados_pessoais == 0 %}
+                                                                            {% if instance.utilizador.utilizar_dados_pessoais == 0 %}
                                                                             <p>Não</p>
                                                                             {% else %}
                                                                             <p> Sim</p>

@@ -212,9 +212,7 @@ class Consultar_user(View):
     template_name = 'consultar_utilizador.html'
 
     def get(self, request):
-        queryset = Utilizador.objects.all()
-
-
+        queryset = AuthUser.objects.all()
         authuser = request.user
         utilizador = AuthUser.objects.get(pk=authuser.pk).utilizador
 
@@ -230,10 +228,10 @@ class Consultar_user(View):
         if type == "1":
             id = post['del']
             print(id)
-            Utilizador.objects.get(pk=id).delete()
+            AuthUser.objects.get(pk=id).delete()
+            #Utilizador.objects.get(pk=id).delete()
             messages.add_message(request, messages.WARNING, "Utilizador APAGADO com sucesso")
         elif type == "0":
-            print("GGGGGGGGGGGGG")
             id = post['val']
             user = Utilizador.objects.get(pk=id)
             print(user.validado)
