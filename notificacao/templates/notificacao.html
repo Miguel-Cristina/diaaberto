@@ -1,0 +1,294 @@
+{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="{% static 'dist/js/wickedpicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'dist/css/wickedpicker.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'main/css/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+    <script src="{% static 'main/js/notificacao.js' %}"></script>
+    <title></title>
+</head>
+
+<script>
+    function user_type(val) {
+        let element = document.getElementById('asda');
+        if (val === "Docente" || val === "Colaborador" || val === "Coordenador") {
+            element.style.display = 'block';
+        } else if (val === "Participante Individual" || val === "Participante em Grupo") {
+            element.style.display = 'none';
+        }
+    }
+
+    function Checknotificacao(val) {
+        let Grupo = document.getElementById('Grupo');
+        let Individual = document.getElementById('Individual');
+        if (val === "Individual") {
+            Grupo.style.display = 'none';
+            Individual.style.display = '';
+            document.getElementById('utilizadortipo').value = 'escolher';
+        } else if (val === "Grupo") {
+            Grupo.style.display = '';
+            Individual.style.display = 'none';
+            document.getElementById('id_utilizador_rec').value = '';
+        }
+    }
+
+    function check_n_emails(val, counter) {
+        let all_emails = document.getElementById('all_emails');
+        let email_final = document.getElementById('email_final');
+        all_emails.insertAdjacentHTML("beforebegin", '<input type="text" hidden name="' + val + counter + '" id="id_' + counter + '" value="' + val + '">');
+        email_final.value = counter;
+    }
+
+</script>
+<body onload="{% for d in all_users %}
+    check_n_emails('{{ d.email }}', '{{ forloop.counter }}');
+    {% endfor %}">
+{% block content %}
+    <form method="POST" name="notificacao_form">
+        {% csrf_token %}
+
+        <div data-v-8716d23a="" id="app">
+            {% include "includes/navbar.html" %}
+            <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+                <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+            </div>
+            <div data-v-8716d23a="" id="page-content">
+                <div data-v-8716d23a="" class="card">
+                    <div data-v-8716d23a="" class="card-content">
+                        <div data-v-8716d23a="" class="columns">
+                            <div class="column">
+                                <nav aria-label="breadcrumbs" class="breadcrumb">
+                                    <ul>
+                                        <li><a href="/" class="router-link-active">Início</a></li>
+                                        <li class="is-active"><a href="/colaboradores"
+                                                                 class="router-link-exact-active router-link-active">Enviar
+                                            Notificação</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                             {% include "includes/msg.html" %}
+                                <div style="padding: 3rem 2vw 1rem;">
+                                    <div class="b-steps">
+                                        <nav class="steps is-success">
+                                            <ul class="step-items">
+                                                <li class="step-item is-success is-active">
+                                                    <a class="step-link">
+                                                        <div class="step-marker"><span class="icon"><i
+                                                                class="mdi mdi-bell mdi-24px"></i></span></div>
+                                                        <div class="step-details"><span
+                                                                class="step-title">Enviar Notificação</span></div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                        <section class="step-content">
+                                            <div class="step-item" style="">
+                                                <div style="padding: 1rem 2vw 0px;">
+                                                    <hr>
+                                                    <div class="column is-offset-3 is-6">
+                                                        <div class="block">
+                                                            <div class="field">
+                                                                <p style="display: inline-block; padding-right: 2rem;">
+                                                                    Tipo de notificação:</p>
+                                                                <label class="b-radio radio"><input type="radio"
+                                                                                                    name="Tiponotificacao"
+                                                                                                    value="Individual"
+                                                                                                    onchange="Checknotificacao(this.value);"
+                                                                                                    required=""
+                                                                                                    id="id_Tiponotificacao_0">
+                                                                    <span class="check"></span> <span
+                                                                            class="control-label"> Individual </span></label>
+                                                                <label class="b-radio radio"><input type="radio"
+                                                                                                    name="Tiponotificacao"
+                                                                                                    value="Grupo"
+                                                                                                    onchange="Checknotificacao(this.value);"
+                                                                                                    required=""
+                                                                                                    id="id_Tiponotificacao_1">
+                                                                    <span class="check"></span> <span
+                                                                            class="control-label"> Grupo </span></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="block" style="display: none" id="Individual">
+                                                            <div class="field">
+                                                                <label class="label">Enviar para um único
+                                                                    utilizador</label>
+                                                            </div>
+                                                            <div class="control is-clearfix">
+                                                                <input type="text" name="utilizador_rec" class="input"
+                                                                       maxlength="200" id="id_utilizador_rec">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="block" style="display: none" id="Grupo">
+                                                            <!--                                                        <div class="field">-->
+                                                            <label class="label">Enviar para um grupo</label>
+                                                            <!--                                                        </div>-->
+                                                            <!--                                                        <div class="control is-clearfix">-->
+                                                            <!--                                                            <input type="text" autocomplete="on" class="input" {{form.teste}}-->
+                                                            <!--                                                        </div>-->
+                                                            <div class="control is-expanded">
+                                                        <span class="select is-fullwidth is-empty">
+                                                            <select name="utilizadortipo" id="utilizadortipo"
+                                                                    onchange="user_type(this.value)">
+                                                                <option value="escolher" hidden>Escolher</option>
+                                                                {% for u in utilizadortipo %}
+                                                                    {% if utilizador_env.utilizadortipo.tipo == "Administrador" %}
+                                                                        {% if u.tipo != 'Administrador' %}
+                                                                            <option value="{{ u.tipo }}">{{ u.tipo }}</option>
+                                                                        {% endif %}
+                                                                    {% elif utilizador_env.utilizadortipo.tipo == "Participante Individual" or utilizador_env.utilizadortipo.tipo == "Participante em Grupo" %}
+                                                                        {% if u.tipo != 'Coordenador' and u.tipo != 'Docente' and u.tipo != 'Colaborador' and u.tipo != 'Participante em Grupo' and u.tipo != 'Participante Individual' %}
+                                                                            <option value="{{ u.tipo }}">{{ u.tipo }}</option>
+                                                                        {% endif %}
+                                                                    {% elif utilizador_env.utilizadortipo.tipo == "Coordenador" %}
+                                                                        {% if u.tipo != 'Administrador' and u.tipo != 'Coordenador' and u.tipo != 'Participante em Grupo' and u.tipo != 'Participante Individual' %}
+                                                                            <option value="{{ u.tipo }}">{{ u.tipo }}</option>
+                                                                        {% endif %}
+                                                                    {% elif utilizador_env.utilizadortipo.tipo == "Colaborador" %}
+                                                                        {% if u.tipo != 'Administrador' and u.tipo != 'Colaborador' and u.tipo != 'Participante em Grupo' and u.tipo != 'Participante Individual' %}
+                                                                            <option value="{{ u.tipo }}">{{ u.tipo }}</option>
+                                                                        {% endif %}
+                                                                    {% elif utilizador_env.utilizadortipo.tipo == "Docente" %}
+                                                                        {% if u.tipo != 'Administrador' and u.tipo != 'Participante em Grupo' and u.tipo != 'Participante Individual' and u.tipo != 'Docente' %}
+                                                                            <option value="{{ u.tipo }}">{{ u.tipo }}</option>
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </select>
+                                                        </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="block">
+                                                            <div class="field">
+                                                                <label class="label">Assunto</label>
+                                                            </div>
+                                                            <div class="control is-clearfix">
+                                                                <input type="text" name="assunto" class="input" maxlength="200" required="" id="id_assunto">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="block">
+                                                            <div class="field">
+                                                                <label class="label">Conteúdo</label>
+                                                            </div>
+                                                            <div class="control is-clearfix">
+                                                                <input type="text" name="conteudo" class="input" maxlength="200" required="" id="id_conteudo">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="column">
+                                                            <div class="field has-numberinput has-numberinput-compact">
+                                                                <label class="label">Prioridade</label>
+                                                                <div class="b-numberinput field has-addons">
+                                                                    <p class="control">
+                                                                        <button onclick="incremental('minus', 'id_prioridade')"
+                                                                                type="button" class="button is-primary">
+                                                                    <span class="icon">
+                                                                        <i class="mdi mdi-minus mdi-24px"></i>
+                                                                    </span>
+                                                                        </button>
+                                                                    </p>
+                                                                    <div class="control is-clearfix">
+                                                                        {#                                                                       {{ form.prioridade }}#}
+                                                                        <input type="number" autocomplete="on" step="1"
+                                                                               class="input" name="prioridade" min="0"
+                                                                               max="5"
+                                                                               id="id_prioridade">
+                                                                    </div>
+                                                                    <p class="control">
+                                                                        <button onclick="incremental('add', 'id_prioridade')"
+                                                                                type="button" class="button is-primary">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-plus mdi-24px"></i>
+                                                                        </span>
+                                                                        </button>
+                                                                    </p>
+                                                                </div> <!---->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <div class="column is-8 is-offset-2">
+                                            <div class="level">
+                                                <div class="level-left"><a href="/notificacao/consultar_notificacao" class="button is-outlined"
+                                                                           type="button"> <span> Cancelar </span>
+                                                </a>
+                                                </div>
+                                                <div class="level-right">
+                                                    <button type="button" id="confirmacao"
+                                                            class="button is-large is-success is-outlined"
+                                                            onclick="validateForm(this.id)">
+                                                        <span> Enviar </span>
+                                                        <span class="icon is-medium">
+                                                            <i class="mdi mdi-forward mdi-36px"></i>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% include 'includes/footer.html' %}
+        </div>
+        <div id="all_emails">
+
+        </div>
+        <input type="text" id="email_final" value="" hidden>
+
+        <div id="popup_notificacao" class="dialog modal is-active" style="display: none">
+            <div class="modal-background"></div>
+            <div class="modal-card animation-content">
+                <section class="modal-card-body is-titleless">
+                    <div class="media">
+                        <div class="media-content"><p>Tem a certeza que pretende enviar?</p></div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button type="button" id="popup_cancel" class="button" onclick="confirmacao_notificacao(this.id)">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="popup_notificacao" class="button is-success">
+                        Confirmar
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </form>
+    {% if messages %}
+        {% for message in messages %}
+            <div id="message_container" class="notices is-bottom">
+                <div role="alert"
+                        {% if message.tags == 'error' %}
+                     class="toast is-danger is-bottom"
+                        {% else %}
+                     class="toast is-success is-bottom"
+                        {% endif %} style="">
+                    <div>{{ message }}</div>
+                </div>
+            </div>
+        {% endfor %}
+
+    {% endif %}
+    <script>
+        var message_ele = document.getElementById("message_container");
+        setTimeout(function () {
+            message_ele.style.display = "none";
+        }, 4000);
+    </script>
+{% endblock %}
+
+</body>
+</html>

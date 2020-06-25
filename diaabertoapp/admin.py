@@ -1,5 +1,11 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, Sala, Tarefa,Tematica, Atividade, MaterialQuantidade, Faculdade, Departamento, PublicoAlvo, Sessao, SessaoAtividade
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+
+from diaabertoapp.models import SessaoAtividadeInscricao, Inscricao, Edificio, Campus, Transporte, Percurso, \
+    TransporteUniversitarioHorario, Horario, Sala, Tematica, DiaAberto, Dia, Atividade, MaterialQuantidade, \
+    UnidadeOrganica, Departamento, PublicoAlvo, Sessao, SessaoAtividade, TipoAtividade, Utilizador, UtilizadorTipo, \
+    UtilizadorParticipante, Notificacao, Tarefa, Colaboracao
 #LocalAtividade,Local
 from django.utils.safestring import mark_safe
 # Register your models here.
@@ -23,19 +29,48 @@ admin.site.register(Sala, SalaAdmin)
 
 admin.site.register(Tematica)
 
+admin.site.register(Inscricao)
+
+admin.site.register(SessaoAtividadeInscricao)
+
+admin.site.register(Transporte)
+
+admin.site.register(TransporteUniversitarioHorario)
+
+admin.site.register(Percurso)
+
+admin.site.register(Horario)
+
 admin.site.register(PublicoAlvo)
 
-admin.site.register(Tarefa)
+admin.site.register(TipoAtividade)
 
 admin.site.register(MaterialQuantidade)
 
-admin.site.register(Faculdade)
+admin.site.register(UnidadeOrganica)
 
 admin.site.register(Departamento)
 
 admin.site.register(Sessao)
 
 admin.site.register(SessaoAtividade)
+
+admin.site.register(Utilizador)
+
+admin.site.register(UtilizadorTipo)
+
+admin.site.register(UtilizadorParticipante)
+
+admin.site.register(Notificacao)
+
+admin.site.register(DiaAberto)
+
+admin.site.register(Dia)
+
+admin.site.register(Tarefa)
+
+admin.site.register(Colaboracao)
+
 
 class MateriaisInline(admin.TabularInline):
     model = MaterialQuantidade

@@ -1,0 +1,162 @@
+﻿{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="icon" type="image/png" href="{% static 'main/img/favicon.ico' %}"/>
+    <meta charset="utf-8"/>
+    <title>Dia Aberto - Inscrição</title>
+    {#    jquery  #}
+    <script src="https://code.jquery.com/jquery-3.5.0.slim.min.js"
+            integrity="sha256-MlusDLJIP1GRgLrOflUQtshyP0TwT/RHXsI1wWGnQhs=" crossorigin="anonymous"></script>
+
+
+    <link rel="stylesheet" href="{% static 'dist/css/bulma-calendar.min.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/filter.css' %}">
+
+
+    {#    paf   css #}
+    <link rel="stylesheet" href="{% static 'main/css/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+
+</head>
+<style>
+.notices{
+            position: fixed;
+            display: flex;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8em;
+            overflow: hidden;
+            z-index: 1000;
+            pointer-events: none;
+        }
+</style>
+<body onload="document.inscricao_form.reset();">
+{% block content %}
+    <div data-v-8716d23a="" id="app">
+        {% include "includes/navbar.html" %}
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+        <div id="page-content" data-v-8716d23a="">
+            <div class="card" data-v-8716d23a="">
+                <div class="card-content" data-v-8716d23a="">
+                    <div id="top" data-v-8716d23a="">
+                        <nav aria-label="breadcrumbs" class="breadcrumb">
+                            <ul>
+                                <li>
+                                    <a href="/" class="router-link-active">Início</a>
+                                </li>
+                                <li class="is-active">
+                                    <a href="/inscricao" class="router-link-exact-active router-link-active">Minha
+                                        Inscrição</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div style="padding: 3rem 2vw 1rem">
+                            <div class="b-steps">
+                                <nav class="steps is-success">
+                                    <ul class="step-items">
+                                        <li class="step-item is-success is-previous" id="bar1">
+                                            <a class="step-link">
+                                                <div id="fa1" class="step-marker"><span class="icon"><i
+                                                        class="mdi mdi-account mdi-24px"></i></span></div>
+                                                <div id="p1" class="step-details"><span
+                                                        class="step-title">Participante</span></div>
+                                            </a></li>
+                                        <li class="step-item is-success is-previous" id="bar2">
+                                            <a class="step-link">
+                                                <div id="fa2" class="step-marker"><span class="icon"><i
+                                                        class="mdi mdi-school mdi-24px"></i></span></div>
+                                                <div id="p2" class="step-details"><span class="step-title">Escola</span>
+                                                </div>
+                                            </a></li>
+                                        <li class="step-item is-success is-previous" id="bar3">
+                                            <a class="step-link">
+                                                <div id="fa3" class="step-marker"><span class="icon"><i
+                                                        class="mdi mdi-food-apple mdi-24px"></i></span></div>
+                                                <div id="p3" class="step-details"><span class="step-title">Almoço</span>
+                                                </div>
+                                            </a></li>
+                                        <li class="step-item is-success is-previous" id="bar4">
+                                            <a class="step-link">
+                                                <div id="fa4" class="step-marker"><span class="icon"><i
+                                                        class="mdi mdi-train-car mdi-24px"></i></span></div>
+                                                <div id="p4" class="step-details"><span
+                                                        class="step-title">Transportes</span></div>
+                                            </a></li>
+                                        <li class="step-item is-success is-previous" id="bar5">
+                                            <a class="step-link">
+                                                <div id="fa5" class="step-marker"><span class="icon"><i
+                                                        class="mdi mdi-calendar-check mdi-24px"></i></span>
+                                                </div>
+                                                <div id="p5" class="step-details"><span
+                                                        class="step-title">Sessões</span></div>
+                                            </a></li>
+                                        <li class="step-item is-success is-active" id="bar6">
+                                            <a class="step-link">
+                                                <div id="fa6" class="step-marker"><span class="icon"><i
+                                                        class="mdi mdi-check mdi-24px"></i></span></div>
+                                                <div id="p6" class="step-details"><span
+                                                        class="step-title">Submissão</span></div>
+                                            </a></li>
+                                    </ul>
+                                </nav>
+                                <section class="step-content">
+                                    <div class="step-item" id="pag6">
+                                        <div style="padding: 1rem 2vw 0;">
+                                            <hr>
+                                            <h2 class="title has-text-grey is-uppercase"
+                                                style="font-size: 0.9rem;">
+                                                Submissão </h2>
+                                            <p>Um email de confirmação será enviado
+                                                para {{ email }}</p>
+                                        </div>
+                                    </div>
+                                </section>
+                                <hr>
+                                {#-----------------------------------------------------------butoes---------------------------------------------------#}
+                                <div class="column is-8 is-offset-2">
+                                    <div class="level">
+                                        <div class="level-left">
+                                        </div>
+                                        <div class="level-right">
+                                            <a href="/inscricao/home" id="ok"
+                                               class="button is-large is-success is-outlined" type="button">
+                                                <span> Sair </span><i class="mdi mdi-forward mdi-36px"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'includes/footer.html' %}
+    </div>
+    <div id="message_container" class="notices is-bottom">
+        <div role="alert" class="toast is-success is-bottom" style="">
+            <div>Inscrito com sucesso!</div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+<script>
+        // suppose the `id` attribute of element is `message_container`.
+        var message_ele = document.getElementById("message_container");
+
+        setTimeout(function(){
+           message_ele.style.display = "none";
+        }, 4000);
+        // Timeout is 3 sec, you can change it
+
+</script>
+</html>

@@ -1,0 +1,135 @@
+﻿<!DOCTYPE HTML>
+{% load static %}
+<html lang="pt-pt">
+
+<head>
+
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+    <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
+    <title>Dia Aberto</title>
+    <style>
+        body,
+        html {
+            min-height: 100%;
+            background-size: cover;
+            background: linear-gradient(to bottom, #ffffff, #eeeeff) no-repeat fixed center center;
+        }
+        * {
+            outline: none;
+        }
+        .notices{
+            position: fixed;
+            display: flex;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8em;
+            overflow: hidden;
+            z-index: 1000;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div data-v-8716d23a="" id="app">
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+        <div data-v-8716d23a="" id="page-content">
+            <div data-v-8716d23a="" class="card">
+                <div data-v-8716d23a="" class="card-content">
+                    <div data-v-8716d23a="">
+                        <section class="section">
+                            <div class="container">
+                                <div class="columns is-centered">
+                                    <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+                                        <h3 class="subtitle has-text-centered is-spaced">ENTRAR NA CONTA</h3>
+                                        <hr />
+                            
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <p>{{ form }}</p>
+                                            <br />
+                                            <button class="button is-fullwidth is-success is-rounded">Aceder</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <br />
+                                <article class="message">
+                                  <div class="message-body">
+                                      Os acessos da plataforma estão <strong>reservados</strong> ao tipo de utilizador. Algumas funcionalidades estão visiveis apenas a um determinado tipo de utilizadores/grupo de tipos de utilizador.
+                                  </div>
+                                </article>
+                                <article class="message is-primary">
+                                  <div class="message-body">
+                                    Os dados de login para acesso à plataforma:
+                                      <div class="columns">
+                                          <div class="column is-2"><em>tipo utilizador</em><p><strong>superadministrador</strong></p><p><strong>administrador</strong></p><p><strong>coordenador</strong></p><p><strong>coordenador</strong></p><p><strong>docente</strong></p><p><strong>docente</strong><p><strong>colaborador</strong></p><p><strong>docente</strong></p></div>
+                                          <div class="column is-2"><em>username</em><p>admin</p><p>a54375@ualg.pt</p><p>delrio@ualg.pt</p><p>jsantos@ualg.pt</p><p>fcastilho@ualg.pt</p><p>jsapinho@ualg.pt</p><p>glaranja@ualg.pt</p><p>fpinto@ualg.pt</p></div>
+                                          <div class="column is-2"><em>password</em><p>admin</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p><p>diaaberto12</p></div>
+                                          <div class="column is-3"><em>nome</em><p>Administrador</p><p>Miguel Cristina</p><p>Alonso del Rio</p> <p>José dos Santos Ferreira</p><p>Fátima Castilho</p><p>Jéssica Sapinho</p><p>Guilherme Laranja</p><p>Filipe Pinto</p></div>
+                                          <div class="column is-3"><em>unidade orgânica</em><p>Faculdade de Ciências e Tecnologia</p><p>Faculdade de Ciências e Tecnologia</p><p>Faculdade de Ciências e Tecnologia</p><p>Faculdade de Artes e Letras</p><p>Faculdade de Artes e Letras</p><p>Faculdade de Artes e Letras</p><p>Faculdade de Economia</p><p>Faculdade de Economia</p></div>
+                                      </div>
+                                  </div>
+                                </article>
+
+
+                            </div>
+                        </section>
+                        <br />
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div id="message_container" class="notices is-bottom"><div role="alert" class="toast is-danger is-bottom" style=""><div>{{ message }}</div></div></div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="hero is-light">
+                            <div class="hero-body">
+                                <div class="columns">
+                                    <div class="column is-8">
+                                        <p>2019 Dia Aberto por
+                                            <a>Grupo 9</a>
+                                        </p>
+                                        <small> Contacto de suporte:
+                                            <a href="">suporte.dia.aberto@ualg.pt</a>
+                                        </small>
+                                    </div>
+                                    <div class="column">
+                                        <img src="{% static "diaabertoapp/img/ualg-logo.png" %}" alt="Dia Aberto">
+                                    </div>
+                                    <div class="column is-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer data-v-8716d23a="" class="footer">
+            <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
+            <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
+            <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
+        </footer>
+    </div>
+    <script>
+        // suppose the `id` attribute of element is `message_container`.
+        var message_ele = document.getElementById("message_container");
+
+        setTimeout(function(){ 
+           message_ele.style.display = "none"; 
+        }, 4000);
+        // Timeout is 3 sec, you can change it
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="">
+<head>
+    {% load static %}
+    <title>Title</title>
+    <style type="text/css">
+        body {
+            font-size: 12px;
+            font-family: "Arial Black", Gadget, sans-serif;
+        }
+
+        .header {
+            font-size: 20px;
+            font-weight: 100;
+            text-align: center;
+            color: #007cae;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 100;
+            /* text-align: right;*/
+            padding: 10px 20px 0px 20px;
+        }
+
+        .title span {
+            color: #007cae;
+        }
+
+        .details {
+            padding: 10px 20px 0px 20px;
+            text-align: left !important;
+            /*margin-left: 40%;*/
+        }
+
+        .half {
+            width: 49%;
+            display: inline-block;
+            margin: 8px 0;
+            padding: 10px;
+        }
+
+        .onethird {
+            width: 30%;
+            float: left;
+            margin: 8px 0;
+            padding: 10px;
+        }
+
+        .half p {
+            font-family: "Arial Black", Gadget, sans-serif;
+        }
+
+        .details h2 {
+            color: #007cae;
+            padding-top: 10px;
+            border-top: 2px solid #007cae;
+            font-size: 18px;
+            font-family: "Arial Black", Gadget, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 90%;
+        }
+
+        .tablerow {
+            background-color: #2d74d8;
+            color: white;
+            margin: 1px;
+            padding: 1px;
+        }
+    </style>
+</head>
+{% block content %}
+    <body>
+    <div class='wrapper'>
+        <div class='header'>
+            <p class='title'>Inscricao Dia Aberto Ualg</p>
+        </div>
+        <div class='details'>
+            {% if  utilizador.utilizadortipo.tipo == 'Participante Individual' %}
+                <div>
+                    <h2>Participante</h2>
+                    <div class="onethird">
+                        <p>Nome: {{ participante.utilizador.nome }}</p>
+                        <p>Email: {{ participante.utilizador.email }}</p>
+                        <p>Contacto: {{ participante.utilizador.numero_telemovel }}</p>
+                    </div>
+                    <div class="half">
+                        <p>Escola: {{ participante.escola.nome }}</p>
+                        <p>Area de Estudos: {{ participante.area_estudos }}</p>
+                        <p>Ano: {{ participante.ano_estudos }}</p>
+                    </div>
+                    <p>Acompanhantes: {{ participantetipo.acompanhantes }}</p>
+                </div>
+            {% elif utilizador.utilizadortipo.tipo == 'Participante em Grupo' %}
+                <div>
+                    <h2>Responsavel do Grupo</h2>
+                    <div class="onethird"></div>
+                    <p>Nome: {{ participante.utilizador.nome }}</p>
+                    <p>Email: {{ participante.utilizador.email }}</p>
+                    <p>Contacto: {{ participante.utilizador.numero_telemovel }}</p>
+                </div>
+                <div class="half">
+                    <h2>Dados do Grupo</h2>
+                    <p>Escola: {{ participante.escola.nome }}</p>
+                    <p>Area de Estudos: {{ participante.area_estudos }}</p>
+                    <p>Ano: {{ participante.ano_estudos }}</p>
+                    <p>Turma:{{ participantetipo.turma }}</p>
+                    <p>Total Alunos:{{ participantetipo.total_participantes }}</p>
+                    <p>Total Professores:{{ participantetipo.total_professores }}</p>
+                </div>
+            {% endif %}
+            <div class="half">
+                <h2>Transportes</h2>
+                <p>Transporte para Ualg: {{ transporte.tipo_transporte }}</p>
+                <p>Hora Chegada: {{ transporte.hora_chegada }}</p>
+                <p>Hora Partida: {{ transporte.hora_partida }}</p>
+                {% if transporte.transporte_para_campus == 'nao' %}
+                    <p>Requer Transporte Da Estação para Campus: Não</p>
+                {% elif transporte.transporte_para_campus == 'sim' %}
+                    <p>Requer Transporte Da Estação para Campus: Sim</p>
+                {% endif %}
+                {% if transporte.transporte_entre_campus == 'nao' %}
+                    <p>Requer Transporte entre Campus: Não</p>
+                {% elif transporte.transporte_entre_campus == 'só ida' %}
+                    <p>Requer Transporte entre Campus: Sim, {{ transporte.transporte_entre_campus }}</p>
+                {% elif transporte.transporte_entre_campus == 'ida e volta' %}
+                    <p>Requer Transporte entre Campus: Sim, {{ transporte.transporte_entre_campus }}</p>
+                {% endif %}
+            </div>
+            <div class="half">
+                <h2>Refeição</h2>
+                {% if eminsc.numero_aluno_normal == '0' and eminsc.numero_outro_normal == '0' %}
+                    <p>Requer Refeição: Não</p>
+                {% else %}
+                    <p>Requer Refeição: Sim</p>
+                    <p>Refeiçoes para Aluno: {{ eminsc.numero_aluno_normal }}, {{ eminsc.ementa.preco_aluno_normal }}&euro;/cada</p>
+                    <p>Refeiçoes para Outro: {{ eminsc.numero_outro_normal }}, {{ eminsc.ementa.preco_outro_normal }}&euro;/cada</p>
+                {% endif %}
+            </div>
+            <div class="half">
+                <h2>Sessões Inscritas</h2>
+                <table>
+                    <thead>
+                    <tr class="tablerow">
+                        <th>Atividade</th>
+                        <th>Hora Inicio</th>
+                        <th>Duracao</th>
+                        <th>Numero inscritos</th>
+                        <th>Campus</th>
+                        <th>Local</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in sessao %}
+                        <tr>
+                            <td>{{ s.sessaoAtividade.atividade.nome }}</td>
+                            <td>{{ s.sessaoAtividade.sessao.hora|date:"H:i" }}</td>
+                            <td>{{ s.sessaoAtividade.atividade.duracao }}</td>
+                            <td>{{ s.numero_alunos }}</td>
+                            <td>{{ s.sessaoAtividade.atividade.campus.nome }}</td>
+                            {% if s.sessaoAtividade.atividade.edificio.nome == None %}
+                                <td>{{ s.sessaoAtividade.atividade.tipo_local }}</td>
+                            {% else %}
+                                <td>{{ s.sessaoAtividade.atividade.edificio.nome }} {{ s.sessaoAtividade.atividade.sala.identificacao }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock %}
+</html>

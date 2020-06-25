@@ -1,0 +1,97 @@
+/*.container {*/
+/*    width: 100%;*/
+/*}*/
+
+/*!*{#text #}*!*/
+/*.progressbar li {*/
+/*    list-style-type: none;*/
+/*    float: left;*/
+/*    width: 16.66%;*/
+/*    position: relative;*/
+/*    text-align: center;*/
+/*    text-transform: uppercase;*/
+/*    font-size: 12px;*/
+/*    color: black;*/
+/*}*/
+
+
+/*!*{#linha n selecionada #}*!*/
+/*.progressbar li:after {*/
+/*    content: '';*/
+/*    position: absolute;*/
+/*    width: 80%;*/
+/*    height: 2px;*/
+/*    background-color: #999999;*/
+/*    top: 10px;*/
+/*    left: -40%;*/
+
+/*}*/
+
+/*!*{#linha a esq invisivel #}*!*/
+/*.progressbar li:first-child:after {*/
+/*    content: none;*/
+/*}*/
+
+/*!*{#icons#}*!*/
+/*.progressbar li .fa {*/
+/*    color: grey;*/
+/*    background: white;*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    border-radius: 50%;*/
+/*    padding: 5px;*/
+/*}*/
+
+/*!*{#icon ativo#}*!*/
+/*.progressbar li .faactive {*/
+/*    color: white;*/
+/*    background: #23d160;*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    !*border-style: solid;*!*/
+/*    border-radius: 50%;*/
+/*    !*border-color: green;*!*/
+/*    padding: 5px;*/
+/*}*/
+
+/*.progressbar li .fausada {*/
+/*    color: #23d160;*/
+/*    background: white;*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    border-radius: 50%;*/
+/*    padding: 5px;*/
+/*}*/
+
+/*!*linha a ja selecionada *!*/
+/*.progressbar li.active:after {*/
+/*    background-color: #23d160;*/
+/*}*/
+
+
+/*.caminho a{*/
+/*    color: #2d74d8;*/
+/*    width: min-content;*/
+/*}*/
+
+/*.caminho a:hover{*/
+/*    color: black;*/
+/*    text-decoration: none;*/
+/*}*/
+
+/*.caminho a:last-child{*/
+/*    color: black;*/
+/*    pointer-events: none;*/
+/*    cursor: default;*/
+/*    text-decoration: none;*/
+/*}*/
+
+.b-steps .steps .step-items .step-item.is-completed .step-marker {
+    background-color: #23d160;
+    border-color: #23d160;
+    color: white;
+}
+
+.b-steps .steps .step-items .step-item:after, .b-steps .steps .step-items .step-item:before {
+    background: -webkit-gradient(linear, right top, left top, color-stop(50%, #23d160), color-stop(50%, #23d160));
+}

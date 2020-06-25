@@ -1,0 +1,559 @@
+﻿<!DOCTYPE HTML>
+{% load static %}
+<html lang="pt-pt">
+
+<head>
+
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+    <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
+    <script src="{% static 'diaabertoapp/dist/bulma-steps.js' %}"></script>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <link href="{% static 'diaabertoapp/favicon.ico' %}" rel="icon">
+    <title>Adicionar Departamento - Dia Aberto</title>
+    {{ form.media.css }}
+    <style>
+        body,
+        html {
+            min-height: 100%;
+            background-size: cover;
+            background: linear-gradient(to bottom, #ffffff, #eeeeff) no-repeat fixed center center;
+        }
+
+        * {
+            outline: none;
+        }
+        .footer{
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+        /* Style the tab content */
+        .tabcontent {
+          display: none;
+          padding-left: .8em;
+          padding-right: .8em;
+          /*border: 1px solid #ccc;
+          border-color: #dbdbdb;
+          border-radius: 4px;
+          border-top: none;*/
+        }
+        .tabdcontent {
+          padding-left: .8em;
+          padding-right: .8em;
+          padding-bottom: .8em
+        }
+        /* Style the tab */
+        .tab {
+          /*overflow: hidden;*/
+          border: 0px solid #ccc;
+          /*background-color: #f1f1f1;*/
+        }
+        
+        .tab a {
+          border: none;
+          /*outline: none;*/
+          cursor: pointer;
+          transition: 0.3s;
+        }
+        /* Change background color of buttons on hover */
+        .tab a:hover {
+                /*background-color: #ddd;*/
+        }
+        .tab a.active {
+          background-color: #3273dc;
+          color: white;
+        }
+        .tabs {
+            margin-bottom: 0px
+            /*style="margin-bottom:0px"*/
+        }
+
+        element.style {
+        }
+
+        .b-steps .steps .step-items .step-item.is-completed .step-marker {
+            background-color: #23d160;
+            border-color: #23d160;
+            color: white;
+        }
+        .b-steps .steps .step-items .step-item:after, .b-steps .steps .step-items .step-item:before {
+            background: -webkit-gradient(linear,right top,left top,color-stop(50%,#23d160),color-stop(50%,#23d160));
+        }
+        .tabfields.invalid {
+            background-color: #ffdddd;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div data-v-8716d23a="" id="app">
+        <nav data-v-a67fe1ba="" data-v-8716d23a="" role="navigation" aria-label="main navigation" class="navbar">
+            <div class="navbar-brand">
+                <a data-v-a67fe1ba="" href="/" class="navbar-item logo router-link-active">
+                    <img data-v-a67fe1ba="" alt="Dia Aberto" src="{% static 'diaabertoapp/img/logo-navbar.png' %}">
+                </a>
+                <a role="button" aria-label="menu" class="navbar-burger burger">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                                        <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Atividades
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
+                            <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link">Consultar Atividades</a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Tarefas
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/tarefas" class="navbar-item is-tab router-link"> Minhas Tarefas </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Transportes
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link"> Meus Transportes </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Gestão de Configurações
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
+                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
+                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab is-active"> Configuração das Unidades Orgânicas e Departamentos </a>
+                            <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab router-link-exact-active router-link-active">Configuração dos Transportes</a>
+                            <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab">Configuração dos Percursos</a>
+                            <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab">Configuração dos Horários</a>
+                            <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab">Configuração dos Menus</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="navbar-end">
+                    <div data-v-a67fe1ba="" class="navbar-item">
+                        <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                            <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                                <span data-v-a67fe1ba="" role="button">
+                                    <button data-v-a67fe1ba="" type="button" data-badge="0" class="button has-badge-rounded has-badge-warning is-text" style="margin-right: 0.9rem;">
+                                        <!---->
+                                        <span>
+                                            <span data-v-a67fe1ba="" class="icon">
+                                                <i class="mdi mdi-bell mdi-24px"></i>
+                                            </span>
+                                        </span>
+                                        <!---->
+                                    </button>
+                                </span>
+                            </div>
+                            
+                            <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                                <div role="menu" class="dropdown-content">
+                                    <div data-v-a67fe1ba="" role="menuitem" tabindex="0" class="dropdown-item">
+                                        <strong data-v-a67fe1ba="">Notificações</strong>
+                                    </div>
+                                    <hr data-v-a67fe1ba="" class="dropdown-divider">
+                                    <div data-v-a67fe1ba="">
+                                        <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
+                                            <div data-v-a67fe1ba="" class="has-text-grey"> Não tem novas notificações! </div>
+                                        </div>
+                                        <hr data-v-a67fe1ba="" class="dropdown-divider">
+                                    </div>
+                                    <a data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
+                                        <u data-v-a67fe1ba="">Ver todas as notificações</u>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                            <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                                <button data-v-a67fe1ba="" type="button" class="button is-text" style="margin-right: 0.9rem;">
+                                    <!---->
+                                    <span>
+                                        <span data-v-a67fe1ba="" class="icon">
+                                            <i class="mdi mdi-account-circle mdi-24px"></i>
+                                        </span>
+                                    </span>
+                                    <!---->
+                                </button>
+                            </div>
+                            <div class="background" style="display: none;" aria-hidden="true"></div>
+                            <div class="dropdown-menu"  aria-hidden="true">
+                                <div role="list" class="dropdown-content">
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item has-text-centered"><strong>Meu perfil</strong></div>
+                                    <hr />
+                                    {% if user.is_authenticated %}
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item has-text-centered"><small>{{ utilizador.utilizadortipo }}</small></div>
+                                    <hr />
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.unidadeorganica }}</small></div>
+                                        <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small"><small>{{ utilizador.departamento }}</small></div>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'logout' %}" data-v-a67fe1ba="" type="button" class="button">
+                            <span class="icon is-small">
+                                <i class="mdi mdi-logout-variant"></i>
+                            </span>
+                            <span> Sair </span>
+                            <!---->
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+        <div data-v-8716d23a="" id="page-content">
+            <div data-v-8716d23a="" class="card" style="margin-bottom:6em">
+                <div data-v-8716d23a="" class="card-content">
+                    <div data-v-8716d23a="" id="top">
+                        <nav aria-label="breadcrumbs" class="breadcrumb">
+                            <ul>
+                                <li>
+                                    <a href="/index" class="router-link-active">Início</a>
+                                </li>
+                                <li>
+                                    <a href="/configurarorganicasdepartamentos/" class="">Configuração das Unidades Orgânicas e Departamentos</a>
+                                </li>
+                                <li>
+                                    <a href="/configurarorganicasdepartamentos/departamentos/" class="">Departamentos</a>
+                                </li>
+                                <li class="is-active">
+                                    <a href="/configurarorganicasdepartamentos/departamentos/" class="">Adicionar</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div style="padding: 3rem 2vw 1rem; ">
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <div class="columns">
+                                    <div class="column tile">
+                                        <div class="container box">
+                                            <div class="level">
+                                                <div class="level-left">
+                                                    <div class="level-item">
+                                                        <p class="menu-label">Adicionar departamento</p>
+                                                    </div>
+                                                </div>
+                                                <div class="level-right">
+                                                    <div class="level-item">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        <div class="control is-clearfix" id="form_set_material">
+                                        <div class="columns">
+                                            <div class="column is-half">
+                                                <label class="label">Unidade Orgânica</label>
+                                            </div>
+                                            <div class="column">
+                                                <label class="label">Departamento</label>
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                                
+                                                <div class="column is-half">
+                                                    <div class="select is-fullwidth">
+                                                    {{ form.unidadeorganica }}
+                                                    </div>
+                                                </div>
+                                                <div class="column">
+                                                    {{ form.nome }}
+                                                {% for error in form.nome.errors %} 
+                                                    <p class="help is-danger">{{ error }}</p>
+                                                {% endfor %}
+                                                {% for error in form.non_field_errors  %} 
+                                                    <p class="help is-danger">{{ error }}</p>
+                                                {% endfor %}
+                                                </div>
+                                            
+                                        </div>
+                                    <hr />
+                                    <br />
+
+                                    <div class="level">
+                                        <div class="level-left">
+                                            <a href="/configurarorganicasdepartamentos/departamentos" class="button is-danger is-outlined" type="button" onclick="return confirm('Tem a certeza que prentede cancelar? Os dados inseridos são descartados!');">
+                                                <span class="icon is-small">
+                                                    <i class="mdi mdi-close mdi-24px"></i>
+                                                </span>
+                                                <span> Cancelar </span>
+                                            </a>
+                                        </div>                     
+                                        <div class="level-right">
+                                            <button type="submit" class="button is-success is-outlined">
+                                                <!---->
+                                                <span> Submeter </span>
+                                                <span class="icon is-small">
+                                                    <i class="mdi mdi-check mdi-24px"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                        </div>
+                                    </div>
+
+                                     </div>
+                                </div>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
+        <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
+        <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
+    </footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#plus-btn').click(function () {
+                if (!$('#maxPersons_input').val()) { $('#maxPersons_input').val(0); }
+    	    $('#maxPersons_input').val(parseInt($('#maxPersons_input').val()) + 1 );
+    	        });
+            $('#minus-btn').click(function(){
+    	    $('#maxPersons_input').val(parseInt($('#maxPersons_input').val()) - 1 );
+    	    if ($('#maxPersons_input').val() <= 0) {
+			    $('#maxPersons_input').val(0);
+		    }
+    	        });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('#plus-btn2').click(function () {
+                if (!$('#duracao_input').val()) { $('#duracao_input').val(parseInt(0));}
+                if ($('#duracao_input').val() <= 0 || $('#duracao_input').val() > 0 || $('#duracao_input').val())  { $('#duracao_input').val(parseInt($('#duracao_input').val()) + 5 ); }
+    	    
+    	        });
+            $('#minus-btn2').click(function(){
+    	    $('#duracao_input').val(parseInt($('#duracao_input').val()) - 5 );
+    	    if ($('#duracao_input').val() <= 0) {
+			    $('#duracao_input').val(0);
+		    }
+    	        });
+        });
+    </script>
+    <script>
+      function countChar(val) {
+        var len = val.value.length;
+        if (len > 300) {
+            val.value = val.value.substring(0, 300);
+        } else {
+          $('#charNum').text(300 - len).append(' caracteres restantes');
+        }
+      };
+    </script>
+    <script>
+        function openLocal(evt, localName) {
+            var i,g,h,j, tabcontent, tablinks, tabinputs, tabsinputs, changertabsinputs;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++)
+            {
+                tabcontent[i].style.display = "none";
+            }
+            //document.getElementById("tipoLocalinput").required = false;
+            tabinputs = document.getElementsByClassName("tipoLocalInput");
+            for (h = 0; h < tabinputs.length; h++)
+            {
+                tabinputs[h].required = false;
+                tabinputs[h].value = "";
+            }
+            tabsinputs = document.getElementsByClassName("escolherLocalInput");
+            for (g = 0; g < tabsinputs.length; g++)
+            {
+                tabsinputs[g].required = false;
+                tabsinputs[g].value = "";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(localName).style.display = "block";
+            evt.currentTarget.className += " active";
+            var inputLocalName = localName.concat('Input');
+            changertabsinputs = document.getElementsByClassName(inputLocalName);
+            for (j = 0; j < changertabsinputs.length; j++)
+            {
+                changertabsinputs[j].required = true;
+            }
+            document.getElementById(inputLocalName).required = true;
+        }
+    </script>
+    <script>
+        function openDep(evt, localName) {
+            var i,g,h,j, tabdcontent, tabdlinks, changertabsinputs;
+            tabdcontent = document.getElementsByClassName("tabdcontent");
+            for (i = 0; i < tabdcontent.length; i++)
+            {
+                tabdcontent[i].style.display = "none";
+            }
+
+            tabdlinks = document.getElementsByClassName("tabdlinks");
+            for (i = 0; i < tabdlinks.length; i++) {
+                tabdlinks[i].className = tabdlinks[i].className.replace(" active", "");
+            }
+            document.getElementById(localName).style.display = "block";
+            evt.currentTarget.className += " active";
+            var inputLocalName = localName.concat('Input');
+            //document.getElementById(inputLocalName).required = true;
+        }
+    </script>
+    <script>
+        var currentTab = 0; // Current tab is set to be the first tab (0)
+        showTab(currentTab); // Display the current tab
+
+        function showTab(n) {
+              // This function will display the specified tab of the form ...
+              var x = document.getElementsByClassName("stepcontent");
+              x[n].style.display = "block";
+              // ... and fix the Previous/Next buttons:
+              if (n == 0) {
+                  document.getElementById("prevBtn").style.display = "none";
+                  document.getElementById("submitBtn").style.display = "none";
+              } else {
+                document.getElementById("prevBtn").style.display = "";
+              }
+              if (n == (x.length - 1)) {
+                  document.getElementById("nextBtn").style.display = "none"; //display:block;
+                  document.getElementById("submitBtn").style.display = "";
+              } else {
+                  document.getElementById("nextBtn").style.display = "";
+                  document.getElementById("submitBtn").style.display = "none";
+                  document.getElementById("nextBtn").innerHTML = '<span> Próximo </span><span class="icon is-small"><i class="mdi mdi-arrow-right mdi-24px"></i></span>';
+              }
+              // ... and run a function that displays the correct step indicator:
+              fixStepIndicator(n)
+        }
+        function nextPrev(n) {
+              // This function will figure out which tab to display
+              var x = document.getElementsByClassName("stepcontent");
+              // Exit the function if any field in the current tab is invalid:
+              if (n == 1 && !validateForm()) return false;
+              // Hide the current tab:
+              x[currentTab].style.display = "none";
+              // Increase or decrease the current tab by 1:
+              currentTab = currentTab + n;
+              // if you have reached the end of the form... :
+            if (currentTab >= x.length) {
+                //...the form gets submitted:
+                //document.getElementById("atividadeForm").submit();
+                return false;
+            }
+            else if (currentTab < x.length) {
+                var  x = document.getElementsByClassName("link");
+                for (var i = currentTab; i < x.length; i++)
+                {
+                    //x[i].removeClass().addClass( "step-item link is-success" );
+                    while (x[i].className.includes("is-completed"))
+                    {
+                        x[i].className = x[i].className.replace("is-completed", "is-success");
+                    }
+                    
+                }
+            }
+              // Otherwise, display the correct tab:
+              showTab(currentTab);
+            }
+        function validateForm()
+        {
+            
+              // This function deals with validation of the form fields
+            var x, y, i, f, z, valid = true;
+            x = document.getElementsByClassName("stepcontent");    
+            //y = x[currentTab].getElementsByTagName("input");
+            z = x[currentTab].getElementsByClassName("tabfields");
+            // A loop that checks every input field in the current tab:
+            /*for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                if (y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    //y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }*/
+            
+            for (f = 0; f < z.length; f++) {
+                // If a field is empty...
+                const isValid = z[f].checkValidity();
+                if (!isValid) {
+                    
+                    // add an "invalid" class to the field:
+                    z[f].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+            // If the valid status is true, mark the step as finished and valid:
+            if (valid) {
+                document.getElementsByClassName("link")[currentTab].className.replace("is-success", "");
+                document.getElementsByClassName("link")[currentTab].className.replace("is-active","");
+                document.getElementsByClassName("link")[currentTab].className += " is-completed ";
+            }
+            return valid; // return the valid status
+        }
+        function fixStepIndicator(n)
+        {
+              // This function removes the "active" class of all steps...
+            var i, x = document.getElementsByClassName("link");
+            for (i = 0; i < x.length; i++)
+            {
+                if (i < n) {
+                    x[i].className = x[i].className.replace("is-success", "");
+                    x[i].className = x[i].className.replace("is-active", "");
+                    x[i].className = x[i].className += " is-completed ";
+                }
+                else
+                {
+                    //x[i].className = x[i].className.replace("is-completed", "");
+                    x[i].className = x[i].className.replace("is-active", ""); 
+                }
+                           
+            }
+             //... and adds the "active" class to the current step:
+             x[n].className += " is-active";
+        }   
+    </script>
+    <script>
+        $('#add_more').click(function() {
+            var form_idx = $('#id_sa-TOTAL_FORMS').val();
+            $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+            $('#id_sa-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    </script>
+    <script>
+        $('#add_more_material').click(function() {
+            var form_idx = $('#id_mq-TOTAL_FORMS').val();
+            $('#form_set_material').append($('#empty_form_material').html().replace(/__prefix__/g, form_idx));
+            $('#id_mq-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    </script>
+
+ {{ form.media.js }}
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<body>
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="col s12 m6">
+        <h2>Apagar Colaboração</h2>
+    </div>
+    <div class="col s12 m6">
+        {% ifequal 1 obj.primeiro_dia %}
+        Quer colaborar no primeiro dia?
+        <input type="radio" id="sim1" name="primeiro_dia" value="sim" checked="checked">
+        <label for="sim1">SIM</label>
+        <input type="radio" id="nao1" name="primeiro_dia" value="nao">
+        <label for="nao1">NAO</label>
+        {% endifequal %}
+        {% ifequal 0 obj.primeiro_dia %}
+        Quer colaborar no primeiro dia?
+        <input type="radio" id="sim2" name="primeiro_dia" value="sim" >
+        <label for="sim2">SIM</label>
+        <input type="radio" id="nao2" name="primeiro_dia" value="nao" checked="checked">
+        <label for="nao2">NAO</label>
+        {% endifequal %}
+        <p>
+        {% ifequal 1 obj.segundo_dia %}
+        Quer colaborar no segundo dia?
+        <input type="radio" id="sim3" name="segundo_dia" value="sim" checked="checked">
+        <label for="sim3">SIM</label>
+        <input type="radio" id="nao3" name="segundo_dia" value="nao">
+        <label for="nao3">NAO</label>
+        {% endifequal %}
+        {% ifequal 0 obj.segundo_dia %}
+        Quer colaborar no segundo dia?
+        <input type="radio" id="sim4" name="segundo_dia" value="sim" >
+        <label for="sim4">SIM</label>
+        <input type="radio" id="nao4" name="segundo_dia" value="nao" checked="checked">
+        <label for="nao4">NAO</label>
+        {% endifequal %}
+        <p>
+        {% ifequal 1 obj.sala_de_aula %}
+        Quer auxiliar na sala de aula?
+        <input type="radio" id="sim5" name="sala_de_aula" value="sim" checked="checked">
+        <label for="sim5">SIM</label>
+        <input type="radio" id="nao5" name="sala_de_aula" value="nao">
+        <label for="nao5">NAO</label>
+        {% endifequal %}
+        {% ifequal 0 obj.sala_de_aula %}
+        Quer auxiliar na sala de aula?
+        <input type="radio" id="sim6" name="sala_de_aula" value="sim" >
+        <label for="sim6">SIM</label>
+        <input type="radio" id="nao6" name="sala_de_aula" value="nao" checked="checked">
+        <label for="nao6">NAO</label>
+        {% endifequal %}
+        <p>
+        {% ifequal 1 obj.percurso %}
+        Quer auxiliar no percurso?
+        <input type="radio" id="sim7" name="percurso" value="sim" checked="checked">
+        <label for="sim7">SIM</label>
+        <input type="radio" id="nao7" name="percurso" value="nao">
+        <label for="nao7">NAO</label>
+        {% endifequal %}
+        {% ifequal 0 obj.percurso %}
+        Quer auxiliar no percurso?
+        <input type="radio" id="sim8" name="percurso" value="sim" >
+        <label for="sim8">SIM</label>
+        <input type="radio" id="nao8" name="percurso" value="nao" checked="checked">
+        <label for="nao8">NAO</label>
+        {% endifequal %}
+        <p>
+    </div>
+    <input type="submit" value="Apagar Colaboração">
+</form>
+</div>
+{% endblock %}
+
+</body>
+</html>

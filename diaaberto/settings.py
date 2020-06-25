@@ -25,7 +25,7 @@ SECRET_KEY = '930b0e9d-9cbd-4c7d-9b18-fe78313502e0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1']
 
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
@@ -39,7 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_select2',
     'diaabertoapp',
-    
+
+    'inscricao.apps.InscricaoConfig',
+    'utilizadores.apps.UtilizadoresConfig',
+    'colaboradores.apps.ColaboradoresConfig',
+    'notificacao.apps.NotificacaoConfig',
+
 ]
 
 # Middleware framework
@@ -78,7 +83,7 @@ WSGI_APPLICATION = 'diaaberto.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
 #        'NAME' : 'mydb',
@@ -87,15 +92,26 @@ WSGI_APPLICATION = 'diaaberto.wsgi.application'
 #        'HOST' : '127.0.0.1',
 #        'PORT' : '3306'
 #    }
-#}
+# }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ualg',
+#         'USER': 'root',
+#         'PASSWORD': 'miguelcristina',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME' : 'les',
-        'USER' : 'root',
-        'PASSWORD' : 'administrator',
-        'HOST' : '127.0.0.1',
-        'PORT' : '3306',
+        'NAME': 'test5',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306'
     }
 }
 
@@ -118,13 +134,26 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'pt-pt'
+TIME_ZONE = 'Europe/Lisbon'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+DATE_INPUT_FORMATS = ('%d-%m-%Y')
+DATE_FORMAT = 'j F Y'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'lesgrupo7@gmail.com'
+EMAIL_HOST_PASSWORD = 'g7123456789'
+DEFAULT_FROM_EMAIL = 'Grupo7 LES Team <noreply@G7LESteam.com'

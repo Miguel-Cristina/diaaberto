@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+<h1>Login</h1>
+
+{% block content %}
+<div class="container">
+        <form method="POST">
+        {% csrf_token %}
+
+            <p>Insira o seu email: {{ form.username}}</p>
+            <p>Insira a sua password: {{ form.password}}</p>
+            <button style="background-color:#F4EB16; color:blue" class="btn btn-outline-info" type="submit">Login</button>
+
+        </form>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+        Don't have an account? <a href="/utilizadores/register" target="blank"><strong>register here</strong></a>!
+        <p></p>
+        <a href="/utilizadores/password_reset" target="blank"><strong>Forget your password?</strong></a>!
+    </div>
+{% endblock %}
+
+
+</body>

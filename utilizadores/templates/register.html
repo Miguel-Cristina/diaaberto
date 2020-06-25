@@ -1,0 +1,611 @@
+﻿{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="icon" type="image/png" href="{% static 'main/img/favicon.ico' %}"/>
+    <meta charset="UTF-8">
+    <title>Dia Aberto - Registo</title>
+    <meta charset="utf-8"/>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'main/css/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+
+    <title></title>
+</head>
+
+<script type="text/javascript" src="{% static 'main/js/utilizadores_errors.js' %}"></script>
+<script type="text/javascript">
+    function user_type(val) {
+        let element = document.getElementById('asda');
+        let esec = document.getElementById('esec');
+        let ess = document.getElementById('ess');
+        let ese = document.getElementById('ese');
+        let fchs = document.getElementById('fchs');
+        let fct = document.getElementById('fct');
+        if (val === "Docente" || val === "Colaborador" || val === "Coordenador" ){
+            element.style.display = 'block';
+        } else if (val === "Participante Individual" || val === "Participante em Grupo") {
+            element.style.display = 'none';
+            esec.setAttribute("hidden", "True");
+            ess.setAttribute("hidden", "True");
+            ese.setAttribute("hidden", "True");
+            fchs.setAttribute("hidden", "True");
+            fct.setAttribute("hidden", "True");
+        }
+    }
+
+    function dep_type(val) {
+
+        if (val === "Escola Superior de Gestão, Hotelaria e Turismo" || val === "Faculdade de Economia" ||
+            val === "Departamento de Ciências Biomédicas e Medicina"){
+            let esec = document.getElementById('esec');
+            esec.setAttribute("hidden", "True");
+
+            let ess = document.getElementById('ess');
+            ess.setAttribute("hidden", "True");
+
+            let ese = document.getElementById('ese');
+            ese.setAttribute("hidden", "True");
+
+            let fchs = document.getElementById('fchs');
+            fchs.setAttribute("hidden", "True");
+
+            let fct = document.getElementById('fct');
+            fct.setAttribute("hidden", "True");
+        } else if( val === "Escola Superior de Educação e Comunicação"  ){
+            let esec = document.getElementById('esec');
+            esec.removeAttribute("hidden");
+
+            let ess = document.getElementById('ess');
+            ess.setAttribute("hidden", "True");
+
+            let ese = document.getElementById('ese');
+            ese.setAttribute("hidden", "True");
+
+            let fchs = document.getElementById('fchs');
+            fchs.setAttribute("hidden", "True");
+
+            let fct = document.getElementById('fct');
+            fct.setAttribute("hidden", "True");
+
+        } else if( val === "Escola Superior de Saúde"  ){
+            let esec = document.getElementById('esec');
+            esec.setAttribute("hidden", "True");
+
+            let ess = document.getElementById('ess');
+            ess.removeAttribute("hidden");
+
+            let ese = document.getElementById('ese');
+            ese.setAttribute("hidden", "True");
+
+            let fchs = document.getElementById('fchs');
+            fchs.setAttribute("hidden", "True");
+
+            let fct = document.getElementById('fct');
+            fct.setAttribute("hidden", "True");
+
+        } else if( val === "Escola Superior de Engenharia"  ){
+            let esec = document.getElementById('esec');
+            esec.setAttribute("hidden", "True");
+
+            let ess = document.getElementById('ess');
+            ess.setAttribute("hidden", "True");
+
+            let ese = document.getElementById('ese');
+            ese.removeAttribute("hidden");
+
+            let fchs = document.getElementById('fchs');
+            fchs.setAttribute("hidden", "True");
+
+            let fct = document.getElementById('fct');
+            fct.setAttribute("hidden", "True");
+        } else if( val === "Faculdade de Ciências Humanas e Sociais"  ){
+            let esec = document.getElementById('esec');
+            esec.setAttribute("hidden", "True");
+
+            let ess = document.getElementById('ess');
+            ess.setAttribute("hidden", "True");
+
+            let ese = document.getElementById('ese');
+            ese.setAttribute("hidden", "True");
+
+            let fchs = document.getElementById('fchs');
+            fchs.removeAttribute("hidden");
+
+            let fct = document.getElementById('fct');
+            fct.setAttribute("hidden", "True");
+        } else if( val === "Faculdade de Ciências e Tecnologia"  ){
+            let esec = document.getElementById('esec');
+            esec.setAttribute("hidden", "True");
+
+            let ess = document.getElementById('ess');
+            ess.setAttribute("hidden", "True");
+
+            let ese = document.getElementById('ese');
+            ese.setAttribute("hidden", "True");
+
+            let fchs = document.getElementById('fchs');
+            fchs.setAttribute("hidden", "True");
+
+            let fct = document.getElementById('fct');
+            fct.removeAttribute("hidden");
+        }
+    }
+
+function cancel_reg(val) {
+    document.getElementById('popup_confirmacao').style.display = 'none'
+}
+
+
+function check_def(val) {
+    let def = document.getElementById('def_id');
+    if (val === "sim") {
+        def.style.display = 'block';
+    } else if (val === 'nao') {
+        def.style.display = 'none';
+    }
+}
+
+function check_n_emails(val,counter) {
+    let all_emails = document.getElementById('all_emails');
+    let email_final = document.getElementById('email_final');
+    all_emails.insertAdjacentHTML("beforebegin",'<input hidden type="text" name="'+val+counter+'" id="id_'+counter+'" value="'+val+'">');
+    email_final.value=counter;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<body onload="{% for d in all_users %}
+                check_n_emails('{{d.email}}', '{{forloop.counter}}');
+              {% endfor %}">
+{% block content %}
+<form method="POST" name="register_form">
+    {% csrf_token %}
+    <div id="popup_confirmacao" class="dialog modal is-active" style="display: none">
+            <div class="modal-background"></div>
+            <div class="modal-card animation-content">
+                <section class="modal-card-body is-titleless">
+                    <div class="media">
+                        <div class="media-content"><p>Tem a certeza que pretende registar-se no Dia Aberto?</p></div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button id="popup_cancel" type="button" class="button" onclick="cancel_reg()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="button is-success">
+                        Confirmar
+                    </button>
+                </footer>
+            </div>
+        </div>
+    <div data-v-8716d23a="" id="app">
+        {% include "includes/navbar.html" %}
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+        <div data-v-8716d23a="" id="page-content">
+            <div data-v-8716d23a="" class="card">
+                <div data-v-8716d23a="" class="card-content">
+                    <div data-v-8716d23a="" id="top">
+                        <div style="padding: 3rem 2vw 1rem;">
+                            <div class="b-steps">
+                                <div style="text-align:center">
+                                    <span style="font-size: 16pt;font-weight:bold">Criar Utilizador</span>
+                                </div>
+                                <!--                                <nav class="steps is-success">-->
+                                <!--                                    <ul class="step-items">-->
+                                <!--                                        <li class="step-item is-success is-active"><a class="step-link">-->
+                                <!--                                            <div class="step-marker"><span class="icon"><i-->
+                                <!--                                                    class="mdi mdi-train-car mdi-24px"></i></span></div>-->
+                                <!--                                            <div class="step-details"><span-->
+                                <!--                                                    class="step-title">Adicionar Transporte</span></div>-->
+                                <!--                                        </a></li>-->
+                                <!--                                    </ul>-->
+                                <!--                                </nav>-->
+                                {% include "includes/msg.html" %}
+                                <section class="step-content">
+                                    <div class="step-item" style="">
+                                        <div style="padding: 1rem 2vw 0px;">
+                                            <hr>
+                                                <h3 style="color:red;">
+                                                    {% if messages %}
+                                                        {% for message in messages %}
+                                                    <p style="text-align:center"> {{ message }} </p>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </h3>
+
+                                            <div class="column is-offset-3 is-6">
+                                                <div class="field"><label class="label" for="id_nome">Nome:</label>
+                                                    <div class="control" id="id_nome_div"><input type="text"
+                                                                                            autocomplete="on"
+                                                                                            class="input"
+                                                                                            name="nome"
+                                                                                            id="id_nome"
+                                                                                            oninput="formerror(this.name, this.id, 'text')">
+                                                        <span id="id_nome_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
+
+                                                    </div>
+                                                    <p id="id_nome_msg" style="display: none" class="help is-danger" >Por favor, preencha este campo corretamente.</p>
+                                                </div>
+
+                                                <div class="field"><label class="label">Email:</label>
+                                                    <div class="control is-clearfix" id="id_email_div"><input type="text"
+                                                                                            autocomplete="on"
+                                                                                            class="input"
+                                                                                            name="email"
+                                                                                            id="id_email"
+                                                                                            onchange="formerror(this.name, this.id, 'email')">
+                                                    <span id="id_email_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
+
+                                                    </div>
+                                                    <p id="id_email_msg" style="display: none" class="help is-danger" >Por favor, utilize um email real.</p>
+
+                                                </div>
+                                                <div class="field"><label class="label">Password:</label>
+                                                    <div class="control is-clearfix" id="id_password_div"><input type="password"
+                                                                                            class="input"
+                                                                                            name="password_digest"
+                                                                                            id="id_password"
+                                                                                            onchange="formerror(this.name, this.id, 'password')">
+                                                    <span id="id_password_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
+
+                                                    </div>
+                                                    <p id="id_password_msg" style="display: none" class="help is-danger" >A password tem que ter pelo menos 5 caracteres.</p>
+
+                                                </div>
+                                                <div class="field"><label class="label">Confirme a sua password:</label>
+                                                    <div class="control is-clearfix" id="id_password1_div"><input type="password"
+                                                                                            class="input"
+                                                                                            name="password_conf"
+                                                                                            id="id_password1"
+                                                                                            onchange="formerror(this.name, this.id, 'password')">
+                                                    <span id="id_password1_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
+
+                                                    </div>
+                                                    <p id="id_password1_msg" style="display: none" class="help is-danger" >A password tem que ter pelo menos 5 caracteres.</p>
+
+                                                </div>
+                                                <div class="field"><label class="label">Data de nascimento:</label>
+                                                    <div class="control is-clearfix"><input type="date"
+                                                                                            autocomplete="on" id="date"
+                                                                                            class="input"
+                                                                                            name="data_nascimento" >
+                                                    </div>
+                                                </div>
+                                                <div class="field"><label class="label">Numero de telemóvel:</label>
+                                                    <div class="control is-clearfix" id="id_tele_div"><input type="number"
+                                                                                            autocomplete="on"
+                                                                                            class="input"
+                                                                                            name="numero_telemovel"
+                                                                                            id="id_tele"
+                                                                                            onchange="formerror(this.name, this.id, 'movel')">
+                                                    <span id="id_tele_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
+
+                                                    </div>
+                                                    <p id="id_tele_msg" style="display: none" class="help is-danger" >O número de telemovél tem que ter 9 digitos.</p>
+
+                                                </div>
+                                                <div class="field"><label class="label">Cartão de Cidadão:</label>
+                                                    <div class="control is-clearfix" id="id_cartao_div"><input type="number"
+                                                                                            autocomplete="on"
+                                                                                            class="input"
+                                                                                            name="cartao_cidadao"
+                                                                                            id="id_cartao"
+                                                                                            onchange="formerror(this.name, this.id, 'cartao')">
+                                                    <span id="id_cartao_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
+
+                                                    </div>
+                                                    <p id="id_cartao_msg" style="display: none" class="help is-danger" >O número de cartao de cidadão tem que ter 8 digitos.</p>
+
+                                                </div>
+                                                <div class="field"><label class="label">Tem alguma deficiência?:</label>
+                                                    <label class="b-radio radio"><input type="radio"
+                                                                                        name="deficiencias1"
+                                                                                        onchange="check_def(this.value);"
+                                                                                        value="sim">
+                                                        <span class="check"></span>
+                                                        <span class="control-label"> Sim </span>
+                                                    </label>
+                                                    <label class="b-radio radio"><input type="radio"
+                                                                                        name="deficiencias1"
+                                                                                        onchange="check_def(this.value);"
+                                                                                        value="nao">
+                                                        <span class="check"></span>
+                                                        <span class="control-label"> Não </span>
+                                                    </label>
+<!--                                                    <div class="control is-clearfix"><input type="radio" id="sim3"-->
+<!--                                                                                            name="deficiencias"-->
+<!--                                                                                            value="sim" required>-->
+<!--                                                        <label for="sim3">SIM</label>-->
+<!--                                                        <input type="radio" id="nao3" name="deficiencias" value="nao">-->
+<!--                                                        <label for="nao3">NAO</label>-->
+<!--                                                    </div>-->
+                                                </div>
+<!--                                                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
+
+                                                <div id="def_id" style="display:none;" class="field"><label class="label">Indique quais:</label>
+                                                    <div class="control is-clearfix"><input type="text"
+                                                                                            autocomplete="on"
+                                                                                            class="input"
+                                                                                            name="deficiencias">
+                                                    </div>
+                                                </div>
+                                                <div class="field"><label class="label">Permite o acesso à sua
+                                                    localização?</label>
+
+                                                    <label class="b-radio radio"><input type="radio"
+                                                                                        name="permitir_localizacao"
+                                                                                        value="sim">
+                                                        <span class="check"></span>
+                                                        <span class="control-label"> Sim </span>
+                                                    </label>
+                                                    <label class="b-radio radio"><input type="radio"
+                                                                                        name="permitir_localizacao"
+                                                                                        value="nao">
+                                                        <span class="check"></span>
+                                                        <span class="control-label"> Não </span>
+                                                    </label>
+                                                </div>
+                                                <div class="field"><label class="label">Permite a utilização dos seus
+                                                    dados pessoais?</label>
+                                                    <label class="b-radio radio"><input type="radio"
+                                                                                        name="utilizar_dados_pessoais"
+                                                                                        value="sim">
+                                                        <span class="check"></span>
+                                                        <span class="control-label"> Sim </span>
+                                                    </label>
+                                                    <label class="b-radio radio"><input type="radio"
+                                                                                        name="utilizar_dados_pessoais"
+                                                                                        value="nao">
+                                                        <span class="check"></span>
+                                                        <span class="control-label"> Não </span>
+                                                    </label>
+<!--                                                    <div class="control is-clearfix"><input type="radio" id="sim2"-->
+<!--                                                                                            name="utilizar_dados_pessoais"-->
+<!--                                                                                            value="sim" required>-->
+<!--                                                        <label for="sim2">SIM</label>-->
+<!--                                                        <input type="radio" id="nao2" name="utilizar_dados_pessoais"-->
+<!--                                                               value="nao">-->
+<!--                                                        <label for="nao2">NAO</label>-->
+<!--                                                    </div>-->
+                                                </div>
+                                                <div class="field"><label class="label">Tipo de Utilizador:</label>
+                                                    <div class="control is-expanded">
+                                                        <span class="select is-fullwidth is-empty">
+                                                            <select name="utilizadortipo" id="utilizadortipo"
+                                                                    onchange="user_type(this.value)">
+                                                                <option value ="Escolher" hidden>Escolher</option>
+                                                                    {% for u in utilizadortipo %}
+                                                                    {% if u.tipo != 'Administrador' %}
+                                                                        <option value="{{ u.tipo }}">{{ u.tipo }}</option>
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="field" id="asda" style="display:none;"><label class="label" for="unidadeorganica">Indique a sua unidade orgânica:</label>
+                                                    <div class="control is-expanded">
+                                                        <span class="select is-fullwidth is-empty">
+                                                            <select name="unidadeorganica" id="unidadeorganica"
+                                                                    onchange="dep_type(this.value)">
+                                                                <option hidden>Escolher</option>
+                                                                {% for uni in unidadeorganica %}
+                                                                <option value="{{ uni.nome }}">{{ uni.nome }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="field" id="esec" hidden><label class="label" for="departamento">Departamento:</label>
+                                                    <div class="control is-expanded">
+                                                        <span class="select is-fullwidth is-empty">
+                                                            <select name="departamento_esec" id="departamento">
+                                                                <option hidden>Escolher</option>
+                                                                {% for d in unidadeorganica_dep %}
+                                                                {% if d.unidade_organica.nome == 'Escola Superior de Educação e Comunicação' %}
+                                                                <option value="{{ d.departamento.nome }}">{{ d.departamento.nome }}
+                                                                </option>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="field" id="ess" hidden><label class="label" for="departamento">Departamento:</label>
+                                                    <div class="control is-expanded">
+                                                        <span class="select is-fullwidth is-empty">
+                                                            <select name="departamento_ess" id="departamento1">
+                                                                <option hidden>Escolher</option>
+                                                                {% for d in unidadeorganica_dep %}
+                                                                {% if d.unidade_organica.nome == 'Escola Superior de Saúde' %}
+                                                                <option value="{{ d.departamento.nome }}">{{ d.departamento.nome }}
+                                                                </option>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="field" id="ese" hidden><label class="label" for="departamento">Departamento:</label>
+                                                    <div class="control is-expanded">
+                                                        <span class="select is-fullwidth is-empty">
+                                                            <select name="departamento_ese" id="departamento2">
+                                                                <option hidden>Escolher</option>
+                                                                {% for d in unidadeorganica_dep %}
+                                                                {% if d.unidade_organica.nome == 'Escola Superior de Engenharia' %}
+                                                                <option value="{{ d.departamento.nome }}">{{ d.departamento.nome }}
+                                                                </option>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="field" id="fchs" hidden><label class="label" for="departamento">Departamento:</label>
+                                                    <div class="control is-expanded">
+                                                        <span class="select is-fullwidth is-empty">
+                                                            <select name="departamento_fchs" id="departamento3">
+                                                                <option hidden>Escolher</option>
+                                                                {% for d in unidadeorganica_dep %}
+                                                                {% if d.unidade_organica.nome == 'Faculdade de Ciências Humanas e Sociais' %}
+                                                                <option value="{{ d.departamento.nome }}">{{ d.departamento.nome }}
+                                                                </option>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="field" id="fct" hidden><label class="label" for="departamento">Departamento:</label>
+                                                    <div class="control is-expanded">
+                                                        <span class="select is-fullwidth is-empty">
+                                                            <select name="departamento_fct" id="departamento4">
+                                                                <option hidden>Escolher</option>
+                                                                {% for d in unidadeorganica_dep %}
+                                                                {% if d.unidade_organica.nome == 'Faculdade de Ciências e Tecnologia' %}
+                                                                <option value="{{ d.departamento.nome }}">{{ d.departamento.nome }}
+                                                                </option>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+
+                                        </div>
+                                    </div>
+                                </section>
+                                <div class="column is-8 is-offset-2">
+                                    <div class="level">
+                                        <div class="level-left"><a href="/utilizadores/register"
+                                                                   class="button is-outlined"
+                                                                   type="button"><!----> <span> Cancelar </span> <!---->
+                                        </a></div>
+                                        <div class="level-right">
+                                            <button type="button" id="confirmacao" onclick="validateForm(this.id)" class="button is-large is-success is-outlined"><!---->
+                                                <span> Registar Utilizador </span> <!----></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'includes/footer.html' %}
+    </div>
+
+    <div id="all_emails">
+
+    </div>
+    <input  type="text" id="email_final" value="" hidden>
+    <!--    <div class="col s12 m6">-->
+    <!--        <h2>Criar Utilizador</h2>-->
+    <!--    </div>-->
+    <!--    <h3 style="color:red;">-->
+    <!--        {% if messages %}-->
+    <!--        {% for message in messages %}-->
+    <!--        {{ message }}-->
+    <!--        {% endfor %}-->
+    <!--        {% endif %}-->
+    <!--    </h3>-->
+    <!--    <div class="col s12 m6">-->
+    <!--        Insira o seu nome:-->
+    <!--        <br>-->
+    <!--        {{ form.nome }}-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Insira o seu email:-->
+    <!--        <br>-->
+    <!--        {{ form.email }}-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Insira a sua password:-->
+    <!--        <br>-->
+    <!--        {{ form.password_digest }}-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Confirme a password:-->
+    <!--        <br>-->
+    <!--        {{ form.password_conf }}-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        &lt;!&ndash;            <p>Data de nascimento: {{ form.data_nascimento }}</p>&ndash;&gt;-->
+
+    <!--        <label for="date">Data de nascimento</label>-->
+    <!--        <br>-->
+    <!--        <input type="date" id="date" name="data_nascimento">-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Número de telemovel:-->
+    <!--        <br>-->
+    <!--        {{ form.numero_telemovel }}-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Cartão de Cidadão:-->
+    <!--        <br>-->
+    <!--        {{ form.cartao_cidadao }}-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Tem algumas deficiências?-->
+    <!--        <br>-->
+    <!--        <input type="radio" id="sim3" name="deficiencias" value="sim">-->
+    <!--        <label for="sim3">SIM</label>-->
+    <!--        <input type="radio" id="nao3" name="deficiencias" value="nao">-->
+    <!--        <label for="nao3">NAO</label>-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Se sim, indique quais:-->
+    <!--        <br>-->
+    <!--        {{ form.deficiencias }}-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Permite o acesso à sua localização?-->
+    <!--        <br>-->
+    <!--        <input type="radio" id="sim1" name="permitir_localizacao22" value="sim">-->
+    <!--        <label for="sim1">SIM</label>-->
+    <!--        <input type="radio" id="nao1" name="permitir_localizacao22" value="nao">-->
+    <!--        <label for="nao1">NAO</label>-->
+    <!--        <br>-->
+    <!--        <br>-->
+    <!--        Permite a utilização dos seus dados pessoais?-->
+    <!--        <br>-->
+    <!--        <input type="radio" id="sim2" name="utilizar_dados_pessoais" value="sim">-->
+    <!--        <label for="sim2">SIM</label>-->
+    <!--        <input type="radio" id="nao2" name="utilizar_dados_pessoais" value="nao">-->
+    <!--        <label for="nao2">NAO</label>-->
+    {# -----------------------------------------------------------------------#}
+
+</form>
+{% endblock %}
+
+</body>
+</html>

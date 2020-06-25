@@ -1,0 +1,75 @@
+{% load static %}
+
+<nav data-v-a67fe1ba="" data-v-8716d23a="" role="navigation" aria-label="main navigation" class="navbar">
+    <div class="navbar-brand">
+        <a data-v-a67fe1ba="" href="/" class="navbar-item logo router-link-exact-active router-link-active">
+            <img data-v-a67fe1ba="" alt="Dia Aberto" src="{% static 'main/img/logo-navbar.png' %}">
+        </a>
+        <a role="button" aria-label="menu" class="navbar-burger burger">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            {% for n in href %}
+            <a data-v-a67fe1ba="" href="{{ n }}" class="navbar-item is-tab router-link"> {{ n }} </a>
+            {% endfor %}
+{#            <a data-v-a67fe1ba="" href="/inscricao" class="navbar-item is-tab router-link router-link-exact-active router-link-active"> Minha Inscrição </a>#}
+{#            <a data-v-a67fe1ba="" href="/departamentoatividades" class="navbar-item is-tab router-link"> Atividades do Departamento </a>#}
+{#            <a data-v-a67fe1ba="" href="/inscricoes" class="navbar-item is-tab router-link">Inscrições </a>#}
+{#            <a data-v-a67fe1ba="" href="/colaboradores" class="navbar-item is-tab router-link">Colaboradores </a>#}
+{#            <a data-v-a67fe1ba="" href="/tarefas" class="navbar-item is-tab router-link"> Tarefas </a>#}
+        </div>
+
+        {# --------------icons a direita--------------------------#}
+        <div class="navbar-end">
+            <div data-v-a67fe1ba="" class="navbar-item">
+                <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                    <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                        <span data-v-a67fe1ba="" role="button">
+                            <button data-v-a67fe1ba="" type="button" data-badge="0"
+                                    class="button has-badge-rounded has-badge-warning is-text"
+                                    style="margin-right: 0.9rem;">
+                                <span>
+                                    <span data-v-a67fe1ba="" class="icon">
+                                        <i class="mdi mdi-bell mdi-24px"></i>
+                                    </span>
+                                </span>
+                            </button>
+                        </span>
+                    </div>
+                    <div aria-hidden="true" class="background" style="display: none;"></div>
+                    <div aria-hidden="true" class="dropdown-menu" style="display: none;">
+                        <div role="menu" class="dropdown-content">
+                        </div>
+                    </div>
+                </div>
+                <div data-v-a67fe1ba="" class="dropdown is-bottom-left is-mobile-modal">
+                    <div role="button" aria-haspopup="true" class="dropdown-trigger">
+                        <button data-v-a67fe1ba="" type="button" class="button is-text" style="margin-right: 0.9rem;">
+                            <span>
+                                <span data-v-a67fe1ba="" class="icon">
+                                    <i class="mdi mdi-account-circle mdi-24px"></i>
+                                </span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="background" style="display: none;" aria-hidden="true"></div>
+                    <div class="dropdown-menu" style="display: none;" aria-hidden="true">
+                        <div role="list" class="dropdown-content">
+                        </div>
+                    </div>
+                </div>
+                <button data-v-a67fe1ba="" type="button" class="button" onclick="window.location.href='/utilizadores/logout'">
+                    <span class="icon is-small">
+                        <i class="mdi mdi-logout-variant"></i>
+                    </span>
+                    <span> Sair </span>
+                </button>
+            </div>
+        </div>
+        {# ---------------------------------#}
+    </div>
+</nav>

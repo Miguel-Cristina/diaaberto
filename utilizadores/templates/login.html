@@ -1,0 +1,149 @@
+﻿{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="{% static 'dist/js/wickedpicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'dist/css/wickedpicker.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'main/css/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+    <script src="{% static 'main/js/loginerrors.js' %}"></script>
+    <title></title>
+    <style>
+.notices{
+            position: fixed;
+            display: flex;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8em;
+            overflow: hidden;
+            z-index: 1000;
+            pointer-events: none;
+        }
+</style>
+</head>
+<body>
+{% block content %}
+<form method="POST" name="login_form">
+    {% csrf_token %}
+
+    <div data-v-8716d23a="" id="app">
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+        <div data-v-8716d23a="" id="page-content">
+            <div data-v-8716d23a="" class="card">
+                <div data-v-8716d23a="" class="card-content">
+                    <div data-v-8716d23a="" class="columns">
+                        <div class="column" align="center">
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <img data-v-a67fe1ba="" alt="Dia Aberto" src="{% static 'main/img/logo-large.png' %}">
+                        </div>
+                        <div class="column">
+                            <nav aria-label="breadcrumbs" class="breadcrumb">
+                            </nav>
+                            <div style="padding: 3rem 2vw 1rem;">
+                                <div class="b-steps">
+                                    <nav class="steps is-success">
+                                        <ul class="step-items">
+                                            <li class="step-item is-success is-active">
+                                                <a class="step-link">
+                                                    <div class="step-marker"><span class="icon"><i
+                                                            class="mdi mdi-account-details mdi-24px"></i></span></div>
+                                                    <div class="step-details"><span
+                                                            class="step-title">Login</span></div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                    <section class="step-content">
+                                        <div class="step-item" style="">
+                                            <div style="padding: 1rem 2vw 0px;">
+                                                <hr>
+                                                <div class="column is-offset-3 is-6">
+
+                                                    <div class="block">
+                                                        <div class="field">
+                                                            <label class="label">Insira o seu email</label>
+                                                        </div>
+                                                        <div class="control is-clearfix" id="id_username_div">
+                                                            <input type="text" placeholder="Email" autocomplete="on" class="input" name="username" autofocus="" autocapitalize="none" maxlength="150" required="" id="id_username">
+                                                        </div>
+                                                    </div>
+                                                    <p id="id_turma_msg" class="help is-danger"
+                                                               style="display: none">Por favor, preencha este campo
+                                                                corretamente.</p>
+
+                                                    <div class="block">
+                                                        <div class="field">
+                                                            <label class="label">Insira a sua password</label>
+                                                        </div>
+                                                        <div class="control is-clearfix">
+                                                            <input type="password" placeholder="Password" autocomplete="on" class="input"  name="password" required="" id="id_password">
+                                                        </div>
+                                                    </div>
+                                                          {% if messages %}
+                                                                    {% for message in messages %}
+                                                                    <div id="message_container" class="notices is-bottom">
+                                                                        <div role="alert"
+                                                                             {% if message.tags == 'error' %}
+                                                                        class="toast is-danger is-bottom"
+                                                                        {% else %}
+                                                                        class="toast is-success is-bottom"
+                                                                        {% endif %} style="">
+                                                                        <div>{{ message }}</div>
+                                                                    </div>
+                                                                    </div>
+                                                                    {% endfor %}
+                                                            {% endif %}
+
+                                                    Não possui conta? <a href="/utilizadores/register" target="blank"><strong>Registe-se aqui</strong></a>
+                                                        <p></p>
+                                                    Não se lembra da password? <a href="/password_reset" target="blank"><strong>Recupere-a aqui</strong></a>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <div class="column is-8 is-offset-2">
+                                            <div class="level-right">
+                                                <button type="submit" value="Submeter" class="button is-large is-success is-outlined">
+                                                    <!----> <span> Login </span> <!----></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% include 'includes/footer.html' %}
+        </div>
+    </div>
+
+
+</form>
+
+{% endblock %}
+
+</body>
+<script>
+
+        var message_ele = document.getElementById("message_container");
+
+        setTimeout(function(){
+           message_ele.style.display = "none";
+        }, 4000);
+
+</script>
+</html>

@@ -6,6 +6,10 @@
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
     <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
+    <TestFramework>pytest</TestFramework>
+    <UnitTestPattern>test*.py</UnitTestPattern>
+    <UnitTestRootDirectory>.</UnitTestRootDirectory>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,6 +56,8 @@
     <Compile Include="diaaberto\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="diaaberto - Web Deploy.pubxml" />
+    <Content Include="diaabertoapp\static\diaabertoapp\bulma-radio-checkbox.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.css.map" />
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.min.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\dist\accordion.js" />
@@ -74,6 +80,25 @@
     <Content Include="diaabertoapp\static\diaabertoapp\img\logo.png" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\ualg-logo.png" />
     <Content Include="diaabertoapp\static\diaabertoapp\img\vue-logo.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\AUDITORIOGAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\BIBLIOGAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\BIBLIOPENHA.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\CPGAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\CPPENHA.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\default.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\ESECPENHA.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\ESGHTPENHA.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\FCHSGAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\FCTE2GAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\FCTE7GAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\FCTE8GAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\FEGAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\ISEPENHA.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\JSGAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\RESTAURANTEGAMB.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\RESTAURANTEPENHA.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\SAPENHA.png" />
+    <Content Include="diaabertoapp\static\diaabertoapp\maps\SERVICOSPENHA.png" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\bulma.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\core.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\dismissableComponent.js" />
@@ -88,14 +113,63 @@
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\navbar.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\notification.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\tabs.js" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarconfigurardiaaberto.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarementa.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarhorario.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarpercurso.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarprato.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionartransporteuniversitario.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\almocos.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurardiaaberto.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarhorario.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarpercurso.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarprato.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurartransporte.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\editarcampus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarcampus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\editaredificio.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionaredificio.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\editarsala.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\editarorganica.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\editardepartamento.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarorganica.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionardepartamento.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\adicionartarefa.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\atividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionarsala.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurardepartamentos.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarorganicasdepartamentos.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarorganicas.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarsalas.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configuraredificios.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarespacos.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\edificios.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\edificioSelect.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\administrador.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\editTarefa.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\error_404.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\error_500.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\login.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\listaratividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\proportransporte.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\sugeriralteracao.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\alteraratividade.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configuraratividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\campus.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus1.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\tipoatividade.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\tematicas.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\publicoalvo.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\sessoes.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\proporatividade.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\tarefas.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\transportes.html" />
+    <Content Include="pytest.ini">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +179,7 @@
     <Folder Include="diaabertoapp\static\diaabertoapp\" />
     <Folder Include="diaabertoapp\static\diaabertoapp\dist\" />
     <Folder Include="diaabertoapp\static\diaabertoapp\img\" />
+    <Folder Include="diaabertoapp\static\diaabertoapp\maps\" />
     <Folder Include="diaabertoapp\static\diaabertoapp\src\" />
     <Folder Include="diaabertoapp\static\diaabertoapp\src\plugins\" />
     <Folder Include="diaabertoapp\templates\" />

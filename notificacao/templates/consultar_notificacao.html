@@ -1,0 +1,189 @@
+{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+
+    <link rel="stylesheet" href="{% static 'main/css/bulma.css' %}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    {#    jquery  #}
+    <script src="https://code.jquery.com/jquery-3.5.0.slim.min.js"
+            integrity="sha256-MlusDLJIP1GRgLrOflUQtshyP0TwT/RHXsI1wWGnQhs=" crossorigin="anonymous"></script>
+
+    {#    table   #}
+    <script type="text/javascript" src="{% static 'dist/js/jquery.tablesorter.js' %}"></script>
+    <script src="{% static 'dist/js/jquery.tablesorter.widgets.js' %}"></script>
+
+    {#    filter#}
+    <script src="{% static 'main/js/filter.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'main/css/filter.css' %}">
+
+</head>
+<style>
+    table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+.tablerow {
+    background-color: #2d74d8;
+    color: white;
+}
+
+.rowhover tr:hover {
+    background-color: #bed4f3;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+<script>
+  var d = new Date();
+  var n = d.toString();
+  document.getElementById("demo").innerHTML = n;
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+<body>
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <div data-v-8716d23a="" id="app">
+        {% include "includes/navbar.html" %}
+        <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
+            <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
+        </div>
+        <div data-v-8716d23a="" id="page-content">
+            <div data-v-8716d23a="" class="card">
+                <div data-v-8716d23a="" class="card-content">
+                    <div data-v-8716d23a="" class="columns">
+                        {% include "includes/filter_notificacoes.html" %}
+                        <div class="column">
+                            <nav aria-label="breadcrumbs" class="breadcrumb">
+                                <ul>
+                                    <li><a href="/" class="router-link-active">Início</a></li>
+                                    <li class="is-active"><a href="/tarefas"
+                                                             class="router-link-exact-active router-link-active">Notificações</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <a href="/notificacao/notificacao" class="button is-success is-outlined" type="button"
+                               style="margin-bottom: 1rem; margin-right: 20px;"><span class="icon is-small"><i
+                                    class="mdi mdi-plus"></i></span> <span>Criar Notificação</span> <!----></a>
+                            <!--                            tabela-->
+                            <div>
+                                <div class="b-table">
+                                    <div class="table-wrapper">
+                                        <table class="table is-striped has-mobile-cards is-hoverable">
+                                            <thead>
+                                            <tr>
+                                                <th width="40px"></th> <!---->
+                                                <th class="is-sortable" style="width: 120px;">
+                                                    <div class="th-wrap">Data <span class="icon is-small"
+                                                                                    style="display: none;"><i
+                                                            class="mdi mdi-menu-up"></i></span></div>
+                                                </th>
+                                                <th class="is-sortable">
+                                                    <div class="th-wrap">Assunto <span class="icon is-small"
+                                                                                              style="display: none;"><i
+                                                            class="mdi mdi-menu-up"></i></span></div>
+                                                </th>
+                                                <th class="is-sortable">
+                                                    <div class="th-wrap">Conteudo <span class="icon is-small"
+                                                                                           style="display: none;"><i
+                                                            class="mdi mdi-menu-up"></i></span></div>
+                                                </th>
+                                                <th class="is-sortable">
+                                                    <div class="th-wrap">Prioridade <span class="icon is-small"
+                                                                                       style="display: none;"><i
+                                                            class="mdi mdi-menu-up"></i></span></div>
+                                                </th>
+                                                <th class="">
+                                                    <div class="th-wrap is-centered">Utilizador <span class="icon is-small"
+                                                                                                 style="display: none;"><i
+                                                            class="mdi mdi-menu-up"></i></span></div>
+                                                </th>
+                                                <th class="">
+                                                    <div class="th-wrap is-centered">Ação <span class="icon is-small"
+                                                                                                 style="display: none;"><i
+                                                            class="mdi mdi-menu-up"></i></span></div>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for lc in lista_notificacao_final %}
+                                            <tr draggable="false" class="">
+                                                <td class="chevron-cell"><a role="button"><span class="icon"><i
+                                                        class="mdi mdi-chevron-right mdi-24px"></i></span></a></td>
+                                                <!---->
+                                                <td data-label="Data" class="">
+                                                    {{ lc.hora | date:'d-m-Y' }}
+                                                </td>
+                                                <td data-label="Assunto" class="">
+                                                    {{ lc.assunto }}
+                                                </td>
+                                                <td data-label="Conteudo" class=""><span
+                                                        style="text-transform: capitalize;">{{ lc.conteudo }}</span>
+                                                </td>
+                                                <td data-label="Prioridade" class="">
+                                                    {{ lc.prioridade }}
+                                                </td>
+                                                <td data-label="Utilizador" class="has-text-centered">
+                                                    {{ lc.utilizador_rec.email }}
+                                                </td>
+                                                <td data-label="Ação" class="has-text-centered">
+
+                                                    <button type="button"
+                                                           onclick="location.href='editar_notificacao/{{lc.id}}';"
+                                                           value="Editar"><i style='font-size:18px' class='material-icons'>&#xe254;</i>
+                                                    </button>
+                                                </td><!---->
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% include 'includes/footer.html' %}
+    </div>
+
+</form>
+{% endblock %}
+
+</body>
+</html>
