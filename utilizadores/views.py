@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
@@ -16,20 +17,24 @@ class register(View):
     template_name = 'register.html'
 
     def get(self, request):
-        form = RegisterForm()
-        utilizadortipo = UtilizadorTipo.objects.all
-        departamento = Departamento.objects.all
-        unidadeorganica = UnidadeOrganica.objects.all
-        unidadeorganica_dep = UnidadeorganicaDepartamento.objects.all
-        all_users = Utilizador.objects.all
-        return render(request, self.template_name, {
-            'form': form,
-            'utilizadortipo': utilizadortipo,
-            'departamento': departamento,
-            'unidadeorganica': unidadeorganica,
-            'unidadeorganica_dep': unidadeorganica_dep,
-            'all_users': all_users,
-        })
+        if not request.user.is_authenticated:
+            form = RegisterForm()
+            utilizadortipo = UtilizadorTipo.objects.all
+            departamento = Departamento.objects.all
+            unidadeorganica = UnidadeOrganica.objects.all
+            unidadeorganica_dep = UnidadeorganicaDepartamento.objects.all
+            all_users = Utilizador.objects.all
+            return render(request, self.template_name, {
+                'form': form,
+                'utilizadortipo': utilizadortipo,
+                'departamento': departamento,
+                'unidadeorganica': unidadeorganica,
+                'unidadeorganica_dep': unidadeorganica_dep,
+                'all_users': all_users,
+            })
+        else:
+            messages.error(request, 'Tem de terminar a sessão atual!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         form_register = RegisterForm(request.POST)
@@ -212,17 +217,19 @@ class Consultar_user(View):
     template_name = 'consultar_utilizador.html'
 
     def get(self, request):
-        queryset = Utilizador.objects.all()
-
-
+        queryset = AuthUser.objects.all()
         authuser = request.user
         utilizador = AuthUser.objects.get(pk=authuser.pk).utilizador
-
-        context = {
-            "object_list": queryset,
-            "utilizador": utilizador
-        }
-        return render(request, "consultar_utilizador.html", context)
+        print(utilizador.utilizadortipo.tipo)
+        if utilizador.utilizadortipo.tipo == "Administrador" or utilizador.utilizadortipo.tipo == "Coordenador":
+            context = {
+                "object_list": queryset,
+                "utilizador": utilizador
+            }
+            return render(request, "consultar_utilizador.html", context)
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         post = request.POST
@@ -230,10 +237,10 @@ class Consultar_user(View):
         if type == "1":
             id = post['del']
             print(id)
-            Utilizador.objects.get(pk=id).delete()
+            AuthUser.objects.get(pk=id).delete()
+            #Utilizador.objects.get(pk=id).delete()
             messages.add_message(request, messages.WARNING, "Utilizador APAGADO com sucesso")
         elif type == "0":
-            print("GGGGGGGGGGGGG")
             id = post['val']
             user = Utilizador.objects.get(pk=id)
             print(user.validado)
@@ -241,28 +248,27 @@ class Consultar_user(View):
             user.save()
             print(user.validado)
 
-        return redirect('/utilizadores/consultar_utilizadores/')
+        return redirect('/utilizadores/consultar/')
 
 
 class Editar_user(View):
     template_name = 'editar_utilizador.html'
 
     def get(self, request, pk):
-        obj = Utilizador.objects.get(pk=pk)
+        obj = AuthUser.objects.get(pk=pk).utilizador
+        # obj = Utilizador.objects.get(pk=pk)
         form = RegisterForm
-        data_nascimento = Utilizador.objects.get(pk=pk).data_nascimento
-        email = Utilizador.objects.get(pk=pk).email
-        nome = Utilizador.objects.get(pk=pk).nome
-        numero_telemovel = Utilizador.objects.get(pk=pk).numero_telemovel
-        cartao_cidadao = Utilizador.objects.get(pk=pk).cartao_cidadao
-        deficiencias = Utilizador.objects.get(pk=pk).deficiencias
-        permitir_localizacao = Utilizador.objects.get(pk=pk).permitir_localizacao
-        utilizar_dados_pessoais = Utilizador.objects.get(pk=pk).utilizar_dados_pessoais
+        email = obj.email
+        nome = obj.nome
+        numero_telemovel = obj.numero_telemovel
+        cartao_cidadao = obj.cartao_cidadao
+        deficiencias = obj.deficiencias
+        permitir_localizacao = obj.permitir_localizacao
+        utilizar_dados_pessoais = obj.utilizar_dados_pessoais
 
         return render(request, self.template_name, {
             'obj': obj,
             'form': form,
-            'data_nascimento': data_nascimento,
             'email': email,
             'nome': nome,
             'numero_telemovel': numero_telemovel,
@@ -306,7 +312,7 @@ class Editar_user(View):
             utilizar_dados_pessoais=utilizar_dados_pessoais,
         )
 
-        return redirect('/utilizadores/consultar_utilizadores')
+        return redirect('/utilizadores/consultar')
 
 
 # def get_object(self):
@@ -368,4 +374,4 @@ class Validar_user(View):
             validado=validado,
         )
 
-        return redirect('/utilizadores/consultar_utilizadores')
+        return redirect('/utilizadores/consultar')

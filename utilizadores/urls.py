@@ -29,8 +29,8 @@ urlpatterns = [
     path("logout/", views.logout_request, name="logout"),
     path("login/", views.login_request, name="login"),
     path("success/", views.success, name="success"),
-    path("consultar_utilizadores/", Consultar_user.as_view(), name='consultar_user'),
-    path("consultar_utilizadores/editar_utilizadores/<int:pk>/", Editar_user.as_view(), name='editar_user'),
+    path("consultar/", Consultar_user.as_view(), name='consultar_user'),
+    path("consultar/editar/<int:pk>/", Editar_user.as_view(), name='editar_user'),
 
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html',
                                                                    success_url=reverse_lazy(
