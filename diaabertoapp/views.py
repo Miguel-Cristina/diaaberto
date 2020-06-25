@@ -1689,9 +1689,12 @@ def aceitaratividade(request, pk):
     proposta = object.nome
     responsavel = object.responsavel
     object.save()
-
+    if Notificacao.objects.all().exists():
+        notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+    else:
+        notificacao_grupo = 0
     notificacao_obj = Notificacao(assunto="Proposta aceite", hora=datetime.now(), conteudo="Proposta " + proposta + " aceite!",
-                                  utilizador_rec=responsavel, utilizador_env=utilizador, prioridade=2)
+                                  utilizador_rec=responsavel, utilizador_env=utilizador, prioridade=2, notificacao_grupo=notificacao_grupo)
     notificacao_obj.save()
     messages.success(request, 'Atividade foi aceite!')
     return HttpResponseRedirect('/minhasatividades/')

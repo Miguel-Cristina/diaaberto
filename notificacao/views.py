@@ -5,7 +5,7 @@ from django.views.generic import View
 
 from diaabertoapp.models import Utilizador, AuthUser, UtilizadorTipo
 from .forms import NotificacaoForm
-from .models import Notificacao
+from diaabertoapp.models import Notificacao
 
 
 class notificacao(View):
