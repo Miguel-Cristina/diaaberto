@@ -38,10 +38,25 @@ def error_404(request):
 
 
 # ========================================================================================================================
-# Login request
-# Reedireciona para a pagina login.html se nenhum utilizador estiver autentificado
-# Reedireciona para a pagina index.html se o utilizador autentificar com sucesso
+# Consultar notificacoes recebidas
+# Ler as mensagens recebidas
 # ========================================================================================================================
+def notificacoesrecebidas(request):
+    if request.user.is_authenticated:
+        auth_user = request.user
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
+    else:
+        messages.error(request, 'É necessário realizar o log in!')
+        return HttpResponseRedirect('/login')
+    lista_colab3 = []
+    auth_user = request.user
+    lista_notificacoes = Notificacao.objects.filter(utilizador_rec_id=AuthUser.objects.get(pk=auth_user.pk).utilizador)
+    count_notificacoes = 0
+    for x in lista_notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
+    return render(request, 'diaabertoapp/notificacoesrecebidas.html', {'count_notificacoes':count_notificacoes,'notificacoes':lista_notificacoes,'lista_notificacao_final':lista_notificacoes, 'utilizador':utilizador})
+
 
 
 # ========================================================================================================================
