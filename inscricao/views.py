@@ -8,8 +8,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from diaaberto.utils import render_to_pdf
-from diaabertoapp.models import Ementa, Escola, Inscricao, EmentaInscricao, Transporteproprio, Atividade, SessaoAtividade, \
-    SessaoAtividadeInscricao, InscricaoGrupo, InscricaoIndividual, TransporteproprioPercursos, AuthUser
+from diaabertoapp.models import Ementa, Escola, Inscricao, EmentaInscricao, Transporteproprio, Atividade, \
+    SessaoAtividade, \
+    SessaoAtividadeInscricao, InscricaoGrupo, InscricaoIndividual, TransporteproprioPercursos, AuthUser, DiaAberto
 
 
 def remove_all_space(string):
@@ -45,6 +46,9 @@ class CriarInscricaoView(View):
             age = today.year - utilizador.data_nascimento.year - ((today.month, today.day) < (
                 utilizador.data_nascimento.month, utilizador.data_nascimento.day
             ))
+            diainicio = str(DiaAberto.objects.first().data_inicio)
+            diafim = str(DiaAberto.objects.first().data_fim)
+            dia = DiaAberto.objects.first()
             return render(request, self.template_name, {
                 'values': values,
                 'escolas': escolas,
@@ -52,6 +56,8 @@ class CriarInscricaoView(View):
                 'sessaoatividade': sessaoatividade,
                 'utilizador': utilizador,
                 'age': age,
+                'diainicio': diainicio,
+                'diafim': diafim,
             })
         else:
             messages.error(request, 'Não tem permissões para aceder à pagina!!')

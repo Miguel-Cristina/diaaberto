@@ -316,3 +316,7 @@ function incremental(type, id) {
     document.getElementById(id).setAttribute('value', value)
 }
 
+
+function CheckDia(val) {
+    console.log(val)
+}

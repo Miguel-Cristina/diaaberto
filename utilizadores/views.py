@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
@@ -16,20 +17,24 @@ class register(View):
     template_name = 'register.html'
 
     def get(self, request):
-        form = RegisterForm()
-        utilizadortipo = UtilizadorTipo.objects.all
-        departamento = Departamento.objects.all
-        unidadeorganica = UnidadeOrganica.objects.all
-        unidadeorganica_dep = UnidadeorganicaDepartamento.objects.all
-        all_users = Utilizador.objects.all
-        return render(request, self.template_name, {
-            'form': form,
-            'utilizadortipo': utilizadortipo,
-            'departamento': departamento,
-            'unidadeorganica': unidadeorganica,
-            'unidadeorganica_dep': unidadeorganica_dep,
-            'all_users': all_users,
-        })
+        if not request.user.is_authenticated:
+            form = RegisterForm()
+            utilizadortipo = UtilizadorTipo.objects.all
+            departamento = Departamento.objects.all
+            unidadeorganica = UnidadeOrganica.objects.all
+            unidadeorganica_dep = UnidadeorganicaDepartamento.objects.all
+            all_users = Utilizador.objects.all
+            return render(request, self.template_name, {
+                'form': form,
+                'utilizadortipo': utilizadortipo,
+                'departamento': departamento,
+                'unidadeorganica': unidadeorganica,
+                'unidadeorganica_dep': unidadeorganica_dep,
+                'all_users': all_users,
+            })
+        else:
+            messages.error(request, 'Tem de terminar a sessão atual!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         form_register = RegisterForm(request.POST)
@@ -241,7 +246,7 @@ class Consultar_user(View):
             user.save()
             print(user.validado)
 
-        return redirect('/utilizadores/consultar_utilizadores/')
+        return redirect('/utilizadores/consultar/')
 
 
 class Editar_user(View):
@@ -306,7 +311,7 @@ class Editar_user(View):
             utilizar_dados_pessoais=utilizar_dados_pessoais,
         )
 
-        return redirect('/utilizadores/consultar_utilizadores')
+        return redirect('/utilizadores/consultar')
 
 
 # def get_object(self):
@@ -368,4 +373,4 @@ class Validar_user(View):
             validado=validado,
         )
 
-        return redirect('/utilizadores/consultar_utilizadores')
+        return redirect('/utilizadores/consultar')

@@ -93,8 +93,10 @@
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">Colaborações</a>
                     <div class="navbar-dropdown">
-                        <a data-v-a67fe1ba="" href="/colaboradores/criar" class="navbar-item is-tab router-link">Nova Colaboração</a>
-                        <a data-v-a67fe1ba="" href="/colaboradores/consultar" class="navbar-item is-tab router-link">Consultar Colaborações</a>
+                        <a data-v-a67fe1ba="" href="/colaboradores/criar" class="navbar-item is-tab router-link">Nova
+                            Colaboração</a>
+                        <a data-v-a67fe1ba="" href="/colaboradores/consultar" class="navbar-item is-tab router-link">Consultar
+                            Colaborações</a>
                     </div>
                 </div>
             {% endif %}
@@ -209,14 +211,22 @@
                                 <div data-v-a67fe1ba="" role="listitem" tabindex="0"
                                      class="is-grey dropdown-item has-text-centered">{{ utilizador.nome }}</div>
                                 <div data-v-a67fe1ba="" role="listitem" tabindex="0"
-                                     class="is-grey dropdown-item has-text-centered">
+                                     class="is-grey dropdown-item">
                                     <small>{{ utilizador.utilizadortipo }}</small></div>
-                                <hr/>
                                 {% if utilizador.unidadeorganica and utilizador.departamento %}
-                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small">
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item">
                                         <small>{{ utilizador.unidadeorganica }}</small></div>
-                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-small">
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="is-grey dropdown-item">
                                         <small>{{ utilizador.departamento }}</small></div>
+                                {% endif %}
+                                <hr>
+                                <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">
+                                    <small><a href="/utilizadores/password_change">Alterar Password</a></small></div>
+                                {% if utilizador.utilizadortipo.tipo == "Administrador" or utilizador.utilizadortipo.tipo == "Coordenador" %}
+                                    <div data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">
+                                        <small><a href="/utilizadores/consultar">Consultar Utilizadores</a></small>
+                                    </div>
+
                                 {% endif %}
                             {% else %}
                                 <div data-v-a67fe1ba="" role="listitem" tabindex="0"
