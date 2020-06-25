@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_select2',
     'diaabertoapp',
+    
 ]
 
 # Middleware framework
@@ -89,11 +91,11 @@ WSGI_APPLICATION = 'diaaberto.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME' : 'mydb',
+        'NAME' : 'les',
         'USER' : 'root',
-        'PASSWORD' : 'admin',
+        'PASSWORD' : 'administrator',
         'HOST' : '127.0.0.1',
-        'PORT' : '3306'
+        'PORT' : '3306',
     }
 }
 

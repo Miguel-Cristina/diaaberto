@@ -1,42 +1,52 @@
 from django.contrib import admin
-from diaabertoapp.models import Edificio, Campus, LocalAtividade, Tematica, Atividade, Material, MaterialQuantidade
+from diaabertoapp.models import Edificio, Campus, Sala, Tarefa,Tematica, Atividade, MaterialQuantidade, Faculdade, Departamento, PublicoAlvo, Sessao, SessaoAtividade
+#LocalAtividade,Local
 from django.utils.safestring import mark_safe
-
 # Register your models here.
+
 
 class CampusAdmin(admin.ModelAdmin):
     list_display = ('nome', 'morada', 'contacto')
-
 admin.site.register(Campus, CampusAdmin)
 
-class LocalAtividadeAdmin(admin.ModelAdmin):
-    list_display = ('sala','andar', 'get_edificio', 'descricao', 'get_campus')
-
-    def get_campus(self, obj):
-        return obj.edificio.campus.nome
-    get_campus.short_description = "Campus"
-    def get_edificio(self, obj):
-        return obj.edificio.nome
-    get_edificio.short_description = "Edificio"
-
-admin.site.register(LocalAtividade, LocalAtividadeAdmin)
-admin.site.register(Tematica)
-admin.site.register(Material)
-admin.site.register(MaterialQuantidade)
 
 class EdificioAdmin(admin.ModelAdmin):
     list_display = ('nome', 'campus')
-
 admin.site.register(Edificio, EdificioAdmin)
+
+
+class SalaAdmin(admin.ModelAdmin):
+    list_display = ('identificacao', 'edificio', 'get_campus')
+    def get_campus(self,obj):
+        return obj.edificio.campus
+admin.site.register(Sala, SalaAdmin)
+
+admin.site.register(Tematica)
+
+admin.site.register(PublicoAlvo)
+
+admin.site.register(Tarefa)
+
+admin.site.register(MaterialQuantidade)
+
+admin.site.register(Faculdade)
+
+admin.site.register(Departamento)
+
+admin.site.register(Sessao)
+
+admin.site.register(SessaoAtividade)
 
 class MateriaisInline(admin.TabularInline):
     model = MaterialQuantidade
 
 class AtividadeAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'descricao', 'local', 'duracao', 'limite_participantes', 'tipo_atividade', 'publico_alvo', 'colored_name')
+   
+    list_display = ('nome', 'descricao', 'campus', 'edificio', 'sala', 'duracao', 'limite_participantes', 'tipo_atividade','colored_name')
     inlines = [
         MateriaisInline,
     ]
+
     def colored_name(self,obj):
         if obj.validada == 'VD':
             estado = 'Validada'

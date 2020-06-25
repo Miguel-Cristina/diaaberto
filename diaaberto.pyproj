@@ -56,6 +56,7 @@
     <Content Include="diaabertoapp\static\diaabertoapp\bulma.min.css" />
     <Content Include="diaabertoapp\static\diaabertoapp\dist\accordion.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\dist\alert.js" />
+    <Content Include="diaabertoapp\static\diaabertoapp\dist\bulma-steps.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\dist\bulma.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\dist\calendar.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\dist\dropdown.js" />
@@ -87,11 +88,14 @@
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\navbar.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\notification.js" />
     <Content Include="diaabertoapp\static\diaabertoapp\src\plugins\tabs.js" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\adicionartarefa.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\atividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\edificios.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\edificioSelect.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\proporatividade.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\tarefas.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>

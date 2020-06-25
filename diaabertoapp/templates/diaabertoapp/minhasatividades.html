@@ -29,6 +29,10 @@
           bottom: 0;
           width: 100%;
         }
+        .menu-list a.is-active {
+            background-color: white;
+            color: black;
+        }
     </style>
 </head>
 
@@ -133,10 +137,221 @@
                                 <div class="menu" style="        margin-bottom: 1rem;">
                                     <p class="menu-label">Filtros Atividade</p>
                                     <ul class="menu-list">
-                                        <form method="GET" action=".">
+                                        <form method="GET" action=".">                                           
                                         <div class="field has-addons">
                                             <!---->
-                                            {% if not nomesquery|length > 0 %}
+                                            {% if not campusquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Campus
+                                                        </option>
+                                                        {% for Campus in campuss %}
+                                                            <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                        {% for Campus in campuss %}
+                                                            <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not faculdadequery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="faculdadeSearch" name="faculdade"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Faculdade
+                                                        </option>
+                                                        {% for Faculdade in faculdades %}
+                                                            <option value="{{ Faculdade.id }}">{{ Faculdade.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="faculdadeSearch" name="faculdade"><!--onchange="searchByType()"-->
+                                                        {% for Faculdade in faculdades %}
+                                                            <option value="{{ Faculdade.id }}">{{ Faculdade.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('faculdadeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not departamentoquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="departamentoSearch" name="departamento"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Departamento
+                                                        </option>
+                                                        {% for Departamento in departamentos %}
+                                                            <option value="{{ Departamento.id }}">{{ Departamento.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="departamentoSearch" name="departamento"><!--onchange="searchByType()"-->
+                                                        {% for Departamento in departamentos %}
+                                                            <option value="{{ Departamento.id }}">{{ Departamento.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('departamentoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                             <div class="field has-addons">
+                                            <!---->
+                                            {% if not tematicaquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Tema
+                                                        </option>
+                                                        {% for Tematica in tematicas %}
+                                                            <option value="{{ Tematica.id }}">{{ Tematica.tema }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="tematicaSearch" name="tematica"><!--onchange="searchByType()"-->
+                                                        {% for Tematica in tematicas %}
+                                                            <option value="{{ Tematica.id }}">{{ Tematica.tema }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('tematicaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not publicoquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="publicoSearch" name="publico_alvo"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Público-alvo
+                                                        </option>
+                                                        {% for Publico in publicoalvo %}
+                                                            <option value="{{ Publico.id }}">{{ Publico.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="publicoSearch" name="publico_alvo"><!--onchange="searchByType()"-->
+                                                        {% for Publico in publicoalvo %}
+                                                            <option value="{{ Publico.id }}">{{ Publico.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('publicoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>                                      
+                                        <template>
+                                            <b-menu>
+                                                <b-menu-list>
+                                                    <b-menu-item>
+                                                        <template slot="label" slot-scope="props">
+                                                            <small>Mais Filtros de Atividade</small>
+                                                            <b-icon
+                                                                class="is-pulled-right"
+                                                                :icon="props.expanded ? 'minus' : 'plus'">
+                                                            </b-icon>
+                                                        </template>
+                                           <div class="field has-addons">
+                                            <!---->
+                                        {% if not nomesquery|length > 0 %}
                                             <div class="control is-expanded">
                                                 <div class="control is-clearfix">
                                                     <input type="search" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input"><!--onkeyup="searchByName()"-->
@@ -151,7 +366,7 @@
                                             <div class="control">
                                                 <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
                                               </div>
-                                            {% else %}<div class="control is-expanded">
+                                        {% else %}<div class="control is-expanded">
                                                 <div class="control is-clearfix">
                                                     <input type="text" autocomplete="off" id="nameSearch" name="nome"  placeholder="Nome da Atividade" class="input" value="{{ nomesquery }}"><!--onkeyup="searchByName()"-->
                                                     <!--<span class="icon is-left">
@@ -164,20 +379,20 @@
                                             </div>
                                             <div class="control">
                                                 <button class="button is-danger" onclick="document.getElementById('nameSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                              </div>{% endif %}
+                                              </div>
+                                        {% endif %}
                                             <!---->
                                         </div>
-                                            
-                                        <div class="field has-addons">
+                                         <div class="field has-addons">
                                             <!---->
-                                            {% if not tiposquery|length > 0 %}
+                                            {% if not tipo_query|length > 0 %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select  id="typeSearch" name="tipo"><!--onchange="searchByType()"-->
+                                                    <select  id="tipoSearch" name="tipo"><!--onchange="searchByType()"-->
                                                         <option disabled="disabled" hidden="hidden" selected>
-                                                            Tipo de Atividade
+                                                            Tipo de atividade
                                                         </option>
-                                                        {% for Tipo in tiposatividades %}
+                                                        {% for Tipo in tipoatividade %}
                                                             <option value="{{ Tipo.tipo_atividade }}">{{ Tipo.get_tipo_atividade_display }}</option>
                                                         {% endfor %}
                                                     </select>
@@ -192,9 +407,9 @@
                                             {% else %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
-                                                    <select  id="typeSearch" name="tipo"><!--onchange="searchByType()"-->
-                                                        {% for Tipo in tiposatividades %}
-                                                            <option value="{{ Tipo.tipo_atividade }}" selected>{{ Tipo.get_tipo_atividade_display }}</option>
+                                                    <select  id="tipoSearch" name="tipo"><!--onchange="searchByType()"-->
+                                                        {% for Tipo in tipoatividade %}
+                                                            <option value="{{ Tipo.tipo_atividade }}">{{ Tipo.get_tipo_atividade_display }}</option>
                                                         {% endfor %}
                                                     </select>
                                                 </span>
@@ -204,124 +419,119 @@
                                             </div>
                                             <!---->
                                             <div class="control">
-                                                <button class="button is-danger" onclick="document.getElementById('typeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                <button class="button is-danger" onclick="document.getElementById('tipoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
                                               </div>
                                             {% endif %}
                                         </div>
-                                        <div class="field has-addons">
-                                            <!---->
-                                            {% if not estadosquery|length > 0 %}
-                                            <div class="control is-expanded">
-                                                <span class="select is-fullwidth is-empty">
-                                                    <select id="validationSearch" name="validada"><!--onchange="searchByValidation()"-->
-                                                        <option disabled="disabled" hidden="hidden" selected>
-                                                            Estado
-                                                        </option>
-                                                        {% for Estado in estados %}
-                                                            <option value="{{ Estado.validada }}">{{ Estado.get_validada_display }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </span>
-                                               
-                                            </div>
-                                            <div class="control">
-                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                            </div>
-                                            <!---->
-                                            {% else %}
-                                            <div class="control is-expanded">
-                                                <span class="select is-fullwidth is-empty">
-                                                    <select id="validationSearch"><!--onchange="searchByValidation()"-->
-                                                        {% for Estado in estados %}
-                                                            <option value="{{ Estado.get_validada_display }}" selected>{{ Estado.get_validada_display }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </span>
-                                                
-                                            </div>
-                                            <div class="control">
-                                                <button class="button is-danger" onclick="document.getElementById('validationSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-
-
-
-                                        <li class="is-menu more">
-                                            <a class="">
+                                            <div class="field has-addons">
                                                 <!---->
-                                                <span class="icon is-pulled-right">
-                                                    <i class="mdi mdi-plus mdi-24px"></i>
-                                                </span>
-                                                <small>Mais Filtros de Atividade</small>
-                                            </a>
-                                            <ul>
-                                                <div class="field">
-                                                    <!---->
-                                                    <template>
-                                                        <b-field>
-                                                            <b-datepicker
-                                                                placeholder="Submetido depois de..."
-                                                                icon="calendar"
-                                                                :min-date="minDate"
-                                                                :max-date="maxDate"
-                                                                editable>
-                                                            </b-datepicker>
-                                                        </b-field>
-                                                    </template>
-                                                    <!---->
+                                                {% if not estadosquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select id="validationSearch" name="validada"><!--onchange="searchByValidation()"-->
+                                                            <option disabled="disabled" hidden="hidden" selected>
+                                                                Estado
+                                                            </option>
+                                                            {% for Estado in estados %}
+                                                                <option value="{{ Estado.validada }}">{{ Estado.get_validada_display }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                               
                                                 </div>
-                                                <div class="field">
-                                                    <!---->
-                                                    <template>
-                                                        <b-field>
-                                                            <b-datepicker
-                                                                placeholder="Submetido antes de..."
-                                                                icon="calendar"
-                                                                :min-date="minDate"
-                                                                :max-date="maxDate"
-                                                                 editable>
-                                                            </b-datepicker>
-                                                        </b-field>
-                                                    </template>
-                                                    <!---->
+                                                <div class="control">
+                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
                                                 </div>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                                <!---->
+                                                {% else %}
+                                                <div class="control is-expanded">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select id="validationSearch"><!--onchange="searchByValidation()"-->
+                                                            {% for Estado in estados %}
+                                                                <option value="{{ Estado.get_validada_display }}" selected>{{ Estado.get_validada_display }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('validationSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                                        <template>
+                                                            <b-field>
+                                                                <b-datepicker
+                                                                    placeholder="Submetido depois de..."
+                                                                    icon="calendar"
+                                                                    :min-date="minDate"
+                                                                    :max-date="maxDate"
+                                                                    editable>
+                                                                </b-datepicker>
+                                                            </b-field>
+                                                        </template>
+                                                        <template>
+                                                            <b-field>
+                                                                <b-datepicker
+                                                                    placeholder="Submetido antes de..."
+                                                                    icon="calendar"
+                                                                    :min-date="minDate"
+                                                                    :max-date="maxDate"
+                                                                    editable>
+                                                                </b-datepicker>
+                                                            </b-field>
+                                                        </template>
+                                                    </b-menu-item>
+                                            </b-menu>
+                                        </template>
                                     </form>
+                                 </ul>
                                 </div>
                                 <div class="menu">
                                     <p class="menu-label">Filtros Sessão</p>
                                     <ul class="menu-list">
-                                    <div class="columns" style="margin-bottom: 0px;">
-                                        <div class="field column" style="margin-bottom: 0px;">
-                                            <!---->
-                                            <template>
-                                                <b-field>
-                                                    <b-timepicker
-                                                        placeholder="De"
-                                                        icon="clock"
-                                                        editable>
-                                                    </b-timepicker>
-                                                </b-field>
-                                            </template>
-                                            <!---->
-                                        </div>
-                                        <div class="field column">
-                                             <!---->
-                                            <template>
-                                                <b-field>
-                                                    <b-timepicker
-                                                        placeholder="Até"
-                                                        icon="clock"
-                                                        editable>
-                                                    </b-timepicker>
-                                                </b-field>
-                                            </template>
-                                            <!---->
-                                        </div>
-                                    </div>
+                                        <form method="GET" action=".">  
+                                            <div class="field has-addons">
+                                                <!---->
+                                                {% if not sessoesquery|length > 0 %}
+                                                <div class="control is-expanded has-icons-left">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select id="sessaoSearch" name="sessao"><!--onchange="searchByValidation()"-->
+                                                            <option disabled="disabled" hidden="hidden" selected>
+                                                                Sessão
+                                                            </option>
+                                                            {% for Sessao in sessoes %}
+                                                                <option value="{{ Sessao.id }}">{{ Sessao.hora|time:"H:i" }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                <span class="icon is-small is-left">
+                                                    <i class="mdi mdi-clock"></i>
+                                                 </span>
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                </div>
+                                                <!---->
+                                                {% else %}
+                                                <div class="control is-expanded has-icons-left">
+                                                    <span class="select is-fullwidth is-empty">
+                                                        <select id="sessaoSearch" name="sessao"><!--onchange="searchByValidation()"-->
+                                                            {% for Sessao in sessoes %}
+                                                                <option value="{{ Sessao.id }}">{{ Sessao.hora|time:"H:i" }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </span>
+                                                <span class="icon is-small is-left">
+                                                    <i class="mdi mdi-clock"></i>
+                                                </span>
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('sessaoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </form>
                                     <li class="is-not-menu">
                                         <a class="">
                                             <!---->
@@ -433,7 +643,7 @@
                                                     </td>
                                                     <!---->
                                                     <td data-label="Nome" id="activityName" class=""> {{ Atividade.nome }} </td>
-                                                    <td data-label="Submetido a" class=""> {{ Atividade.data }} </td>
+                                                    <td data-label="Submetido a" class=""> {{ Atividade.data|date:'d-m-Y' }} </td>
                                                     <td data-label="Estado" class="">
                                                         <span class="tag text {% if Atividade.validada  == "RJ" %}
               is-danger {% endif %} {% if Atividade.validada  == "PD" %} is-warning {% endif %} {% if Atividade.validada  == "VD" %} is-success {% endif %}" style="width: 7rem;font-size: small;"> {{ Atividade.get_validada_display }} </span>
@@ -446,27 +656,43 @@
                                                         
                                                         <div class="content">
     <div style="font-size: 15px;">
-        <p>
-            <strong>Nome: </strong> {{ Atividade.nome }} </p>
-        <p>
-            <strong>Criador:</strong> por configurar </p>
-        <p>
-            <strong>Data de submissão:</strong> {{ Atividade.data }} </p>
-        <p>
-            <strong>Estado de submissão:</strong> {{ Atividade.get_validada_display }} </p>
-        <p>
-            <strong>Tipo de Atividade:</strong> {{ Atividade.get_tipo_atividade_display }} </p>
-        <p>
-            <strong>Descrição:</strong> {{ Atividade.descricao }} </p>
-        <p>
-            <strong>Local:</strong> {{ Atividade.local }} </p>
-        <p>
-            <strong>Entidade Organizacional:</strong> por configurar </p>
-        <p>
-            <strong>Departamento:</strong> por configurar </p>
-        <p>
-            <strong>Sessões:</strong>
-        </p>
+        <div class="columns">
+            <div class="column">
+                        <p><strong>Nome: </strong> {{ Atividade.nome }} </p>
+                        <p><strong>Descrição:</strong> {{ Atividade.descricao }} </p>
+                        <p><strong>Tipo de Atividade:</strong> {{ Atividade.get_tipo_atividade_display }} </p>
+                        <p><strong>Temáticas:</strong> 
+                        {% for tema in Atividade.tematicas.all %}
+                            {{ tema }};           
+                        {% endfor %}
+                        </p>
+                        <p><strong>Público-alvo:</strong>
+                        {% for alvo in Atividade.publico_alvo.all %}
+                            {{ alvo }};           
+                        {% endfor %}
+                        </p>
+            </div>
+            <div class="column">
+                        <p><strong>Faculdade:</strong> {{ Atividade.faculdade }} </p>
+                        <p><strong>Departamento:</strong> {{ Atividade.departamento }} </p>
+                        <p><strong>Campus:</strong> {{ Atividade.campus }} </p>
+                        <p><strong>Edificio:</strong> {{ Atividade.edificio }} </p>
+                        <p><strong>Sala:</strong> {{ Atividade.sala }} </p>
+            </div>
+            <div class="column">
+                        <p><strong>Material:</strong> 
+                        {% for Mat in materiais %}
+                            {% ifequal Mat.atividade.id Atividade.id %}
+                                {{ Mat.material }};
+                            {% endifequal %}
+                        {% endfor %}
+                        </p>
+                        <p><strong>Responsável:</strong> por configurar </p>
+                        <p><strong>Data de submissão:</strong> {{ Atividade.data|date:'d-m-Y' }} </p>
+                        <p><strong>Estado de submissão:</strong> {{ Atividade.get_validada_display }} </p>
+            </div>
+        </div>
+        <p><strong>Sessões:</strong></p>
         <div class="b-table">
             <!---->
             <!---->
@@ -504,30 +730,25 @@
                                     </span>
                                 </div>
                             </th>
-                            <th class="">
-                                <div class="th-wrap">Espaço
-                                    <span class="icon is-small" style="display: none;">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                    </span>
-                                </div>
-                            </th>
                             <!---->
                         </tr>
                         <!---->
                         <!---->
                     </thead>
                     <tbody>
-                        <tr draggable="false" class="">
-                            <!---->
-                            <!---->
-                            <td data-label="Dia" class=""> 20/02/2020 </td>
-                            <td data-label="Hora" class=""> 09:30 </td>
-                            <td data-label="Duração" class=""> 60 min </td>
-                            <td data-label="Máximo de participantes" class=""> 25 </td>
-                            <td data-label="Espaço" class=""> Por alocar </td>
-                            <!---->
-                        </tr>
                         <!---->
+                        {% for Sessao in sessoesatividade %}
+                            {% ifequal Sessao.atividade.id Atividade.id %}
+                            <tr draggable="false" class="">
+                                <!---->
+                                <td data-label="Dia" class=""> {{ Sessao.dia|date:'d-m-Y' }} </td>
+                                <td data-label="Hora" class=""> {{ Sessao.sessao.hora|time:"H:i" }} </td>
+                                <td data-label="Duração" class=""> {{ Sessao.atividade.duracao }} minutos</td>
+                                <td data-label="Máximo de participantes" class=""> {{ Sessao.atividade.limite_participantes }} </td>
+                                <!---->
+                            </tr>
+                            {% endifequal %}
+                        {% endfor %}
                         <!---->
                     </tbody>
                     <!---->
@@ -537,20 +758,34 @@
         </div>
     </div>
     <div style="margin-top: 13px;">
-        <button type="button" class="button is-success" style="margin-right: 10px;">
-            <span class="icon is-small">
-                <i class="mdi mdi-check"></i>
-            </span>
-            <span>Aceitar</span>
-            <!---->
-        </button>
-        <button type="button" class="button is-danger">
-            <span class="icon is-small">
-                <i class="mdi mdi-delete"></i>
-            </span>
-            <span>Rejeitar</span>
-            <!---->
-        </button>
+        <div class="level">
+            <div class="level-left">
+            <div class="level-item">
+                <form action="{% url 'aceitaratividade' Atividade.id %}" method=POST>
+                    {% csrf_token %}
+                    <button type="submit" class="button is-success" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede aceitar a proposta?');">
+                        <span class="icon is-small">
+                            <i class="mdi mdi-check"></i>
+                        </span>
+                        <span>Aceitar</span>
+                        <!---->
+                    </button>
+                </form>
+            </div>
+            <div class="level-item">
+                <form action="{% url 'rejeitaratividade' Atividade.id %}" method=POST>
+                    {% csrf_token %}
+                    <button type="submit" class="button is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede rejeitar a proposta?');">
+                        <span class="icon is-small">
+                            <i class="mdi mdi-delete"></i>
+                        </span>
+                        <span>Rejeitar</span>
+                        <!---->
+                    </button>
+                </form>
+            </div>
+        </div>
+        </div>
     </div>
 </div>
                                                     </td>
@@ -633,7 +868,7 @@
             <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
         </footer>
         
- <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue"></script>
     <!-- Full bundle -->
     <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
 
