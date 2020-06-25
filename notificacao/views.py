@@ -1,7 +1,8 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 from django.views.generic import View
+from django.contrib import messages
 
 from diaabertoapp.models import Utilizador, AuthUser, UtilizadorTipo
 from .forms import NotificacaoForm
@@ -12,20 +13,26 @@ class notificacao(View):
     template_name = 'notificacao.html'
 
     def get(self, request):
-        form = NotificacaoForm()
-        all_users = Utilizador.objects.all
-        # ---------------get autenticated user
-        user_id = request.user
-        # utilizador_env = Utilizador.objects.get(pk=auth_user.id)
-        utilizador_env = AuthUser.objects.get(pk=user_id.pk).utilizador
-        print(utilizador_env)
-        utilizadortipo = UtilizadorTipo.objects.all
-        # ----------------------
-        return render(request, self.template_name, {'form': form,
-                                                    'utilizador_env': utilizador_env,
-                                                    'utilizadortipo': utilizadortipo,
-                                                    'all_users': all_users,
-                                                    })
+        if request.user.is_authenticated:
+            form = NotificacaoForm()
+            all_users = Utilizador.objects.all
+            # ---------------get autenticated user
+            user_id = request.user
+            # utilizador_env = Utilizador.objects.get(pk=auth_user.id)
+            utilizador_env = AuthUser.objects.get(pk=user_id.pk).utilizador
+            print(utilizador_env)
+            utilizador = utilizador_env
+            utilizadortipo = UtilizadorTipo.objects.all
+            # ----------------------
+            return render(request, self.template_name, {'form': form,
+                                                        'utilizador_env': utilizador_env,
+                                                        'utilizadortipo': utilizadortipo,
+                                                        'all_users': all_users,
+                                                        'utilizador': utilizador
+                                                        })
+        else:
+            messages.error(request, 'Tem de efetuar log in para aceder a esta página!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         form_notificacao = NotificacaoForm(request.POST)
@@ -80,17 +87,22 @@ class Consultar_notificacao(View):
 
     def get(self, request):
         lista_colab3 = []
-        visto = Notificacao.visto.get()
-        auth_user = request.user
-        lista_notificacao_final = Notificacao.objects.filter(
-            utilizador_env_id=AuthUser.objects.get(pk=auth_user.pk).utilizador,visto=visto)
-        return render(request, self.template_name, {
-            # 'form': form,
-            # 'lista_colab': lista_colab,
-            # 'hora_str': hora_str,
-            # 'lista_colab3': lista_colab3,
-            'lista_notificacao_final': lista_notificacao_final,
-        })
+        if request.user.is_authenticated:
+            auth_user = request.user
+            utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
+            lista_notificacao_final = Notificacao.objects.filter(
+                utilizador_env_id=AuthUser.objects.get(pk=auth_user.pk).utilizador)
+            return render(request, self.template_name, {
+                # 'form': form,
+                # 'lista_colab': lista_colab,
+                # 'hora_str': hora_str,
+                # 'lista_colab3': lista_colab3,
+                'lista_notificacao_final': lista_notificacao_final,
+                'utilizador': utilizador
+            })
+        else:
+            messages.error(request, 'Tem de efetuar log in para aceder a esta página!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         post = request.POST
@@ -104,23 +116,30 @@ class Editar_notificacao(View):
     template_name = 'editar_notificacao.html'
 
     def get(self, request, pk):
-        form = NotificacaoForm()
-        obj = Notificacao.objects.get(pk=pk)
-        auth_user = request.user
-        utilizador_env = AuthUser.objects.get(pk=auth_user.pk).utilizador
-        if utilizador_env == obj.utilizador_env:
-            if len(Notificacao.objects.filter(notificacao_grupo=obj.notificacao_grupo)) == 1:
-                tiponotificacao = "notificação indvidual"
-            elif len(Notificacao.objects.filter(notificacao_grupo=obj.notificacao_grupo)) > 1:
-                tiponotificacao = "notificação grupo"
-            return render(request, self.template_name, {
-                'form': form,
-                'obj': obj,
-                'user_id': auth_user,
-                'tiponotificacao': tiponotificacao,
-            })
+        if request.user.is_authenticated:
+            form = NotificacaoForm()
+            obj = Notificacao.objects.get(pk=pk)
+            auth_user = request.user
+            utilizador_env = AuthUser.objects.get(pk=auth_user.pk).utilizador
+            utilizador= utilizador_env
+            if utilizador_env == obj.utilizador_env:
+                if len(Notificacao.objects.filter(notificacao_grupo=obj.notificacao_grupo)) == 1:
+                    tiponotificacao = "notificação indvidual"
+                elif len(Notificacao.objects.filter(notificacao_grupo=obj.notificacao_grupo)) > 1:
+                    tiponotificacao = "notificação grupo"
+                return render(request, self.template_name, {
+                    'form': form,
+                    'obj': obj,
+                    'user_id': auth_user,
+                    'tiponotificacao': tiponotificacao,
+                    'utilizador': utilizador,
+                })
+            else:
+                messages.error(request, 'Não lhe é permitido aceder a esta página!')
+                return HttpResponseRedirect('/index')
         else:
-            return HttpResponse('<h1>Não lhe é permitido aceder a esta página</h1>')
+            messages.error(request, 'Tem de efetuar log in para aceder a esta página!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request, pk):
         form_notificacao = NotificacaoForm(request.POST)
