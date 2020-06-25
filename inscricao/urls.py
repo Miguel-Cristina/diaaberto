@@ -23,6 +23,7 @@ from .views import HomeView, success, CriarInscricaoView, ConsultarInscricaoView
 app_name = "inscricao"
 
 urlpatterns = [
+    path('', CriarInscricaoView.as_view(), name='criar'),
     path('criar/', CriarInscricaoView.as_view(), name='criar'),
     path('consultar/', ConsultarInscricaoView.as_view(), name='consultar'),
     path("consultar/editar/<int:pk>", EditarInscricaoView.as_view(), name='editarinscricao'),

@@ -141,7 +141,7 @@ function cancelSessao(val) {
                                     </li>
                                 </ul>
                             </nav>
-                            <a href="/colaboradores/criar_colab" class="button is-success is-outlined" type="button"
+                            <a href="/colaboradores/criar" class="button is-success is-outlined" type="button"
                                style="margin-bottom: 1rem; margin-right: 20px;"><span class="icon is-small"><i
                                     class="mdi mdi-plus"></i></span> <span>Criar Colaboração</span> <!----></a>
                             <!--                            tabela-->
@@ -208,7 +208,7 @@ function cancelSessao(val) {
                                                     {% if lc.tarefa_atribuida != 1 %}
 
                                                     <button type="button"
-                                                           onclick="location.href='editar_colab/{{lc.id}}';"
+                                                           onclick="location.href='editar/{{lc.id}}';"
                                                            value="Editar"><i style='font-size:18px' class='material-icons'>&#xe254;</i>
                                                     </button>
 <!--                                                    <button type="submit" id="2" name="del" value="{{lc.id}}"><i style='font-size:18px;color:red'  class='material-icons'>&#xe92b;</i>-->

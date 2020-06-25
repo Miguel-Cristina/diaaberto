@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMessage
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from diaaberto.utils import render_to_pdf
@@ -54,7 +54,8 @@ class CriarInscricaoView(View):
                 'age': age,
             })
         else:
-            return HttpResponse('<h1>Não lhe é permitido aceder a esta página</h1>')
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         # --------------------------escola----------------------------------

@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib import messages
@@ -18,24 +19,23 @@ class Criar_colab(View):
 
     def get(self, request):
         # form = Criar_Colab_Form()
-        data_fim1 = DiaAberto.objects.get(pk=1).data_fim
-        data_fim = str(data_fim1)
-        data_inicio1 = DiaAberto.objects.get(pk=1).data_inicio
-        data_inicio = str(data_inicio1)
-        return render(request, self.template_name, {
-            'data_fim': data_fim,
-            'data_inicio': data_inicio,
-
-        })
+        auth_user = request.user
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
+        if utilizador.utilizadortipo.tipo == "Colaborador":
+            data_fim1 = DiaAberto.objects.get(pk=1).data_fim
+            data_fim = str(data_fim1)
+            data_inicio1 = DiaAberto.objects.get(pk=1).data_inicio
+            data_inicio = str(data_inicio1)
+            return render(request, self.template_name, {
+                'data_fim': data_fim,
+                'data_inicio': data_inicio,
+                'utilizador': utilizador
+            })
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
-        '''form_colab = Criar_Colab_Form(request.POST)
-        #print(form_register.errors)
-        if form_colab.is_valid():
-            primeiro_dia = form_colab['primeiro_dia'].value()
-            segundo_dia = form_colab['segundo_dia'].value()
-            sala_de_aula = form_colab['sala_de_aula'].value()
-            percurso = form_colab['percurso'].value()'''
         data_colaboracao = request.POST['data_colaboracao']
         # segundo_dia = request.POST['segundo_dia']
         hora_inicio_colab = remove_all_space(request.POST['hora_inicio_colab'])
@@ -74,33 +74,40 @@ class Editar_colab(View):
     template_name = 'editar_colaboracao.html'
 
     def get(self, request,pk):
+        auth_user = request.user
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         obj = Colaboracao.objects.get(pk=pk)
-        data_colaboracao1 = Colaboracao.objects.get(pk=pk).data_colaboracao
-        data_colaboracao = str(data_colaboracao1)
-        inicio_colab1 = Colaboracao.objects.get(pk=pk).hora_inicio_colab
-        inicio_colab = str(inicio_colab1)
-        fim_colab1 = Colaboracao.objects.get(pk=pk).hora_fim_colab
-        fim_colab = str(fim_colab1)
+        if utilizador.utilizadortipo.tipo == "Colaborador" and obj.colaborador.id == utilizador.id:
+            data_colaboracao1 = Colaboracao.objects.get(pk=pk).data_colaboracao
+            data_colaboracao = str(data_colaboracao1)
+            inicio_colab1 = Colaboracao.objects.get(pk=pk).hora_inicio_colab
+            inicio_colab = str(inicio_colab1)
+            fim_colab1 = Colaboracao.objects.get(pk=pk).hora_fim_colab
+            fim_colab = str(fim_colab1)
 
-        print(inicio_colab)
-        inicio_colab= inicio_colab[:-3]
-        fim_colab = fim_colab[:-3]
-        print(inicio_colab)
-        # form = Editar_Colab_Form()
-        # form = Editar_Colab_Form(instance=Utilizador.objects.get(pk=3))
-        data_fim1 = DiaAberto.objects.get(pk=1).data_fim
-        data_fim = str(data_fim1)
-        data_inicio1 = DiaAberto.objects.get(pk=1).data_inicio
-        data_inicio = str(data_inicio1)
-        return render(request, self.template_name, {
-            # 'form': form,
-            'obj': obj,
-            'data_fim': data_fim,
-            'data_inicio': data_inicio,
-            'data_colaboracao': data_colaboracao,
-            'inicio_colab': inicio_colab,
-            'fim_colab': fim_colab,
-        })
+            print(inicio_colab)
+            inicio_colab= inicio_colab[:-3]
+            fim_colab = fim_colab[:-3]
+            print(inicio_colab)
+            # form = Editar_Colab_Form()
+            # form = Editar_Colab_Form(instance=Utilizador.objects.get(pk=3))
+            data_fim1 = DiaAberto.objects.get(pk=1).data_fim
+            data_fim = str(data_fim1)
+            data_inicio1 = DiaAberto.objects.get(pk=1).data_inicio
+            data_inicio = str(data_inicio1)
+            return render(request, self.template_name, {
+                # 'form': form,
+                'obj': obj,
+                'data_fim': data_fim,
+                'data_inicio': data_inicio,
+                'data_colaboracao': data_colaboracao,
+                'inicio_colab': inicio_colab,
+                'fim_colab': fim_colab,
+                'utilizador': utilizador
+            })
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request,pk):
         #primeiro_dia = request.POST['primeiro_dia']
@@ -169,23 +176,28 @@ class Consultar_colab(View):
         user_id=request.user
         print(user_id.pk)
         pk_user = AuthUser.objects.get(pk=user_id.pk).utilizador
-        lista_colab_final = Colaboracao.objects.filter(colaborador_id=pk_user.pk)
-        lista_tarefa_atrib = Tarefa.objects.filter(colaborador_id=pk_user.pk)
-        print(lista_tarefa_atrib)
-        # for x in lista_colab:
-        #     lista_colab3.append(str(x.data_colaboracao))
-        #     lista_colab_final =  zip(lista_colab, lista_colab3)
-        #hora_str1 = Colaboracao.objects.get(pk=1).hora_inicio_colab
-        #hora_str = str(hora_str1)
-        #print(lista_colab)
-        return render(request, self.template_name, {
-            # 'form': form,
-            #'lista_colab': lista_colab,
-            #'hora_str': hora_str,
-            #'lista_colab3': lista_colab3,
-            'lista_colab_final': lista_colab_final,
-            'lista_tarefa_atrib': lista_tarefa_atrib,
-        })
+        if pk_user.utilizadortipo.tipo == "Colaborador":
+            lista_colab_final = Colaboracao.objects.filter(colaborador_id=pk_user.pk)
+            lista_tarefa_atrib = Tarefa.objects.filter(coolaborador=pk_user.pk)
+            print(lista_tarefa_atrib)
+            # for x in lista_colab:
+            #     lista_colab3.append(str(x.data_colaboracao))
+            #     lista_colab_final =  zip(lista_colab, lista_colab3)
+            #hora_str1 = Colaboracao.objects.get(pk=1).hora_inicio_colab
+            #hora_str = str(hora_str1)
+            #print(lista_colab)
+            return render(request, self.template_name, {
+                # 'form': form,
+                #'lista_colab': lista_colab,
+                #'hora_str': hora_str,
+                #'lista_colab3': lista_colab3,
+                'lista_colab_final': lista_colab_final,
+                'lista_tarefa_atrib': lista_tarefa_atrib,
+                'utilizador': pk_user
+            })
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         post= request.POST
@@ -201,22 +213,28 @@ class Consultar_tarefa(View):
     def get(self, request):
         lista_colab3 = []
         user_id=request.user
-        # lista_tarefa = UtilizadorTarefa.objects.filter(colaborador_id=user_id.pk)
-        lista_tarefa = Tarefa.objects.filter(colaborador_id=user_id.pk)
-        print(lista_tarefa)
-        # for x in lista_colab:
-        #     lista_colab3.append(str(x.data_colaboracao))
-        #     lista_colab_final =  zip(lista_colab, lista_colab3)
-        #hora_str1 = Colaboracao.objects.get(pk=1).hora_inicio_colab
-        #hora_str = str(hora_str1)
-        #print(lista_colab)
-        return render(request, self.template_name, {
-            # 'form': form,
-            #'lista_colab': lista_colab,
-            #'hora_str': hora_str,
-            #'lista_colab3': lista_colab3,
-            'lista_tarefa': lista_tarefa,
-        })
+        pk_user = AuthUser.objects.get(pk=user_id.pk).utilizador
+        if pk_user.utilizadortipo.tipo == "Colaborador":
+            # lista_tarefa = UtilizadorTarefa.objects.filter(colaborador_id=user_id.pk)
+            lista_tarefa = Tarefa.objects.filter(colaborador_id=user_id.pk)
+            print(lista_tarefa)
+            # for x in lista_colab:
+            #     lista_colab3.append(str(x.data_colaboracao))
+            #     lista_colab_final =  zip(lista_colab, lista_colab3)
+            #hora_str1 = Colaboracao.objects.get(pk=1).hora_inicio_colab
+            #hora_str = str(hora_str1)
+            #print(lista_colab)
+            return render(request, self.template_name, {
+                # 'form': form,
+                #'lista_colab': lista_colab,
+                #'hora_str': hora_str,
+                #'lista_colab3': lista_colab3,
+                'lista_tarefa': lista_tarefa,
+                'utilizador': pk_user
+            })
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         post= request.POST
