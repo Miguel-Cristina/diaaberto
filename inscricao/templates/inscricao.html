@@ -719,7 +719,7 @@
                                                     style="font-size: 0.9rem;"> Dia de Inscrição </h2>
                                                 <div class="columns">
                                                     <div class="column is-one-fifth">
-                                                        <input type="date" id="datemax" name="data_colaboracao"
+                                                        <input type="date" id="datemax" id="data_inscricao" name="data_inscricao"
                                                                min="{{ diainicio }}" max="{{ diafim }}"
                                                                class="input" onchange="CheckDia(this.value)">
                                                     </div>
@@ -902,7 +902,7 @@
                                                                                                                         </th>
                                                                                                                     </tr>
                                                                                                                     </thead>
-                                                                                                                    <tbody class="">
+                                                                                                                    <tbody class="" id="table_sessoes">
                                                                                                                     {% for s in sessaoatividade %}
                                                                                                                         {% if s.atividade.id == atividade.id and s.n_alunos > 0 %}
                                                                                                                             <tr draggable="false"
