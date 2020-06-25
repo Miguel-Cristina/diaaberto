@@ -2115,13 +2115,15 @@ def atribuir_tarefa(request,pk):
 
     tarefas_1 = Tarefa.objects.all()
     colaboradorids = request.POST.getlist('colaborador_id')
-        
+
+    
     if(len(colaboradorids) != 0):
+
         tarefa_obj = Tarefa.objects.get(pk=pk)
         tarefa_obj.coolaborador.clear()
         tarefa_obj.coolaborador.add(*colaboradorids)
         tarefa_obj.estado = 'AT'
-        tarefa_obj.save()               
+        tarefa_obj.save()         
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
         return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas_1})
@@ -2293,20 +2295,19 @@ def user_switch(request):
 
     userlist = []
     usernamelist = []
+    colaboracaolist = []
     tarefa = Tarefa.objects.get(pk =request.GET.get('tarefa',None))
+    tarefa_tipo = tarefa.tipo_tarefa
     utilizadores = Utilizador.objects.filter(utilizadortipo = 3).order_by("nome")
     #print(tarefa.duracao)
     #print(tarefa.horario)
-    d = datetime.timedelta(seconds=(tarefa.duracao*60))
-    tarefa_inicio = datetime.timedelta(seconds = ((tarefa.horario.hour*3600)+(tarefa.horario.minute*60)+tarefa.horario.second))
+    d = timedelta(seconds=(tarefa.duracao*60))
+    tarefa_inicio = timedelta(seconds = ((tarefa.horario.hour*3600)+(tarefa.horario.minute*60)+tarefa.horario.second))
     tarefa_fim = d + tarefa_inicio
     data_tarefa = tarefa.dia
 
     if(tarefa.estado == 'PA'):
 
-        #     print(tarefa)
-        #     print(utilizadores)
-        #     print(len(utilizadores))
         
         for utilizador in utilizadores:
             colaboracoes = Colaboracao.objects.filter(colaborador = utilizador)
@@ -2315,61 +2316,46 @@ def user_switch(request):
                 for colaboracao in colaboracoes:
                     data_colaboracao  = colaboracao.data_colaboracao 
                     
-                    hora_inicio_colab = datetime.timedelta(seconds = ((colaboracao.hora_inicio_colab.hour*3600)+(colaboracao.hora_inicio_colab.minute*60)+(colaboracao.hora_inicio_colab.second)))
-                    hora_fim_colab    = datetime.timedelta(seconds = ((colaboracao.hora_fim_colab.hour*3600)+(colaboracao.hora_fim_colab.minute*60)+(colaboracao.hora_fim_colab.second)))
+                    hora_inicio_colab = timedelta(seconds = ((colaboracao.hora_inicio_colab.hour*3600)+(colaboracao.hora_inicio_colab.minute*60)+(colaboracao.hora_inicio_colab.second)))
+                    hora_fim_colab    = timedelta(seconds = ((colaboracao.hora_fim_colab.hour*3600)+(colaboracao.hora_fim_colab.minute*60)+(colaboracao.hora_fim_colab.second)))
                      
-                   # print("---------------------------------")
-                   # print("Tarefa: ")
-                   # print(data_tarefa)
-                   # print("Colaboracao: " )
-                   # print(data_colaboracao)
+
                     if(data_colaboracao == data_tarefa and hora_inicio_colab <= tarefa_inicio and hora_fim_colab >= tarefa_fim ):
-                       # print("---------------------")
-                       # print(utilizador)  
-                       # print("Colaboracao: " )
-                       # print(hora_inicio_colab)
-                       # print(hora_fim_colab)
-                       # print(data_colaboracao)
-                       # print("Tarefa: ")
-                       # print(tarefa_inicio)
-                       # print(tarefa_fim)
-                       # print(data_colaboracao)
-                       # print("-----------------------")
 
                         tarefa_atribuida = Tarefa.objects.filter(coolaborador = utilizador.id)
                         if(len(tarefa_atribuida)!=0):
+
                             for task in tarefa_atribuida:
-                            #    print(task.nome)
-                            #    print("*********************")
-                                duracao_task = datetime.timedelta(seconds=(task.duracao*60))
-                                task_inicio = datetime.timedelta(seconds = ((task.horario.hour*3600)+(task.horario.minute*60)+task.horario.second))
+  
+                                duracao_task = timedelta(seconds=(task.duracao*60))
+                                task_inicio = timedelta(seconds = ((task.horario.hour*3600)+(task.horario.minute*60)+task.horario.second))
                                 task_fim = duracao_task + task_inicio
                                 data_task = task.dia
 
 
                                 if(data_task == data_tarefa ):
                                     if(( tarefa_inicio < task_inicio and tarefa_fim <= tarefa_inicio ) or (tarefa_fim > task_fim and tarefa_inicio >= task_fim)):
-                                        userlist.append(utilizador.id)
-                                        usernamelist.append(utilizador.nome)
+                                        if((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (tarefa_tipo =='OT')):
+                                            userlist.append(utilizador.id)
+                                            usernamelist.append(utilizador.nome)
+                                            colaboracaolist.append(colaboracao.id)
                                     else:
                                         break
                                 else:
-                                    userlist.append(utilizador.id)
-                                    usernamelist.append(utilizador.nome)
+                                    if((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (tarefa_tipo =='OT')):
+                                        userlist.append(utilizador.id)
+                                        usernamelist.append(utilizador.nome)
+                                        colaboracaolist.append(colaboracao.id)
                         else:
-                            userlist.append(utilizador.id)
-                            usernamelist.append(utilizador.nome)
-   
-        #print("****************")
-        #print(userlist)
-        #print("****************")
-        
-        #inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora = horas , sessaoAtividade__atividade__sala = sala, sessaoAtividade__dia = data).values_list('inscricao', flat=True).order_by('id')
-        #inscricaoid = {1,2}
+                            if((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (tarefa_tipo =='OT')):
+                                userlist.append(utilizador.id)
+                                usernamelist.append(utilizador.nome)
+                                colaboracaolist.append(colaboracao.id)
 
         dados = {
             'usernamelist' : usernamelist,
-            'userlist' : userlist
+            'userlist' : userlist,
+            'colaboracao' : colaboracaolist
          }
 
     return JsonResponse(dados)

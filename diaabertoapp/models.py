@@ -303,17 +303,18 @@ class AtividadeForm(ModelForm):
 # model Notificacao
 #========================================================================================================================
 class Notificacao(models.Model):
-    assunto = models.CharField(max_length=255, null=True, blank=True)
-    conteudo = models.CharField(max_length=255, null=True,  blank=True)
-    hora = models.DateTimeField(default=timezone.now)
-    prioridade = models.IntegerField(null=True, blank=True)
-    utilizador_recebe = models.ForeignKey('Utilizador',  related_name='utilizador_recebe', on_delete=models.CASCADE, null=True)
-    utilizador_envia = models.ForeignKey('Utilizador',  related_name='utilizador_envia', on_delete=models.PROTECT, null=True)
-    visto = models.BooleanField(default=False)
+    conteudo = models.TextField(blank=True, null=True)
+    hora = models.DateTimeField()
+    prioridade = models.IntegerField(blank=True, null=True)
+    assunto = models.TextField(blank=True, null=True)
+    utilizador_env = models.ForeignKey(Utilizador, models.DO_NOTHING, related_name='utilizador_env',null=True)
+    utilizador_rec = models.ForeignKey(Utilizador, models.DO_NOTHING, related_name='utilizador_rec',null=True)
+    notificacao_grupo = models.IntegerField(db_column='Notificacao_grupo',null=True)
+    #visto
+
     class Meta:
-        db_table='Notificacao'
-    def __str__(self):
-        return self.assunto
+        #managed = False
+        db_table = 'Notificacao'
 
 #========================================================================================================================
 # model Dia
@@ -448,6 +449,7 @@ class Tarefa(models.Model):
     #coolaborador = models.ForeignKey( Utilizador , related_name='atribuicao_tarefa', on_delete=models.CASCADE, null=True,blank=True)
     coolaborador = models.ManyToManyField(Utilizador, related_name='tarefa_coolaborador')
     grupo = models.ManyToManyField(Inscricao, related_name='percurso_grupoM')
+    colaboracao = models.ForeignKey(Colaboracao, on_delete=models.CASCADE, null=True)
     def str(self):
         return 'Tarefa : ' + self.id + ' Descricao : '+ self.descricao +coolaborador
 
