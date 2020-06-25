@@ -2187,7 +2187,7 @@ def add_tarefa(request):
     else:
         aForm = TarefaForm()
 
-    return render(request, 'diaabertoapp/adicionartarefa.html',
+    return render(request, 'diaabertoapp/adicionarTarefa.html',
                   {'form': aForm, 'atividades': atividades, 'salas': salas, 'utilizador': aut_utilizador})
 
 
@@ -3307,7 +3307,7 @@ def adicionartransporteuniversitario(request):
             return HttpResponseRedirect('/transportes/')
     else:
         form = TransporteUniversitarioHorarioForm()
-    return render(request, 'diaabertoapp/adicionartransporteUniversitario.html', {'form': form})
+    return render(request, 'diaabertoapp/adicionartransporteuniversitario.html', {'form': form})
 
 
 def editartransporteuniversitario(request, id):
