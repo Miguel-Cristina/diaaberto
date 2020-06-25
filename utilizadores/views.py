@@ -220,12 +220,16 @@ class Consultar_user(View):
         queryset = AuthUser.objects.all()
         authuser = request.user
         utilizador = AuthUser.objects.get(pk=authuser.pk).utilizador
-
-        context = {
-            "object_list": queryset,
-            "utilizador": utilizador
-        }
-        return render(request, "consultar_utilizador.html", context)
+        print(utilizador.utilizadortipo.tipo)
+        if utilizador.utilizadortipo.tipo == "Administrador" or utilizador.utilizadortipo.tipo == "Coordenador":
+            context = {
+                "object_list": queryset,
+                "utilizador": utilizador
+            }
+            return render(request, "consultar_utilizador.html", context)
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         post = request.POST
@@ -251,21 +255,20 @@ class Editar_user(View):
     template_name = 'editar_utilizador.html'
 
     def get(self, request, pk):
-        obj = Utilizador.objects.get(pk=pk)
+        obj = AuthUser.objects.get(pk=pk).utilizador
+        # obj = Utilizador.objects.get(pk=pk)
         form = RegisterForm
-        data_nascimento = Utilizador.objects.get(pk=pk).data_nascimento
-        email = Utilizador.objects.get(pk=pk).email
-        nome = Utilizador.objects.get(pk=pk).nome
-        numero_telemovel = Utilizador.objects.get(pk=pk).numero_telemovel
-        cartao_cidadao = Utilizador.objects.get(pk=pk).cartao_cidadao
-        deficiencias = Utilizador.objects.get(pk=pk).deficiencias
-        permitir_localizacao = Utilizador.objects.get(pk=pk).permitir_localizacao
-        utilizar_dados_pessoais = Utilizador.objects.get(pk=pk).utilizar_dados_pessoais
+        email = obj.email
+        nome = obj.nome
+        numero_telemovel = obj.numero_telemovel
+        cartao_cidadao = obj.cartao_cidadao
+        deficiencias = obj.deficiencias
+        permitir_localizacao = obj.permitir_localizacao
+        utilizar_dados_pessoais = obj.utilizar_dados_pessoais
 
         return render(request, self.template_name, {
             'obj': obj,
             'form': form,
-            'data_nascimento': data_nascimento,
             'email': email,
             'nome': nome,
             'numero_telemovel': numero_telemovel,
