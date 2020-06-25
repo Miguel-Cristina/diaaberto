@@ -348,7 +348,7 @@ class Notificacao(models.Model):
     utilizador_env = models.ForeignKey(Utilizador, models.DO_NOTHING, related_name='1+', null=True)
     utilizador_rec = models.ForeignKey(Utilizador, models.DO_NOTHING, related_name='1+', null=True)
     notificacao_grupo = models.IntegerField(db_column='Notificacao_grupo', null=True)
-
+    visto = models.BooleanField(default=False)
     # visto
 
     class Meta:

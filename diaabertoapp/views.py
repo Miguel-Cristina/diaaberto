@@ -5,7 +5,7 @@ from django.db.models import Count
 from .models import Dia, SessaoAtividadeInscricao, Prato, Ementa, DiaAberto, Edificio, Atividade, Campus, \
     UnidadeOrganica, Departamento, Tematica, Percurso, Transporte, TransporteUniversitarioHorario, Horario, \
     TipoAtividade, Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, \
-    UtilizadorParticipante, Notificacao, Colaboracao
+    UtilizadorParticipante, Notificacao, Colaboracao, AuthUser
 from .forms import CampusForm, AtividadeForm, EmentaForm, PratoForm, MaterialQuantidadeForm, DiaabertoForm, \
     TransporteUniversitarioHorarioForm, SessaoAtividadeForm, TransporteForm, PercursoForm, HorarioForm, MaterialFormSet, \
     TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, \
@@ -42,26 +42,6 @@ def error_404(request):
 # Reedireciona para a pagina login.html se nenhum utilizador estiver autentificado
 # Reedireciona para a pagina index.html se o utilizador autentificar com sucesso
 # ========================================================================================================================
-def login_request(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('/index/')
-            else:
-                messages.error(request, "Email ou password inválidos.")
-        else:
-            print(form.errors.as_text)
-            messages.error(request, "Email ou password inválidos.")
-    form = AuthenticationForm()
-    form.fields['username'].widget.attrs['class'] = "input"
-    form.fields['username'].widget.attrs['type'] = "email"
-    form.fields['password'].widget.attrs['class'] = "input"
-    return render(request, 'diaabertoapp/login.html', {"form": form})
 
 
 # ========================================================================================================================
@@ -69,10 +49,10 @@ def login_request(request):
 # Termina a sessao do utilizador
 # Reedireciona para o login
 # ========================================================================================================================
-def logout_request(request):
-    logout(request)
-    messages.info(request, "Sessão terminada. Até breve!")
-    return redirect('/login')
+#def logout_request(request):
+#    logout(request)
+#    messages.info(request, "Sessão terminada. Até breve!")
+#    return redirect('/login')
 
 
 # ========================================================================================================================
@@ -81,10 +61,12 @@ def logout_request(request):
 # ========================================================================================================================
 def index(request):
     utilizador = ''
+    auth_user = request.user 
     notificacoes = Notificacao.objects.none()
     if request.user.is_authenticated:
         user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        #utilizador = Utilizador.objects.get(email=user_email)
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
 
@@ -334,7 +316,13 @@ def configurarorganicas(request):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
     organicas = UnidadeOrganica.objects.all()
-
+    campus = Campus.objects.all()
+    # BEGIN filter_by_campus
+    campus_query = request.GET.get('campus')
+    if campus_query != '' and campus_query is not None:
+        organicas = organicas.filter(campus=campus_query)
+        campus = campus.filter(id=campus_query)
+    # END filter_by_campus
     # BEGIN filter_by_name
     nome_query = request.GET.get('nome')
     if nome_query != '' and nome_query is not None:
@@ -348,6 +336,11 @@ def configurarorganicas(request):
             organicas = organicas.order_by('nome')
         else:
             organicas = organicas.order_by('-nome')
+    if order_by == 'campus':
+        if sort == 'asc':
+            organicas = organicas.order_by('campus')
+        else:
+            organicas = organicas.order_by('-campus')
     # END order_by
 
     # BEGIN pagination
@@ -361,7 +354,7 @@ def configurarorganicas(request):
         organicas = paginator.page(paginator.num_pages)
     # END pagination
     return render(request, 'diaabertoapp/configurarorganicas.html',
-                  {'utilizador': utilizador, 'nomesquery': nome_query, 'organicas': organicas, 'order_by': order_by,
+                  {'utilizador': utilizador, 'campusquery':campus_query, 'campus':campus, 'nomesquery': nome_query, 'organicas': organicas, 'order_by': order_by,
                    'sort': sort})
 
 
@@ -1525,11 +1518,12 @@ def proporatividade(request):
     if request.user.is_authenticated:
         user_email = request.user.email
         utilizador = Utilizador.objects.get(email=user_email)
-        organicas = UnidadeOrganica.objects.get(id=utilizador.unidadeorganica.id)
-        departamentos = Departamento.objects.get(id=utilizador.departamento.id)
         if utilizador is None or utilizador.utilizadortipo.tipo != 'Docente':
             messages.error(request, 'Não tem permissões para aceder à pagina!')
             return HttpResponseRedirect('/index')
+        organicas = UnidadeOrganica.objects.get(id=utilizador.unidadeorganica.id)
+        departamentos = Departamento.objects.get(id=utilizador.departamento.id)
+        
     else:
         messages.error(request, 'Não tem permissões para aceder à pagina! É necessário autentificar-se.')
         return HttpResponseRedirect('/index')
@@ -1693,8 +1687,8 @@ def aceitaratividade(request, pk):
     responsavel = object.responsavel
     object.save()
 
-    notificacao_obj = Notificacao(assunto="Proposta aceite", conteudo="Proposta " + proposta + " aceite!",
-                                  utilizador_rec=responsavel, utilizador_envia=utilizador, prioridade=2)
+    notificacao_obj = Notificacao(assunto="Proposta aceite", hora=datetime.now(), conteudo="Proposta " + proposta + " aceite!",
+                                  utilizador_rec=responsavel, utilizador_env=utilizador, prioridade=2)
     notificacao_obj.save()
     messages.success(request, 'Atividade foi aceite!')
     return HttpResponseRedirect('/minhasatividades/')
@@ -1725,8 +1719,8 @@ def rejeitaratividade(request, pk):
     proposta = object.nome
     responsavel = object.responsavel
     object.save()
-    notificacao_obj = Notificacao(assunto="Proposta rejeitada", conteudo="Proposta " + proposta + " rejeitada!",
-                                  utilizador_rec=responsavel, utilizador_envia=utilizador, prioridade=2)
+    notificacao_obj = Notificacao(assunto="Proposta rejeitada",hora=datetime.now(), conteudo="Proposta " + proposta + " rejeitada!",
+                                  utilizador_rec=responsavel, utilizador_env=utilizador, prioridade=2)
     notificacao_obj.save()
     messages.success(request, 'Atividade foi rejeitada!')
     return HttpResponseRedirect('/minhasatividades/')

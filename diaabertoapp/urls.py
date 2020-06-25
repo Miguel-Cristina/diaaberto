@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from diaabertoapp.views import index
+from utilizadores.views import login_request, logout_request
 from django.conf.urls import include, handler404, handler500
 from django.conf.urls.static import static
 from django.conf import settings
@@ -10,8 +11,8 @@ urlpatterns = [
     path('error_500/', views.error_500, name='error_500'),
     path('error_404/', views.error_404, name='error_404'),
     path('', views.index, name='index'),
-    path('login/', views.login_request, name='login'),
-    path('logout/', views.logout_request, name='logout'),
+    path('utilizadores/login/', login_request, name='login'),
+    path('utilizadores/logout/', logout_request, name='logout'),
     path('index/', views.index, name='index'),
     path('administrador/', views.administrador, name='administrador'),
     path('minhasatividades/', views.minhasatividades, name='minhasatividades'),

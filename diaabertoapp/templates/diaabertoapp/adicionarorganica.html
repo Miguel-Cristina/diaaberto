@@ -264,12 +264,23 @@
                                             <div class="column">
                                                 <label class="label">Unidade Orgânica</label>
                                             </div>
+                                            <div class="column">
+                                                <label class="label">Campus</label>
+                                            </div>
                                         </div>
                                         <div class="columns">
                                                 {% csrf_token %}
                                                 <div class="column">
                                                     {{ form.nome }}
                                                     {% for error in form.nome.errors %} 
+                                                        <p class="help is-danger">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="column">
+                                                    <div class="select is-fullwidth">
+                                                        {{ form.campus }}
+                                                    </div>
+                                                    {% for error in form.campus.errors %} 
                                                         <p class="help is-danger">{{ error }}</p>
                                                     {% endfor %}
                                                 </div>
