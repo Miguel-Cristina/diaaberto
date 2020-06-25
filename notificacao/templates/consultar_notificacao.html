@@ -160,11 +160,17 @@ th, td {
                                                     {{ lc.utilizador_rec.email }}
                                                 </td>
                                                 <td data-label="Ação" class="has-text-centered">
-
-                                                    <button type="button"
-                                                           onclick="location.href='editar_notificacao/{{lc.id}}';"
-                                                           value="Editar"><i style='font-size:18px' class='material-icons'>&#xe254;</i>
-                                                    </button>
+                                                       {% if Notificacao.visto == "0" %}
+                                                            <button type="button"
+                                                                onclick="location.href='editar_notificacao/{{lc.id}}';"
+                                                                value="Editar"><i style='font-size:18px' class='material-icons'>&#xe254;</i>
+                                                            </button>
+                                                        {% elif Notificacao.visto == "1" %}
+                                                            <button type="button"
+                                                                onclick="location.href='editar_notificacao/{{lc.id}}';"
+                                                                value=""><i style='font-size:18px' class='material-icons'>&#xe254;</i>
+                                                            </button>
+                                                        {% endif %}
                                                 </td><!---->
                                             </tr>
                                             {% endfor %}

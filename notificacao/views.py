@@ -80,9 +80,10 @@ class Consultar_notificacao(View):
 
     def get(self, request):
         lista_colab3 = []
+        visto = Notificacao.visto.get()
         auth_user = request.user
         lista_notificacao_final = Notificacao.objects.filter(
-            utilizador_env_id=AuthUser.objects.get(pk=auth_user.pk).utilizador)
+            utilizador_env_id=AuthUser.objects.get(pk=auth_user.pk).utilizador,visto=visto)
         return render(request, self.template_name, {
             # 'form': form,
             # 'lista_colab': lista_colab,
