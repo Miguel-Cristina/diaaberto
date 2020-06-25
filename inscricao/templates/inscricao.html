@@ -608,10 +608,10 @@
                                                     <div class="column">
                                                         <div class="field">
                                                             <label for="timepicker-one">Hora Chegada</label>
-                                                            
-                                                                <input type="time" id="timepicker-one"
-                                                                       name="timepicker-one"
-                                                                       class="input">
+
+                                                            <input type="time" id="timepicker-one"
+                                                                   name="timepicker-one"
+                                                                   class="input">
 
                                                         </div>
                                                     </div>
@@ -713,6 +713,17 @@
                                         </div>
                                         <div class="step-item" id="pag5" style="display: none">
                                             <div data-v-dac68d9e="" style="padding: 1rem 2vw 0;">
+
+                                                <hr data-v-dac68d9e="">
+                                                <h2 data-v-dac68d9e="" class="title has-text-grey is-uppercase"
+                                                    style="font-size: 0.9rem;"> Dia de Inscrição </h2>
+                                                <div class="columns">
+                                                    <div class="column is-one-fifth">
+                                                        <input type="date" id="datemax" name="data_colaboracao"
+                                                               min="{{ diainicio }}" max="{{ diafim }}"
+                                                               class="input" onchange="CheckDia(this.value)">
+                                                    </div>
+                                                </div>
                                                 <hr data-v-dac68d9e="">
                                                 <h2 data-v-dac68d9e="" class="title has-text-grey is-uppercase"
                                                     style="font-size: 0.9rem;"> Sessões Disponíveis </h2>
@@ -873,6 +884,15 @@
                                                                                                                         </th>
                                                                                                                         <th class="">
                                                                                                                             <div class="th-wrap">
+                                                                                                                                Dia
+                                                                                                                                <span class="icon is-small"
+                                                                                                                                      style="display: none;">
+                                                                                                                                    <i class="mdi mdi-arrow-up"></i>
+                                                                                                                                </span>
+                                                                                                                            </div>
+                                                                                                                        </th>
+                                                                                                                        <th class="">
+                                                                                                                            <div class="th-wrap">
                                                                                                                                 Inscrever
                                                                                                                                 <span class="icon is-small"
                                                                                                                                       style="display: none;">
@@ -903,15 +923,13 @@
                                                                                                                                 {#                                                                                                                                    <td data-label="Espaço"#}
                                                                                                                                 {#                                                                                                                                        class="">{{ atividade.edificio.nome }} {{ atividade.sala.identificacao }}</td>#}
                                                                                                                                 {#                                                                                                                                {% endif %}#}
-                                                                                                                                {% if atividade.edificio or atividade.sala %}
-                                                                                                                                    {% if atividade.edificio and atividade.sala %}
-                                                                                                                                        <td>
-                                                                                                                                            Edificio: {{ atividade.edificio }}
-                                                                                                                                        </td>
-                                                                                                                                    {% endif %}
-                                                                                                                                    {% if atividade.edificio and not atividade.sala %}
-                                                                                                                                        <td>
-                                                                                                                                            Edificio: {{ atividade.edificio }}
+                                                                                                                                <td>
+                                                                                                                                    {% if atividade.edificio or atividade.sala %}
+                                                                                                                                        {% if atividade.edificio and atividade.sala %}
+                                                                                                                                            {{ atividade.edificio }}
+                                                                                                                                        {% endif %}
+                                                                                                                                        {% if atividade.edificio and not atividade.sala %}
+                                                                                                                                            {{ atividade.edificio }}
                                                                                                                                             {% if atividade.edificio.mapa_imagem %}
                                                                                                                                                 <p>
                                                                                                                                                     <a id="open-modal"
@@ -920,25 +938,31 @@
                                                                                                                                                         mapa<i class="mdi mdi-open-in-new"></i></small></a>
                                                                                                                                                 </p>
                                                                                                                                             {% endif %}
-                                                                                                                                        </td>
-                                                                                                                                    {% endif %}
-                                                                                                                                    {% if atividade.sala %}
-                                                                                                                                            <td>Sala: {{ atividade.sala }}
-                                                                                                                                        {% if atividade.sala.mapa_imagem %}
-                                                                                                                                            <p>
-                                                                                                                                                <a id="open-modal"
-                                                                                                                                                   onclick="srcImage('{{ atividade.sala.mapa_imagem.url }}')"><small>Ver
-                                                                                                                                                    no
-                                                                                                                                                    mapa<i class="mdi mdi-open-in-new"></i></small></a>
-                                                                                                                                            </p>
                                                                                                                                         {% endif %}
-                                                                                                                                        </td>
+                                                                                                                                        {% if atividade.sala %}
+                                                                                                                                            Sala:
+                                                                                                                                            {{ atividade.sala }}
+                                                                                                                                            {% if atividade.sala.mapa_imagem %}
+                                                                                                                                                <p>
+                                                                                                                                                    <a id="open-modal"
+                                                                                                                                                       onclick="srcImage('{{ atividade.sala.mapa_imagem.url }}')"><small>Ver
+                                                                                                                                                        no
+                                                                                                                                                        mapa<i class="mdi mdi-open-in-new"></i></small></a>
+                                                                                                                                                </p>
+                                                                                                                                            {% endif %}
+                                                                                                                                        {% endif %}
+                                                                                                                                    {% elif atividade.tipo_local %}
+                                                                                                                                        Local:
+                                                                                                                                        {{ atividade.tipo_local }}
+                                                                                                                                    {% else %}
+                                                                                                                                        Local:
+                                                                                                                                        Não
+                                                                                                                                        especificado
                                                                                                                                     {% endif %}
-                                                                                                                                {% elif atividade.tipo_local %}
-                                                                                                                                        <td>Local: {{ atividade.tipo_local }}</td>
-                                                                                                                                {% else %}
-                                                                                                                                        <td>Local: Não especificado</td>
-                                                                                                                                {% endif %}
+                                                                                                                                </td>
+                                                                                                                                <td>{{ s.dia | date:'Y-m-d' }}
+                                                                                                                                    <input type="text" value="{{ s.dia| date:'Y-m-d' }}" id="dia_{{ s.id }}">
+                                                                                                                                </td>
                                                                                                                                 <td data-label="Inscrever"
                                                                                                                                     class="">
                                                                                                                                     <div class="field has-numberinput has-numberinput-compact">
@@ -1195,7 +1219,6 @@
                 </footer>
             </div>
         </div>
-
 
 
     </form>
