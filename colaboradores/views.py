@@ -1,3 +1,6 @@
+import time
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -42,6 +45,7 @@ class Criar_colab(View):
         hora_fim_colab = remove_all_space(request.POST['hora_fim_colab'])
         sala_de_aula = request.POST['sala_de_aula']
         percurso = request.POST['percurso']
+        outro = request.POST['outro']
 
         if sala_de_aula == "sim":
             sala_de_aula = 1
@@ -52,6 +56,11 @@ class Criar_colab(View):
             percurso = 1
         else:
             percurso = 0
+
+        if outro == "sim":
+            outro = 1
+        else:
+            outro = 0
         '''if form_colab.is_valid():
             primeiro_dia = form_colab['primeiro_dia'].value()
             segundo_dia = form_colab['segundo_dia'].value()
@@ -63,11 +72,12 @@ class Criar_colab(View):
         pk_user=AuthUser.objects.get(pk=user_id.pk).utilizador#################
         print(pk_user.pk)
         messages.error(request, "Colaboração criada com sucesso!")
+        #outras = 1
         Colaboracao.objects.create(colaborador_id=pk_user.pk, data_colaboracao=data_colaboracao, sala_de_aula=sala_de_aula,
                                    percurso=percurso, hora_inicio_colab=hora_inicio_colab,
-                                   hora_fim_colab=hora_fim_colab)
+                                   hora_fim_colab=hora_fim_colab, outras=outro)
         #user_id.pk
-        return redirect('/colaboradores/consultar_colab/')
+        return redirect('/colaboradores/consultar/')
 
 
 class Editar_colab(View):
@@ -114,6 +124,7 @@ class Editar_colab(View):
         #segundo_dia = request.POST['segundo_dia']
         sala_de_aula = request.POST['sala_de_aula']
         percurso = request.POST['percurso']
+        outro = request.POST['outro']
         #if primeiro_dia == "sim":
          #   primeiro_dia = 1
         #else:
@@ -134,6 +145,11 @@ class Editar_colab(View):
         else:
             percurso = 0
 
+        if outro == "sim":
+            outro = 1
+        else:
+            outro = 0
+
         '''if form_colab.is_valid():
          primeiro_dia = form_colab['primeiro_dia'].value()
             segundo_dia = form_colab['segundo_dia'].value()
@@ -145,9 +161,9 @@ class Editar_colab(View):
         hora_fim_colab = remove_all_space(request.POST['hora_fim_colab'])
         Colaboracao.objects.filter(pk=pk).update(data_colaboracao=data_colaboracao, sala_de_aula=sala_de_aula,
                                             percurso=percurso, hora_inicio_colab=hora_inicio_colab,
-                                            hora_fim_colab=hora_fim_colab)
+                                            hora_fim_colab=hora_fim_colab, outras=outro)
         messages.error(request, "Colaboração editada com sucesso!")
-        return redirect('/colaboradores/consultar_colab/')
+        return redirect('/colaboradores/consultar/')
 
 
 class Apagar_colab(View):
@@ -165,7 +181,7 @@ class Apagar_colab(View):
     def post(self, request):
         # Utilizador.objects.filter(pk=3).update(primeiro_dia=None, segundo_dia=None,
         #                                        sala_de_aula=None, percurso=None)
-        return redirect('/colaboradores/consultar_colab/')
+        return redirect('/colaboradores/consultar/')
 
 
 class Consultar_colab(View):
@@ -179,7 +195,28 @@ class Consultar_colab(View):
         if pk_user.utilizadortipo.tipo == "Colaborador":
             lista_colab_final = Colaboracao.objects.filter(colaborador_id=pk_user.pk)
             lista_tarefa_atrib = Tarefa.objects.filter(coolaborador=pk_user.pk)
-            print(lista_tarefa_atrib)
+            print(lista_colab_final)
+            for l in lista_colab_final:
+                #print(l.tarefa_atribuida)
+                Colaboracao.objects.filter(pk=l.id).update(tarefa_atribuida=0)
+
+            lista_colab_final1 = Colaboracao.objects.filter(colaborador_id=pk_user.pk)
+            for l1 in lista_colab_final1:
+                print(l1.tarefa_atribuida)
+
+            for y in lista_colab_final1:
+                #Colaboracao.objects.filter(pk=y.id).update(tarefa_atribuida=0)
+                for x in lista_tarefa_atrib:
+                    hora_tarefa = timedelta(seconds=((x.horario.hour * 3600) + (x.horario.minute * 60) + x.horario.second))
+                    hora_inicio_c = timedelta(seconds=((y.hora_inicio_colab.hour * 3600) + (y.hora_inicio_colab.minute * 60) + y.hora_inicio_colab.second))
+                    hora_fim_c = timedelta(seconds=((y.hora_fim_colab.hour * 3600) + (y.hora_fim_colab.minute * 60) + y.hora_fim_colab.second))
+                    if y.data_colaboracao == x.dia and hora_inicio_c <= hora_tarefa and hora_fim_c >= hora_tarefa:
+                        Colaboracao.objects.filter(pk=y.id).update(tarefa_atribuida=1)
+            #time.sleep(5)
+
+            lista_colab_final2 = Colaboracao.objects.filter(colaborador_id=pk_user.pk)
+            for l2 in lista_colab_final2:
+                print(l2.tarefa_atribuida)
             # for x in lista_colab:
             #     lista_colab3.append(str(x.data_colaboracao))
             #     lista_colab_final =  zip(lista_colab, lista_colab3)
@@ -191,7 +228,7 @@ class Consultar_colab(View):
                 #'lista_colab': lista_colab,
                 #'hora_str': hora_str,
                 #'lista_colab3': lista_colab3,
-                'lista_colab_final': lista_colab_final,
+                'lista_colab_final': lista_colab_final2,
                 'lista_tarefa_atrib': lista_tarefa_atrib,
                 'utilizador': pk_user
             })
@@ -204,7 +241,7 @@ class Consultar_colab(View):
         id=post['del']
         print(id)
         Colaboracao.objects.filter(pk=id).delete()
-        return redirect('/colaboradores/consultar_colab/')
+        return redirect('/colaboradores/consultar/')
     #
 
 class Consultar_tarefa(View):
@@ -216,7 +253,7 @@ class Consultar_tarefa(View):
         pk_user = AuthUser.objects.get(pk=user_id.pk).utilizador
         if pk_user.utilizadortipo.tipo == "Colaborador":
             # lista_tarefa = UtilizadorTarefa.objects.filter(colaborador_id=user_id.pk)
-            lista_tarefa = Tarefa.objects.filter(colaborador_id=user_id.pk)
+            lista_tarefa = Tarefa.objects.filter(coolaborador=user_id.pk)
             print(lista_tarefa)
             # for x in lista_colab:
             #     lista_colab3.append(str(x.data_colaboracao))
@@ -241,4 +278,4 @@ class Consultar_tarefa(View):
         id=post['del']
         print(id)
         #Colaboracao.objects.filter(pk=id).delete()
-        return redirect('/colaboradores/consultar_colab/')
+        return redirect('/colaboradores/consultar/')

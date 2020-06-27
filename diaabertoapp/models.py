@@ -441,6 +441,7 @@ class Colaboracao(models.Model):
     hora_fim_colab = models.TimeField(blank=True, null=True)
     percurso = models.IntegerField(blank=True, null=True)
     sala_de_aula = models.IntegerField(blank=True, null=True)
+    outras = models.IntegerField(blank=True, null=True)
     tarefa_atribuida = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -549,6 +550,7 @@ class Ementa(models.Model):
 
     class Meta:
         db_table = 'ementa'
+
 
 class Prato(models.Model):
     prato_carne = models.CharField(max_length=255)

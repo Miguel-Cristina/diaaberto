@@ -244,6 +244,54 @@ function cancel_reg(val) {
                                                         {% endifequal %}
                                                     </div>
 
+                                                    <div class="block">
+                                                        <div class="field">
+                                                            <label class="label">Quer auxiliar em outro tipo de tarefas?</label>
+                                                        </div>
+                                                        {% ifequal 1 obj.outras %}
+<!--                                                        Quer auxiliar no percurso?-->
+                                                        <label class="b-radio radio"><input type="radio"
+                                                                                        name="outro"
+                                                                                        value="sim"
+                                                                                        checked="checked">
+                                                            <span class="check"></span>
+                                                            <span class="control-label"> Sim </span>
+                                                        </label>
+                                                        <label class="b-radio radio"><input type="radio"
+                                                                                        name="outro"
+                                                                                        value="nao">
+                                                            <span class="check"></span>
+                                                            <span class="control-label"> Não </span>
+                                                        </label>
+<!--                                                        <input type="radio" id="sim7" name="percurso" value="sim"-->
+<!--                                                               checked="checked">-->
+<!--                                                        <label for="sim7">SIM</label>-->
+<!--                                                        <input type="radio" id="nao7" name="percurso" value="nao">-->
+<!--                                                        <label for="nao7">NAO</label>-->
+                                                        {% endifequal %}
+                                                        {% ifequal 0 obj.outras %}
+<!--                                                        Quer auxiliar no percurso?-->
+                                                        <label class="b-radio radio"><input type="radio"
+                                                                                        name="outro"
+                                                                                        value="sim">
+                                                            <span class="check"></span>
+                                                            <span class="control-label"> Sim </span>
+                                                        </label>
+                                                        <label class="b-radio radio"><input type="radio"
+                                                                                        name="outro"
+                                                                                        value="nao"
+                                                                                        checked="checked">
+                                                            <span class="check"></span>
+                                                            <span class="control-label"> Não </span>
+                                                        </label>
+<!--                                                        <input type="radio" id="sim8" name="percurso" value="sim">-->
+<!--                                                        <label for="sim8">SIM</label>-->
+<!--                                                        <input type="radio" id="nao8" name="percurso" value="nao"-->
+<!--                                                               checked="checked">-->
+<!--                                                        <label for="nao8">NAO</label>-->
+                                                        {% endifequal %}
+                                                    </div>
+
                                                 </div>
                                                 <hr>
                                             </div>
