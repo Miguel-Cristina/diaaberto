@@ -124,6 +124,7 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\configurarpercurso.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configurarprato.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configurartransporte.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\notificacoesrecebidas.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\editarcampus.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\adicionarcampus.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus.html" />

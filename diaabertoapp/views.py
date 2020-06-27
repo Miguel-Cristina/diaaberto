@@ -38,10 +38,24 @@ def error_404(request):
 
 
 # ========================================================================================================================
-# Login request
-# Reedireciona para a pagina login.html se nenhum utilizador estiver autentificado
-# Reedireciona para a pagina index.html se o utilizador autentificar com sucesso
+# Consultar notificacoes recebidas
+# Ler as mensagens recebidas
 # ========================================================================================================================
+def notificacoesrecebidas(request):
+    notificacoes = Notificacao.objects.none()
+    if request.user.is_authenticated:
+        auth_user = request.user
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
+    else:
+        messages.error(request, 'É necessário realizar o log in!')
+        return HttpResponseRedirect('/login')
+    lista_notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by("-hora")
+    count_notificacoes = 0
+    for x in lista_notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
+    return render(request, 'diaabertoapp/notificacoesrecebidas.html', {'count_notificacoes':count_notificacoes,'notificacoes':lista_notificacoes,'lista_notificacao_final':lista_notificacoes, 'utilizador':utilizador})
+
 
 
 # ========================================================================================================================
@@ -60,15 +74,13 @@ def error_404(request):
 # Reedireciona para a pagina inicial
 # ========================================================================================================================
 def index(request):
-    utilizador = ''
-    auth_user = request.user 
+    
     notificacoes = Notificacao.objects.none()
     if request.user.is_authenticated:
-        user_email = request.user.email
-        #utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
         utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
-            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')
         else:
             return HttpResponseRedirect('/utilizadores/login')
     else:
@@ -88,33 +100,29 @@ def index(request):
 
 
 # ========================================================================================================================
-# Administrador
-# Reedireciona para a pagina do administrador e das configurações
-# ========================================================================================================================
-def administrador(request):
-    return render(request, 'diaabertoapp/administrador.html', {})
-
-
-# ========================================================================================================================
 # Configuracao das atividades
 # Reedireciona para a pagina das configuracoes das atividades se o utilizador for do tipo administrador
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def configuraratividades(request):
-    utilizador = ''
+    
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
-            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')
+            count_notificacoes = 0
+            for x in notificacoes:
+                if (x.visto == False):
+                    count_notificacoes = count_notificacoes + 1
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     sessoes = Sessao.objects.all()
     tipos = TipoAtividade.objects.all()
@@ -150,7 +158,7 @@ def configuraratividades(request):
     # END order_by
 
     return render(request, 'diaabertoapp/configuraratividades.html',
-                  {'notificacoes': notificacoes, 'utilizador': utilizador, 'sessoes': sessoes, 'temas': temas,
+                  {'count_notificacoes':count_notificacoes,'notificacoes': notificacoes, 'utilizador': utilizador, 'sessoes': sessoes, 'temas': temas,
                    'tipos': tipos, 'publicos': publicos, 'order_by': order_by, 'sort': sort})
 
 
@@ -160,19 +168,18 @@ def configuraratividades(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def configurarespacos(request):
-    utilizador = ''
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     campus = Campus.objects.all()
     edificios = Edificio.objects.all()
@@ -226,11 +233,15 @@ def configurarespacos(request):
     except EmptyPage:
         salas = paginator.page(paginator.num_pages)
     # END pagination
-
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/configurarespacos.html',
                   {'utilizador': utilizador, 'campus': campus, 'nomesquery': nome_query, 'campusquery': campus_query,
                    'edificioquery': edificio_query, 'edificios': edificios, 'salas': salas, 'espacos': salas,
-                   'order_by': order_by, 'sort': sort})
+                   'order_by': order_by, 'sort': sort, 'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -239,19 +250,19 @@ def configurarespacos(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def configurarorganicasdepartamentos(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     organicas = UnidadeOrganica.objects.all()
     departamentos = Departamento.objects.all()
@@ -292,10 +303,14 @@ def configurarorganicasdepartamentos(request):
     except EmptyPage:
         departamentos = paginator.page(paginator.num_pages)
     # END pagination
-
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/configurarorganicasdepartamentos.html',
                   {'utilizador': utilizador, 'nomesquery': nome_query, 'organicaquery': organica_query,
-                   'organicas': organicas, 'departamentos': departamentos, 'order_by': order_by, 'sort': sort})
+                   'organicas': organicas, 'departamentos': departamentos, 'order_by': order_by, 'sort': sort,'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -304,19 +319,19 @@ def configurarorganicasdepartamentos(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def configurarorganicas(request):
-    utilizador = ''
+    
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     organicas = UnidadeOrganica.objects.all()
     campus = Campus.objects.all()
@@ -356,9 +371,14 @@ def configurarorganicas(request):
     except EmptyPage:
         organicas = paginator.page(paginator.num_pages)
     # END pagination
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/configurarorganicas.html',
                   {'utilizador': utilizador, 'campusquery':campus_query, 'campus':campus, 'nomesquery': nome_query, 'organicas': organicas, 'order_by': order_by,
-                   'sort': sort})
+                   'sort': sort, 'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -367,19 +387,19 @@ def configurarorganicas(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def configurardepartamentos(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     organicas = UnidadeOrganica.objects.all()
     departamentos = Departamento.objects.all()
@@ -420,10 +440,15 @@ def configurardepartamentos(request):
     except EmptyPage:
         departamentos = paginator.page(paginator.num_pages)
     # END pagination
-    print(organica_query)
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/configurardepartamentos.html',
                   {'utilizador': utilizador, 'nomesquery': nome_query, 'organicas': organicas,
-                   'departamentos': departamentos, 'organicaquery': organica_query, 'order_by': order_by, 'sort': sort})
+                   'departamentos': departamentos, 'organicaquery': organica_query, 'order_by': order_by, 'sort': sort,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -432,19 +457,19 @@ def configurardepartamentos(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def configurarcampus(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     campus = Campus.objects.all()
     # BEGIN filter_by_name
@@ -482,9 +507,14 @@ def configurarcampus(request):
     except EmptyPage:
         campus = paginator.page(paginator.num_pages)
     # END pagination
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/configurarcampus.html',
                   {'utilizador': utilizador, 'campus': campus, 'order_by': order_by, 'sort': sort,
-                   'nomesquery': nome_query})
+                   'nomesquery': nome_query, 'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -493,19 +523,19 @@ def configurarcampus(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def configuraredificios(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     campus = Campus.objects.all()
     edificios = Edificio.objects.all()
@@ -548,10 +578,14 @@ def configuraredificios(request):
     except EmptyPage:
         edificios = paginator.page(paginator.num_pages)
     # END pagination
-
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/configuraredificios.html',
                   {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'order_by': order_by,
-                   'sort': sort, 'nomesquery': nome_query, 'campusquery': campus_query})
+                   'sort': sort, 'nomesquery': nome_query, 'campusquery': campus_query,'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -560,19 +594,19 @@ def configuraredificios(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def configurarsalas(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     campus = Campus.objects.all()
     edificios = Edificio.objects.all()
@@ -626,11 +660,15 @@ def configurarsalas(request):
     except EmptyPage:
         salas = paginator.page(paginator.num_pages)
     # END pagination
-
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')    
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/configurarsalas.html',
                   {'utilizador': utilizador, 'campus': campus, 'nomesquery': nome_query, 'campusquery': campus_query,
                    'edificioquery': edificio_query, 'edificios': edificios, 'salas': salas, 'espacos': salas,
-                   'order_by': order_by, 'sort': sort})
+                   'order_by': order_by, 'sort': sort, 'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -639,20 +677,24 @@ def configurarsalas(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def editaredificio(request, pk):
-    utilizador = ''
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')    
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     campus = Campus.objects.all()
     edificios = Edificio.objects.all()
     espaco = get_object_or_404(Edificio, pk=pk)
@@ -667,9 +709,10 @@ def editaredificio(request, pk):
     else:
 
         aForm = EdificioForm(initial={'campus': espaco.campus.id}, instance=espaco)
-
+    
     return render(request, 'diaabertoapp/editaredificio.html',
-                  {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'form': aForm})
+                  {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'form': aForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -678,20 +721,25 @@ def editaredificio(request, pk):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def editarcampus(request, pk):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')    
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     campus = Campus.objects.all()
     espaco = get_object_or_404(Campus, pk=pk)
     if request.method == 'POST':
@@ -706,8 +754,9 @@ def editarcampus(request, pk):
 
         aForm = CampusForm(instance=espaco)
 
+    
     return render(request, 'diaabertoapp/editarcampus.html',
-                  {'utilizador': utilizador, 'campus': campus, 'form': aForm})
+                  {'utilizador': utilizador, 'campus': campus, 'form': aForm, 'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -716,19 +765,19 @@ def editarcampus(request, pk):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def eliminaredificio(request, pk):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     object = Edificio.objects.get(pk=pk)
     try:
@@ -736,7 +785,7 @@ def eliminaredificio(request, pk):
         messages.success(request, 'O edifício foi eliminado!')
     except ProtectedError:
         messages.error(request,
-                       'O edifício não pode ser eliminado! Outras dependências impedem que elimine o edifício.')
+                       'O edifício não pode ser eliminado! Outras dependências impedem que o edifício seja eliminado.')
     # messages.success(request, 'O edifício foi eliminado!')
     return HttpResponseRedirect('/configurarespacos/edificios/')
 
@@ -749,24 +798,24 @@ def eliminaredificio(request, pk):
 def eliminarcampus(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     object = Campus.objects.get(pk=pk)
     try:
         object.delete()
         messages.success(request, 'O campus foi eliminado!')
     except ProtectedError:
-        messages.error(request, 'O campus não pode ser eliminado! Outras dependências impedem que elimine.')
+        messages.error(request, 'O campus não pode ser eliminado! Outras dependências impedem que campus seja eliminado.')
     # messages.success(request, 'O edifício foi eliminado!')
     return HttpResponseRedirect('/configurarespacos/campus/')
 
@@ -777,20 +826,26 @@ def eliminarcampus(request, pk):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def editarsala(request, pk):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')    
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     campus = Campus.objects.all()
     edificios = Edificio.objects.all()
     salas = Sala.objects.all()
@@ -808,7 +863,8 @@ def editarsala(request, pk):
         aForm = SalaForm(initial={'campus': espaco.edificio.campus.id}, instance=espaco)
 
     return render(request, 'diaabertoapp/editarsala.html',
-                  {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'salas': salas, 'form': aForm})
+                  {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'salas': salas, 'form': aForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -819,24 +875,24 @@ def editarsala(request, pk):
 def eliminarsala(request, pk):
     utilizador = ''
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     object = Sala.objects.get(pk=pk)
     try:
         object.delete()
         messages.success(request, 'O espaço foi eliminado!')
     except ProtectedError:
-        messages.error(request, 'O espaço não pode ser eliminado! Outras dependências impedem que elimine o espaço.')
+        messages.error(request, 'O espaço não pode ser eliminado! Outras dependências impedem que o espaço seja eliminado.')
     # messages.success(request, 'O espaço foi eliminado!')
     return HttpResponseRedirect('/configurarespacos/salas/')
 
@@ -847,20 +903,26 @@ def eliminarsala(request, pk):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def adicionarsala(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+    
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     campus = Campus.objects.all()
     edificios = Edificio.objects.all()
     salas = Sala.objects.all()
@@ -876,7 +938,8 @@ def adicionarsala(request):
         aForm = SalaForm()
 
     return render(request, 'diaabertoapp/adicionarsala.html',
-                  {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'salas': salas, 'form': aForm})
+                  {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'salas': salas, 'form': aForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -887,18 +950,24 @@ def adicionarsala(request):
 def adicionaredificio(request):
     utilizador = ''
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     campus = Campus.objects.all()
     edificios = Edificio.objects.all()
     if request.method == 'POST':
@@ -913,7 +982,8 @@ def adicionaredificio(request):
         aForm = EdificioForm()
 
     return render(request, 'diaabertoapp/adicionaredificio.html',
-                  {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'form': aForm})
+                  {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'form': aForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -922,22 +992,26 @@ def adicionaredificio(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def adicionarcampus(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     campus = Campus.objects.all()
-
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     if request.method == 'POST':
         aForm = CampusForm(request.POST, request.FILES)
         if aForm.is_valid():
@@ -950,7 +1024,7 @@ def adicionarcampus(request):
         aForm = CampusForm()
 
     return render(request, 'diaabertoapp/adicionarcampus.html',
-                  {'utilizador': utilizador, 'campus': campus, 'form': aForm})
+                  {'utilizador': utilizador, 'campus': campus, 'form': aForm, 'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -959,21 +1033,28 @@ def adicionarcampus(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def editarorganica(request, pk):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+    
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     organica = get_object_or_404(UnidadeOrganica, pk=pk)
+
     if request.method == 'POST':
         aForm = UnidadeOrganicaForm(request.POST, instance=organica)
         if aForm.is_valid():
@@ -987,7 +1068,8 @@ def editarorganica(request, pk):
         aForm = UnidadeOrganicaForm(instance=organica)
 
     return render(request, 'diaabertoapp/editarorganica.html',
-                  {'utilizador': utilizador, 'organica': organica, 'form': aForm})
+                  {'utilizador': utilizador, 'organica': organica, 'form': aForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -996,19 +1078,19 @@ def editarorganica(request, pk):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def eliminarorganica(request, pk):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     object = UnidadeOrganica.objects.get(pk=pk)
     try:
@@ -1016,7 +1098,7 @@ def eliminarorganica(request, pk):
         messages.success(request, 'A unidade orgânica foi eliminada com sucesso!')
     except ProtectedError:
         messages.error(request,
-                       'A unidade orgânica não pode ser eliminada! Outras dependências impedem que elimine a unidade orgânica.')
+                       'A unidade orgânica não pode ser eliminada! Outras dependências impedem que a unidade orgânica seja eliminada.')
     # messages.success(request, 'A unidade orgânica foi eliminada com sucesso!')
     return HttpResponseRedirect('/configurarorganicasdepartamentos/organicas/')
 
@@ -1027,20 +1109,26 @@ def eliminarorganica(request, pk):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def adicionarorganica(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     organica = UnidadeOrganica.objects.all()
     if request.method == 'POST':
         aForm = UnidadeOrganicaForm(request.POST)
@@ -1054,7 +1142,8 @@ def adicionarorganica(request):
         aForm = UnidadeOrganicaForm()
 
     return render(request, 'diaabertoapp/adicionarorganica.html',
-                  {'organica': organica, 'utilizador': utilizador, 'form': aForm})
+                  {'organica': organica, 'utilizador': utilizador, 'form': aForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -1063,20 +1152,26 @@ def adicionarorganica(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def editardepartamento(request, pk):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     departamento = get_object_or_404(Departamento, pk=pk)
     if request.method == 'POST':
         aForm = DepartamentoForm(request.POST, instance=departamento)
@@ -1091,7 +1186,8 @@ def editardepartamento(request, pk):
         aForm = DepartamentoForm(instance=departamento)
 
     return render(request, 'diaabertoapp/editardepartamento.html',
-                  {'utilizador': utilizador, 'departamento': departamento, 'form': aForm})
+                  {'utilizador': utilizador, 'departamento': departamento, 'form': aForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -1100,27 +1196,29 @@ def editardepartamento(request, pk):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def eliminardepartamento(request, pk):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    
     object = Departamento.objects.get(pk=pk)
     try:
         object.delete()
         messages.success(request, 'O departamento foi eliminado com sucesso!')
     except ProtectedError:
         messages.error(request,
-                       'O departamento não pode ser eliminado! Outras dependências impedem que elimine o departamento.')
+                       'O departamento não pode ser eliminado! Outras dependências impedem que o departamento seja eliminado.')
     # messages.success(request, 'O departamento foi eliminado com sucesso!')
     return HttpResponseRedirect('/configurarorganicasdepartamentos/departamentos/')
 
@@ -1131,20 +1229,26 @@ def eliminardepartamento(request, pk):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def adicionardepartamento(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     organicas = UnidadeOrganica.objects.all()
     departamentos = Departamento.objects.all()
     if request.method == 'POST':
@@ -1159,7 +1263,8 @@ def adicionardepartamento(request):
         aForm = DepartamentoForm()
 
     return render(request, 'diaabertoapp/adicionardepartamento.html',
-                  {'utilizador': utilizador, 'departamentos': departamentos, 'organicas': organicas, 'form': aForm})
+                  {'utilizador': utilizador, 'departamentos': departamentos, 'organicas': organicas, 'form': aForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -1168,20 +1273,26 @@ def adicionardepartamento(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def sessoes(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     sessoes = Sessao.objects.all().order_by('hora')
     SessoesFormSet = modelformset_factory(Sessao, form=SessoesForm, fields=('hora',), can_delete=True, extra=0)
 
@@ -1197,7 +1308,8 @@ def sessoes(request):
         sessoesForm = SessoesFormSet(queryset=sessoes, prefix="sa")
 
     return render(request, 'diaabertoapp/sessoes.html',
-                  {'utilizador': utilizador, 'sessoes': sessoes, 'form': sessoesForm})
+                  {'utilizador': utilizador, 'sessoes': sessoes, 'form': sessoesForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -1206,20 +1318,26 @@ def sessoes(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def publicoalvo(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     publicos = PublicoAlvo.objects.all().order_by('nome')
     PublicoAlvoFormSet = modelformset_factory(PublicoAlvo, form=PublicoAlvoForm, fields=('nome',), can_delete=True,
                                               extra=0)
@@ -1236,7 +1354,8 @@ def publicoalvo(request):
         publicoAlvoForm = PublicoAlvoFormSet(queryset=publicos, prefix="sa")
 
     return render(request, 'diaabertoapp/publicoalvo.html',
-                  {'utilizador': utilizador, 'publicos': publicos, 'form': publicoAlvoForm})
+                  {'utilizador': utilizador, 'publicos': publicos, 'form': publicoAlvoForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -1245,20 +1364,26 @@ def publicoalvo(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def tematicas(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     tematicas = Tematica.objects.all().order_by('tema')
     TematicasFormSet = modelformset_factory(Tematica, form=TematicasForm, fields=('tema',), can_delete=True, extra=0)
 
@@ -1274,7 +1399,8 @@ def tematicas(request):
         tematicasForm = TematicasFormSet(queryset=tematicas, prefix="sa")
 
     return render(request, 'diaabertoapp/tematicas.html',
-                  {'utilizador': utilizador, 'tematicas': tematicas, 'form': tematicasForm})
+                  {'utilizador': utilizador, 'tematicas': tematicas, 'form': tematicasForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -1283,20 +1409,26 @@ def tematicas(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador
 # ========================================================================================================================
 def tipoatividade(request):
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     tipos = TipoAtividade.objects.all().order_by('tipo')
     TipoAtividadeFormSet = modelformset_factory(TipoAtividade, form=TipoAtividadeForm, fields=('tipo',),
                                                 can_delete=True, extra=0)
@@ -1313,7 +1445,8 @@ def tipoatividade(request):
         tipoatividadeForm = TipoAtividadeFormSet(queryset=tipos, prefix="sa")
 
     return render(request, 'diaabertoapp/tipoatividade.html',
-                  {'utilizador': utilizador, 'tematicas': tipos, 'form': tipoatividadeForm})
+                  {'utilizador': utilizador, 'tematicas': tipos, 'form': tipoatividadeForm,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -1322,15 +1455,18 @@ def tipoatividade(request):
 # Reedireciona para a pagina inicial se o utilizador nao tiver permissoes do tipo administrador, coordenador ou docente
 # ========================================================================================================================
 def minhasatividades(request):
-    # minhasatividades = Atividade.objects.all()
-    utilizador = ''
+
     notificacoes = Notificacao.objects.none()
     atividade_list = Atividade.objects.all()
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
-            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+            count_notificacoes = 0
+            for x in notificacoes:
+                if (x.visto == False):
+                    count_notificacoes = count_notificacoes + 1
             if utilizador.utilizadortipo.tipo == 'Docente':
                 atividade_list = Atividade.objects.filter(responsavel=utilizador.id)
             elif utilizador.utilizadortipo.tipo == 'Coordenador':
@@ -1343,10 +1479,10 @@ def minhasatividades(request):
                 messages.error(request, 'Não tem permissões para aceder à pagina!')
                 return HttpResponseRedirect('/index/')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index/')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina! É necessário efetuar o login!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/login/')
     campus_arr = Campus.objects.all()
     organicas = UnidadeOrganica.objects.all()
@@ -1498,7 +1634,7 @@ def minhasatividades(request):
                    'departamentoquery': departamento_query, 'tematicas': tematicas, 'tematicaquery': tematica_query,
                    'tipoatividade': tipoatividade, 'tipo_query': tipo_query, 'estados': unique_valida_obj,
                    'estadosquery': estado_query, 'nomesquery': nome_query, 'materiais': materiais,
-                   'publicoalvo': publico_alvo, 'publicoquery': publico_query})
+                   'publicoalvo': publico_alvo, 'publicoquery': publico_query,'count_notificacoes':count_notificacoes})
 
 
 # ========================================================================================================================
@@ -1517,10 +1653,9 @@ def proporatividade(request):
     departamentos = Departamento.objects.all()
     distinct_sessoes = Sessao.objects.values('hora').distinct().count()
 
-    utilizador = ''
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is None or utilizador.utilizadortipo.tipo != 'Docente':
             messages.error(request, 'Não tem permissões para aceder à pagina!')
             return HttpResponseRedirect('/index')
@@ -1528,8 +1663,14 @@ def proporatividade(request):
         departamentos = Departamento.objects.get(id=utilizador.departamento.id)
         
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina! É necessário autentificar-se.')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
 
     mFormSet = inlineformset_factory(Atividade, MaterialQuantidade, MaterialQuantidadeForm,
                                      fields=('material', 'quantidade',), extra=0, can_delete=True)
@@ -1548,8 +1689,6 @@ def proporatividade(request):
         if aForm.is_valid() and mForm.is_valid() and sForm.is_valid():
             atividade = aForm.save(commit=False)
             if request.user.is_authenticated:
-                user_email = request.user.email
-                utilizador = Utilizador.objects.get(email=user_email)
                 atividade.responsavel = utilizador
             atividade.save()
             aForm.save_m2m()
@@ -1583,9 +1722,9 @@ def proporatividade(request):
         mForm = mFormSet(prefix='mq')
         sForm = sFormSet(prefix='sa')
     return render(request, 'diaabertoapp/proporatividade.html',
-                  {'tipos': tipos_atividade, 'tematicas': temas_atividade, 'publicosalvo': publico_alvo, 'campi': campi,
+                  {'utilizador':utilizador,'tipos': tipos_atividade, 'tematicas': temas_atividade, 'publicosalvo': publico_alvo, 'campi': campi,
                    'edificios': edificios, 'salas': salas, 'departamentos': departamentos, 'organicas': organicas,
-                   'form': aForm, 'form2': mForm, 'form3': sForm})
+                   'form': aForm, 'form2': mForm, 'form3': sForm,'count_notificacoes':count_notificacoes,'notificacoes':notificacoes})
 
 
 # ========================================================================================================================
@@ -1595,19 +1734,19 @@ def proporatividade(request):
 # ========================================================================================================================
 def alteraratividade(request, pk):
     atividade = get_object_or_404(Atividade, pk=pk)
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not atividade.responsavel.id == utilizador.id:
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     tipos_atividade = TipoAtividade.objects.all()
     temas_atividade = Tematica.objects.all()
@@ -1618,12 +1757,15 @@ def alteraratividade(request, pk):
     organicas = UnidadeOrganica.objects.all()
     departamentos = Departamento.objects.all()
     distinct_sessoes = Sessao.objects.values('hora').distinct().count()
-    utilizador = ''
-    if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
-        organicas = UnidadeOrganica.objects.get(id=utilizador.unidadeorganica.id)
-        departamentos = Departamento.objects.get(id=utilizador.departamento.id)
+    
+    organicas = UnidadeOrganica.objects.get(id=utilizador.unidadeorganica.id)
+    departamentos = Departamento.objects.get(id=utilizador.departamento.id)
+
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
 
     # mFormSet = modelformset_factory(MaterialQuantidade, fields=('material','quantidade'))
     mFormSet = inlineformset_factory(Atividade, MaterialQuantidade, MaterialQuantidadeForm,
@@ -1661,7 +1803,7 @@ def alteraratividade(request, pk):
                   {'utilizador': utilizador, 'tipos': tipos_atividade, 'tematicas': temas_atividade,
                    'publicosalvo': publico_alvo, 'campi': campi, 'edificios': edificios, 'salas': salas,
                    'departamentos': departamentos, 'organicas': organicas, 'form': aForm, 'form2': mForm,
-                   'form3': sForm})
+                   'form3': sForm,'count_notificacoes':count_notificacoes,'notificacoes':notificacoes})
 
 
 # ========================================================================================================================
@@ -1670,19 +1812,19 @@ def alteraratividade(request, pk):
 # ========================================================================================================================
 def aceitaratividade(request, pk):
     object = Atividade.objects.get(pk=pk)
-    utilizador = ''
+    
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not object.unidadeorganica == utilizador.unidadeorganica:
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
 
     object.validada = 'VD'
@@ -1706,27 +1848,31 @@ def aceitaratividade(request, pk):
 # ========================================================================================================================
 def rejeitaratividade(request, pk):
     object = Atividade.objects.get(pk=pk)
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not object.unidadeorganica == utilizador.unidadeorganica:
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
 
     object.validada = 'RJ'
     proposta = object.nome
     responsavel = object.responsavel
     object.save()
+    if Notificacao.objects.all().exists():
+        notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+    else:
+        notificacao_grupo = 0
     notificacao_obj = Notificacao(assunto="Proposta rejeitada",hora=datetime.now(), conteudo="Proposta " + proposta + " rejeitada!",
-                                  utilizador_rec=responsavel, utilizador_env=utilizador, prioridade=2)
+                                  utilizador_rec=responsavel, utilizador_env=utilizador, prioridade=2, notificacao_grupo=notificacao_grupo)
     notificacao_obj.save()
     messages.success(request, 'Atividade foi rejeitada!')
     return HttpResponseRedirect('/minhasatividades/')
@@ -1738,19 +1884,19 @@ def rejeitaratividade(request, pk):
 # ========================================================================================================================
 def eliminaratividade(request, pk):
     object = Atividade.objects.get(pk=pk)
-    utilizador = ''
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
             if not object.responsavel.id == utilizador.id:
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
 
     object.delete()
@@ -1764,6 +1910,20 @@ def eliminaratividade(request, pk):
 # ========================================================================================================================
 def visto(request, pk):
     object = Notificacao.objects.get(pk=pk)
+    if request.user.is_authenticated:
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
+        if utilizador is not None:
+            if not object.utilizador_rec == utilizador:
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'É necessário efetuar o login!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'É necessário efetuar o login!')
+        return HttpResponseRedirect('/index')
+    
     object.visto = True
     object.save()
     # messages.success(request, 'Notificação vista!')
@@ -1776,13 +1936,13 @@ def visto(request, pk):
 # ========================================================================================================================
 def sugeriralteracao(request, pk):
     atividade = Atividade.objects.get(pk=pk)
-    utilizador = ''
     notificacoes = Notificacao.objects.none()
+
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
-            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
             if utilizador.utilizadortipo.tipo == 'Coordenador':
                 utilizador_organica = utilizador.unidadeorganica
 
@@ -1799,9 +1959,13 @@ def sugeriralteracao(request, pk):
     if request.method == 'GET':
         solicitacao = request.GET.get('alteracao')
         if solicitacao:
+            if Notificacao.objects.all().exists():
+                notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+            else:
+                notificacao_grupo = 0
             notificacao_obj = Notificacao(assunto="Solicitação para alteração da proposta " + proposta,
                                           conteudo="Foi solicitado: " + solicitacao, utilizador_rec=responsavel,
-                                          utilizador_envia=utilizador, prioridade=2)
+                                          utilizador_env=utilizador, prioridade=2,notificacao_grupo=notificacao_grupo, hora=datetime.now())
             notificacao_obj.save()
             messages.success(request, 'A solicitação foi enviada com sucesso!')
             return HttpResponseRedirect('/minhasatividades/')
@@ -2136,11 +2300,16 @@ def get_tarefas(request):
         tarefas = paginator.page(paginator.num_pages)
     # END pagination
     # ,'campuss': campus_arr, 'campusquery':campus_query ,'UnidadeOrganicas':UnidadeOrganicas,'UnidadeOrganicaquery':UnidadeOrganica_query,'departamentos':departamentos,'departamentoquery':departamento_query,
+    notificacoes = Notificacao.objects.filter(utilizador_rec=aut_utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/tarefas.html',
                   {'utilizador': aut_utilizador, 'campuss': campus_arr, 'campusquery': campus_query, 'form': aform,
                    'tipo_query': tipo_query, 'tarefas': tarefas, 'utilizadores': utilizador,
                    'tiposs': unique_valida_obj, 'nomesquery': nome_query, 'nomesColaboradorQuery': nome_colab_query,
-                   'order_by': order_by, 'sort': sort})
+                   'order_by': order_by, 'sort': sort,'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 def add_tarefa(request):
@@ -2168,7 +2337,7 @@ def add_tarefa(request):
 
     atividades = Atividade.objects.all()
     salas = Sala.objects.all()
-
+    diaaberto = DiaAberto.objects.first()
     if request.method == 'POST':
         aForm = TarefaForm(request.POST)
         if aForm.is_valid():
@@ -2177,7 +2346,13 @@ def add_tarefa(request):
             if (tarefa.tipo_tarefa == 'PE'):
                 tarefa.duracao = 15
             if (tarefa.tipo_tarefa == 'AV'):
+                horas = request.POST.get("sessao")
+                print(horas)
+                sessao = SessaoAtividade.objects.get(id=request.POST.get("sessao"))
                 tarefa.duracao = tarefa.atividade.duracao
+                tarefa.horario = sessao.sessao.hora
+                print("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»")
+                print(sessao.sessao.hora)
             tarefa.save()
             aForm.save_m2m()
 
@@ -2186,9 +2361,14 @@ def add_tarefa(request):
             print(aForm.errors)
     else:
         aForm = TarefaForm()
-
+    notificacoes = Notificacao.objects.filter(utilizador_rec=aut_utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/adicionarTarefa.html',
-                  {'form': aForm, 'atividades': atividades, 'salas': salas, 'utilizador': aut_utilizador})
+                  {'form': aForm, 'atividades': atividades, 'salas': salas, 'utilizador': aut_utilizador, 'diaaberto':diaaberto,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 def rem_tarefa(request, pk):
@@ -2326,7 +2506,11 @@ def edit_tarefa(request, pk):
         ('PE', 'Percurso'),
         ('OT', 'Outra'),
     }
-
+    notificacoes = Notificacao.objects.filter(utilizador_rec=aut_utilizador).order_by('-hora')  
+    count_notificacoes = 0
+    for x in notificacoes:
+        if (x.visto == False):
+            count_notificacoes = count_notificacoes + 1
     atividades = Atividade.objects.all()
     salas = Sala.objects.all()
 
@@ -2349,7 +2533,8 @@ def edit_tarefa(request, pk):
         aForm = TarefaForm(instance=tarefa)
 
     return render(request, 'diaabertoapp/editTarefa.html',
-                  {'form': aForm, 'atividades': atividades, 'salas': salas, 'tipo_tarefa': tipo_tarefa})
+                  {'form': aForm, 'atividades': atividades, 'salas': salas, 'tipo_tarefa': tipo_tarefa, 'utilizador':aut_utilizador,
+                   'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 
 def grupos_switch(request):
@@ -2362,6 +2547,12 @@ def grupos_switch(request):
     inscricaoids = []
     if tarefa is None:
         horas = horas + ":00"
+    print(horas)
+    horasstring = str(horas)
+    leng = len(horasstring)
+    if leng <= 5:
+        horas = horas + ":00" 
+    print("-wrfkoweofwkofwekweofkweof------------------")
     print(horas)
     novashoras = datetime.strptime(horas, '%H:%M:%S').time()
     print(novashoras)
@@ -2433,13 +2624,17 @@ def user_switch(request):
     tarefa = Tarefa.objects.get(pk=request.GET.get('tarefa', None))
     tarefa_tipo = tarefa.tipo_tarefa
     utilizadores = Utilizador.objects.filter(utilizadortipo__tipo='Colaborador').order_by("nome")
-    # print(tarefa.duracao)
-    # print(tarefa.horario)
+    
+    #numero_colabs = 1
+    #if(tarefa.tipo_tarefa == 'AV'):
+
+
     d = timedelta(seconds=(tarefa.duracao * 60))
     tarefa_inicio = timedelta(
         seconds=((tarefa.horario.hour * 3600) + (tarefa.horario.minute * 60) + tarefa.horario.second))
     tarefa_fim = d + tarefa_inicio
     data_tarefa = tarefa.dia
+    no_task_day = 0
 
     if (tarefa.estado == 'PA'):
 
@@ -2455,23 +2650,28 @@ def user_switch(request):
                     hora_fim_colab = timedelta(seconds=(
                                 (colaboracao.hora_fim_colab.hour * 3600) + (colaboracao.hora_fim_colab.minute * 60) + (
                             colaboracao.hora_fim_colab.second)))
-
-                    if (
-                            data_colaboracao == data_tarefa and hora_inicio_colab <= tarefa_inicio and hora_fim_colab >= tarefa_fim):
+                    
+                    if (data_colaboracao == data_tarefa and hora_inicio_colab <= tarefa_inicio and hora_fim_colab >= tarefa_fim):
 
                         tarefa_atribuida = Tarefa.objects.filter(coolaborador=utilizador.id)
+                        
                         if (len(tarefa_atribuida) != 0):
 
                             for task in tarefa_atribuida:
-
+                                
                                 duracao_task = timedelta(seconds=(task.duracao * 60))
                                 task_inicio = timedelta(seconds=((task.horario.hour * 3600) + (
                                             task.horario.minute * 60) + task.horario.second))
                                 task_fim = duracao_task + task_inicio
                                 data_task = task.dia
-
+                               
                                 if (data_task == data_tarefa):
-                                    if ((tarefa_inicio < task_inicio and tarefa_fim <= tarefa_inicio) or (
+                                    no_task_day = no_task_day + 1
+                                    print("Tarefa")
+                                    print(tarefa)
+                                    print("Task")
+                                    print(task)
+                                    if ((tarefa_inicio < task_inicio and tarefa_fim <= task_inicio) or (
                                             tarefa_fim > task_fim and tarefa_inicio >= task_fim)):
                                         if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
                                                 tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (
@@ -2481,13 +2681,15 @@ def user_switch(request):
                                             colaboracaolist.append(colaboracao.id)
                                     else:
                                         break
-                                else:
-                                    if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
-                                            tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (
-                                            tarefa_tipo == 'OT')):
-                                        userlist.append(utilizador.id)
-                                        usernamelist.append(utilizador.nome)
-                                        colaboracaolist.append(colaboracao.id)
+                            if(no_task_day == 0):
+                                if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
+                                                tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (
+                                                tarefa_tipo == 'OT')):
+                                    userlist.append(utilizador.id)
+                                    usernamelist.append(utilizador.nome)
+                                    colaboracaolist.append(colaboracao.id)   
+
+
                         else:
                             if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
                                     tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (tarefa_tipo == 'OT')):
@@ -2502,6 +2704,79 @@ def user_switch(request):
         }
 
     return JsonResponse(dados)
+
+def activity_switch(request):
+     
+    dia = request.GET.get('data', None)
+    print(dia)
+    sessoesatividades = SessaoAtividade.objects.filter(dia=dia)
+    activity_list = []
+    activity_name_list = []
+
+    for sessaoatividade in sessoesatividades:
+        if sessaoatividade.atividade.id in activity_list:
+            pass
+        else:
+            activity_list.append(sessaoatividade.atividade.id)
+            activity_name_list.append(sessaoatividade.atividade.nome)
+
+    print(sessoesatividades)
+    dados = {
+        'activity_list': activity_list,
+        'activity_name_list': activity_name_list
+    }
+
+    return JsonResponse(dados)
+
+def sessions_switch(request):
+     
+    atividade = request.GET.get('atividade', None)
+    data = request.GET.get('data', None)
+    print(atividade)
+    sessoesdaatividade = SessaoAtividade.objects.filter(atividade=atividade,dia=data)
+    sessions_list = []
+    sessions_hours_list = []
+
+    for sessao in sessoesdaatividade:
+        if sessao.id in sessions_list:
+            pass
+        else:
+            sessions_list.append(sessao.id)
+            sessions_hours_list.append(sessao.sessao.hora)
+
+    print(sessoesdaatividade)
+    dados = {
+        'sessions_list': sessions_list,
+        'sessions_hours_list': sessions_hours_list
+    }
+
+    return JsonResponse(dados)
+
+
+#def salas_switch(request):
+#     
+#    tarefa = request.GET.get('tarefa', None)
+#    salas = request.GET.get('salas', None)
+#
+#
+#    salas_list = []
+#    salas_nome_list = []
+#
+#    for sala in salas:
+#        if sessao.id in sessions_list:
+#            pass
+#        else:
+#            salas_list.append(sala.id)
+#            salas_nome_list.append(sala.edificio.nome + " Sala: "+ sala.identificacao +" Campus: "+ sala.edificio.campus.nome )
+#
+#    print(sessoesdaatividade)
+#    dados = {
+#        'salas_list': salas_list,
+#        'salas_nome_list': salas_nome_list
+#    }
+#
+#    return JsonResponse(dados)
+
 
 
 # ========================================================================================================================

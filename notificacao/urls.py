@@ -17,13 +17,13 @@ Including another URLconf
 """
 
 # Uncomment next two lines to enable admin:
-#from django.contrib import admin
-#from django.urls import path
+# from django.contrib import admin
+# from django.urls import path
 
-#urlpatterns = [
-    # Uncomment the next line to enable the admin:
-    #path('admin/', admin.site.urls)
-#]
+# urlpatterns = [
+# Uncomment the next line to enable the admin:
+# path('admin/', admin.site.urls)
+# ]
 
 from django.urls import path
 from . import views
@@ -32,7 +32,8 @@ from .views import notificacao, Consultar_notificacao, Editar_notificacao
 app_name = "notificacao"
 
 urlpatterns = [
-    path("notificacao/", notificacao.as_view(), name='notificacao'),
-    path("consultar_notificacao/", Consultar_notificacao.as_view(), name='consultar_notificacao'),
-    path("consultar_notificacao/editar_notificacao/<int:pk>", Editar_notificacao.as_view(), name='editar_notificacao'),
+    path("", notificacao.as_view(), name='notificacao'),
+    path("criar/", notificacao.as_view(), name='notificacao'),
+    path("consultar/", Consultar_notificacao.as_view(), name='consultar_notificacao'),
+    path("consultar/editar/<int:pk>", Editar_notificacao.as_view(), name='editar_notificacao'),
 ]

@@ -316,3 +316,10 @@ function incremental(type, id) {
     document.getElementById(id).setAttribute('value', value)
 }
 
+
+function CheckDia(val) {
+    console.log(val)
+    let table = document.getElementById('table_sessoes')
+    let table_length = document.getElementById("table_sessoes").rows.length;
+
+}
