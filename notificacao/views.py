@@ -79,7 +79,7 @@ class notificacao(View):
                 Notificacao.objects.create(assunto=assunto, conteudo=conteudo, hora=hora,
                                            prioridade=prioridade, utilizador_env=utilizador_env,
                                            utilizador_rec=utilizador_rec1, notificacao_grupo=notificacao_grupo)
-        return redirect('/notificacao/consultar_notificacao/')
+        return redirect('/notificacao/consultar/')
 
 
 class Consultar_notificacao(View):
@@ -109,7 +109,7 @@ class Consultar_notificacao(View):
         id = post['del']
         print(id)
         Notificacao.objects.filter(pk=id).delete()
-        return redirect('/notificacao/consultar_notificacao/')
+        return redirect('/notificacao/consultar/')
 
 
 class Editar_notificacao(View):
@@ -175,4 +175,4 @@ class Editar_notificacao(View):
                 notificacao.prioridade = prioridade
                 notificacao.assunto = assunto
                 notificacao.save()
-        return redirect('/notificacao/consultar_notificacao/')
+        return redirect('/notificacao/consultar/')
