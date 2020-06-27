@@ -1,0 +1,57 @@
+/*.topnav {*/
+/*    overflow: hidden;*/
+/*    background-color: white;*/
+/*    position: absolute; !* Set the navbar to fixed position *!*/
+/*    top: 0; !* Position the navbar at the top of the page *!*/
+/*    width: 100%; !* Full width *!*/
+/*}*/
+
+/*.topnav a {*/
+/*    float: left;*/
+/*    color: black;*/
+/*    text-align: center;*/
+/*    padding: 14px 16px;*/
+/*    text-decoration: none;*/
+/*    font-size: 17px;*/
+/*    height: 50px;*/
+/*    width: auto;*/
+/*}*/
+
+/*.topnav a:first-child:hover {*/
+/*    border-bottom-style: none;*/
+/*}*/
+
+/*!*diaaberto*!*/
+/*.topnav a:nth-child(2) {*/
+/*    color: #2d74d8;*/
+/*}*/
+
+/*.topnav a:nth-child(2):hover {*/
+/*    border-bottom-style: none;*/
+/*}*/
+
+/*.topnav a:hover {*/
+/*    border-bottom-style: solid;*/
+/*    border-bottom-color: #2d74d8;*/
+/*}*/
+
+/*.topnav a.active {*/
+/*    color: #2d74d8;*/
+/*    border-bottom-style: solid;*/
+/*    border-bottom-color: #2d74d8;*/
+/*}*/
+
+/*.topnav a.floatright {*/
+/*    float: right;*/
+/*}*/
+
+
+/*.topnav a:link {*/
+/*    text-decoration: none;*/
+/*}*/
+
+/*.topnav a:visited {*/
+/*    text-decoration: none;*/
+/*}*/
+
+
