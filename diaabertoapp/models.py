@@ -414,7 +414,7 @@ class Escola(models.Model):
 # ========================================================================================================================
 
 class Inscricao(models.Model):
-    dia = models.DateField(default=datetime.date.today)
+    dia = models.DateField()
     escola = models.ForeignKey(Escola, on_delete=models.DO_NOTHING, blank=True, null=True, db_column='escola_id')
     hora_check_in = models.TimeField()
     unidadeorganica_checkin = models.ForeignKey(UnidadeOrganica, on_delete=models.DO_NOTHING, db_column='unidadeorganica_checkin',
@@ -441,6 +441,7 @@ class Colaboracao(models.Model):
     hora_fim_colab = models.TimeField(blank=True, null=True)
     percurso = models.IntegerField(blank=True, null=True)
     sala_de_aula = models.IntegerField(blank=True, null=True)
+    outras = models.IntegerField(blank=True, null=True)
     tarefa_atribuida = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -550,6 +551,7 @@ class Ementa(models.Model):
     class Meta:
         db_table = 'ementa'
 
+
 class Prato(models.Model):
     prato_carne = models.CharField(max_length=255)
     prato_peixe = models.CharField(max_length=255)
@@ -596,7 +598,7 @@ class EmentaInscricao(models.Model):
     inscricao = models.ForeignKey('Inscricao', models.DO_NOTHING)
     numero_aluno_normal = models.IntegerField(blank=True, null=True)
     numero_outro_normal = models.IntegerField(blank=True, null=True)
-    dia = models.DateField(blank=True, null=True)
+    dia = models.DateField()
 
     class Meta:
         db_table = 'ementa_inscricao'
@@ -606,7 +608,7 @@ class EmentaInscricao(models.Model):
 
 
 class Transporteproprio(models.Model):
-    data = models.DateField(blank=True, null=True)
+    data = models.DateField()
     tipo_transporte = models.CharField(max_length=255)
     transporte_para_campus = models.CharField(max_length=255, null=True)
     transporte_entre_campus = models.CharField(max_length=255, null=True)

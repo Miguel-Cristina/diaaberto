@@ -17,18 +17,6 @@ def remove_all_space(string):
     return string.replace(" ", "")
 
 
-class HomeView(View):
-    template_name = 'home.html'
-
-    def get(self, request):
-        return render(request, 'home.html', )
-
-
-class success(View):
-    def get(self, request):
-        return render(request, 'home.html', context={'MSG': "Sucesso"})
-
-
 class CriarInscricaoView(View):
     template_name = 'inscricao.html'
 
@@ -65,6 +53,7 @@ class CriarInscricaoView(View):
 
     def post(self, request):
         # --------------------------escola----------------------------------
+        dia_inscrito = request.POST['data_inscricao']
         escola_escolhida = request.POST['Escola']
         print(escola_escolhida)
         if escola_escolhida != "Escolher":
@@ -80,14 +69,11 @@ class CriarInscricaoView(View):
             else:
                 escola = Escola.objects.get(nome=escola_escolhida)
             # ------------inscricao grupo/individual
-            # session user--------------------------------------
             auth_user = request.user
-            # utilizador = Utilizador.objects.get(pk=auth_user.id)
             utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
-            # session user--------------------------------------
             area_estudos = request.POST['area_estudos']
             ano_estudos = request.POST['ano_estudos']
-            inscricao = Inscricao.objects.create(escola=escola, hora_check_in=time(23, 59, 59),
+            inscricao = Inscricao.objects.create(dia=dia_inscrito, escola=escola, hora_check_in=time(23, 59, 59),
                                                  area_estudos=area_estudos,
                                                  ano_estudos=ano_estudos, utilizador=utilizador)
             radio_value_tipo_part = utilizador.utilizadortipo.tipo
@@ -119,7 +105,8 @@ class CriarInscricaoView(View):
             ementa = Ementa.objects.first()
             EmentaInscricao.objects.create(ementa=ementa, inscricao=inscricao,
                                            numero_aluno_normal=n_aluno,
-                                           numero_outro_normal=n_outro
+                                           numero_outro_normal=n_outro,
+                                           dia=dia_inscrito
                                            )
             ementainscricao = EmentaInscricao.objects.get(inscricao=inscricao)
             # -----------transporte------------------------------------
@@ -140,7 +127,7 @@ class CriarInscricaoView(View):
                 trans_entre_campus = "nao"
             chegada = remove_all_space(request.POST['timepicker-one'])
             partida = remove_all_space(request.POST['timepicker-two'])
-            Transporteproprio.objects.create(tipo_transporte=drop_value,
+            Transporteproprio.objects.create(data=dia_inscrito, tipo_transporte=drop_value,
                                              transporte_para_campus=trans_para_campus,
                                              transporte_entre_campus=trans_entre_campus,
                                              hora_chegada=chegada,
@@ -242,7 +229,8 @@ class CriarInscricaoView(View):
                 # -------------------------------------------------------
                 email.attach('inscricao.pdf', pdf.getvalue(), 'application/pdf')
                 email.send()
-                return render(request, 'inscricao_sucess.html', context={'email': utilizador.email})
+                return render(request, 'inscricao_sucess.html',
+                              context={'email': utilizador.email, 'utilizador': utilizador})
 
 
 class ConsultarInscricaoView(View):
@@ -318,7 +306,6 @@ class EditarInscricaoView(View):
     def get(self, request, pk):
         # session user--------------------------------------
         auth_user = request.user
-        # utilizador = Utilizador.objects.get(pk=auth_user.id)
         utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador.utilizadortipo.tipo == "Participante Individual" or \
                 utilizador.utilizadortipo.tipo == "Participante em Grupo":

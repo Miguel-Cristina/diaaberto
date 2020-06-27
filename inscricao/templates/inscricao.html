@@ -84,6 +84,7 @@
     </script>
 
 </head>
+
 <body onload="document.inscricao_form.reset();">
 {% block content %}
     <form method="POST" name="inscricao_form" enctype="multipart/form-data">
@@ -115,6 +116,20 @@
                                     <section class="step-content">
                                         <div class="step-item" id="pag1" style="">
                                             <div style="padding: 1rem 2vw 0;">
+
+
+                                                <hr data-v-dac68d9e="">
+                                                <h2 data-v-dac68d9e="" class="title has-text-grey is-uppercase"
+                                                    style="font-size: 0.9rem;"> Dia de Inscrição </h2>
+                                                <div class="columns">
+                                                    <div class="column is-one-fifth">
+                                                        <label class="label">Dia que pretende participar</label>
+                                                        <input type="date" id="data_inscricao"
+                                                               name="data_inscricao"
+                                                               min="{{ diainicio }}" max="{{ diafim }}"
+                                                               class="input" onchange="CheckDia(this.value)">
+                                                    </div>
+                                                </div>
                                                 <hr>
                                                 <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;">
                                                     Dados Participante</h2>
@@ -196,9 +211,10 @@
                                                         </div>
                                                     {% endif %}
                                                 </div>
-                                                <hr>
+
 
                                                 {% if utilizador.utilizadortipo.tipo == "Participante Individual" and age < 18 %}
+                                                    <hr>
                                                     <h2 class="title has-text-grey is-uppercase"
                                                         style="font-size: 0.9rem;">
                                                         Autorização Encarregado Educação</h2>
@@ -714,16 +730,7 @@
                                         <div class="step-item" id="pag5" style="display: none">
                                             <div data-v-dac68d9e="" style="padding: 1rem 2vw 0;">
 
-                                                <hr data-v-dac68d9e="">
-                                                <h2 data-v-dac68d9e="" class="title has-text-grey is-uppercase"
-                                                    style="font-size: 0.9rem;"> Dia de Inscrição </h2>
-                                                <div class="columns">
-                                                    <div class="column is-one-fifth">
-                                                        <input type="date" id="datemax" id="data_inscricao" name="data_inscricao"
-                                                               min="{{ diainicio }}" max="{{ diafim }}"
-                                                               class="input" onchange="CheckDia(this.value)">
-                                                    </div>
-                                                </div>
+
                                                 <hr data-v-dac68d9e="">
                                                 <h2 data-v-dac68d9e="" class="title has-text-grey is-uppercase"
                                                     style="font-size: 0.9rem;"> Sessões Disponíveis </h2>
@@ -902,7 +909,8 @@
                                                                                                                         </th>
                                                                                                                     </tr>
                                                                                                                     </thead>
-                                                                                                                    <tbody class="" id="table_sessoes">
+                                                                                                                    <tbody class=""
+                                                                                                                           id="table_sessoes">
                                                                                                                     {% for s in sessaoatividade %}
                                                                                                                         {% if s.atividade.id == atividade.id and s.n_alunos > 0 %}
                                                                                                                             <tr draggable="false"
@@ -961,7 +969,9 @@
                                                                                                                                     {% endif %}
                                                                                                                                 </td>
                                                                                                                                 <td>{{ s.dia | date:'Y-m-d' }}
-                                                                                                                                    <input type="text" value="{{ s.dia| date:'Y-m-d' }}" id="dia_{{ s.id }}">
+                                                                                                                                    <input type="text"
+                                                                                                                                           value="{{ s.dia| date:'Y-m-d' }}"
+                                                                                                                                           id="dia_{{ s.id }}" hidden>
                                                                                                                                 </td>
                                                                                                                                 <td data-label="Inscrever"
                                                                                                                                     class="">
@@ -971,7 +981,7 @@
                                                                                                                                             <p class="control">
                                                                                                                                                 <button type="button"
                                                                                                                                                         class="button is-primary"
-                                                                                                                                                        onclick="incremental('minus', 'quantity_{{ s.id }}'); EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',
+                                                                                                                                                        onclick="incremental_atividades('minus', 'quantity_{{ s.id }}', 'dia_{{ s.id }}'); EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',
                                                                                                                                                                 '{{ s.sessao.hora|date:"H:i" }}', '{{ atividade.duracao }}',
                                                                                                                                                                 '{{ atividade.nome }}', '{{ atividade.edificio.nome }} {{ atividade.sala.identificacao }}',
                                                                                                                                                                 '{{ atividade.campus.nome }}', '{{ s.n_alunos }}',
@@ -991,17 +1001,19 @@
                                                                                                                                                        value="0"
                                                                                                                                                        min="0"
                                                                                                                                                        max="{{ s.n_alunos }}"
-                                                                                                                                                       onchange="EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',
-                                                                                                                                                               '{{ s.sessao.hora|date:"H:i" }}', '{{ atividade.duracao }}',
-                                                                                                                                                               '{{ atividade.nome }}', '{{ atividade.edificio.nome }} {{ atividade.sala.identificacao }}',
-                                                                                                                                                               '{{ atividade.campus.nome }}', '{{ s.n_alunos }}',
-                                                                                                                                                               'quantity_{{ s.id }}'
-                                                                                                                                                               )">
+                                                                                                                                                       disabled>
+{#                                                                                                                                                       onchange="EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',#}
+{#                                                                                                                                                               '{{ s.sessao.hora|date:"H:i" }}', '{{ atividade.duracao }}',#}
+{#                                                                                                                                                               '{{ atividade.nome }}', '{{ atividade.edificio.nome }} {{ atividade.sala.identificacao }}',#}
+{#                                                                                                                                                               '{{ atividade.campus.nome }}', '{{ s.n_alunos }}',#}
+{#                                                                                                                                                               'quantity_{{ s.id }}'#}
+{#                                                                                                                                                               )">#}
+
                                                                                                                                             </div>
                                                                                                                                             <p class="control">
                                                                                                                                                 <button type="button"
                                                                                                                                                         class="button is-primary"
-                                                                                                                                                        onclick="incremental('add', 'quantity_{{ s.id }}'); EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',
+                                                                                                                                                        onclick="incremental_atividades('add', 'quantity_{{ s.id }}', 'dia_{{ s.id }}'); EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',
                                                                                                                                                                 '{{ s.sessao.hora|date:"H:i" }}', '{{ atividade.duracao }}',
                                                                                                                                                                 '{{ atividade.nome }}', '{{ atividade.edificio.nome }} {{ atividade.sala.identificacao }}',
                                                                                                                                                                 '{{ atividade.campus.nome }}', '{{ s.n_alunos }}',
@@ -1142,7 +1154,7 @@
                                                     <span> Cancelar </span>
                                                 </a>
                                                 <button type="button" id="back1" class="button is-outlined"
-                                                        style="display: none" onclick="pagination(this.id)">
+                                                        style="display: none" onclick="pagination(this.id, '{{ utilizador.utilizadortipo.tipo }}')">
                                                     <span class="icon is-small"><i
                                                             class="mdi mdi-chevron-left"></i></span>
                                                     <span> Anterior </span>
@@ -1151,7 +1163,7 @@
                                             <div class="level-right">
                                                 <button type="button" id="next"
                                                         class="button is-large is-success is-outlined"
-                                                        onclick="pagination(this.id)">
+                                                        onclick="pagination(this.id, '{{ utilizador.utilizadortipo.tipo }}')">
                                                     <span> Próximo </span> <span class="icon is-medium">
                                                     <i class="mdi mdi-forward mdi-36px"></i>
                                                 </span>
@@ -1166,11 +1178,6 @@
                                                             <i class="mdi mdi-forward mdi-36px"></i>
                                                 </span>
                                                 </button>
-                                                <a href="/inscricao/templates/home.html" id="ok"
-                                                   class="button is-large is-success is-outlined" type="button"
-                                                   style="display: none">
-                                                    <span> Ok </span><i class="mdi mdi-forward mdi-36px"></i>
-                                                </a>
                                             </div>
                                         </div>
                                     </div>
