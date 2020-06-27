@@ -550,6 +550,7 @@ class Ementa(models.Model):
     class Meta:
         db_table = 'ementa'
 
+
 class Prato(models.Model):
     prato_carne = models.CharField(max_length=255)
     prato_peixe = models.CharField(max_length=255)
