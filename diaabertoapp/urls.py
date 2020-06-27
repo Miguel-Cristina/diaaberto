@@ -16,7 +16,6 @@ urlpatterns = [
     path('utilizadores/login/', login_request, name='login'),
     path('utilizadores/logout/', logout_request, name='logout'),
     path('index/', views.index, name='index'),
-    path('administrador/', views.administrador, name='administrador'),
     path('minhasatividades/', views.minhasatividades, name='minhasatividades'),
     path('consultaratividades/', views.consultaratividades, name='consultaratividades'),
     path('minhasatividades/propor/', views.proporatividade, name='proporatividade'),
@@ -63,6 +62,8 @@ urlpatterns = [
     path('tarefas/reatribuir/<pk>',views.remove_colab, name='remove_colab'),
     path(r'^ajax/grupos_switch/$', views.grupos_switch, name='grupos_switch'),
     path(r'^ajax/user_switch/$', views.user_switch, name='user_switch'),
+    path(r'^ajax/activity_switch/$', views.activity_switch, name='activity_switch'),
+    path(r'^ajax/sessions_switch/$', views.sessions_switch, name='sessions_switch'),
 
     path('configurartransporte/', views.configurartransporte, name='configurartransporte'),
     path('adicionartransporte/', views.adicionartransporte, name='adicionartransporte'),

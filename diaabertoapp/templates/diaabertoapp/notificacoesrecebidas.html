@@ -95,7 +95,7 @@ th, td {
                                     </li>
                                 </ul>
                             </nav>
-                            <a href="/notificacao/notificacao" class="button is-success is-outlined" type="button"
+                            <a href="/notificacao/criar" class="button is-success is-outlined" type="button"
                                style="margin-bottom: 1rem; margin-right: 20px;"><span class="icon is-small"><i
                                     class="mdi mdi-plus"></i></span> <span>Criar Notificação</span> <!----></a>
                             <!--                            tabela-->
@@ -140,34 +140,65 @@ th, td {
                                             </thead>
                                             <tbody class="header">
                                             {% for lc in lista_notificacao_final %}
-                                            <tr draggable="false" class="header">
-                                                <td class="chevron-cell"><a role="button"><span class="icon"><i
-                                                        class="mdi mdi-chevron-right mdi-24px"></i></span></a></td>
-                                                <!---->
-                                                <td data-label="Data" class="">
-                                                    {{ lc.hora | date:'d-m-Y' }}
-                                                </td>
-                                                <td data-label="Assunto" class="">
-                                                    {{ lc.assunto }}
-                                                </td>
-                                                <td data-label="Conteudo" class=""><span
-                                                        style="text-transform: capitalize;">{{ lc.conteudo }}</span>
-                                                </td>
-                                                <td data-label="Prioridade" class="">
-                                                    {{ lc.prioridade }}
-                                                </td>
-                                                <td data-label="Utilizador" class="has-text-centered">
-                                                    {{ lc.utilizador_rec.email }}
-                                                </td>
-                                                <td data-label="Visto" class="has-text-centered">
+                                            {% if lc.visto is False %}
+                                                <tr draggable="false" class="header has-background-white-ter">
+                                                    <td class="chevron-cell"><a role="button"><span class="icon"><i
+                                                            class="mdi mdi-chevron-right mdi-24px"></i></span></a></td>
+                                                    <!---->
+                                                    <td data-label="Data" class="">
+                                                        {{ lc.hora | date:'d-m-Y' }}
+                                                    </td>
+                                                    <td data-label="Assunto" class="">
+                                                        {{ lc.assunto }}
+                                                    </td>
+                                                    <td data-label="Conteudo" class=""><span
+                                                            style="text-transform: capitalize;">{{ lc.conteudo }}</span>
+                                                    </td>
+                                                    <td data-label="Prioridade" class="">
+                                                        {{ lc.prioridade }}
+                                                    </td>
+                                                    <td data-label="Utilizador" class="has-text-centered">
+                                                        {{ lc.utilizador_rec.email }}
+                                                    </td>
+                                                    <td data-label="Visto" class="has-text-centered">
 
-                                                {% if lc.visto is False %}
-                                                   <a href="{% url 'visto' lc.id %}" class="is-small"><i class="mdi mdi-check mdi-12px"></i></a>
-                                                {% else %}
-                                                        <i class="mdi mdi-check-all"></i>
-                                                {% endif %}
-                                                </td><!---->
-                                            </tr>
+                                                    {% if lc.visto is False %}
+                                                       <a href="{% url 'visto' lc.id %}" class="is-small"><i class="mdi mdi-check mdi-12px"></i></a>
+                                                    {% else %}
+                                                            <i class="mdi mdi-check-all"></i>
+                                                    {% endif %}
+                                                    </td><!---->
+                                                </tr>
+                                            {% else %}
+                                                <tr draggable="false" class="header">
+                                                    <td class="chevron-cell"><a role="button"><span class="icon"><i
+                                                            class="mdi mdi-chevron-right mdi-24px"></i></span></a></td>
+                                                    <!---->
+                                                    <td data-label="Data" class="">
+                                                        {{ lc.hora | date:'d-m-Y' }}
+                                                    </td>
+                                                    <td data-label="Assunto" class="">
+                                                        {{ lc.assunto }}
+                                                    </td>
+                                                    <td data-label="Conteudo" class=""><span
+                                                            style="text-transform: capitalize;">{{ lc.conteudo }}</span>
+                                                    </td>
+                                                    <td data-label="Prioridade" class="">
+                                                        {{ lc.prioridade }}
+                                                    </td>
+                                                    <td data-label="Utilizador" class="has-text-centered">
+                                                        {{ lc.utilizador_rec.email }}
+                                                    </td>
+                                                    <td data-label="Visto" class="has-text-centered">
+
+                                                    {% if lc.visto is False %}
+                                                       <a href="{% url 'visto' lc.id %}" class="is-small"><i class="mdi mdi-check mdi-12px"></i></a>
+                                                    {% else %}
+                                                            <i class="mdi mdi-check-all"></i>
+                                                    {% endif %}
+                                                    </td><!---->
+                                                </tr>
+                                            {% endif %}
                                             <tr class="detail" style="display:none">
                                                 <td colspan="5">
                                                     <div class="content">
@@ -196,23 +227,6 @@ th, td {
     </div>
 
 </form>
-    <script>
-            $(document).ready(function () {
-                $('tr.header').click(function () {
-                //$(this).find('span').find('i').toggleClass('fa-thumbs-down');
-                    if ($(this).find('span').find('i').hasClass('mdi mdi-chevron-right mdi-24px'))
-                    {
-                        $(this).find('span').find('i').removeClass("mdi mdi-chevron-right mdi-24px").addClass("mdi mdi-chevron-down mdi-24px");
-                    }
-                    else
-                    {
-                        $(this).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
-                    }
-                    $(this).nextUntil('tr.header').slideToggle(100, function(){
-                    });
-                });
-            });
-    </script>
 {% endblock %}
        
 </body>
