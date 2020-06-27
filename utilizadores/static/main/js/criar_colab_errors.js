@@ -41,6 +41,11 @@ console.log(this_id)
         percurso='null'
     }
 
+    let outro = document.forms["criar_colab_form"]["outro"].value;
+    if(outro===''){
+        outro='null'
+    }
+
     if (data_colaboracao === "null") {
         msgdiv.innerHTML = errormsg1 + 'Deve escolher uma data para colaborar' + errormsg2
     }else if(hora_inicio_colab==='null'){
@@ -51,6 +56,8 @@ console.log(this_id)
         msgdiv.innerHTML = errormsg1 + 'Deve indicar se pretende auxiliar no percurso' + errormsg2
     }else if(sala_de_aula==='null'){
         msgdiv.innerHTML = errormsg1 + 'Deve indicar se pretende auxiliar na sala de aula' + errormsg2
+    }else if(outro==='null'){
+        msgdiv.innerHTML = errormsg1 + 'Deve indicar se pretende auxiliar em outro tipo de tarefas' + errormsg2
     }else {
         document.getElementById('popup_confirmacao').style.display=''
     }

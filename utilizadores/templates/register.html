@@ -195,7 +195,43 @@ function check_n_emails(val,counter) {
             </div>
         </div>
     <div data-v-8716d23a="" id="app">
-        {% include "includes/navbar.html" %}
+
+
+
+
+    {% load static %}
+<script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
+<nav data-v-a67fe1ba="" data-v-8716d23a="" role="navigation" aria-label="main navigation" class="navbar">
+    <div class="navbar-brand">
+        <a data-v-a67fe1ba="" href="/" class="navbar-item logo router-link-active">
+            <img data-v-a67fe1ba="" alt="Dia Aberto" src="{% static "diaabertoapp/img/logo-navbar.png" %}">
+        </a>
+        <a role="button" aria-label="menu" class="navbar-burger burger">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu">
+        <div class="navbar-end">
+            <div data-v-a67fe1ba="" class="navbar-item">
+                    <a href="{% url 'login' %}" data-v-a67fe1ba="" type="button" class="button">
+                            <span class="icon is-small">
+                                <i class="mdi mdi-login-variant"></i>
+                            </span>
+                        <span> Entrar </span>
+                        <!---->
+                    </a>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+
+
+
         <div data-v-8716d23a="" id="top-hero" class="hero is-primary is-bold">
             <div data-v-8716d23a="" id="top-hero-body" class="hero-body"></div>
         </div>

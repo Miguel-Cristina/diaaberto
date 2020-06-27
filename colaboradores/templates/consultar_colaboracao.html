@@ -194,13 +194,18 @@ function cancelSessao(val) {
                                                 <td data-label="Hora de Fim" class=""><span
                                                         style="text-transform: capitalize;">{{ lc.hora_fim_colab | date:'H:i' }}</span>
                                                 </td>
-                                                <td data-label="Auxilio" class="">{% if lc.percurso == 0 %}
+                                                <td data-label="Auxilio" class="">
+                                                    {% if lc.percurso == 0 %}
                                                     {% else %}
                                                     <i style='font-size:24px' class='fas'>&#xf4d7;</i>&nbsp;
                                                     {% endif %}
                                                     {% if lc.sala_de_aula == 0 %}
                                                     {% else %}
                                                     <i style='font-size:24px' class='fas'>&#xf51c;</i>
+                                                    {% endif %}
+                                                    {% if lc.outras == 0 %}
+                                                    {% else %}
+                                                    <i style='font-size:24px' class='fas'>&#xf141;</i>
                                                     {% endif %}
                                                 </td>
                                                 <td data-label="Ações" class="has-text-centered">

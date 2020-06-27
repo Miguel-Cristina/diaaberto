@@ -64,7 +64,14 @@ th, td {
 
 
 
-
+function expandoutra(id) {
+    let icon = document.getElementById('icon_' + id)
+    if (icon.classList.contains('is-expanded')) {
+        icon.classList.remove('is-expanded')
+    } else {
+        icon.classList.add('is-expanded')
+    }
+}
 
 
 
@@ -147,10 +154,33 @@ th, td {
                                             <tbody>
                                             {% for lt in lista_tarefa %}
                                             <tr draggable="false" class="">
-                                                <td class="chevron-cell"><a role="button">
-<!--                                                    <span class="icon"><i-->
-<!--                                                        class="mdi mdi-chevron-right mdi-24px"></i></span>-->
-                                                </a></td>
+                                                {% ifequal "OT" lt.tipo_tarefa %}
+                                                    <td class="chevron-celltoggle pointer" onclick="expandoutra('{{ lt.id }}')">
+                                                            <a role="button">
+                                                            <span class="icon" id="icon_{{ lt.id }}"><i
+                                                                class="mdi mdi-chevron-right mdi-24px"></i></span>
+                                                            </a>
+                                                    </td>
+                                                {% else %}
+                                                    <td class="chevron-cell">
+                                                            <a role="button">
+<!--                                                            <span class="icon" id="icon_{{ lt.id }}"><i-->
+<!--                                                                class="mdi mdi-chevron-right mdi-24px"></i></span>-->
+                                                            </a>
+                                                    </td>
+                                                {% endifequal %}
+                                                
+
+
+<!--                                                <td class="chevron-cell toggle pointer"-->
+<!--                                                            onclick="expandAtividade('{{ p.id }}')">-->
+<!--                                                            <a role="button">-->
+<!--                                                                <span class="icon" id="icon_{{ p.id }}">-->
+<!--                                                                    <i class="mdi mdi-chevron-right mdi-24px"></i>-->
+<!--                                                                </span>-->
+<!--                                                            </a>-->
+<!--                                                        </td>-->
+
                                                 <!---->
                                                 <td data-label="Data" class="">
                                                     {{ lt.dia | date:'d-m-Y' }}
@@ -162,20 +192,25 @@ th, td {
                                                     {% ifequal "AV" lt.tipo_tarefa %}
                                                         {{ lt.atividade.nome }}
                                                     {% else %}
-                                                        {% ifequal "OT" lt.tipo_tarefa %}
-                                                            {{ lt.atividade.nome }}
-                                                        {% else %}
-                                                            &#8194;&#8194;&#8194;&#8194;&#8194;&#8194;&#8212;&#8212;
-                                                        {% endifequal %}
+                                                            &#8194;&#8194;&#8194;&#8212;&#8212;
+
                                                     {% endifequal %}
                                                 </td>
                                                 <td data-label="Sala Origem" class="">
-                                                    {{ lt.localizacao_grupo.identificacao }}
+                                                    {% ifequal "PE" lt.tipo_tarefa %}
+                                                        {{ lt.localizacao_grupo.identificacao }}
+                                                    {% endifequal %}
+                                                    {% ifequal "AV" lt.tipo_tarefa %}
+                                                        {{ lt.atividade.sala.identificacao }}
+                                                    {% endifequal %}
+                                                    {% ifequal "OT" lt.tipo_tarefa %}
+                                                        &#8194;&#8194;&#8194;&#8212;&#8212;
+                                                    {% endifequal %}
                                                 </td>
                                                 <td data-label="Sala Destino" class="">
 <!--                                                    {{ lt.tarefa.destino }}-->
                                                     {% ifequal "PE" lt.tipo_tarefa %}
-                                                        {{ lt.localizacao_grupo.identificacao }}
+                                                        {{ lt.destino.identificacao }}
                                                     {% else %}
                                                         &#8194;&#8194;&#8212;&#8212;
                                                     {% endifequal %}
@@ -193,10 +228,19 @@ th, td {
                                                     {% ifequal "PE" lt.tipo_tarefa %}
                                                         <i style='font-size:24px' class='fas'>&#xf4d7;</i>&nbsp;
 <!--                                                        {{ lt.tarefa.tipo_tarefa }}-->
-                                                    {% else %}
-                                                        <i style='font-size:24px' class='fas'>&#xf51c;</i>
+                                                    {% endifequal %}
+                                                    {% ifequal "AV" lt.tipo_tarefa %}
+                                                        <i style='font-size:24px' class='fas'>&#xf51c;</i>&nbsp;
 <!--                                                        {{ lt.tarefa.tipo_tarefa }}-->
                                                     {% endifequal %}
+                                                    {% ifequal "OT" lt.tipo_tarefa %}
+                                                        <i style='font-size:24px' class='fas'>&#xf141;</i>&nbsp;
+<!--                                                        {{ lt.tarefa.tipo_tarefa }}-->
+                                                    {% endifequal %}
+
+<!--                                                        <i style='font-size:24px' class='fas'>&#xf51c;</i>-->
+<!--                                                        {{ lt.tarefa.tipo_tarefa }}-->
+
                                                 </td>
                                             </tr>
                                             {% endfor %}
