@@ -126,6 +126,15 @@
                                     <section class="step-content">
                                         <div class="step-item" id="pag1" style="">
                                             <div style="padding: 1rem 2vw 0;">
+                                                <hr data-v-dac68d9e="">
+                                                <h2 data-v-dac68d9e="" class="title has-text-grey is-uppercase"
+                                                    style="font-size: 0.9rem;"> Dia de Inscrição </h2>
+                                                <div class="columns">
+                                                    <div class="column is-one-fifth">
+                                                         <label class="label">Dia que pretende participar</label>
+                                                        {{ inscricao.dia|date:'Y-m-d' }}
+                                                    </div>
+                                                </div>
                                                 <hr>
                                                 <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;">
                                                     Dados Participante</h2>
@@ -624,7 +633,8 @@
                                                             <div class="control">
                                                                 <input type="time" id="timepicker-one"
                                                                        name="timepicker-one"
-                                                                       class="input" value="{{ transporte.hora_chegada | date:'H:i' }}">
+                                                                       class="input"
+                                                                       value="{{ transporte.hora_chegada | date:'H:i' }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -634,7 +644,8 @@
                                                             <div class="control">
                                                                 <input type="time" id="timepicker-two"
                                                                        name="timepicker-two"
-                                                                       class="input" value="{{ transporte.hora_partida | date:'H:i' }}">
+                                                                       class="input"
+                                                                       value="{{ transporte.hora_partida | date:'H:i' }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -700,7 +711,7 @@
                                                                 <div class="control">
                                                                     <input type="time" id="timepicker-three"
                                                                            name="timepicker-three"
-                                                                           class="input" >
+                                                                           class="input">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -713,7 +724,7 @@
                                                                 <div class="control">
                                                                     <input type="time" id="timepicker-four"
                                                                            name="timepicker-four"
-                                                                           class="input" >
+                                                                           class="input">
                                                                 </div>
                                                             </div>
                                                         </div>
