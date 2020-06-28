@@ -73,6 +73,23 @@ function expandoutra(id) {
     }
 }
 
+$(function () {
+    $("#table_atividades").tablesorter();
+});
+$(function () {
+    $('.tablesorter-childRow td').hide();
+
+    $(".tablesorter")
+        .tablesorter({
+            theme: 'blue',
+            cssChildRow: "tablesorter-childRow"
+        })
+
+    $('.tablesorter').delegate('.toggle', 'click', function () {
+        $(this).closest('tr').nextUntil('tr:not(.tablesorter-childRow)').find('td').toggle();
+        return false;
+    });
+});
 
 
 
@@ -112,10 +129,10 @@ function expandoutra(id) {
                             <div>
                                 <div class="b-table">
                                     <div class="table-wrapper">
-                                        <table class="table is-striped has-mobile-cards is-hoverable">
+                                        <table class="table is-striped has-mobile-cards is-hoverable tablesorter" id="table_atividadess">
                                             <thead>
                                             <tr>
-                                                <th width="40px"></th> <!---->
+                                                <th  width="40px"></th> <!---->
                                                 <th class="is-sortable" style="width: 120px;">
                                                     <div class="th-wrap">Data <span class="icon is-small"
                                                                                     style="display: none;"><i
@@ -151,11 +168,13 @@ function expandoutra(id) {
                                                             class="mdi mdi-menu-up"></i></span></div>
                                                 </th> <!----></tr>
                                             </thead>
+
                                             <tbody>
+
                                             {% for lt in lista_tarefa %}
                                             <tr draggable="false" class="">
                                                 {% ifequal "OT" lt.tipo_tarefa %}
-                                                    <td class="chevron-celltoggle pointer" onclick="expandoutra('{{ lt.id }}')">
+                                                    <td class="chevron-cell toggle pointer" onclick="expandoutra('{{ lt.id }}')">
                                                             <a role="button">
                                                             <span class="icon" id="icon_{{ lt.id }}"><i
                                                                 class="mdi mdi-chevron-right mdi-24px"></i></span>
@@ -215,13 +234,24 @@ function expandoutra(id) {
                                                         &#8194;&#8194;&#8212;&#8212;
                                                     {% endifequal %}
                                                 </td>
-                                                <td data-label="Grupo" class="">
+
+                                                <td data-label="Grupo" >
 <!--                                                    {{ lt.tarefa.grupo }}-->
+
+
+
+
+
+
                                                     {% ifequal "PE" lt.tipo_tarefa %}
-                                                        {{ lt.grupo }}
+                                                        {% for grupo in lt.grupo.all %}
+                                                            {{ grupo.id }}
+                                                        {% endfor %}
                                                     {% else %}
                                                         &#8194;&#8212;&#8212;
                                                     {% endifequal %}
+
+
                                                 </td>
                                                 <td data-label="Tipo" class="">
 <!--                                                    {{ lt.tarefa.tipo_tarefa }}-->
@@ -243,9 +273,21 @@ function expandoutra(id) {
 
                                                 </td>
                                             </tr>
+                                            {% ifequal "OT" lt.tipo_tarefa %}
+                                                <tr class="tablesorter-childRow" >
+                                                        <td colspan="8">
+                                                            <label class="label">
+                                                                Descrição
+                                                            </label>
+                                                            {{lt.descricao}}
+                                                        </td>
+                                                </tr>
+                                            {% endifequal %}
                                             {% endfor %}
                                             </tbody>
                                         </table>
+
+
                                     </div>
                                 </div>
 
