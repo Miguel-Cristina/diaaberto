@@ -19,7 +19,7 @@ function CheckEscola(val) {
 
 function tipoTransporte(val) {
     let transporte_para_campus = document.getElementById('transporte_para_campus')
-    if (val === 'proprio') {
+    if (val === 'Transporte próprio') {
         transporte_para_campus.style.display = 'none';
         document.getElementById('id_QuerTransportePara_0').removeAttribute("required");
         document.getElementById('id_QuerTransportePara_1').removeAttribute("required");
@@ -92,12 +92,6 @@ function CheckRefeicao(val) {
 }
 
 function MultiplicaPreco() {
-    let num1 = document.getElementById("id_numero_aluno_normal").value;
-    let num2 = document.getElementById("id_numero_outro_normal").value;
-    let preco1 = parseFloat(document.getElementById("preco_aluno_normal").value);
-    let preco2 = parseFloat(document.getElementById("preco_outro_normal").value);
-    let final = (num1 * preco1) + (num2 * preco2);
-    document.getElementById("preco_total").setAttribute("value", final.toFixed(2).toString());
 }
 
 let max_incritos = 0;
@@ -142,7 +136,7 @@ function EscolherSessao(atividade_id, sessao_id, ini, dur,
             '<input type="number" class="input" id="inscritos_sessao_' + sessao_id +
             '"  name="inscritos_sessao_' + row_count + '" value="' + val +
             '" min="0" max="' + vag +
-            '" onchange="AlterarInscritos(' + ses_id_plica + ', this.value, ' + sessao_id_plica + ')">' +
+            '" style="cursor: text" readonly onchange="AlterarInscritos(' + ses_id_plica + ', this.value, ' + sessao_id_plica + ')">' +
             '</div>\n' +
             '<p class="control">\n' +
             '<button type="button" class="button is-primary" onclick="incremental(\'add\', \'quantity_' + sessao_id + '\'); EscolherSessao( \'' + atividade_id + '\', \'' + sessao_id + '\',\n' +
@@ -186,7 +180,7 @@ function EscolherSessao(atividade_id, sessao_id, ini, dur,
             '<input type="number" class="input" id="inscritos_sessao_' + sessao_id +
             '"  name="inscritos_sessao_' + row_count + '" value="' + val +
             '" min="0" max="' + vag +
-            '" onchange="AlterarInscritos(' + ses_id_plica + ', this.value, ' + sessao_id_plica + ')">' +
+            '" style="cursor: text" readonly onchange="AlterarInscritos(' + ses_id_plica + ', this.value, ' + sessao_id_plica + ')">' +
             '</div>\n' +
             '<p class="control">\n' +
             '<button type="button" class="button is-primary" onclick="incremental(\'add\', \'quantity_' + sessao_id + '\'); EscolherSessao( \'' + atividade_id + '\', \'' + sessao_id + '\',\n' +
@@ -268,15 +262,173 @@ function expandAtividade(id) {
 
 let pag = "1"
 
-function pagination(id) {
+function pagination(id, participante, age) {
     if (id === "next") {
-        let next = (parseInt(pag) + 1).toString()
-        document.getElementById('pag' + pag).style.display = 'none'
-        document.getElementById('pag' + next).style.display = ''
-        document.getElementById('bar' + pag).classList.remove('is-active')
-        document.getElementById('bar' + pag).classList.add('is-previous')
-        document.getElementById('bar' + next).classList.add('is-active')
-        pag = next
+        let errormsg1 = '<div id="message_container" class="notices is-bottom">\n' +
+            '    <div role="alert" class="toast is-danger is-bottom" style="">\n' +
+            '        <div id="msg_here">'
+        let errormsg2 = '</div>\n' +
+            '    </div>\n' +
+            '</div>'
+        let msgdiv = document.getElementById('msgdiv')
+
+        let dia
+        let area
+        let ano
+        let p
+        let alunos
+        let professores
+        let file
+        let nome
+        let morada
+        let codigo_postal
+        let localidade
+        let contacto
+        let escola
+        let todasescolas = ""
+        let radio_refeicao
+        let refAlunos;
+        let refOutros;
+        let tipoTransporte;
+        let transporteEstacao;
+        let horaChegada;
+        let qualcampus;
+        let qualcampus2;
+        let horaIda;
+        let horaVolta;
+        let horaPartida
+        let transporteEntreValue
+        if (pag === '1') {
+            dia = document.forms["inscricao_form"]["data_inscricao"].value;
+            area = document.forms["inscricao_form"]["area_estudos"].value;
+            ano = document.forms["inscricao_form"]["ano_estudos"].value;
+            if (participante === 'Participante Individual') {
+                p = document.forms["inscricao_form"]["acompanhantes"].value;
+                if (age < 18)
+                    file = document.forms["inscricao_form"]["myfile"].value;
+            } else if (participante === 'Participante em Grupo') {
+                p = document.forms["inscricao_form"]["turma"].value;
+                alunos = document.forms["inscricao_form"]["total_participantes"].value;
+                professores = document.forms["inscricao_form"]["total_professores"].value;
+            }
+        } else if (pag === '2') {
+            escola = document.forms["inscricao_form"]["Escola"].value;
+            if (escola === "others") {
+                nome = document.forms["inscricao_form"]["nome"].value.toLowerCase();
+                nome = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+                morada = document.forms["inscricao_form"]["morada"].value;
+                codigo_postal = document.forms["inscricao_form"]["codigo_postal"].value;
+                localidade = document.forms["inscricao_form"]["localidade"].value;
+                contacto = document.forms["inscricao_form"]["contacto"].value;
+            }
+            let x = document.getElementById("Escola");
+            let i;
+            for (i = 0; i < x.length; i++) {
+                todasescolas = todasescolas + "\n" + x.options[i].text;
+            }
+            todasescolas = todasescolas.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+        } else if (pag === '3') {
+            radio_refeicao = document.forms["inscricao_form"]["QuerRefeicao"].value;
+            if (radio_refeicao === '') {
+                radio_refeicao = "null"
+            } else if (radio_refeicao === "sim") {
+                refAlunos = document.forms["inscricao_form"]["numero_aluno_normal"].value;
+                refOutros = document.forms["inscricao_form"]["numero_outro_normal"].value;
+            }
+        } else if (pag === '4') {
+            tipoTransporte = document.forms["inscricao_form"]["tipo_transporte"].value;
+            if (tipoTransporte === "Autocarro Publico" || tipoTransporte === "Comboio") {
+                transporteEstacao = document.forms["inscricao_form"]["QuerTransportePara"].value;
+                if (transporteEstacao === "sim") {
+                    qualcampus = document.forms["inscricao_form"]["qual"].value;
+                }
+            }
+            horaChegada = document.forms["inscricao_form"]["timepicker-one"].value;
+            horaPartida = document.forms["inscricao_form"]["timepicker-two"].value;
+            transporteEntreValue = document.forms["inscricao_form"]["QuerTransporteEntre"].value;
+            if (transporteEntreValue === "ida" || transporteEntreValue === "idavolta") {
+                qualcampus2 = document.forms["inscricao_form"]["transporte_campus"].value;
+                if (qualcampus2 !== "escolher") {
+                    horaIda = document.forms["inscricao_form"]["timepicker-three"].value;
+                    if (transporteEntreValue === "idavolta") {
+                        horaVolta = document.forms["inscricao_form"]["timepicker-four"].value;
+                    }
+                }
+            }
+        }
+        if (pag === '1' && dia === "") {
+            msgdiv.innerHTML = errormsg1 + 'Deve escolher o dia que pretende participar' + errormsg2
+        } else if (pag === '1' && area === "escolha") {
+            msgdiv.innerHTML = errormsg1 + 'Deve de escolher a área de estudos' + errormsg2
+        } else if (pag === '1' && (ano < 0 || ano > 12 || ano === '')) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de indicar o ano de estudos' + errormsg2
+        } else if (pag === '1' && participante === 'Participante em Grupo' && !RegExp("^[A-zÀ-ÿ0-9ºª ]+$").test(p)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de indicar a turma' + errormsg2
+        } else if (pag === '1' && participante === 'Participante em Grupo' && alunos <= 0) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de indicar o numero total alunos' + errormsg2
+        } else if (pag === '1' && participante === 'Participante em Grupo' && professores <= 0) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de indicar o número total professores' + errormsg2
+        } else if (pag === '1' && participante === 'Participante Individual' && (p < 0 || p === '')) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de indicar o número acompanhantes' + errormsg2
+        } else if (pag === '1' && participante === 'Participante Individual' && age < 18 && !(RegExp("[a-zA-Z0-9-_]+.pdf$").test(file) || RegExp("[a-zA-Z0-9-_]+.png$").test(file) || RegExp("[a-zA-Z0-9-_]+.PNG$").test(file))) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de fazer updload do PDF ou PNG de autorização' + errormsg2
+        } else if (pag === '2' && escola === "Escolher") {
+            msgdiv.innerHTML = errormsg1 + 'Deve de escolher uma escola adequada' + errormsg2
+        } else if (pag === '2' && escola === "others" && !RegExp('^[A-zÀ-ÿ0-9ºª ]+$').test(nome)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de escolher um nome de escola adequada' + errormsg2
+        } else if (pag === '2' && escola === "others" && RegExp('^[ ]+$').test(nome)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de escolher um nome de escola adequada' + errormsg2
+        } else if (pag === '2' && escola === "others" && todasescolas.toLowerCase().includes(nome)) {
+            msgdiv.innerHTML = errormsg1 + 'Escola criada já existe' + errormsg2
+        } else if (pag === '2' && escola === "others" && !RegExp('^[A-zÀ-ÿ0-9ºª ]+$').test(morada)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de escolher uma morada da escola' + errormsg2
+        } else if (pag === '2' && escola === "others" && RegExp('^[ ]+$').test(morada)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de escolher uma morada da escola' + errormsg2
+        } else if (pag === '2' && escola === "others" && !RegExp('^[0-9]{4}-[0-9]{3}$').test(codigo_postal)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de usar um código postal valido da escola' + errormsg2
+        } else if (pag === '2' && escola === "others" && !RegExp('^[A-zÀ-ÿ0-9 ]+$').test(localidade)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de usar uma localidade válida da escola' + errormsg2
+        } else if (pag === '2' && escola === "others" && RegExp('^[ ]+$').test(localidade)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de usar uma localidade valida da escola' + errormsg2
+        } else if (pag === '2' && escola === "others" && !RegExp('^[0-9]{9}$').test(contacto)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve de usar um contacto valido da escola' + errormsg2
+        } else if (pag === '3' && radio_refeicao === "null") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar se requer refeição' + errormsg2
+        } else if (pag === '3' && radio_refeicao === "sim" && (refAlunos <= 0 || refOutros <= 0)) {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar o número de refeições correto' + errormsg2
+        } else if (pag === '4' && tipoTransporte === "escolher") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar o tipo transporte que irá usar' + errormsg2
+        } else if (pag === '4' && (tipoTransporte === "Autocarro Publico" || tipoTransporte === "Comboio") && transporteEstacao === "sim" && qualcampus === "escolher") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar para que campos necessita de transporte desde a estação' + errormsg2
+        } else if (pag === '4' && horaChegada === horaPartida) {
+            msgdiv.innerHTML = errormsg1 + 'Hora de chegada e de partida não podem coincidir' + errormsg2
+        } else if (pag === '4' && horaChegada >= horaPartida) {
+            msgdiv.innerHTML = errormsg1 + 'Hora de chegada e de partida incoerentes' + errormsg2
+        } else if (pag === '4' && horaChegada === "00 : 00") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de chegada correta' + errormsg2
+        } else if (pag === '4' && horaPartida === "00 : 00") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de partida correta' + errormsg2
+        } else if (pag === '4' && transporteEntreValue !== "nao" && qualcampus2 === "escolher") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar de qual para qual campus necessita de transporte' + errormsg2
+        } else if (pag === '4' && transporteEntreValue === "ida" && qualcampus2 !== "escolher" && horaIda === "00 : 00") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de ida correta' + errormsg2
+        } else if (pag === '4' && transporteEntreValue === "idavolta" && qualcampus2 !== "escolher" && horaIda === horaVolta) {
+            msgdiv.innerHTML = errormsg1 + 'Hora de ida e de volta não podem coincidir' + errormsg2
+        } else if (pag === '4' && transporteEntreValue === "idavolta" && qualcampus2 !== "escolher" && horaIda >= horaVolta) {
+            msgdiv.innerHTML = errormsg1 + 'Hora de ida e de volta incoerentes' + errormsg2
+        } else if (pag === '4' && transporteEntreValue === "idavolta" && qualcampus2 !== "escolher" && horaIda === "00 : 00") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de ida correta' + errormsg2
+        } else if (pag === '4' && transporteEntreValue === "idavolta" && qualcampus2 !== "escolher" && horaVolta === "00 : 00") {
+            msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de ida correta' + errormsg2
+        } else {
+            let next = (parseInt(pag) + 1).toString()
+            document.getElementById('pag' + pag).style.display = 'none'
+            document.getElementById('pag' + next).style.display = ''
+            document.getElementById('bar' + pag).classList.remove('is-active')
+            document.getElementById('bar' + pag).classList.add('is-previous')
+            document.getElementById('bar' + next).classList.add('is-active')
+            pag = next
+        }
     } else if (id === "back1") {
         let back = (parseInt(pag) - 1).toString()
         document.getElementById('pag' + pag).style.display = 'none'
@@ -304,6 +456,11 @@ function pagination(id) {
         document.getElementById('next').style.display = ''
         document.getElementById('confirmacao').style.display = 'none'
     }
+
+    var message_ele = document.getElementById("message_container");
+    setTimeout(function () {
+        message_ele.style.display = "none";
+    }, 4000);
 }
 
 function incremental(type, id) {
@@ -317,9 +474,90 @@ function incremental(type, id) {
 }
 
 
+function incremental_max_estudantes(type, id, tipo) {
+    let value = document.getElementById(id).getAttribute('value')
+    let x
+    if (type === 'add') {
+        x = document.getElementById(id)
+        x.stepUp(1)
+    } else if (type === 'minus') {
+        x = document.getElementById(id)
+        x.stepDown(1)
+    }
+    if (tipo === "Participante em Grupo") {
+        document.getElementById('id_numero_aluno_normal').setAttribute('max', x.value)
+    } else if (tipo === "Participante Individual") {
+        document.getElementById('id_numero_aluno_normal').setAttribute('max', '1')
+    }
+    document.getElementById(id).setAttribute('value', value)
+}
+
+
+function incremental_max_outros(type, id) {
+    let value = document.getElementById(id).getAttribute('value')
+    let x
+    if (type === 'add') {
+        x = document.getElementById(id)
+        x.stepUp(1)
+    } else if (type === 'minus') {
+        x = document.getElementById(id)
+        x.stepDown(1)
+    }
+    document.getElementById('id_numero_outro_normal').setAttribute('max', x.value)
+    document.getElementById(id).setAttribute('value', value)
+}
+
+
+function incremental_atividades(type, id, dia, tipo) {
+    let value = document.getElementById(id).getAttribute('value')
+    let dia_inscricao = document.getElementById('data_inscricao').value
+    let dia_value = document.getElementById(dia).value
+    console.log("dia_inscricao: " + dia_inscricao)
+    console.log("dia_id: " + dia)
+    console.log("dia_value: " + dia_value)
+    let errormsg1 = '<div id="message_container" class="notices is-bottom">\n' +
+        '    <div role="alert" class="toast is-danger is-bottom" style="">\n' +
+        '        <div id="msg_here">'
+    let errormsg2 = '</div>\n' +
+        '    </div>\n' +
+        '</div>'
+
+    if (tipo === "Participante em Grupo") {
+        let maxGrupo = document.getElementById('id_total_participantes').value
+        document.getElementById(id).setAttribute('max', maxGrupo)
+
+        console.log(maxGrupo)
+    }
+    if (type === 'add') {
+        if (dia_value === dia_inscricao) {
+            document.getElementById(id).stepUp(1)
+            document.getElementById(id).setAttribute('value', value)
+            console.log("dia_value === dia_inscricao")
+        } else if (dia_inscricao === "") {
+            document.getElementById('msgdiv').innerHTML = errormsg1 + 'Deve escolher o dia em que vai participar no dia aberto' + errormsg2
+            console.log("dia_inscricao===null")
+        } else {
+            console.log("else")
+            document.getElementById('msgdiv').innerHTML = errormsg1 + 'Deve escolher uma sessão do mesmo dia que vai participar no dia aberto' + errormsg2
+        }
+    } else if (type === 'minus') {
+        document.getElementById(id).stepDown(1)
+        document.getElementById(id).setAttribute('value', value)
+    }
+    var message_ele = document.getElementById("message_container");
+    setTimeout(function () {
+        message_ele.style.display = "none";
+    }, 4000);
+
+}
+
 function CheckDia(val) {
     console.log(val)
-    let table = document.getElementById('table_sessoes')
-    let table_length = document.getElementById("table_sessoes").rows.length;
-
+    let x = document.getElementsByClassName('menus')
+    let i
+    for (i = 0; i < x.length; i++) {
+        let y = x[i]
+        y.style.display= "none"
+    }
+    document.getElementById(val).style.display = ""
 }

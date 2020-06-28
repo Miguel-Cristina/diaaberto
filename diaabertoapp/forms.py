@@ -22,6 +22,7 @@ class TarefaForm(forms.ModelForm):
      coolaborador =forms.ModelMultipleChoiceField(required=False, queryset=Utilizador.objects.filter(utilizadortipo = 3),widget=forms.SelectMultiple(attrs={'id':'colaborador_id','class':"select is-multiple is-fullwidth",'style':"width:100%"}))
      grupo = forms.ModelMultipleChoiceField(required=False, queryset=Inscricao.objects.all(),widget=forms.SelectMultiple(attrs={'id':'gruposSelect','class':"select is-multiple is-fullwidth",'style':"width:100%",'label':"Grupo"}))
      duracao = forms.IntegerField(required=False, widget = forms.TextInput(attrs = {'class':'input','type':'number','step':'5','min':'0'}))
+     #sessao = forms.ModelChoiceField(required=False, queryset=Sessao.objects.all(), label="",widget=forms.Select(attrs={'id':'sessao','class':"select is-fullwidth",'style':"width:100%"}))
      
      class Meta:
         model = Tarefa
