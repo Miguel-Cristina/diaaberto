@@ -8,7 +8,7 @@ from django.conf import settings
 from django.conf.urls import include
 
 urlpatterns = [
-    path('notificacoes/recebidas/', views.notificacoesrecebidas, name="notificacoes_recebidas"),
+    path('notificacao/consultar/recebidas/', views.notificacoesrecebidas, name="notificacoes_recebidas"),
 
     path('error_500/', views.error_500, name='error_500'),
     path('error_404/', views.error_404, name='error_404'),
