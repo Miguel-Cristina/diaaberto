@@ -2349,6 +2349,7 @@ def add_tarefa(request):
                 horas = request.POST.get("sessao")
                 print(horas)
                 sessao = SessaoAtividade.objects.get(id=request.POST.get("sessao"))
+                print(sessao.sessao.hora)
                 tarefa.duracao = tarefa.atividade.duracao
                 tarefa.horario = sessao.sessao.hora
                 print("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»")
@@ -2550,6 +2551,10 @@ def grupos_switch(request):
     print(horas)
     horasstring = str(horas)
     leng = len(horasstring)
+    if leng < 4:
+        horas = "00:00:00"
+        horasstring = str(horas)
+        leng = len(horasstring)
     if leng <= 5:
         horas = horas + ":00" 
     print("-wrfkoweofwkofwekweofkweof------------------")
@@ -2559,7 +2564,9 @@ def grupos_switch(request):
     outrashoras = timedelta(seconds=((novashoras.hour * 3600) + (novashoras.minute * 60) + novashoras.second))
     print(outrashoras)
     sessaoatividades = SessaoAtividade.objects.filter(atividade__sala__id=sala, dia=data)
+    print("OLA")
     print(sessaoatividades)
+    
     for sessaoatividade in sessaoatividades:
         atividade = sessaoatividade.atividade
         print(atividade)
@@ -2698,9 +2705,9 @@ def user_switch(request):
                                 colaboracaolist.append(colaboracao.id)
 
         dados = {
-            'usernamelist': usernamelist,
-            'userlist': userlist,
-            'colaboracao': colaboracaolist
+            'usernamelist': list(dict.fromkeys(usernamelist)),
+            'userlist': list(dict.fromkeys(userlist)),
+            'colaboracao': list(dict.fromkeys(colaboracaolist))
         }
 
     return JsonResponse(dados)
@@ -2717,8 +2724,9 @@ def activity_switch(request):
         if sessaoatividade.atividade.id in activity_list:
             pass
         else:
-            activity_list.append(sessaoatividade.atividade.id)
-            activity_name_list.append(sessaoatividade.atividade.nome)
+            if sessaoatividade.atividade.validada == 'VD':
+                activity_list.append(sessaoatividade.atividade.id)
+                activity_name_list.append(sessaoatividade.atividade.nome)
 
     print(sessoesatividades)
     dados = {

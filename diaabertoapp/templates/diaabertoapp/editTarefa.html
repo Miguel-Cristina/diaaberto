@@ -637,7 +637,8 @@
               
                var options = document.querySelectorAll('#atividade option');
                options.forEach(o => o.remove());
-               
+
+               $('#atividade').prepend('<option readonly="readonly"></option>');
 
                 var data = $("#data").val();
 
