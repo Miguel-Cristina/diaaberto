@@ -22,6 +22,7 @@
     {#    filter#}
     <script src="{% static 'main/js/filter.js' %}"></script>
     <link rel="stylesheet" href="{% static 'main/css/filter.css' %}">
+    <script src="{% static 'main/js/consultar_inscricao.js' %}"></script>
 
 </head>
 <style>
@@ -174,7 +175,7 @@ $(function () {
                                             {% for lt in lista_tarefa %}
                                             <tr draggable="false" class="">
                                                 {% ifequal "OT" lt.tipo_tarefa %}
-                                                    <td class="chevron-cell toggle pointer" onclick="expandoutra('{{ lt.id }}')">
+                                                    <td class="chevron-cell toggle pointer" onclick="expandAtividade('{{ lt.id }}')">
                                                             <a role="button">
                                                             <span class="icon" id="icon_{{ lt.id }}"><i
                                                                 class="mdi mdi-chevron-right mdi-24px"></i></span>
