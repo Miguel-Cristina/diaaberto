@@ -3,7 +3,7 @@
 <head>
     <link rel="icon" type="image/png" href="{% static 'main/img/favicon.ico' %}"/>
     <meta charset="utf-8"/>
-    <title>Dia Aberto - Criar Inscrição</title>
+    <title>Nova Inscrição</title>
 
     {#    jquery  #}
     <script src="https://code.jquery.com/jquery-3.5.0.slim.min.js"
@@ -33,7 +33,6 @@
             crossorigin="anonymous"></script>
 
     <script>
-
         $(function () {
             $("#table_atividades").tablesorter();
         });
@@ -80,11 +79,9 @@
                 html.classList.remove('is-clipped');
             });
         };
-
     </script>
 
 </head>
-
 <body onload="document.inscricao_form.reset();">
 {% block content %}
     <form method="POST" name="inscricao_form" enctype="multipart/form-data">
@@ -116,8 +113,6 @@
                                     <section class="step-content">
                                         <div class="step-item" id="pag1" style="">
                                             <div style="padding: 1rem 2vw 0;">
-
-
                                                 <hr data-v-dac68d9e="">
                                                 <h2 data-v-dac68d9e="" class="title has-text-grey is-uppercase"
                                                     style="font-size: 0.9rem;"> Dia de Inscrição </h2>
@@ -174,17 +169,33 @@
                                                             <div class="field">
                                                                 <label class="label"
                                                                        for="id_acompanhantes">Acompanhantes:</label>
-                                                                <div class="control" id="id_acompanhantes_div">
-                                                                    <input class="input" type="number"
-                                                                           name="acompanhantes"
-                                                                           required=""
-                                                                           id="id_acompanhantes"
-                                                                           min="0"
-                                                                           oninput="formerror(this.name, this.id, 'number')">
-                                                                    <span id="id_acompanhantes_icon"
-                                                                          style="display: none"
-                                                                          class="icon is-right has-text-danger"><i
-                                                                            class="mdi mdi-alert-circle mdi-24px"></i></span>
+                                                                <div class="b-numberinput field has-addons">
+                                                                    <p class="control">
+                                                                        <button type="button" class="button is-primary"
+                                                                                onclick="incremental_max_outros('minus','id_acompanhantes'); MultiplicaPreco()">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-minus mdi-24px"></i>
+                                                                        </span>
+                                                                        </button>
+                                                                    </p>
+                                                                    <div class="control is-clearfix">
+                                                                        <label for="id_acompanhantes"></label>
+                                                                        <input class="input" type="number"
+                                                                               name="acompanhantes"
+                                                                               required=""
+                                                                               id="id_acompanhantes"
+                                                                               min="0"
+                                                                               value="0"
+                                                                               readonly>
+                                                                    </div>
+                                                                    <p class="control">
+                                                                        <button type="button" class="button is-primary"
+                                                                                onclick="incremental_max_outros('add','id_acompanhantes'); MultiplicaPreco()">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-plus mdi-24px"></i>
+                                                                        </span>
+                                                                        </button>
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                             <p id="id_acompanhantes_msg" class="help is-danger"
@@ -211,8 +222,6 @@
                                                         </div>
                                                     {% endif %}
                                                 </div>
-
-
                                                 {% if utilizador.utilizadortipo.tipo == "Participante Individual" and age < 18 %}
                                                     <hr>
                                                     <h2 class="title has-text-grey is-uppercase"
@@ -251,15 +260,13 @@
                                                     </div>
                                                 {% elif utilizador.utilizadortipo.tipo == "Participante em Grupo" %}
                                                     <h2 class="title has-text-grey is-uppercase"
-                                                        style="font-size: 0.9rem;">
-                                                        Tamanho Grupo </h2>
+                                                        style="font-size: 0.9rem;">Tamanho Grupo </h2>
                                                     <div class="field  has-numberinput has-numberinput-compact">
-                                                        <label for="preco_aluno_normal">Total
-                                                            Participantes</label>
+                                                        <label for="preco_aluno_normal">Total Participantes</label>
                                                         <div class="b-numberinput field has-addons">
                                                             <p class="control">
                                                                 <button type="button" class="button is-primary"
-                                                                        onclick="incremental('minus','id_total_participantes'); MultiplicaPreco()">
+                                                                        onclick="incremental_max_estudantes('minus','id_total_participantes', '{{ utilizador.utilizadortipo.tipo }}'); MultiplicaPreco()">
                                                                         <span class="icon">
                                                                             <i class="mdi mdi-minus mdi-24px"></i>
                                                                         </span>
@@ -267,13 +274,15 @@
                                                             </p>
                                                             <div class="control is-clearfix">
                                                                 <label for="id_total_participantes"></label>
-                                                                <input type="number" autocomplete="on" step="1"
+                                                                <input style="cursor: text" readonly type="number"
+                                                                       autocomplete="on" step="1"
                                                                        class="input" name="total_participantes"
-                                                                       value="0" min="0" id="id_total_participantes">
+                                                                       value="0"
+                                                                       min="0" id="id_total_participantes">
                                                             </div>
                                                             <p class="control">
                                                                 <button type="button" class="button is-primary"
-                                                                        onclick="incremental('add','id_total_participantes'); MultiplicaPreco()">
+                                                                        onclick="incremental_max_estudantes('add','id_total_participantes', '{{ utilizador.utilizadortipo.tipo }}'); MultiplicaPreco()">
                                                                         <span class="icon">
                                                                             <i class="mdi mdi-plus mdi-24px"></i>
                                                                         </span>
@@ -285,7 +294,7 @@
                                                             <div class="b-numberinput field has-addons">
                                                                 <p class="control">
                                                                     <button type="button" class="button is-primary"
-                                                                            onclick="incremental('minus','id_total_professores'); MultiplicaPreco()">
+                                                                            onclick="incremental_max_outros('minus','id_total_professores', '{{ utilizador.utilizadortipo.tipo }}'); MultiplicaPreco()">
                                                                         <span class="icon">
                                                                             <i class="mdi mdi-minus mdi-24px"></i>
                                                                         </span>
@@ -293,13 +302,14 @@
                                                                 </p>
                                                                 <div class="control is-clearfix">
                                                                     <label for="id_total_professores"></label>
-                                                                    <input type="number" autocomplete="on" step="1"
+                                                                    <input style="cursor: text" readonly type="number"
+                                                                           autocomplete="on" step="1"
                                                                            class="input" name="total_professores"
                                                                            value="0" min="0" id="id_total_professores">
                                                                 </div>
                                                                 <p class="control">
                                                                     <button type="button" class="button is-primary"
-                                                                            onclick="incremental('add','id_total_professores'); MultiplicaPreco()">
+                                                                            onclick="incremental_max_outros('add','id_total_professores', '{{ utilizador.utilizadortipo.tipo }}'); MultiplicaPreco()">
                                                                         <span class="icon">
                                                                             <i class="mdi mdi-plus mdi-24px"></i>
                                                                         </span>
@@ -314,8 +324,7 @@
                                         <div class="step-item" id="pag2" style="display: none">
                                             <div style="padding: 1rem 2vw 0;">
                                                 <hr>
-                                                <h2 class="title has-text-grey is-uppercase"
-                                                    style="font-size: 0.9rem;">
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;">
                                                     Escola Participante </h2>
                                                 <div class="columns">
                                                     <div class="column">
@@ -445,124 +454,132 @@
                                                     Refeição </h2>
                                                 <p style="display: inline-block; padding-right: 2rem;"> Vai desejar
                                                     Almoçar nas nossas Cantinas? </p>
-                                                <label class="b-radio radio"><input type="radio" name="QuerRefeicao"
-                                                                                    value="sim"
-                                                                                    onchange="CheckRefeicao(this.value);"
-                                                                                    required=""
-                                                                                    id="id_QuerRefeicao_0">
-                                                    <span class="check"></span> <span
-                                                            class="control-label"> Sim </span></label>
-                                                <label class="b-radio radio"><input type="radio" name="QuerRefeicao"
-                                                                                    value="nao"
-                                                                                    onchange="CheckRefeicao(this.value);"
-                                                                                    required=""
-                                                                                    id="id_QuerRefeicao_1">
-                                                    <span class="check"></span> <span
-                                                            class="control-label"> Não </span></label>
+                                                <label class="b-radio radio">
+                                                    <input type="radio" name="QuerRefeicao" value="sim"
+                                                           onchange="CheckRefeicao(this.value);"
+                                                           required="" id="id_QuerRefeicao_0">
+                                                    <span class="check"></span>
+                                                    <span class="control-label"> Sim </span></label>
+                                                <label class="b-radio radio">
+                                                    <input type="radio" name="QuerRefeicao" value="nao"
+                                                           onchange="CheckRefeicao(this.value);"
+                                                           required="" id="id_QuerRefeicao_1">
+                                                    <span class="check"></span>
+                                                    <span class="control-label"> Não </span></label>
 
                                                 <div id="quer_refeicao" style="display:none;">
                                                     <hr>
-                                                    <h2 class="title has-text-grey is-uppercase"
-                                                        style="font-size: 0.9rem;">
-                                                        Quantas Refeições Deseja? </h2>
-                                                    {% for v in values %}
-                                                        {# ----------hiden---------------------------#}
-                                                        <label for="preco_aluno_normal"></label>
-                                                        <input id="preco_aluno_normal" type="text"
-                                                               style="display:none;"
-                                                               value="{{ v.preco_aluno_normal }}">
-                                                        <label for="preco_outro_normal"></label>
-                                                        <input id="preco_outro_normal" type="text"
-                                                               style="display:none;"
-                                                               value="{{ v.preco_outro_normal }}">
-                                                        {# -------------------------------------------#}
-                                                        <div data-v-f5fe8f88=""
-                                                             class="field has-numberinput has-numberinput-compact">
-                                                            <label for="preco_aluno_normal">Preço Aluno:
-                                                                &euro;{{ v.preco_aluno_normal }}</label>
-                                                            <div data-v-f5fe8f88=""
-                                                                 class="b-numberinput field has-addons">
-                                                                <p class="control">
-                                                                    <button type="button" class="button is-primary"
-                                                                            onclick="incremental('minus','id_numero_aluno_normal'); MultiplicaPreco()">
+                                                    <div class="columns">
+                                                        <div class="column">
+                                                            <h2 class="title has-text-grey is-uppercase"
+                                                                style="font-size: 0.9rem;">
+                                                                Quantas Refeições Deseja? </h2>
+                                                            {% for v in values %}
+                                                                {# ----------hiden---------------------------#}
+                                                                <label for="preco_aluno_normal"></label>
+                                                                <input id="preco_aluno_normal" type="text"
+                                                                       style="display:none;"
+                                                                       value="{{ v.preco_aluno_normal }}">
+                                                                <label for="preco_outro_normal"></label>
+                                                                <input id="preco_outro_normal" type="text"
+                                                                       style="display:none;"
+                                                                       value="{{ v.preco_outro_normal }}">
+                                                                {# -------------------------------------------#}
+                                                                <div data-v-f5fe8f88=""
+                                                                     class="field has-numberinput has-numberinput-compact">
+                                                                    <label for="preco_aluno_normal">Preço Aluno:
+                                                                        &euro;{{ v.preco_aluno_normal }}</label>
+                                                                    <div data-v-f5fe8f88=""
+                                                                         class="b-numberinput field has-addons">
+                                                                        <p class="control">
+                                                                            <button type="button"
+                                                                                    class="button is-primary"
+                                                                                    onclick="incremental('minus','id_numero_aluno_normal', '{{ utilizador.utilizadortipo.tipo }}'); MultiplicaPreco()">
                                                                         <span class="icon">
                                                                             <i class="mdi mdi-minus mdi-24px"></i>
                                                                         </span>
-                                                                    </button>
-                                                                </p>
-                                                                <div class="control is-clearfix">
-                                                                    <label for="id_numero_aluno_normal"></label>
-                                                                    <input type="number" autocomplete="on" step="1"
-                                                                           class="input" name="numero_aluno_normal"
-                                                                           value="0" min="0" required=""
-                                                                           id="id_numero_aluno_normal">
-                                                                </div>
-                                                                <p class="control">
-                                                                    <button type="button" class="button is-primary"
-                                                                            onclick="incremental('add','id_numero_aluno_normal'); MultiplicaPreco()">
+                                                                            </button>
+                                                                        </p>
+                                                                        <div class="control is-clearfix">
+                                                                            <label for="id_numero_aluno_normal"></label>
+                                                                            <input style="cursor: text" readonly
+                                                                                   type="number"
+                                                                                   autocomplete="on" step="1"
+                                                                                   class="input"
+                                                                                   name="numero_aluno_normal"
+                                                                                   value="0" min="0" max="1" required=""
+                                                                                   id="id_numero_aluno_normal">
+                                                                        </div>
+                                                                        <p class="control">
+                                                                            <button type="button"
+                                                                                    class="button is-primary"
+                                                                                    onclick="incremental('add','id_numero_aluno_normal', '{{ utilizador.utilizadortipo.tipo }}'); MultiplicaPreco()">
                                                                         <span class="icon">
                                                                             <i class="mdi mdi-plus mdi-24px"></i>
                                                                         </span>
-                                                                    </button>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div data-v-f5fe8f88=""
-                                                             class="field has-numberinput has-numberinput-compact">
-                                                            <label for="preco_aluno_normal">Preço não Aluno:
-                                                                &euro;{{ v.preco_outro_normal }}</label>
-                                                            <div data-v-f5fe8f88=""
-                                                                 class="b-numberinput field has-addons">
-                                                                <p class="control">
-                                                                    <button type="button" class="button is-primary"
-                                                                            onclick="incremental('minus','id_numero_outro_normal'); MultiplicaPreco()">
-                                                                        <span class="icon">
-                                                                            <i class="mdi mdi-minus mdi-24px"></i>
-                                                                        </span>
-                                                                    </button>
-                                                                </p>
-                                                                <div class="control is-clearfix">
-                                                                    <label for="id_numero_outro_normal"></label><input
-                                                                        type="number" autocomplete="on" step="1"
-                                                                        class="input" name="numero_outro_normal"
-                                                                        value="0" min="0" required=""
-                                                                        id="id_numero_outro_normal">
-                                                                </div>
-                                                                <p class="control">
-                                                                    <button type="button" class="button is-primary"
-                                                                            onclick="incremental('add','id_numero_outro_normal'); MultiplicaPreco()">
-                                                                        <span class="icon">
-                                                                            <i class="mdi mdi-plus mdi-24px"></i>
-                                                                        </span>
-                                                                    </button>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="columns">
-                                                            <div class="column">
-                                                                <div class="field widht">
-                                                                    <label class="label">Preço total</label>
-                                                                    <div class="control is-clearfix">
-                                                                        <label for="preco_total"></label>
-                                                                        <input class="input" type="number"
-                                                                               name="preco_total"
-                                                                               id="preco_total" value="0" disabled
-                                                                               style="width: 20%">&euro;
+                                                                            </button>
+                                                                        </p>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="column"></div>
-                                                            <div class="column"></div>
+                                                                <div data-v-f5fe8f88=""
+                                                                     class="field has-numberinput has-numberinput-compact">
+                                                                    <label for="preco_aluno_normal">Preço não Aluno:
+                                                                        &euro;{{ v.preco_outro_normal }}</label>
+                                                                    <div data-v-f5fe8f88=""
+                                                                         class="b-numberinput field has-addons">
+                                                                        <p class="control">
+                                                                            <button type="button"
+                                                                                    class="button is-primary"
+                                                                                    onclick="incremental('minus','id_numero_outro_normal'); MultiplicaPreco()">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-minus mdi-24px"></i>
+                                                                        </span>
+                                                                            </button>
+                                                                        </p>
+                                                                        <div class="control is-clearfix">
+                                                                            <label for="id_numero_outro_normal"></label>
+                                                                            <input style="cursor: text" readonly
+                                                                                   type="number"
+                                                                                   autocomplete="on" step="1"
+                                                                                   class="input"
+                                                                                   name="numero_outro_normal"
+                                                                                   value="0" min="0" required=""
+                                                                                   id="id_numero_outro_normal">
+                                                                        </div>
+                                                                        <p class="control">
+                                                                            <button type="button"
+                                                                                    class="button is-primary"
+                                                                                    onclick="incremental('add','id_numero_outro_normal'); MultiplicaPreco()">
+                                                                        <span class="icon">
+                                                                            <i class="mdi mdi-plus mdi-24px"></i>
+                                                                        </span>
+                                                                            </button>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
                                                         </div>
-                                                    {% endfor %}
+                                                        {% for p in prato %}
+                                                            <div class="column menus" id="{{ p.dia|date:"Y-m-d" }}"
+                                                                 style="display: none">
+                                                                <h2 class="title has-text-grey is-uppercase"
+                                                                    style="font-size: 0.9rem;">Ementa
+                                                                    dia {{ p.dia }}</h2>
+                                                                <p>Prato de Carne: {{ p.prato_carne }} </p>
+                                                                <p>Prato de Peixe: {{ p.prato_peixe }} </p>
+                                                                <p>Prato Vegetariano: {{ p.prato_vegan }} </p>
+                                                                <p>Sopa: {{ p.sopa }} </p>
+                                                                <p>Sobremesa: {{ p.sobremesa }} </p>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="step-item" id="pag4" style="display: none">
                                             <div style="padding: 1rem 2vw 0;">
                                                 <hr>
-                                                <h2 class="title has-text-grey is-uppercase"
-                                                    style="font-size: 0.9rem;">
+                                                <h2 class="title has-text-grey is-uppercase" style="font-size: 0.9rem;">
                                                     Transportes Para o Dia Aberto </h2>
                                                 <div class="columns">
                                                     <div class="column">
@@ -576,9 +593,9 @@
                                                                             required>
                                                                         <option value="escolher"
                                                                                 hidden>Escolher</option>
-                                                                        <option value="proprio">Transporte próprio</option>
-                                                                        <option value="autocarro">Autocarro Publico</option>
-                                                                        <option value="comboio">Comboio</option>
+                                                                        <option value="Transporte proprio">Transporte próprio</option>
+                                                                        <option value="Autocarro Publico">Autocarro Publico</option>
+                                                                        <option value="Comboio">Comboio</option>
                                                                     </select>
                                                                 </span>
                                                             </div>
@@ -624,11 +641,11 @@
                                                     <div class="column">
                                                         <div class="field">
                                                             <label for="timepicker-one">Hora Chegada</label>
-
-                                                            <input type="time" id="timepicker-one"
-                                                                   name="timepicker-one"
-                                                                   class="input">
-
+                                                            <div class="control">
+                                                                <input type="time" id="timepicker-one"
+                                                                       name="timepicker-one"
+                                                                       class="input">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="column">
@@ -729,8 +746,6 @@
                                         </div>
                                         <div class="step-item" id="pag5" style="display: none">
                                             <div data-v-dac68d9e="" style="padding: 1rem 2vw 0;">
-
-
                                                 <hr data-v-dac68d9e="">
                                                 <h2 data-v-dac68d9e="" class="title has-text-grey is-uppercase"
                                                     style="font-size: 0.9rem;"> Sessões Disponíveis </h2>
@@ -924,13 +939,6 @@
                                                                                                                                 </td>
                                                                                                                                 <td data-label="Vagas"
                                                                                                                                     class="">{{ s.n_alunos }}</td>
-                                                                                                                                {#                                                                                                                                {% if atividade.edificio.nome == None %}#}
-                                                                                                                                {#                                                                                                                                    <td data-label="Espaço"#}
-                                                                                                                                {#                                                                                                                                        class="">{{ atividade.tipo_local }}</td>#}
-                                                                                                                                {#                                                                                                                                {% else %}#}
-                                                                                                                                {#                                                                                                                                    <td data-label="Espaço"#}
-                                                                                                                                {#                                                                                                                                        class="">{{ atividade.edificio.nome }} {{ atividade.sala.identificacao }}</td>#}
-                                                                                                                                {#                                                                                                                                {% endif %}#}
                                                                                                                                 <td>
                                                                                                                                     {% if atividade.edificio or atividade.sala %}
                                                                                                                                         {% if atividade.edificio and atividade.sala %}
@@ -971,7 +979,8 @@
                                                                                                                                 <td>{{ s.dia | date:'Y-m-d' }}
                                                                                                                                     <input type="text"
                                                                                                                                            value="{{ s.dia| date:'Y-m-d' }}"
-                                                                                                                                           id="dia_{{ s.id }}" hidden>
+                                                                                                                                           id="dia_{{ s.id }}"
+                                                                                                                                           hidden>
                                                                                                                                 </td>
                                                                                                                                 <td data-label="Inscrever"
                                                                                                                                     class="">
@@ -1000,20 +1009,18 @@
                                                                                                                                                        name="quantity_{{ s.id }}"
                                                                                                                                                        value="0"
                                                                                                                                                        min="0"
+                                                                                                                                                        {% if utilizador.utilizadortipo.tipo == "Participante em Grupo" %}
                                                                                                                                                        max="{{ s.n_alunos }}"
-                                                                                                                                                       disabled>
-{#                                                                                                                                                       onchange="EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',#}
-{#                                                                                                                                                               '{{ s.sessao.hora|date:"H:i" }}', '{{ atividade.duracao }}',#}
-{#                                                                                                                                                               '{{ atividade.nome }}', '{{ atividade.edificio.nome }} {{ atividade.sala.identificacao }}',#}
-{#                                                                                                                                                               '{{ atividade.campus.nome }}', '{{ s.n_alunos }}',#}
-{#                                                                                                                                                               'quantity_{{ s.id }}'#}
-{#                                                                                                                                                               )">#}
-
+                                                                                                                                                        {% elif utilizador.utilizadortipo.tipo == "Participante Individual" %}
+                                                                                                                                                       max="1"
+                                                                                                                                                        {% endif %}
+                                                                                                                                                       style="cursor: text"
+                                                                                                                                                       readonly>
                                                                                                                                             </div>
                                                                                                                                             <p class="control">
                                                                                                                                                 <button type="button"
                                                                                                                                                         class="button is-primary"
-                                                                                                                                                        onclick="incremental_atividades('add', 'quantity_{{ s.id }}', 'dia_{{ s.id }}'); EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',
+                                                                                                                                                        onclick="incremental_atividades('add', 'quantity_{{ s.id }}', 'dia_{{ s.id }}', '{{ utilizador.utilizadortipo.tipo }}'); EscolherSessao( '{{ atividade.nome }}', '{{ s.id }}',
                                                                                                                                                                 '{{ s.sessao.hora|date:"H:i" }}', '{{ atividade.duracao }}',
                                                                                                                                                                 '{{ atividade.nome }}', '{{ atividade.edificio.nome }} {{ atividade.sala.identificacao }}',
                                                                                                                                                                 '{{ atividade.campus.nome }}', '{{ s.n_alunos }}',
@@ -1149,12 +1156,13 @@
                                     <div class="column is-8 is-offset-2">
                                         <div class="level">
                                             <div class="level-left">
-                                                <a href="/inscricao/home" id="cancel"
+                                                <a href="/inscricao/consultar" id="cancel"
                                                    class="button router-link-active is-outlined" type="button">
                                                     <span> Cancelar </span>
                                                 </a>
                                                 <button type="button" id="back1" class="button is-outlined"
-                                                        style="display: none" onclick="pagination(this.id, '{{ utilizador.utilizadortipo.tipo }}')">
+                                                        style="display: none"
+                                                        onclick="pagination(this.id, '{{ utilizador.utilizadortipo.tipo }}', '{{ age }}')">
                                                     <span class="icon is-small"><i
                                                             class="mdi mdi-chevron-left"></i></span>
                                                     <span> Anterior </span>
@@ -1163,7 +1171,7 @@
                                             <div class="level-right">
                                                 <button type="button" id="next"
                                                         class="button is-large is-success is-outlined"
-                                                        onclick="pagination(this.id, '{{ utilizador.utilizadortipo.tipo }}')">
+                                                        onclick="pagination(this.id, '{{ utilizador.utilizadortipo.tipo }}', '{{ age }}')">
                                                     <span> Próximo </span> <span class="icon is-medium">
                                                     <i class="mdi mdi-forward mdi-36px"></i>
                                                 </span>
@@ -1171,7 +1179,6 @@
                                                 <button type="button" id="confirmacao"
                                                         class="button is-large is-success is-outlined"
                                                         style="display: none"
-                                                        {#onclick="pagination(this.id)">#}
                                                         onclick="validateForm(this.id, '{{ utilizador.utilizadortipo.tipo }}')">
                                                     <span> Submeter </span>
                                                     <span class="icon is-medium">
@@ -1203,7 +1210,6 @@
                 </div>
                 <button id="close-modal" class="modal-close is-large" aria-label="close"></button>
             </div>
-
             {% include 'includes/footer.html' %}
         </div>
         {#    --------------------------popup-------------------------------------  #}
@@ -1216,7 +1222,7 @@
                     </div>
                 </section>
                 <footer class="modal-card-foot">
-                    <button id="popup_cancel" class="button" onclick="pagination(this.id)">
+                    <button type="button" id="popup_cancel" class="button" onclick="pagination(this.id)">
                         Cancelar
                     </button>
                     <button type="submit" id="popup_confirmacao" class="button is-success"
@@ -1226,8 +1232,6 @@
                 </footer>
             </div>
         </div>
-
-
     </form>
 {% endblock %}
 </body>

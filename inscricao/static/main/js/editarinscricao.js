@@ -9,7 +9,7 @@ function editar(area_estudos, escola, refeicaoaluno, refeicaooutro,
     }else
         document.getElementById('id_QuerRefeicao_1').checked = true
     // document.getElementById('tipo_transporte').value = tipotransporte
-    if (tipotransporte === 'autocarro' || tipotransporte === 'comboio') {
+    if (tipotransporte === 'Autocarro Publico' || tipotransporte === 'Comboio') {
         document.getElementById('transporte_para_campus').style.display = ''
     }
     if (paracampus === 'sim') {

@@ -10,7 +10,8 @@ from django.views.generic import View
 from diaaberto.utils import render_to_pdf
 from diaabertoapp.models import Ementa, Escola, Inscricao, EmentaInscricao, Transporteproprio, Atividade, \
     SessaoAtividade, \
-    SessaoAtividadeInscricao, InscricaoGrupo, InscricaoIndividual, TransporteproprioPercursos, AuthUser, DiaAberto
+    SessaoAtividadeInscricao, InscricaoGrupo, InscricaoIndividual, TransporteproprioPercursos, AuthUser, DiaAberto, \
+    Prato
 
 
 def remove_all_space(string):
@@ -36,7 +37,8 @@ class CriarInscricaoView(View):
             ))
             diainicio = str(DiaAberto.objects.first().data_inicio)
             diafim = str(DiaAberto.objects.first().data_fim)
-            dia = DiaAberto.objects.first()
+            prato = Prato.objects.all()
+            print(prato)
             return render(request, self.template_name, {
                 'values': values,
                 'escolas': escolas,
@@ -46,6 +48,7 @@ class CriarInscricaoView(View):
                 'age': age,
                 'diainicio': diainicio,
                 'diafim': diafim,
+                'prato': prato
             })
         else:
             messages.error(request, 'Não tem permissões para aceder à pagina!!')
@@ -87,12 +90,17 @@ class CriarInscricaoView(View):
                 participante2 = InscricaoGrupo.objects.get(inscricao=inscricao)
             elif radio_value_tipo_part == "Participante Individual":
                 acompanhantes = request.POST['acompanhantes']
-                uploaded_file = request.FILES['myfile']
-                print("uploaded_file")
-                print(uploaded_file)
-                fs = FileSystemStorage()
-                fs_saved = 'LES/inscricao/static/autorizacao/inscricao' + str(inscricao.id)
-                fs.save(fs_saved, uploaded_file)
+                today = date.today()
+                age = today.year - utilizador.data_nascimento.year - (
+                        (today.month, today.day) < (utilizador.data_nascimento.month, utilizador.data_nascimento.day))
+                fs_saved = ""
+                if age < 18:
+                    uploaded_file = request.FILES['myfile']
+                    print("uploaded_file")
+                    print(uploaded_file)
+                    fs = FileSystemStorage()
+                    fs_saved = 'LES/inscricao/static/autorizacao/inscricao' + str(inscricao.id)
+                    fs.save(fs_saved, uploaded_file)
                 InscricaoIndividual.objects.create(autorizacao=0,
                                                    ficheiro_autorizacao=fs_saved,
                                                    acompanhantes=acompanhantes,
@@ -112,7 +120,7 @@ class CriarInscricaoView(View):
             # -----------transporte------------------------------------
             drop_value = request.POST['tipo_transporte']
             trans_para_campus = "nao"
-            if drop_value == "autocarro" or drop_value == "comboio":
+            if drop_value == "Autocarro Publico" or drop_value == "Comboio":
                 trans_para_campus_value = request.POST['QuerTransportePara']
                 if trans_para_campus_value == "sim":
                     trans_para_campus = "sim"
@@ -137,11 +145,11 @@ class CriarInscricaoView(View):
             transporte = Transporteproprio.objects.get(inscricao=inscricao)
             entre_campus_ida = remove_all_space(request.POST['timepicker-three'])
             entre_campus_volta = remove_all_space(request.POST['timepicker-four'])
-            if drop_value == "autocarro" or drop_value == "comboio":
+            if drop_value == "Autocarro Publico" or drop_value == "Comboio":
                 trans_para_campus_value = request.POST['QuerTransportePara']
                 if trans_para_campus_value == "sim":
                     destino = request.POST['qual']
-                    if drop_value == "autocarro":
+                    if drop_value == "Autocarro Publico":
                         origem = "estacao autocarros"
                     else:
                         origem = "estacao comboios"
@@ -279,9 +287,9 @@ class ConsultarInscricaoView(View):
                 s.sessaoAtividade.save()
                 s.delete()
             EmentaInscricao.objects.get(inscricao=insc).delete()
-            if insc.utilizador.utilizadortipo.id == 6:
+            if insc.utilizador.utilizadortipo.tipo == "Participante em Grupo":
                 InscricaoGrupo.objects.get(inscricao=insc).delete()
-            elif insc.utilizador.utilizadortipo.id == 1:
+            elif insc.utilizador.utilizadortipo.tipo == "Participante Individual":
                 InscricaoIndividual.objects.get(inscricao=insc).delete()
             trans = Transporteproprio.objects.get(inscricao=insc)
             for p in TransporteproprioPercursos.objects.filter(transporteproprio=trans):
@@ -332,6 +340,7 @@ class EditarInscricaoView(View):
                 for s in sessoesinscritas:
                     s.sessaoAtividade.n_alunos = s.sessaoAtividade.n_alunos + s.numero_alunos
                     s.sessaoAtividade.save()
+                prato = Prato.objects.all()
                 return render(request, self.template_name, {
                     'values': values,
                     'escolas': escolas,
@@ -346,6 +355,7 @@ class EditarInscricaoView(View):
                     'transporte': transporteproprio,
                     'percurso': percursos,
                     'sessoesinscritas': sessoesinscritas,
+                    'prato': prato
                 })
             else:
                 return HttpResponse('<h1>Não lhe é permitido aceder a esta página</h1>')
@@ -390,13 +400,17 @@ class EditarInscricaoView(View):
             participante2.save()
         elif radio_value_tipo_part == "Participante Individual":
             acompanhantes = request.POST['acompanhantes']
-            uploaded_file = request.FILES['myfile']
-            fs = FileSystemStorage()
-            fs_saved = 'LES/inscricao/static/autorizacao/inscricao' + str(inscricao.id)
-            fs.save(fs_saved, uploaded_file)
+            today = date.today()
+            age = today.year - utilizador.data_nascimento.year - (
+                    (today.month, today.day) < (utilizador.data_nascimento.month, utilizador.data_nascimento.day))
             participante2 = InscricaoIndividual.objects.get(inscricao=inscricao)
+            if age < 18:
+                uploaded_file = request.FILES['myfile']
+                fs = FileSystemStorage()
+                fs_saved = 'LES/inscricao/static/autorizacao/inscricao' + str(inscricao.id)
+                fs.save(fs_saved, uploaded_file)
+                participante2.ficheiro_autorizacao = fs_saved
             participante2.acompanhantes = acompanhantes
-            participante2.ficheiro_autorizacao = fs_saved
             participante2.save()
         # ---------refeicao
         n_aluno = request.POST['numero_aluno_normal']
@@ -408,7 +422,7 @@ class EditarInscricaoView(View):
         # -----------transporte------------------------------------
         drop_value = request.POST['tipo_transporte']
         trans_para_campus = "nao"
-        if drop_value == "autocarro" or drop_value == "comboio":
+        if drop_value == "Autocarro Publico" or drop_value == "Comboio":
             trans_para_campus_value = request.POST['QuerTransportePara']
             if trans_para_campus_value == "sim":
                 trans_para_campus = "sim"
@@ -433,13 +447,13 @@ class EditarInscricaoView(View):
 
         entre_campus_ida = remove_all_space(request.POST['timepicker-three'])
         entre_campus_volta = remove_all_space(request.POST['timepicker-four'])
-        if drop_value == "autocarro" or drop_value == "comboio":
+        if drop_value == "Autocarro Publico" or drop_value == "Comboio":
             trans_para_campus_value = request.POST['QuerTransportePara']
             if trans_para_campus_value == "sim":
                 destino = request.POST['qual']
                 percurso = TransporteproprioPercursos.objects.filter(transporteproprio=transporte)
                 percurso.delete()
-                if drop_value == "autocarro":
+                if drop_value == "Autocarro Publico":
                     origem = "estacao autocarros"
                 else:
                     origem = "estacao comboios"

@@ -19,7 +19,7 @@ function CheckEscola(val) {
 
 function tipoTransporte(val) {
     let transporte_para_campus = document.getElementById('transporte_para_campus')
-    if (val === 'proprio') {
+    if (val === 'Transporte próprio') {
         transporte_para_campus.style.display = 'none';
         document.getElementById('id_QuerTransportePara_0').removeAttribute("required");
         document.getElementById('id_QuerTransportePara_1').removeAttribute("required");
@@ -92,12 +92,6 @@ function CheckRefeicao(val) {
 }
 
 function MultiplicaPreco() {
-    let num1 = document.getElementById("id_numero_aluno_normal").value;
-    let num2 = document.getElementById("id_numero_outro_normal").value;
-    let preco1 = parseFloat(document.getElementById("preco_aluno_normal").value);
-    let preco2 = parseFloat(document.getElementById("preco_outro_normal").value);
-    let final = (num1 * preco1) + (num2 * preco2);
-    document.getElementById("preco_total").setAttribute("value", final.toFixed(2).toString());
 }
 
 let max_incritos = 0;
@@ -142,7 +136,7 @@ function EscolherSessao(atividade_id, sessao_id, ini, dur,
             '<input type="number" class="input" id="inscritos_sessao_' + sessao_id +
             '"  name="inscritos_sessao_' + row_count + '" value="' + val +
             '" min="0" max="' + vag +
-            '" onchange="AlterarInscritos(' + ses_id_plica + ', this.value, ' + sessao_id_plica + ')">' +
+            '" style="cursor: text" readonly onchange="AlterarInscritos(' + ses_id_plica + ', this.value, ' + sessao_id_plica + ')">' +
             '</div>\n' +
             '<p class="control">\n' +
             '<button type="button" class="button is-primary" onclick="incremental(\'add\', \'quantity_' + sessao_id + '\'); EscolherSessao( \'' + atividade_id + '\', \'' + sessao_id + '\',\n' +
@@ -186,7 +180,7 @@ function EscolherSessao(atividade_id, sessao_id, ini, dur,
             '<input type="number" class="input" id="inscritos_sessao_' + sessao_id +
             '"  name="inscritos_sessao_' + row_count + '" value="' + val +
             '" min="0" max="' + vag +
-            '" onchange="AlterarInscritos(' + ses_id_plica + ', this.value, ' + sessao_id_plica + ')">' +
+            '" style="cursor: text" readonly onchange="AlterarInscritos(' + ses_id_plica + ', this.value, ' + sessao_id_plica + ')">' +
             '</div>\n' +
             '<p class="control">\n' +
             '<button type="button" class="button is-primary" onclick="incremental(\'add\', \'quantity_' + sessao_id + '\'); EscolherSessao( \'' + atividade_id + '\', \'' + sessao_id + '\',\n' +
@@ -268,7 +262,7 @@ function expandAtividade(id) {
 
 let pag = "1"
 
-function pagination(id, participante) {
+function pagination(id, participante, age) {
     if (id === "next") {
         let errormsg1 = '<div id="message_container" class="notices is-bottom">\n' +
             '    <div role="alert" class="toast is-danger is-bottom" style="">\n' +
@@ -308,10 +302,10 @@ function pagination(id, participante) {
             dia = document.forms["inscricao_form"]["data_inscricao"].value;
             area = document.forms["inscricao_form"]["area_estudos"].value;
             ano = document.forms["inscricao_form"]["ano_estudos"].value;
-
             if (participante === 'Participante Individual') {
                 p = document.forms["inscricao_form"]["acompanhantes"].value;
-                file = document.forms["inscricao_form"]["myfile"].value;
+                if (age < 18)
+                    file = document.forms["inscricao_form"]["myfile"].value;
             } else if (participante === 'Participante em Grupo') {
                 p = document.forms["inscricao_form"]["turma"].value;
                 alunos = document.forms["inscricao_form"]["total_participantes"].value;
@@ -343,7 +337,7 @@ function pagination(id, participante) {
             }
         } else if (pag === '4') {
             tipoTransporte = document.forms["inscricao_form"]["tipo_transporte"].value;
-            if (tipoTransporte === "autocarro" || tipoTransporte === "comboio") {
+            if (tipoTransporte === "Autocarro Publico" || tipoTransporte === "Comboio") {
                 transporteEstacao = document.forms["inscricao_form"]["QuerTransportePara"].value;
                 if (transporteEstacao === "sim") {
                     qualcampus = document.forms["inscricao_form"]["qual"].value;
@@ -376,7 +370,7 @@ function pagination(id, participante) {
             msgdiv.innerHTML = errormsg1 + 'Deve de indicar o número total professores' + errormsg2
         } else if (pag === '1' && participante === 'Participante Individual' && (p < 0 || p === '')) {
             msgdiv.innerHTML = errormsg1 + 'Deve de indicar o número acompanhantes' + errormsg2
-        } else if (pag === '1' && participante === 'Participante Individual' && !(RegExp("[a-zA-Z0-9-_]+.pdf$").test(file) || RegExp("[a-zA-Z0-9-_]+.png$").test(file) || RegExp("[a-zA-Z0-9-_]+.PNG$").test(file))) {
+        } else if (pag === '1' && participante === 'Participante Individual' && age < 18 && !(RegExp("[a-zA-Z0-9-_]+.pdf$").test(file) || RegExp("[a-zA-Z0-9-_]+.png$").test(file) || RegExp("[a-zA-Z0-9-_]+.PNG$").test(file))) {
             msgdiv.innerHTML = errormsg1 + 'Deve de fazer updload do PDF ou PNG de autorização' + errormsg2
         } else if (pag === '2' && escola === "Escolher") {
             msgdiv.innerHTML = errormsg1 + 'Deve de escolher uma escola adequada' + errormsg2
@@ -404,7 +398,7 @@ function pagination(id, participante) {
             msgdiv.innerHTML = errormsg1 + 'Deve indicar o número de refeições correto' + errormsg2
         } else if (pag === '4' && tipoTransporte === "escolher") {
             msgdiv.innerHTML = errormsg1 + 'Deve indicar o tipo transporte que irá usar' + errormsg2
-        } else if (pag === '4' && (tipoTransporte === "autocarro" || tipoTransporte === "comboio") && transporteEstacao === "sim" && qualcampus === "escolher") {
+        } else if (pag === '4' && (tipoTransporte === "Autocarro Publico" || tipoTransporte === "Comboio") && transporteEstacao === "sim" && qualcampus === "escolher") {
             msgdiv.innerHTML = errormsg1 + 'Deve indicar para que campos necessita de transporte desde a estação' + errormsg2
         } else if (pag === '4' && horaChegada === horaPartida) {
             msgdiv.innerHTML = errormsg1 + 'Hora de chegada e de partida não podem coincidir' + errormsg2
@@ -480,7 +474,41 @@ function incremental(type, id) {
 }
 
 
-function incremental_atividades(type, id, dia) {
+function incremental_max_estudantes(type, id, tipo) {
+    let value = document.getElementById(id).getAttribute('value')
+    let x
+    if (type === 'add') {
+        x = document.getElementById(id)
+        x.stepUp(1)
+    } else if (type === 'minus') {
+        x = document.getElementById(id)
+        x.stepDown(1)
+    }
+    if (tipo === "Participante em Grupo") {
+        document.getElementById('id_numero_aluno_normal').setAttribute('max', x.value)
+    } else if (tipo === "Participante Individual") {
+        document.getElementById('id_numero_aluno_normal').setAttribute('max', '1')
+    }
+    document.getElementById(id).setAttribute('value', value)
+}
+
+
+function incremental_max_outros(type, id) {
+    let value = document.getElementById(id).getAttribute('value')
+    let x
+    if (type === 'add') {
+        x = document.getElementById(id)
+        x.stepUp(1)
+    } else if (type === 'minus') {
+        x = document.getElementById(id)
+        x.stepDown(1)
+    }
+    document.getElementById('id_numero_outro_normal').setAttribute('max', x.value)
+    document.getElementById(id).setAttribute('value', value)
+}
+
+
+function incremental_atividades(type, id, dia, tipo) {
     let value = document.getElementById(id).getAttribute('value')
     let dia_inscricao = document.getElementById('data_inscricao').value
     let dia_value = document.getElementById(dia).value
@@ -493,6 +521,13 @@ function incremental_atividades(type, id, dia) {
     let errormsg2 = '</div>\n' +
         '    </div>\n' +
         '</div>'
+
+    if (tipo === "Participante em Grupo") {
+        let maxGrupo = document.getElementById('id_total_participantes').value
+        document.getElementById(id).setAttribute('max', maxGrupo)
+
+        console.log(maxGrupo)
+    }
     if (type === 'add') {
         if (dia_value === dia_inscricao) {
             document.getElementById(id).stepUp(1)
@@ -518,6 +553,11 @@ function incremental_atividades(type, id, dia) {
 
 function CheckDia(val) {
     console.log(val)
-    // let table = document.getElementById('table_sessoes')
-    // let table_length = document.getElementById("table_sessoes").rows.length;
+    let x = document.getElementsByClassName('menus')
+    let i
+    for (i = 0; i < x.length; i++) {
+        let y = x[i]
+        y.style.display= "none"
+    }
+    document.getElementById(val).style.display = ""
 }

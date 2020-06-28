@@ -566,7 +566,6 @@ class Prato(models.Model):
         db_table = 'prato'
 
 
-
 class TransporteUniversitarioHorario(models.Model):
     horario = models.ForeignKey(Horario, models.DO_NOTHING)
     percurso = models.ForeignKey(Percurso, models.DO_NOTHING)
