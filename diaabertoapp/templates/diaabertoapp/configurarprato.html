@@ -238,152 +238,6 @@
                         <div style="padding: 3rem 2vw 1rem; ">
 
                             <div class="columns">
-                                <div class="column tile is-3">
-                                    <div class="container box">
-                                        <div class="level">
-                                            <div class="level-left">
-                                                <div class="level-item">
-                                                    <p class="menu-label">Filtros</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <form method="GET" action=".">
-                                            <div class="field has-addons">
-                                            <!---->
-                                            {% if not nomequery|length > 0 %}
-                                                <div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="nomeSearch" name="nome"  placeholder="Nome" class="input"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                
-                                                </div>
-                                                <div class="control">
-                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                                  </div>
-                                            {% else %}<div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="nomeSearch" name="nome"  placeholder="Nome" class="input" value="{{ nomequery }}"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                
-                                                </div>
-                                                <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('nomeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                </div>
-                                            {% endif %}
-                                            </div>
-                                             <div class="field has-addons">
-                                            <!---->
-                                            {% if not tipoquery|length > 0 %}
-                                                <div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="tipoSearch" name="tipo"  placeholder="Tipo" class="input"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                </div>
-                                                <div class="control">
-                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                                  </div>
-                                            {% else %}<div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="tipoSearch" name="tipo"  placeholder="Tipo" class="input" value="{{ tipoquery }}"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                
-                                                </div>
-                                                <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('tipoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                </div>
-                                            {% endif %}
-
-                                            </div>
-
-                                            <div class="field has-addons">
-                                            <!---->
-                                            {% if not sopaquery|length > 0 %}
-                                                <div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="sopaSearch" name="sopa"  placeholder="Sopa" class="input"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                </div>
-                                                <div class="control">
-                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                                  </div>
-                                            {% else %}<div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="sopaSearch" name="sopa"  placeholder="Sopa" class="input" value="{{ sopaquery }}"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                
-                                                </div>
-                                                <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('sopaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                </div>
-                                            {% endif %}
-
-                                            </div>
-                                            <div class="field has-addons">
-                                            <!---->
-                                            {% if not sobremesaquery|length > 0 %}
-                                                <div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="sobremesaSearch" name="sobremesa"  placeholder="Sobremesa" class="input"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                </div>
-                                                <div class="control">
-                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                                  </div>
-                                            {% else %}<div class="control is-expanded">
-                                                    <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="sobremesaSearch" name="sobremesa"  placeholder="Sobremesa" class="input" value="{{ sobremesaquery }}"><!--onkeyup="searchByName()"-->
-                                                        <!--<span class="icon is-left">
-                                                            <i class="mdi mdi-magnify mdi-24px"></i>
-                                                        </span>-->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
-                                                
-                                                </div>
-                                                <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('sobremesaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                                </div>
-                                            {% endif %}
-
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
                                 <div class="column tile is-9">
                                     <div class="container box">
                                         <div class="level">
@@ -440,120 +294,20 @@
 
                                                             <!---->
                                                             <th class="is-sortable" style="width: 200px;">
-                                                                {% if order_by == 'nome' and sort == 'asc' %}
-                                                                <a href="?order_by=nome&sort=desc">
-                                                                    <div class="th-wrap">Nome
+                                                                    <div class="th-wrap">Preço
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
-                                                                </a>
-                                                                {% elif order_by == 'nome' and sort == 'desc' %}
-                                                                <a href="?order_by=nome&sort=asc">
-                                                                    <div class="th-wrap">Nome
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi mdi-menu-down"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=nome&sort=desc">
-                                                                    <div class="th-wrap">Nome
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-swap"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
-
                                                             </th>
 
                                                             <th class="is-sortable" style="width: 200px;">
-                                                                {% if order_by == 'tipo' and sort == 'asc' %}
-                                                                <a href="?order_by=tipo&sort=desc">
-                                                                    <div class="th-wrap">Tipo
+                                                                    <div class="th-wrap">Preço outro
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
-                                                                </a>
-                                                                {% elif order_by == 'tipo' and sort == 'desc' %}
-                                                                <a href="?order_by=tipo&sort=asc">
-                                                                    <div class="th-wrap">Tipo
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-down"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=tipo&sort=desc">
-                                                                    <div class="th-wrap">Tipo
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-swap"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
                                                             </th>
-
-                                                            <th class="is-sortable" style="width: 200px;">
-                                                                {% if order_by == 'sopa' and sort == 'asc' %}
-                                                                <a href="?order_by=sopa&sort=desc">
-                                                                    <div class="th-wrap">Sopa
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-up"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% elif order_by == 'sopa' and sort == 'desc' %}
-                                                                <a href="?order_by=sopa&sort=asc">
-                                                                    <div class="th-wrap">Sopa
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi mdi-menu-down"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=sopa&sort=desc">
-                                                                    <div class="th-wrap">Sopa
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-swap"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
-
-                                                            </th>
-
-                                                            <th class="is-sortable" style="width: 200px;">
-                                                                {% if order_by == 'sobremesa' and sort == 'asc' %}
-                                                                <a href="?order_by=sobremesa&sort=desc">
-                                                                    <div class="th-wrap">Sobremesa
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-up"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% elif order_by == 'sobremesa' and sort == 'desc' %}
-                                                                <a href="?order_by=sobremesa&sort=asc">
-                                                                    <div class="th-wrap">Sobremesa
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi mdi-menu-down"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% else %}
-                                                                <a href="?order_by=sobremesa&sort=desc">
-                                                                    <div class="th-wrap">Sobremesa
-                                                                        <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-swap"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </a>
-                                                                {% endif %}
-
-                                                            </th>
-
                                                             <th class="is-sortable" style="width: 200px;">
                                                                     <div class="th-wrap">Acções
                                                                         <span class="icon is-small">
@@ -571,17 +325,14 @@
                                                         <!---->
                                                     </thead>
                                                     <tbody>
-                                                        {% for prato in pratos %}
+                                                        {% for ementa in ementas %}
                                                         <tr draggable="false" class="header">
 
                                                             <!---->
-                                                            <td data-label="Nome" id="activityName" class=""> {{ prato.nome}} </td>
-                                                            <td data-label="Tipo" class=""> {{ prato.tipo }} </td>
-                                                            <td data-label="Sopa" class=""> {{ prato.sopa }} </td>
-                                                            <td data-label="Tipo" class=""> {{ prato.sobremesa }} </td>
+                                                            <td data-label="Preço Aluno" id="activityName" class=""> {{ ementa.preco_aluno_normal}} </td>
+                                                            <td data-label="Preço Outro" class=""> {{ ementa.preco_outro_normal }} </td>
                                                             <td data-label="Accoes">
-                                                                <a class="button is-info is-small " href="{%url 'editarprato' prato.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
-                                                                <a class="button is-danger is-small" href="{%url 'eliminarprato' prato.id %}" onclick="return confirm('Tem a certeza que prentede eliminar este prato?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a>
+                                                                <a class="button is-info is-small " href="{%url 'editarprato' ementa.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
                                                             </td>
                                                             <!---->
                                                         </tr>
@@ -593,21 +344,21 @@
                                                     <!---->
                                                 </table>
                                             </div>
-                                            {% if pratos.has_other_pages %}
+                                            {% if ementas.has_other_pages %}
                                             <div class="level">
                                                 <div class="level-left"></div>
                                                 <div class="level-right">
                                                     <div class="level-item">
                                                         <nav class="pagination">
-                                                            {% if pratos.has_previous %}
+                                                            {% if ementas.has_previous %}
                                                             {% if order_by is not None %}
-                                                            <a role="button" href="?page={{ pratos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                            <a role="button" href="?page={{ ementas.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
                                                                 <span class="icon" aria-hidden="true">
                                                                     <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                 </span>
                                                             </a>
                                                             {% else %}
-                                                            <a role="button" href="?page={{ pratos.previous_page_number }}" class="pagination-link pagination-previous">
+                                                            <a role="button" href="?page={{ ementas.previous_page_number }}" class="pagination-link pagination-previous">
                                                                 <span class="icon" aria-hidden="true">
                                                                     <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                 </span>
@@ -620,15 +371,15 @@
                                                                 </span>
                                                             </a>
                                                             {% endif %}
-                                                            {% if pratos.has_next %}
+                                                            {% if ementas.has_next %}
                                                             {% if order_by is not None %}
-                                                            <a role="button" href="?page={{ pratos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                            <a role="button" href="?page={{ ementas.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
                                                                 <span class="icon" aria-hidden="true">
                                                                     <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                 </span>
                                                             </a>
                                                             {% else %}
-                                                            <a role="button" href="?page={{ pratos.next_page_number }}" class="pagination-link pagination-next">
+                                                            <a role="button" href="?page={{ ementas.next_page_number }}" class="pagination-link pagination-next">
                                                                 <span class="icon" aria-hidden="true">
                                                                     <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                 </span>
@@ -644,8 +395,8 @@
                                                             <ul class="pagination-list">
                                                                 <!---->
                                                                 <!---->
-                                                                {% for i in pratos.paginator.page_range %}
-                                                                {% if pratos.number == i %}
+                                                                {% for i in ementas.paginator.page_range %}
+                                                                {% if ementas.number == i %}
                                                                 <li>
                                                                     <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                                 </li>

@@ -83,7 +83,6 @@ urlpatterns = [
     path('configurarprato/', views.configurarprato, name='configurarprato'),
     path('adicionarprato/', views.adicionarprato, name='adicionarprato'),
     path('editarprato/<int:id>/', views.editarprato, name='editarprato'),
-    path('eliminarprato/<int:id>/', views.eliminarprato, name='eliminarprato'),
     
     path('almocos/', views.almocos, name='almocos'),
     path('adicionarementa/', views.adicionarementa, name='adicionarementa'),

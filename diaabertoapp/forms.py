@@ -244,27 +244,26 @@ class HorarioForm(forms.ModelForm):
         fields = ('hora_chegada', 'hora_partida', 'data')
 
 class EmentaForm(forms.ModelForm):
-    prato = forms.ModelChoiceField(queryset=Prato.objects.all(), widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}))
-    dia = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
     preco_aluno_normal = forms.DecimalField(max_digits=4, decimal_places=2)
-    preco_aluno_economico = forms.DecimalField(max_digits=4, decimal_places=2)
-    preco_outro = forms.DecimalField(max_digits=4, decimal_places=2)
-    preco_outro_economico = forms.DecimalField(max_digits=4, decimal_places=2)
+    preco_outro_normal = forms.DecimalField(max_digits=4, decimal_places=2)
 
     class Meta:
         model = Ementa
-        fields=('prato', 'dia', 'preco_aluno_normal', 'preco_aluno_economico', 'preco_outro', 'preco_outro_economico')
+        fields=('preco_aluno_normal', 'preco_outro_normal')
     
 class PratoForm(forms.ModelForm):
-    nome = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Nome do Prato"}))
-    tipo = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Tipo Prato"}))
-    descricao = forms.CharField(label="", max_length=300, required=True, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea tabfields", 'id':"descricaoField",'placeholder': "Ex: Descrição do Prato"}))
+    prato_carne = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Nome do Prato Carne"}))
+    prato_peixe = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Nome do Prato Peixe"}))
+    prato_vegan = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Nome do Prato"}))
     sopa = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Sopa"}))
-    sobremesa = tipo = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Sobremesa"}))
+    sobremesa = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Sobremesa"}))
+    descricao = forms.CharField(label="", max_length=1200, required=True, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea tabfields", 'id':"descricaoField",'placeholder': "Ex: Descrição do Menu"}))
+    dia = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
 
     class Meta:
         model = Prato
-        fields = ('nome', 'tipo', 'descricao', 'sopa', 'sobremesa')
+        fields = ('prato_carne', 'prato_peixe', 'prato_vegan', 'sopa', 'sobremesa', 'descricao', 'dia')
+        exclude = ('ementa',)
 
 class DiaabertoForm(forms.ModelForm):
     titulo = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Titulo"}))

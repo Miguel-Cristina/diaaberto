@@ -3,7 +3,8 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>diaaberto</Name>
     <RootNamespace>diaaberto</RootNamespace>
-    <InterpreterId>MSBuild|envnaoapagar|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>
+    </InterpreterId>
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
     <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
     <TestFramework>pytest</TestFramework>
@@ -124,7 +125,6 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\configurarpercurso.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configurarprato.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configurartransporte.html" />
-    <Content Include="diaabertoapp\templates\diaabertoapp\notificacoesrecebidas.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\editarcampus.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\adicionarcampus.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\configurarcampus.html" />
@@ -150,6 +150,7 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\editTarefa.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\error_404.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\error_500.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\inscricaoTransporte.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\login.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\listaratividades.html" />
@@ -185,17 +186,6 @@
     <Folder Include="diaabertoapp\templates\" />
     <Folder Include="diaabertoapp\templates\diaabertoapp\" />
     <Folder Include="diaaberto\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Interpreter Include="envnaoapagar\">
-      <Id>envnaoapagar</Id>
-      <Version>3.7</Version>
-      <Description>envnaoapagar (Python 3.7 (64-bit))</Description>
-      <InterpreterPath>Scripts\python.exe</InterpreterPath>
-      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
-      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>X64</Architecture>
-    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

@@ -1,4 +1,4 @@
-function validateForm(this_id, participante) {
+function validateForm(this_id, participante, age) {
     let errormsg1 = '<div id="message_container" class="notices is-bottom">\n' +
         '    <div role="alert" class="toast is-danger is-bottom" style="">\n' +
         '        <div id="msg_here">'
@@ -24,7 +24,8 @@ function validateForm(this_id, participante) {
     let file
     if (participante === 'Participante Individual') {
         p = document.forms["inscricao_form"]["acompanhantes"].value;
-        file = document.forms["inscricao_form"]["myfile"].value;
+        if (age < 18)
+            file = document.forms["inscricao_form"]["myfile"].value;
     } else if (participante === 'Participante em Grupo') {
         p = document.forms["inscricao_form"]["turma"].value;
         alunos = document.forms["inscricao_form"]["total_participantes"].value;
@@ -64,7 +65,7 @@ function validateForm(this_id, participante) {
     let tipoTransporte = document.forms["inscricao_form"]["tipo_transporte"].value;
     let transporteEstacao;
     let qualcampus;
-    if (tipoTransporte === "autocarro" || tipoTransporte === "comboio") {
+    if (tipoTransporte === "Autocarro Publico" || tipoTransporte === "Comboio") {
         transporteEstacao = document.forms["inscricao_form"]["QuerTransportePara"].value;
         if (transporteEstacao === "sim") {
             qualcampus = document.forms["inscricao_form"]["qual"].value;
@@ -76,11 +77,11 @@ function validateForm(this_id, participante) {
     let qualcampus2;
     let horaIda;
     let horaVolta;
-    if (transporteEntreValue==="ida" || transporteEntreValue==="idavolta"){
-        qualcampus2 =document.forms["inscricao_form"]["transporte_campus"].value;
-        if (qualcampus2!=="escolher"){
+    if (transporteEntreValue === "ida" || transporteEntreValue === "idavolta") {
+        qualcampus2 = document.forms["inscricao_form"]["transporte_campus"].value;
+        if (qualcampus2 !== "escolher") {
             horaIda = document.forms["inscricao_form"]["timepicker-three"].value;
-            if (transporteEntreValue==="idavolta"){
+            if (transporteEntreValue === "idavolta") {
                 horaVolta = document.forms["inscricao_form"]["timepicker-four"].value;
             }
         }
@@ -89,8 +90,6 @@ function validateForm(this_id, participante) {
     let rowsDeleted = document.forms["inscricao_form"]["row_deletedd"].value;
     console.log(rowsTotal)
     console.log(rowsDeleted)
-
-
 
 
     if (area === "escolha") {
@@ -105,7 +104,7 @@ function validateForm(this_id, participante) {
         msgdiv.innerHTML = errormsg1 + 'Deve de escolher número total professores adequado' + errormsg2
     } else if (participante === 'Participante Individual' && (p < 0 || p === '')) {
         msgdiv.innerHTML = errormsg1 + 'Deve de escolher nr acompanhantes adequado' + errormsg2
-    } else if (participante === 'Participante Individual' && !(RegExp("[a-zA-Z0-9-_]+.pdf$").test(file) || RegExp("[a-zA-Z0-9-_]+.png$").test(file) || RegExp("[a-zA-Z0-9-_]+.PNG$").test(file))) {
+    } else if (participante === 'Participante Individual' && age < 18 && !(RegExp("[a-zA-Z0-9-_]+.pdf$").test(file) || RegExp("[a-zA-Z0-9-_]+.png$").test(file) || RegExp("[a-zA-Z0-9-_]+.PNG$").test(file))) {
         msgdiv.innerHTML = errormsg1 + 'Deve de fazer updload do PDF ou PNG de autorização' + errormsg2
     } else if (escola === "Escolher") {
         msgdiv.innerHTML = errormsg1 + 'Deve de escolher uma escola adequada' + errormsg2
@@ -133,31 +132,31 @@ function validateForm(this_id, participante) {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar o número de refeições correto' + errormsg2
     } else if (tipoTransporte === "escolher") {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar o tipo transporte que irá usar' + errormsg2
-    }else if ((tipoTransporte === "autocarro" || tipoTransporte === "comboio") && transporteEstacao === "sim" && qualcampus==="escolher") {
+    } else if ((tipoTransporte === "Autocarro Publico" || tipoTransporte === "Comboio") && transporteEstacao === "sim" && qualcampus === "escolher") {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar para que campos necessita de transporte desde a estação' + errormsg2
-    }else if (horaChegada===horaPartida) {
+    } else if (horaChegada === horaPartida) {
         msgdiv.innerHTML = errormsg1 + 'Hora de chegada e de partida não podem coincidir' + errormsg2
-    }else if (horaChegada>=horaPartida) {
+    } else if (horaChegada >= horaPartida) {
         msgdiv.innerHTML = errormsg1 + 'Hora de chegada e de partida incoerentes' + errormsg2
-    }else if (horaChegada==="00 : 00") {
+    } else if (horaChegada === "00 : 00") {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de chegada correta' + errormsg2
-    }else if (horaPartida==="00 : 00") {
+    } else if (horaPartida === "00 : 00") {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de partida correta' + errormsg2
-    }else if (transporteEntreValue!=="nao" && qualcampus2==="escolher") {
+    } else if (transporteEntreValue !== "nao" && qualcampus2 === "escolher") {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar de qual para qual campus necessita de transporte' + errormsg2
-    }else if (transporteEntreValue==="ida" && qualcampus2!=="escolher" && horaIda==="00 : 00") {
+    } else if (transporteEntreValue === "ida" && qualcampus2 !== "escolher" && horaIda === "00 : 00") {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de ida correta' + errormsg2
-    }else if (transporteEntreValue==="idavolta" && qualcampus2!=="escolher" && horaIda===horaVolta) {
+    } else if (transporteEntreValue === "idavolta" && qualcampus2 !== "escolher" && horaIda === horaVolta) {
         msgdiv.innerHTML = errormsg1 + 'Hora de ida e de volta não podem coincidir' + errormsg2
-    }else if (transporteEntreValue==="idavolta" && qualcampus2!=="escolher" && horaIda>=horaVolta) {
+    } else if (transporteEntreValue === "idavolta" && qualcampus2 !== "escolher" && horaIda >= horaVolta) {
         msgdiv.innerHTML = errormsg1 + 'Hora de ida e de volta incoerentes' + errormsg2
-    }else if (transporteEntreValue==="idavolta" && qualcampus2!=="escolher" && horaIda==="00 : 00") {
+    } else if (transporteEntreValue === "idavolta" && qualcampus2 !== "escolher" && horaIda === "00 : 00") {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de ida correta' + errormsg2
-    }else if (transporteEntreValue==="idavolta" && qualcampus2!=="escolher" && horaVolta==="00 : 00") {
+    } else if (transporteEntreValue === "idavolta" && qualcampus2 !== "escolher" && horaVolta === "00 : 00") {
         msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de ida correta' + errormsg2
-    }else if (rowsTotal==='' || rowsTotal<=0 || rowsTotal===rowsDeleted) {
+    } else if (rowsTotal === '' || rowsTotal <= 0 || rowsTotal === rowsDeleted) {
         msgdiv.innerHTML = errormsg1 + 'Deve inscrever-se numa atividade' + errormsg2
-    }else {
+    } else {
         pagination(this_id)
     }
 
