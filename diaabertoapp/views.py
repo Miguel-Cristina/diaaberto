@@ -916,6 +916,7 @@ def adicionaredificio(request):
                   {'utilizador': utilizador, 'campus': campus, 'edificios': edificios, 'form': aForm})
 
 
+
 # ========================================================================================================================
 # Adicionar os campus
 # Reedireciona para a pagina de adicionar os campus se o utilizador for do tipo administrador
@@ -2927,71 +2928,22 @@ def configurarprato(request):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
 
-    pratos_list = Prato.objects.all()
-
-    # BEGIN filter_by_nome
-    nome_query = request.GET.get('nome')
-    if nome_query != '' and nome_query is not None:
-        pratos_list = pratos_list.filter(nome__icontains=nome_query)
-    # END filter_by_nome
-
-    # BEGIN filter_by_tipo
-    tipo_query = request.GET.get('tipo')
-    if tipo_query != '' and tipo_query is not None:
-        pratos_list = pratos_list.filter(tipo__icontains=tipo_query)
-    # END filter_by_tipo
-
-    # BEGIN filter_by_sopa
-    sopa_query = request.GET.get('sopa')
-    if sopa_query != '' and sopa_query is not None:
-        pratos_list = pratos_list.filter(sopa__icontains=sopa_query)
-    # END filter_by_sopa
-
-    # BEGIN filter_by_sobremesa
-    sobremesa_query = request.GET.get('sobremesa')
-    if sobremesa_query != '' and sobremesa_query is not None:
-        pratos_list = pratos_list.filter(sobremesa__icontains=sobremesa_query)
-    # END filter_by_sobremesa
-
-    # ORDER
-    order_by = request.GET.get('order_by')
-    sort = request.GET.get('sort')
-    if order_by == 'nome':
-        if sort == 'asc':
-            pratos_list = pratos_list.order_by('nome')
-        else:
-            pratos_list = pratos_list.order_by('-nome')
-    elif order_by == 'tipo':
-        if sort == 'asc':
-            pratos_list = pratos_list.order_by('tipo')
-        else:
-            pratos_list = pratos_list.order_by('-tipo')
-    elif order_by == 'sopa':
-        if sort == 'asc':
-            pratos_list = pratos_list.order_by('sopa')
-        else:
-            pratos_list = pratos_list.order_by('-sopa')
-    elif order_by == 'sobremesa':
-        if sort == 'asc':
-            pratos_list = pratos_list.order_by('sobremesa')
-        else:
-            pratos_list = pratos_list.order_by('-sobremesa')
+    ementas_list = Ementa.objects.all()
 
     # BEGIN pagination
     page = request.GET.get('page', 1)
-    paginator = Paginator(pratos_list, 5)
+    paginator = Paginator(ementas_list, 5)
     try:
-        pratos = paginator.page(page)
+        ementas = paginator.page(page)
     except PageNotAnInteger:
-        pratos = paginator.page(1)
+        ementas = paginator.page(1)
     except EmptyPage:
-        pratos = paginator.page(paginator.num_pages)
+        ementas = paginator.page(paginator.num_pages)
     # END pagination
 
     # 'tiposquery':tipo_query
     return render(request, 'diaabertoapp/configurarprato.html',
-                  {'pratos': pratos, 'order_by': order_by, 'sort': sort, 'nomequery': nome_query,
-                   'sopaquery': sopa_query, 'sobremesaquery': sobremesa_query, 'tipoquery': tipo_query})
+                  {'ementas': ementas})
 
 
 def adicionarprato(request):
@@ -3038,9 +2990,9 @@ def editarprato(request, id):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
 
-    prato = Prato.objects.get(pk=id)
+    ementa = Ementa.objects.get(pk=id)
     if request.method == 'POST':
-        form = PratoForm(request.POST, instance=prato)
+        form = EmentaForm(request.POST, instance=prato)
         if form.is_valid():
             form.save()
             messages.success(request, 'O prato foi editado com sucesso!')
@@ -3048,15 +3000,10 @@ def editarprato(request, id):
         else:
             print(form.errors)
     else:
-        form = PratoForm(instance=prato)
+        form = EmentaForm(instance=ementa)
 
     return render(request, 'diaabertoapp/adicionarprato.html', {'form': form})
 
-
-def eliminarprato(request, id):
-    object = Prato.objects.get(pk=id)
-    object.delete()
-    return HttpResponseRedirect('/configurarprato/')
 
 
 def almocos(request):
@@ -3218,15 +3165,17 @@ def transportes(request):
     # BEGIN filter_by_destino
     destino_query = request.GET.get('destino')
     if destino_query != '' and destino_query is not None:
-        percurso_list = percurso_list.filter(destino__icontains=destino_query)
-        transporte_list = transporte_list.filter(percurso__in=percurso_list)
+        #percurso_list = percurso_list.filter(destino__icontains=destino_query)
+        #transporte_list = transporte_list.filter(percurso__in=percurso_list)
+        transporte_list = transporte_list.filter(percurso__destino__icontains=destino_query)
     # END filter_by_destino
 
     # BEGIN filter_by_numero
     numero_query = request.GET.get('numero')
     if numero_query != '' and numero_query is not None:
-        transportes_list = transportes_list.filter(numero=numero_query)
-        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+        #transportes_list = transportes_list.filter(numero=numero_query)
+        #transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+        transporte_list = transporte_list.filter(transporte_universitario__numero = numero_query)
     # END filter_by_numero
 
     # BEGIN filter_by_tipo
