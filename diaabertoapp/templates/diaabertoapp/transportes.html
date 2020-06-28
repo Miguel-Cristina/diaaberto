@@ -519,7 +519,12 @@
                                                     <td data-label="Partida" class=""> {{ Transporte.horario.hora_partida|time:"H:i"}} </td>
                                                     <td data-label="Chegada" class=""> {{ Transporte.horario.hora_chegada|time:"H:i"}} </td>
                                                     <td data-label="Accoes">
-                                                        <a class="button is-info is-small " href="{%url 'editartransporteuniversitario' Transporte.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
+                                                        <form action="." method="post">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" value="{{Transporte.id}}" name="transporte"> 
+                                                                <button type="submit" class="button is-info is-small " ><i class="mdi mdi-pencil"></i>&nbsp;Editar</button>
+                                                        </form>
+                                                        
                                                         <a class="button is-danger is-small" href="{%url 'eliminartransporteuniversitario' Transporte.id %}" onclick="return confirm('Tem a certeza que prentede eliminar este transporte?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a>
                                                     </td>
                                                     <!---->

@@ -245,11 +245,11 @@ class HorarioForm(forms.ModelForm):
 
 class EmentaForm(forms.ModelForm):
     preco_aluno_normal = forms.DecimalField(max_digits=4, decimal_places=2)
-    preco_outro = forms.DecimalField(max_digits=4, decimal_places=2)
+    preco_outro_normal = forms.DecimalField(max_digits=4, decimal_places=2)
 
     class Meta:
         model = Ementa
-        fields=('prato', 'dia', 'preco_aluno_normal', 'preco_aluno_economico', 'preco_outro', 'preco_outro_economico')
+        fields=('preco_aluno_normal', 'preco_outro_normal')
     
 class PratoForm(forms.ModelForm):
     prato_carne = forms.CharField(label="", widget=forms.TextInput(attrs={'class': "input", 'placeholder': "Nome do Prato Carne"}))
@@ -262,7 +262,7 @@ class PratoForm(forms.ModelForm):
 
     class Meta:
         model = Prato
-        fields = ('nome', 'tipo', 'descricao', 'sopa', 'sobremesa')
+        fields = ('prato_carne', 'prato_peixe', 'prato_vegan', 'sopa', 'sobremesa', 'descricao', 'dia')
         exclude = ('ementa',)
 
 class DiaabertoForm(forms.ModelForm):

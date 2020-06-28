@@ -3507,6 +3507,10 @@ def transportes(request):
         transportes = paginator.page(paginator.num_pages)
     # END pagination
 
+    if request.POST:          
+       variavel = request.POST.get("transporte")
+       print(variavel)
+
     # 'tiposquery':tipo_query
     return render(request, 'diaabertoapp/transportes.html',
                   {'transportes': transportes, 'origemquery': origem_query, 'destinoquery': destino_query,
