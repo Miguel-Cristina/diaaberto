@@ -1,0 +1,17 @@
+.footer {
+    position: fixed;
+    /*left: 0;*/
+    bottom: 0;
+    width: 100%;
+    background-color: #fafafa;
+    color: grey;
+    text-align: center;
+    height: 50px;
+    /*position: relative;*/
+}
+
+.footer div {
+    margin-top: 15px;
+    width: 30%;
+    float: left;
+}

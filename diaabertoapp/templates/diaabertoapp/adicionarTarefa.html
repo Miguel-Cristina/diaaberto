@@ -168,7 +168,7 @@
                                 <div class="label"> Atividades:
                                     <span class="select is-fullwidth is-full">
                                         <select class="input" id="atividade" name="atividade">
-
+                                            
                                         </select>
                                     </span>
                                 </div>
@@ -456,7 +456,9 @@
         $(document).ready(function () {
             $("#data").change(function () {
                
-              
+              if($('#checkradio2').is(':checked'))
+        {
+                alert("AHAHAHAHAH");
                var options = document.querySelectorAll('#gruposSelect option');
                options.forEach(o => o.remove());
                
@@ -494,7 +496,7 @@
 
                       }
                     });
-
+        }
 
             }
 
@@ -516,7 +518,8 @@
               
                var options = document.querySelectorAll('#atividade option');
                options.forEach(o => o.remove());
-               
+
+                $('#atividade').prepend('<option readonly="readonly"></option>');
 
                 var data = $("#data").val();
 
@@ -544,6 +547,7 @@
                             option.text = nomes[i];
                             grupos.add(option);
                            }
+                           
                         }
 
 

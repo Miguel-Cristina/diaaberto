@@ -788,11 +788,11 @@
            function myfunc(tarefas,contador){
               
                 var tarefa = tarefas;
-                //var colabs1 = document.getElementsByClassName("colaborador_id");  
-                //var colabs2 = colabs1[contador];
+                var colabs1 = document.getElementsByClassName("colaborador_id");  
+                var colabs2 = colabs1[contador];
                 //alert(colabs2);
-                //var x = colabs2.querySelectorAll("option")
-                //x.forEach(o => o.remove());
+                var x = colabs2.querySelectorAll("option")
+                x.forEach(o => o.remove());
                 
                 $.ajax({
                         url: '{% url "user_switch" %}',
