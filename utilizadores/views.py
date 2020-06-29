@@ -8,8 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
-from diaabertoapp.models import Utilizador, UtilizadorTipo, Departamento, UnidadeOrganica, UnidadeorganicaDepartamento, \
-    AuthUser
+from diaabertoapp.models import Utilizador, UtilizadorTipo, Departamento, UnidadeOrganica, UnidadeorganicaDepartamento, AuthUser
 from .forms import RegisterForm
 
 
@@ -303,13 +302,18 @@ class Editar_user(View):
 
 
         # ------------------------------------------------------------------------------
-
-        Utilizador.objects.filter(pk=pk).update(
+        
+        ut_pk=AuthUser.objects.get(pk=pk).utilizador.id
+        Utilizador.objects.filter(pk=ut_pk).update(
             nome=nome, email=email,
             numero_telemovel=numero_telemovel,
             cartao_cidadao=cartao_cidadao,
             permitir_localizacao=permitir_localizacao,
             utilizar_dados_pessoais=utilizar_dados_pessoais,
+        )
+        AuthUser.objects.filter(pk=pk).update(
+            username=email, email=email
+
         )
 
         return redirect('/utilizadores/consultar')
