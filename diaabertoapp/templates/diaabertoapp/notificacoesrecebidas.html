@@ -571,10 +571,81 @@
         </footer>
     <!---------------------------------------------------------------------------------------Inicio do Modal------------------------------------------------------------------------------------------------>
         <div class="modal">
-          <div class="modal-background">
-          </div>
-          <div class="modal-content has-text-centered">   
-              <img id="modalImage" src="{% static 'diaabertoapp/maps/default.png' %}" alt="">
+            <div class="modal-background">
+            </div>
+            <div class="modal-content has-text-centered">   
+                <div class="content">
+                    {% if notificacoesOpen %}
+                        {% if notificacoesOpen.utilizador_rec.email == utilizador.email %}
+                            <div class="section" style="font-size: 15px;">
+                                <div class="box container">
+                                    <article class="media">
+                                        <div class="media-left">
+                                          <figure class="image is-64x64 has-background-grey has-text-centered" style="padding: 1vh 0;vertical-align: bottom;">
+                                            <h1 class="is-vcentered" style="vertical-align: bottom;">{{ notificacoesOpen.utilizador_env.nome|make_list|first }}</h1>
+                                          </figure>
+                                        </div>
+                                        <div class="media-content">
+                                          <div class="content">
+                                            <p>
+                                              <strong>{{ notificacoesOpen.utilizador_env.nome }}</strong> <small>{{ notificacoesOpen.utilizador_env.email }}</small> 
+                                              <br>
+                                            {% if notificacoesOpen.utilizador_env.unidadeorganica %}
+                                              {{ notificacoesOpen.utilizador_env.unidadeorganica }}
+                                            {% endif %}
+                                                <br />
+                                            {% if notificacoesOpen.utilizador_env.departamento %}
+                                              {{ notificacoesOpen.utilizador_env.departamento }}
+                                            {% endif %}
+                                          </div>
+                                        </div>
+                                      </article>
+                                      <div class="container">
+                                            <label class="subtitle">
+                                                <strong>Notificação</strong>
+                                                <br />
+                                            </label><small class="">{{ notificacoesOpen.hora|timesince }}</small>
+                                    
+                                            {% if notificacoesOpen.visto %}
+                                                <p>
+                                                    <i class="mdi mdi-check-all mdi-12px"> visto</i>
+                                                </p>
+                                            {% else %}
+                                                        
+                                                <p>
+                                                    <a href="{% url 'visto' notificacoesOpen.id %}" class="is-small">
+                                                        <i class="mdi mdi-check mdi-12px">Visualizar</i>
+                                                    </a>
+                                                </p>
+                                            {% endif %}
+                                            <div class="columns">
+                                                <div class="column has-text-left">
+                                                    <p><strong>Data:</strong> {{ notificacoesOpen.hora }}</p>
+                                                </div>
+                                                <div class="column has-text-left">
+                                                     <p><strong>Prioridade:</strong> {{ notificacoesOpen.prioridade }} </p>
+                                                </div>
+                                            </div>
+                                            <div class="columns">
+                                                <div class="column has-text-left">
+                                                    <p><strong>De:</strong> {{ notificacoesOpen.utilizador_env }} ({{ notificacoesOpen.utilizador_env.email }})</p>
+                                                </div>
+                                                <div class="column has-text-left">
+                                                    <p><strong>Para:</strong> {{ notificacoesOpen.utilizador_rec }} ({{ notificacoesOpen.utilizador_rec.email }})</p>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                                <p class="has-text-left"><strong>Assunto:</strong> {{ notificacoesOpen.assunto }} </p>
+                                            <hr />
+                                                <p class="has-text-left"><strong>Conteúdo:</strong> {{ notificacoesOpen.conteudo }} </p>
+                                                <hr />
+                                    </div>
+                            </div>
+                        {% else %}
+                        <div class="container box has-background-light"><p>Não tem permissões para visualizar esta notificação!</p></div>
+                        {% endif %}
+                    {% endif %}
+                </div>
           </div>
           <button id="close-modal" class="modal-close is-large" aria-label="close"></button>
         </div>
@@ -615,24 +686,45 @@
         // Timeout is 3 sec, you can change it
 
     </script>
-            <script>
-                function srcImage(p1){
+    <script>
+        function srcImage(p1){
                 
-                    event.preventDefault();
-                    var modal = document.querySelector('.modal');  // assuming you have only 1
-                    var html = document.querySelector('html');
-                    var modalcontent = document.querySelector('#modalImage');            
-                    modal.classList.add('is-active');
-                    html.classList.add('is-clipped');
-                    /*modalcontent.src="{% static "+p1+" %}";*/
-                    modalcontent.src=p1;
-                    modal.querySelector('button#close-modal').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        modal.classList.remove('is-active');
-                        html.classList.remove('is-clipped');
-                    });
-                };
-        </script>
+            event.preventDefault();
+            var modal = document.querySelector('.modal');  // assuming you have only 1
+            var html = document.querySelector('html');
+            var modalcontent = document.querySelector('#modalImage');            
+            modal.classList.add('is-active');
+            html.classList.add('is-clipped');
+            /*modalcontent.src="{% static "+p1+" %}";*/
+            modalcontent.src=p1;
+            modal.querySelector('button#close-modal').addEventListener('click', function(e) 
+            {
+                e.preventDefault();
+                modal.classList.remove('is-active');
+                html.classList.remove('is-clipped');
+            });
+        };
+    </script>
+   <script>
+       $(document).ready(function() {
+
+          if(window.location.href.indexOf('notificacaoid') != -1) {
+            
+            var modal = document.querySelector('.modal');  // assuming you have only 1
+            var html = document.querySelector('html');           
+            modal.classList.add('is-active');
+            html.classList.add('is-clipped');
+            modal.querySelector('button#close-modal').addEventListener('click', function(e) 
+            {
+                e.preventDefault();
+                modal.classList.remove('is-active');
+                html.classList.remove('is-clipped');
+            }); 
+                
+          }
+
+        });
+   </script>
 </body>
 
 </html>
