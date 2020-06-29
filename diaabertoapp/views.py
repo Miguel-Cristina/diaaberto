@@ -1978,7 +1978,9 @@ def rejeitaratividade(request, pk):
 # ========================================================================================================================
 def eliminaratividade(request, pk):
     object = Atividade.objects.get(pk=pk)
-
+    nome = object.nome
+    responsavel = object.responsavel
+    organica = object.unidadeorganica
     if request.user.is_authenticated:
         auth_user = request.user 
         utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
@@ -1992,8 +1994,23 @@ def eliminaratividade(request, pk):
     else:
         messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
+    
+    sessoesatividades = SessaoAtividade.objects.filter(atividade=object)
+    inscricoes = 0
+    for sessao in sessaoatividade:
+        if int(sessao.n_alunos) < int(sessao.atividade.limite_participantes):
+            inscricoes = inscricoes + 1
 
     object.delete()
+    if Notificacao.objects.all().exists():
+        notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+    else:
+        notificacao_grupo = 0
+    coordenadores = Utilizador.objects.filter(utilizadortipo__tipo="Coordenador",unidadeorganica=organica)
+    for coordenador in coordenadores:
+        notificacao_obj = Notificacao(assunto="Atividade eliminada", hora=datetime.now(), conteudo="Atividade <" + nome + "> eliminada!",
+                                  utilizador_rec=coordenador, utilizador_env=responsavel, prioridade=3, notificacao_grupo=notificacao_grupo)
+        notificacao_obj.save()
     messages.success(request, 'Atividade foi eliminada!')
     return HttpResponseRedirect('/minhasatividades/')
 

@@ -923,25 +923,61 @@
                         </form>
                     {% endif %}
                 </div>
-                <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
-                        <a class="button is-info" href="{% url 'alteraratividade' Atividade.id %}"><i class="mdi mdi-pencil">&nbsp;</i> Editar</a>
-                    {% endif %}
-                </div>
-                <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
-                        <form action="{% url 'eliminaratividade' Atividade.id %}" method=POST>
-                            {% csrf_token %}
-                            <button type="submit" class="button is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede eliminar a atividade?');">
-                                <span class="icon is-small">
-                                    <i class="mdi mdi-delete"></i>
-                                </span>
-                                <span>Eliminar</span>
-                                <!---->
-                            </button>
-                        </form>
-                    {% endif %}
-                </div>
+                
+                    {% for Sessao in sessoesatividade %}
+                            {% ifequal Sessao.atividade.id Atividade.id %}
+                                {% if Sessao.n_alunos != Atividade.limite_participantes %}
+                                    {% ifchanged %}
+                                        <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente'%}
+                                                <span class="tag is-warning">Esta atividade já se encontra com utilizadores inscritos!</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente'%}
+                                            <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
+                                                <form action="{% url 'eliminaratividade' Atividade.id %}" method=POST>
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="button is-small is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede eliminar a atividade que já se encontra com utilizadores inscritos?');">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </span>
+                                                        <span>Apagar mesmo assim?</span>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endifchanged %}
+                                {% else %}
+                                    {% ifchanged %}
+                                        <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
+                                                <a class="button is-info" href="{% url 'alteraratividade' Atividade.id %}"><i class="mdi mdi-pencil">&nbsp;</i> Editar</a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
+                                                <form action="{% url 'eliminaratividade' Atividade.id %}" method=POST>
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="button is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede eliminar a atividade?');">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </span>
+                                                        <span>Eliminar</span>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    {% endifchanged %}
+                                {% endif %}
+                            {% endifequal %}
+                        {% endfor %}
+                    
+                 
+                
             </div>
             <div class="level-right">
                 
