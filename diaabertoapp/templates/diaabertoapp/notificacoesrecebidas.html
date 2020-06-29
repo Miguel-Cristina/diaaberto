@@ -402,7 +402,7 @@
                                                 <!---->
                                             </thead>
                                             <tbody>
-                                                {% for Notificacao in notificacoes %}
+                                                {% for Notificacao in lista_notificacao_final %}
                                                     {% if Notificacao.visto %}
                                                         <tr draggable="false" class="header">
                                                             <td class="chevron-cell">
@@ -477,21 +477,21 @@
                                             <!---->
                                         </table>
                                     </div>
-                                    {% if notificacoes.has_other_pages %}
+                                    {% if lista_notificacao_final.has_other_pages %}
                                     <div class="level">
                                         <div class="level-left"></div>
                                         <div class="level-right">
                                             <div class="level-item">
                                                 <nav class="pagination">
-                                                    {% if notificacoes.has_previous %}
+                                                    {% if lista_notificacao_final.has_previous %}
                                                         {% if order_by is not None %}
-                                                            <a role="button" href="?page={{ notificacoes.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                            <a role="button" href="?page={{ lista_notificacao_final.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
                                                             <span class="icon" aria-hidden="true">
                                                                     <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                 </span>
                                                             </a>
                                                         {% else %}
-                                                            <a role="button" href="?page={{ notificacoes.previous_page_number }}" class="pagination-link pagination-previous">
+                                                            <a role="button" href="?page={{ lista_notificacao_final.previous_page_number }}" class="pagination-link pagination-previous">
                                                             <span class="icon" aria-hidden="true">
                                                                     <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                 </span>
@@ -504,15 +504,15 @@
                                                         </span>
                                                     </a>
                                                     {% endif %}
-                                                    {% if notificacoes.has_next %}
+                                                    {% if lista_notificacao_final.has_next %}
                                                         {% if order_by is not None %}
-                                                            <a role="button" href="?page={{ notificacoes.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                            <a role="button" href="?page={{ lista_notificacao_final.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
                                                                 <span class="icon" aria-hidden="true">
                                                                     <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                 </span>
                                                             </a>
                                                         {% else %}
-                                                            <a role="button" href="?page={{ notificacoes.next_page_number }}" class="pagination-link pagination-next">
+                                                            <a role="button" href="?page={{ lista_notificacao_final.next_page_number }}" class="pagination-link pagination-next">
                                                                 <span class="icon" aria-hidden="true">
                                                                     <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                 </span>
@@ -528,8 +528,8 @@
                                                     <ul class="pagination-list">
                                                         <!---->
                                                         <!---->
-                                                        {% for i in notificacoes.paginator.page_range %}
-                                                        {% if notificacoes.number == i %}
+                                                        {% for i in lista_notificacao_final.paginator.page_range %}
+                                                        {% if lista_notificacao_final.number == i %}
                                                         <li>
                                                             <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                         </li>
