@@ -50,6 +50,7 @@ def notificacoesrecebidas(request):
         messages.error(request, 'É necessário realizar o log in!')
         return HttpResponseRedirect('/login')
     lista_notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by("-hora")
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by("-hora")
     count_notificacoes = 0
     for x in lista_notificacoes:
         if (x.visto == False):
@@ -103,7 +104,7 @@ def notificacoesrecebidas(request):
 
     # BEGIN pagination
     page = request.GET.get('page', 1)
-    paginator = Paginator(lista_notificacoes, 8)
+    paginator = Paginator(lista_notificacoes, 5)
     try:
         lista_notificacoes = paginator.page(page)
     except PageNotAnInteger:
@@ -111,9 +112,14 @@ def notificacoesrecebidas(request):
     except EmptyPage:
         lista_notificacoes = paginator.page(paginator.num_pages)
     # END pagination
-
-    return render(request, 'diaabertoapp/notificacoesrecebidas.html', {'count_notificacoes':count_notificacoes,'notificacoes':lista_notificacoes,'lista_notificacao_final':lista_notificacoes, 'utilizador':utilizador, 'dataquery':data_query, 'assuntoquery':assunto_query, 
-                                                                      'utilizadorquery':utilizador_query, 'order_by':order_by, 'sort':sort })
+   
+    notificacoesOpen = Notificacao.objects.none()
+    if request.GET:
+        notificacaoID = request.GET.get("notificacaoid")
+        if notificacaoID is not None:
+            notificacoesOpen = Notificacao.objects.get(id=notificacaoID)
+    return render(request, 'diaabertoapp/notificacoesrecebidas.html', {'count_notificacoes':count_notificacoes,'notificacoes':notificacoes,'lista_notificacao_final':lista_notificacoes, 'utilizador':utilizador, 'dataquery':data_query, 'assuntoquery':assunto_query, 
+                                                                      'utilizadorquery':utilizador_query, 'order_by':order_by, 'sort':sort ,'notificacoesOpen':notificacoesOpen})
 
 
 
@@ -2154,6 +2160,7 @@ def consultaratividades(request):
     if campus_query != '' and campus_query is not None:
         atividade_list = atividade_list.filter(campus=campus_query)
         campus_arr = campus_arr.filter(id=campus_query)
+        organicas = organicas.filter(campus=campus_query)
     # END filter_by_campus
     # BEGIN filter_by_unidadeorganica
     organica_query = request.GET.get('unidadeorganica')

@@ -740,56 +740,63 @@
                             </div>
         
 
-        <p><strong>Materiais:</strong></p>
-        <div class="b-table">
-            <!---->
-            <!---->
-            <div class="table-wrapper">
-                <table class="table has-mobile-cards">
-                    <thead>
-                        <tr>
-                            <!---->
-                            <!---->
-                            <th class="">
-                                <div class="th-wrap">Material
-                                    <span class="icon is-small" style="display: none;">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                    </span>
+        
+        {% for Mat in materiais %}
+        {%if Mat.atividade.id == Atividade.id > 0 %}
+        {% ifchanged %}
+                            <p><strong>Materiais:</strong></p>
+                                <div class="b-table">
+                                <!---->
+                                <!---->
+                                <div class="table-wrapper">
+                                    <table class="table has-mobile-cards">
+                                        <thead>
+                                            <tr>
+                                                <!---->
+                                                <!---->
+                                                <th class="">
+                                                    <div class="th-wrap">Material
+                                                        <span class="icon is-small" style="display: none;">
+                                                            <i class="mdi mdi-arrow-up"></i>
+                                                        </span>
+                                                    </div>
+                                                </th>
+                                                <th class="">
+                                                    <div class="th-wrap">Quantidade
+                                                        <span class="icon is-small" style="display: none;">
+                                                            <i class="mdi mdi-arrow-up"></i>
+                                                        </span>
+                                                    </div>
+                                                </th>
+                                                <!---->
+                                            </tr>
+                                            <!---->
+                                            <!---->
+                                        </thead>
+                                        <tbody>
+            {% endifchanged %}
+            {% endif %}
+            {% endfor %}
+            {% for Mat in materiais %}
+                {% ifequal Mat.atividade.id Atividade.id %}
+                                            <tr draggable="false">
+                                                <td data-label="Material" class=""> {{ Mat.material }} </td>
+                                                <td data-label="Hora" class=""> {{ Mat.quantidade }} </td>
+                                            </tr>
+                {% endifequal %}
+            {% endfor %}
+            {% for Mat in materiais %}
+            {%if Mat.atividade.id == Atividade.id > 0 %}
+            {% ifchanged %}
+                                        </tbody>
+                                        <!---->
+                                    </table>
                                 </div>
-                            </th>
-                            <th class="">
-                                <div class="th-wrap">Quantidade
-                                    <span class="icon is-small" style="display: none;">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                    </span>
-                                </div>
-                            </th>
-                            <!---->
-                        </tr>
-                        <!---->
-                        <!---->
-                    </thead>
-                    <tbody>
-                        <!---->
-
-                        {% for Mat in materiais %}
-                            {% ifequal Mat.atividade.id Atividade.id %}
-                                <tr draggable="false">
-                                    <!---->
-                                    <td data-label="Material" class=""> {{ Mat.material }} </td>
-                                    <td data-label="Hora" class=""> {{ Mat.quantidade }} </td>
-                                
-                                    <!---->
-                                </tr>
-                             {% endifequal %}
-                        {% endfor %}
-                        <!---->
-                    </tbody>
-                    <!---->
-                </table>
-            </div>
-            <!---->
-        </div>
+                                <!---->
+                            </div>
+            {% endifchanged %}
+            {% endif %}
+            {% endfor %}
 
         <br />
         <p><strong>Sessões:</strong></p>
@@ -916,8 +923,6 @@
                         </form>
                     {% endif %}
                 </div>
-            </div>
-            <div class="level-right">
                 <div class="level-item">
                     {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
                         <a class="button is-info" href="{% url 'alteraratividade' Atividade.id %}"><i class="mdi mdi-pencil">&nbsp;</i> Editar</a>
@@ -937,6 +942,10 @@
                         </form>
                     {% endif %}
                 </div>
+            </div>
+            <div class="level-right">
+                
+                
             </div>
         </div>
     </div>
