@@ -2554,7 +2554,7 @@ def atribuir_tarefa(request, pk):
         tarefa_obj.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
-        return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas_1})
+        return render(request, 'diaabertoapp/tarefas.html', {'utilizador': aut_utilizador,'tarefas': tarefas_1})
 
 
 def remove_colab(request, pk):
@@ -2737,6 +2737,7 @@ def grupos_switch(request):
 
 
 def user_switch(request):
+  
     userlist = []
     usernamelist = []
     colaboracaolist = []
@@ -2744,8 +2745,8 @@ def user_switch(request):
     tarefa_tipo = tarefa.tipo_tarefa
     utilizadores = Utilizador.objects.filter(utilizadortipo__tipo='Colaborador').order_by("nome")
     
-    #numero_colabs = 1
-    #if(tarefa.tipo_tarefa == 'AV'):
+    numero_colabs = 1
+   
 
 
     d = timedelta(seconds=(tarefa.duracao * 60))
@@ -2756,6 +2757,17 @@ def user_switch(request):
     no_task_day = 0
 
     if (tarefa.estado == 'PA'):
+
+        if(tarefa.tipo_tarefa == 'AV'):
+             atividade = Atividade.objects.get(pk=tarefa.atividade.id)
+             sessoes = SessaoAtividade.objects.filter(atividade=atividade)
+             
+             for sessao in sessoes:
+                sessao_hora = sessao.sessao.hora
+                sessao_hora_gucci = timedelta(seconds=((tarefa.horario.hour * 3600) + (tarefa.horario.minute * 60) + tarefa.horario.second))
+                if(tarefa_inicio == sessao_hora_gucci):
+                    numero_colabs = sessao.numero_colaboradores
+                 
 
         for utilizador in utilizadores:
             colaboracoes = Colaboracao.objects.filter(colaborador=utilizador)
@@ -2819,7 +2831,8 @@ def user_switch(request):
         dados = {
             'usernamelist': list(dict.fromkeys(usernamelist)),
             'userlist': list(dict.fromkeys(userlist)),
-            'colaboracao': list(dict.fromkeys(colaboracaolist))
+            'colaboracao': list(dict.fromkeys(colaboracaolist)),
+            'numero_colabs': numero_colabs
         }
 
     return JsonResponse(dados)
