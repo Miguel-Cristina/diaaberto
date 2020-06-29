@@ -144,11 +144,13 @@
                                                         </td>
                                                         <td data-label="Ação" class="has-text-centered">
                                                             {% if lc.visto is False %}
-                                                                <button type="button"
+                                                              <button class="button has-text-white is-small" type="button"
                                                                         onclick="location.href='editar/{{ lc.id }}';"
-                                                                        value="Editar"><i style='font-size:18px'
-                                                                                          class='material-icons'>&#xe254;</i>
-                                                                </button>
+                                                                        value="Editar">
+                                                                         <span class="icon is-small has-text-grey">
+                                                                            <i class="has-text-red mdi-pencil-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                                        </span>
+                                                              </button>
                                                             {% else %}
                                                                 <button class="button is-outlined is-small" disabled="">
                                                                     <span class="">
