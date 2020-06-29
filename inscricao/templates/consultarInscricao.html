@@ -23,6 +23,13 @@
 
     <script src="{% static 'main/js/consultar_inscricao.js' %}"></script>
 
+
+    <style>
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <style>
     .notices {
@@ -368,7 +375,7 @@
                                                                                                         Não
                                                                                                     {% elif t.transporte_entre_campus == "ida e volta" %}
                                                                                                         Ida e volta
-                                                                                                    {% elif t.transporte_entre_campus == "ida e volta" %}
+                                                                                                    {% elif t.transporte_entre_campus == "só ida" %}
                                                                                                         só ida
                                                                                                     {% endif %}</td>
                                                                                                 <td data-label="atividade"
@@ -403,11 +410,6 @@
                                                                                             </div>
                                                                                         </th>
                                                                                         <th>
-                                                                                            <div class="th-wrap">
-                                                                                                Preço Total
-                                                                                            </div>
-                                                                                        </th>
-                                                                                        <th>
                                                                                             <div class="th-wrap"></div>
                                                                                         </th>
                                                                                         <th>
@@ -431,8 +433,7 @@
                                                                                                         class="">0
                                                                                                     </td>
                                                                                                     <td data-label="atividade"
-                                                                                                        class="">0€
-                                                                                                    </td>
+                                                                                                        class=""></td>
                                                                                                     <td data-label="atividade"
                                                                                                         class=""></td>
                                                                                                     <td data-label="atividade"
@@ -453,9 +454,7 @@
                                                                                                         id="outro{{ p.id }}">{{ emi.numero_outro_normal }}
                                                                                                     </td>
                                                                                                     <td data-label="atividade"
-                                                                                                        class=""
-                                                                                                        id="preco_total{{ p.id }}">
-                                                                                                    </td>
+                                                                                                        class=""></td>
                                                                                                     <td data-label="atividade"
                                                                                                         class=""></td>
                                                                                                     <td data-label="atividade"
@@ -725,23 +724,24 @@
                                                             <td data-label="buttons" class="">
                                                                 <div class="field is-grouped">
                                                                     <p class="control">
-                                                                        <button class="button" type="button"
+                                                                        <button class="button has-text-white is-small"
+                                                                                type="button"
                                                                                 onclick="location.href='editar/{{ p }}';">
-                                                                            <span class="icon">
-                                                                                <i class="mdi mdi-pencil mdi-24px"></i>
-                                                                            </span>
+                                                                            <span class="icon is-small has-text-grey">
+                                                                            <i class="has-text-red mdi-pencil-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                                        </span>
                                                                         </button>
                                                                     </p>
                                                                     <p class="control">
-                                                                        <button class="button is-danger is-outlined"
+                                                                        <button class="button has-text-white is-small"
                                                                                 type="button"
                                                                                 id=""
                                                                                 name=""
                                                                                 value="{{ p.id }}"
                                                                                 onclick="deleteInscricao(this.value)">
-                                                                                <span class="icon">
-                                                                                    <i class="mdi mdi-close mdi-24px"></i>
-                                                                                </span>
+                                                                                <span class="icon is-small has-text-danger">
+                                                                                <i class="has-text-red mdi-close-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                                            </span>
                                                                         </button>
                                                                     </p>
                                                                 </div>
@@ -937,7 +937,7 @@
                                                                                                             Não
                                                                                                         {% elif t.transporte_entre_campus == "ida e volta" %}
                                                                                                             Ida e volta
-                                                                                                        {% elif t.transporte_entre_campus == "ida e volta" %}
+                                                                                                        {% elif t.transporte_entre_campus == "só ida" %}
                                                                                                             só ida
                                                                                                         {% endif %}</td>
                                                                                                     <td data-label="atividade"
@@ -974,11 +974,6 @@
                                                                                                 </div>
                                                                                             </th>
                                                                                             <th>
-                                                                                                <div class="th-wrap">
-                                                                                                    Preço Total
-                                                                                                </div>
-                                                                                            </th>
-                                                                                            <th>
                                                                                                 <div class="th-wrap"></div>
                                                                                             </th>
                                                                                             <th>
@@ -1002,8 +997,7 @@
                                                                                                             class="">0
                                                                                                         </td>
                                                                                                         <td data-label="atividade"
-                                                                                                            class="">0€
-                                                                                                        </td>
+                                                                                                            class=""></td>
                                                                                                         <td data-label="atividade"
                                                                                                             class=""></td>
                                                                                                         <td data-label="atividade"
@@ -1024,9 +1018,7 @@
                                                                                                             id="outro{{ p.id }}">{{ emi.numero_outro_normal }}
                                                                                                         </td>
                                                                                                         <td data-label="atividade"
-                                                                                                            class=""
-                                                                                                            id="preco_total{{ p.id }}">
-                                                                                                        </td>
+                                                                                                            class=""></td>
                                                                                                         <td data-label="atividade"
                                                                                                             class=""></td>
                                                                                                         <td data-label="asdas"
@@ -1082,7 +1074,7 @@
                                                                                                     class="">
                                                                                                     <td data-label="atividade"
                                                                                                         class="">
-                                                                                                        {{ s.sessaoAtividade.atividade.nome }} {{ s.id }}
+                                                                                                        {{ s.sessaoAtividade.atividade.nome }}
                                                                                                         <p id="sessao{{ s.id }}"
                                                                                                            class=""
                                                                                                            hidden></p>
@@ -1154,15 +1146,15 @@
                                                                                                         style="width: 10%">
                                                                                                         <div class="field is-grouped">
                                                                                                             <p class="control">
-                                                                                                                <button class="button is-danger is-outlined"
+                                                                                                                <button class="button has-text-white is-small"
                                                                                                                         type="button"
                                                                                                                         id=""
                                                                                                                         name="{{ s.sessaoAtividade.atividade.nome }} ás {{ s.sessaoAtividade.sessao.hora|date:"H:i" }}"
                                                                                                                         value="{{ s.id }}"
                                                                                                                         onclick="deleteSessao(this.value, this.name)">
-                                                                                                                            <span class="icon">
-                                                                                                                                <i class="mdi mdi-close mdi-24px"></i>
-                                                                                                                            </span>
+                                                                                                                            <span class="icon is-small has-text-danger">
+                                                                                <i class="has-text-red mdi-close-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                                            </span>
                                                                                                                 </button>
                                                                                                             </p>
                                                                                                         </div>
@@ -1633,21 +1625,26 @@
             </div>
         </div>
     </form>
-     {% if messages %}
-            {% for message in messages %}
-            <div id="message_container" class="notices is-bottom"><div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %} class="toast is-success is-bottom" {% endif %} style=""><div>{{ message }}</div></div></div>
-            {% endfor %}
+    {% if messages %}
+        {% for message in messages %}
+            <div id="message_container" class="notices is-bottom">
+                <div role="alert" {% if message.tags == 'error' %} class="toast is-danger is-bottom" {% else %}
+                     class="toast is-success is-bottom" {% endif %} style="">
+                    <div>{{ message }}</div>
+                </div>
+            </div>
+        {% endfor %}
     {% endif %}
 {% endblock %}
 </body>
 <script>
-        // suppose the `id` attribute of element is `message_container`.
-        var message_ele = document.getElementById("message_container");
+    // suppose the `id` attribute of element is `message_container`.
+    var message_ele = document.getElementById("message_container");
 
-        setTimeout(function(){
-           message_ele.style.display = "none";
-        }, 4000);
-        // Timeout is 3 sec, you can change it
+    setTimeout(function () {
+        message_ele.style.display = "none";
+    }, 4000);
+    // Timeout is 3 sec, you can change it
 
 </script>
 </html>

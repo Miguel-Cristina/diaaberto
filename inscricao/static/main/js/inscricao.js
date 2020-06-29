@@ -200,9 +200,11 @@ function EscolherSessao(atividade_id, sessao_id, ini, dur,
         campus.innerHTML = cam.toString()
         let inscritos_value = "'0'"
         acao.className = 'has-text-centered'
-        acao.innerHTML = '<p onclick="AlterarInscritos(' + ses_id_plica + ', ' + inscritos_value +
+        acao.innerHTML = '<p class="button has-text-white is-small" onclick="AlterarInscritos(' + ses_id_plica + ', ' + inscritos_value +
             ', ' + sessao_id_plica + ')"><a>\n' +
-            '<span class="icon has-text-danger"><i class="mdi mdi-close-box mdi-24px"></i></span></a></p>'
+            '<span class="icon is-small has-text-danger">\n' +
+            '                <i class="has-text-red mdi-close-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>\n' +
+            '            </span></a></p>'
         row_count++
         makecount()
     }
