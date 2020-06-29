@@ -54,7 +54,66 @@ def notificacoesrecebidas(request):
     for x in lista_notificacoes:
         if (x.visto == False):
             count_notificacoes = count_notificacoes + 1
-    return render(request, 'diaabertoapp/notificacoesrecebidas.html', {'count_notificacoes':count_notificacoes,'notificacoes':lista_notificacoes,'lista_notificacao_final':lista_notificacoes, 'utilizador':utilizador})
+    # BEGIN filter_by_data
+    data_query = request.GET.get('data')
+    if data_query != '' and data_query is not None:
+        lista_notificacoes = lista_notificacoes.filter(utilizador_rec=utilizador, hora__gte=data_query).order_by("-hora")
+        
+    # END filter_by_data
+    # BEGIN filter_by_assunto
+    assunto_query = request.GET.get('assunto')
+    if assunto_query != '' and assunto_query is not None:
+        lista_notificacoes = lista_notificacoes.filter(utilizador_rec=utilizador, assunto__icontains=assunto_query).order_by("-hora")
+        
+    # END filter_by_assunto
+    # BEGIN filter_by_name
+    utilizador_query = request.GET.get('utilizador')
+    if utilizador_query != '' and utilizador_query is not None:
+        lista_notificacoes = lista_notificacoes.filter(utilizador_rec=utilizador, utilizador_env__nome__icontains=utilizador_query).order_by("-hora")
+    # END filter_by_name
+    # BEGIN order_by
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'data':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('hora')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-hora')
+    elif order_by == 'assunto':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('assunto')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-assunto')
+    elif order_by == 'conteudo':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('conteudo')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-conteudo')
+    elif order_by == 'prioridade':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('prioridade')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-prioridade')
+    elif order_by == 'utilizador':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('utilizador_env')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-utilizador_env')
+    # END order_by
+
+    # BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(lista_notificacoes, 8)
+    try:
+        lista_notificacoes = paginator.page(page)
+    except PageNotAnInteger:
+        lista_notificacoes = paginator.page(1)
+    except EmptyPage:
+        lista_notificacoes = paginator.page(paginator.num_pages)
+    # END pagination
+
+    return render(request, 'diaabertoapp/notificacoesrecebidas.html', {'count_notificacoes':count_notificacoes,'notificacoes':lista_notificacoes,'lista_notificacao_final':lista_notificacoes, 'utilizador':utilizador, 'dataquery':data_query, 'assuntoquery':assunto_query, 
+                                                                      'utilizadorquery':utilizador_query, 'order_by':order_by, 'sort':sort })
 
 
 
@@ -1705,6 +1764,18 @@ def proporatividade(request):
                     sessao.atividade = atividade
                     sessao.n_alunos = atividade.limite_participantes
                     sessao.save()
+            #Envio da notificacao para o coordenador
+            if Notificacao.objects.all().exists():
+                notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+            else:
+                notificacao_grupo = 0
+
+            coordenadores = Utilizador.objects.filter(utilizadortipo__tipo="Coordenador",unidadeorganica=atividade.unidadeorganica)
+            for coordenador in coordenadores:
+                notificacao_obj = Notificacao(assunto="Nova atividade proposta!", hora=datetime.now(), conteudo="Atividade <" + atividade.nome + "> proposta por " + utilizador.nome,
+                                  utilizador_rec=coordenador, utilizador_env=utilizador, prioridade=2, notificacao_grupo=notificacao_grupo)
+                notificacao_obj.save()
+            #Fim do envio da notificacao para o coordenador
             messages.success(request, 'Proposta de atividade criada com sucesso!')
             return HttpResponseRedirect('/minhasatividades/')
         else:
@@ -1762,6 +1833,8 @@ def alteraratividade(request, pk):
     organicas = UnidadeOrganica.objects.get(id=utilizador.unidadeorganica.id)
     departamentos = Departamento.objects.get(id=utilizador.departamento.id)
 
+    
+
     notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
     count_notificacoes = 0
     for x in notificacoes:
@@ -1791,6 +1864,20 @@ def alteraratividade(request, pk):
             aForm.save_m2m()
             mForm.save()
             sForm.save()
+
+            #Envio da notificacao para o coordenador
+            if Notificacao.objects.all().exists():
+                notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+            else:
+                notificacao_grupo = 0
+
+            coordenadores = Utilizador.objects.filter(utilizadortipo__tipo="Coordenador",unidadeorganica=atividade.unidadeorganica)
+            for coordenador in coordenadores:
+                notificacao_obj = Notificacao(assunto="Proposta alterada", hora=datetime.now(), conteudo="Proposta <" + atividade.nome + "> alterada!",
+                                  utilizador_rec=coordenador, utilizador_env=atividade.responsavel, prioridade=2, notificacao_grupo=notificacao_grupo)
+                notificacao_obj.save()
+            #Fim do envio da notificacao para o coordenador
+
             messages.success(request, 'Proposta de atividade editada com sucesso!')
             return HttpResponseRedirect('/minhasatividades/')
         else:
