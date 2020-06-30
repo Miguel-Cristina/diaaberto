@@ -2451,6 +2451,7 @@ def add_tarefa(request):
             tarefa.cordenador = aut_utilizador
             if (tarefa.tipo_tarefa == 'PE'):
                 tarefa.duracao = 15
+
             if (tarefa.tipo_tarefa == 'AV'):
                 horas = request.POST.get("sessao")
                 print(horas)
