@@ -99,7 +99,7 @@
                                                         {{ form.tipo_tarefa }}
                                                         <label class="b-radio radio" style="margin-right: 1rem;">
                                                             <input onclick="a(1)" type="radio" id="checkradio1"
-                                                                   name="checkradio" value="1" />
+                                                                   name="checkradio" value="AV" />
 
                                                             <span class="check"></span>
                                                             <span class="control-label">
@@ -107,14 +107,14 @@
                                                             </span>
                                                         </label><label class="b-radio radio" style="margin-right: 1rem;">
                                                             <input onclick="a(2)" type="radio"
-                                                                   id="checkradio2" name="checkradio" value="2" />
+                                                                   id="checkradio2" name="checkradio" value="PE" />
                                                             <span class="check"></span>
                                                             <span class="control-label">
                                                                 Acompanhar participantes
                                                             </span>
                                                         </label><label class="b-radio radio">
                                                             <input onclick="a(3)" type="radio" name="checkradio"
-                                                                   id="checkradio3" value="3" />
+                                                                   id="checkradio3" value="OT" />
                                                             <span class="check"></span>
                                                             <span class="control-label"> Outra </span>
                                                         </label>
@@ -159,12 +159,11 @@
 
 
 
-                                                                <div class="control is-expanded has-icons-left">
+                                                                <div class="label"> Atividades:
                                                                     <span class="select is-fullwidth is-full">
-                                                                        {{ form.atividade }}
-                                                                    </span>
-                                                                    <span class="icon is-left">
-                                                                        <i class="mdi mdi-magnify mdi-24px"></i>
+                                                                        <select class="input" id="atividade" name="atividade">
+                                                                            
+                                                                        </select>
                                                                     </span>
                                                                 </div>
 
@@ -211,9 +210,16 @@
                                                                     <div class="autocomplete control">
 
                                                                         <div class="control is-expanded has-icons-left">
-                                                                            <span class="select is-fullwidth is-empty">
-                                                                                {{ form.localizacao_grupo }}
+                                                                            <span class="select is-fullwidth ">
+                                                                               <select  id="salaSearchEnc" name="localizacao_grupo">
+
+                                                                                   
+                                      
+                                                                             </select>
                                                                             </span>
+
+                                                                             
+
                                                                             <span class="icon is-left">
                                                                                 <i class="mdi mdi-magnify mdi-24px"></i>
                                                                             </span>
@@ -227,12 +233,20 @@
                                                                     <div class="autocomplete control">
 
                                                                         <div class="control is-expanded has-icons-left">
-                                                                            <span class="select is-fullwidth is-empty">
-                                                                                {{ form.destino }}
+                                                                            <span class="select is-fullwidth ">
+                                                                                <select  id="salaSearchDesct" name="destino"><!--onchange="searchByType()"-->
+                                                       
+                                                                                
+                                                                                   
+                                                                                     
+                                                                                
+                                                                            </select>
                                                                             </span>
                                                                             <span class="icon is-left">
                                                                                 <i class="mdi mdi-magnify mdi-24px"></i>
                                                                             </span>
+
+                                                                           
                                                                         </div>
 
                                                                     </div>
@@ -245,9 +259,15 @@
                                                                          <label class="label">Grupo/s a Transportar:</label>
                                                                             <div class=" control is-expanded ">
                                                                                <span class="select is-multiple is-fullwidth ">
-                                                                                   {{form.grupo }}
+                                                                                 
+
+                                                                                   <select  id="gruposSelect" multiple><!--onchange="searchByType()"-->
+                                                       
+                                                                                
+                                                                                    </select>
                                                                                 </span>
                                                                                  
+
                                                                             </div>
                                                                           <!---->
                                                                         </div>
@@ -266,7 +286,8 @@
 
                                                 <hr />
                                             </div>
-                                        </div>
+                                            <input type="hidden" id="checker" value="-1">
+                                        
                                     </section>
                                     <div class="column is-8 is-offset-2">
                                         <div class="level">
@@ -329,29 +350,92 @@
 
      
     <script>
-       $( document).ready(function() {
-           
-           var grupos = document.getElementById("gruposSelect");
+      
+         $( document).ready(function() {
+           if ($("#tipo_tarefa").val() == 'PE') {
 
-           var selected2 = $('#gruposSelect option');
-           selected2.each(function () {
-               if (this.selected == "")
-                   this.remove();
+                   
 
-               else {
-                    var option = document.createElement("option");
-                    option.value = this.value;
-                    option.text = "Grupo " + this.value;
-                    option.selected = "selected";
-                    grupos.add(option);
-                    this.remove();
+                    var tarefa = $("#tarefaid").val();
+            
+                    var horas = $("#horas").val();
+                    var data = $("#data").val();
+                        
+                 
+                           $.ajax({
+                               url: '{% url "salas_switch_edit" %}',
+                                 data: {
+                                     'tarefa': tarefa
+                                 },
+                             dataType: 'json',
+                             success: function (dados) {
+                               
+                               if (typeof dados.SALALIST[0] !== 'undefined') {   // this is good
+                                            var lista = dados.SALALIST;
+                                          
+                                            var nome  = dados.NAMELIST;
+                                            var x = lista.length;
+                                            var salas = document.getElementById("salaSearchEnc");    
+                                            var salas1 = document.getElementById("salaSearchDesct");                                      
 
-               }
-                  
-           });
+                                            for(var i = 0; i < x; i++){
+                                                var option = document.createElement("option");
+                                                var option2 = document.createElement("option");
+                                                option.value = lista[i];
+                                                option.text = nome[i];
+                                                option2.value = lista[i];
+                                                option2.text = nome[i];
+                                                salas.add(option); 
+                                                salas1.add(option2);
+                                            }
+                                           sala =dados.ENCCOUNT[0];
+                                           saladest     =dados.DESTCOUNT[0];
+                                           document.getElementById('salaSearchEnc').getElementsByTagName('option')[dados.ENCCOUNT[1]].selected = 'selected'
+                                           document.getElementById('salaSearchDesct').getElementsByTagName('option')[dados.DESTCOUNT[1]].selected = 'selected'
+                               
+                                                           var options = document.querySelectorAll('#gruposSelect option');
+                                                           options.forEach(o => o.remove());
+                                          
+                                                            $.ajax({
+                                                                url: '{% url "grupos_switch_edit" %}',
+                                                                  data: {
+                                                                      'data' : data,
+                                                                      'horas': horas,
+                                                                      'sala' : sala,
+                                                                      'tarefa':tarefa
+                                                                  },
+                                                              dataType: 'json',
+                                                              success: function (dados) {
+                                                                 
+                                                                if (typeof dados.idinscricao[0] !== 'undefined') {   // this is good
+                                                                   
+                                                                  
+                                                                  var lista = dados.idinscricao;
+                                                                  var x = lista.length;
+                                                                  var grupos = document.getElementById("gruposSelect");                
+                                                                 
+                                                                   
+                                                                  for(var i = 0; i < x; i++){
+                                                                    var option = document.createElement("option");
+                                                                    option.value = lista[i];
+                                                                    option.text = "Grupo "+lista[i];
+                                                                    grupos.add(option);
+                                                                    
+                                                                    
+                                                                   }
 
+                                                                    for(var i = 0; i < dados.index; i++){  
+                                                                        document.getElementById('salaSearchEnc').getElementsByTagName('option')[dados.index1[i]].selected = 'selected';
+                                                                    }
+                                                                }
 
-           
+                                                              }
+                                                            });
+                        }
+                      }
+                    });
+                
+        }   
        });
     </script>
     
@@ -360,6 +444,7 @@
             $("#salaSearchEnc").change(function () {
                
              
+            if($('#checkradio2').is(':checked')){
                var options = document.querySelectorAll('#gruposSelect option');
                options.forEach(o => o.remove());
                
@@ -401,6 +486,7 @@
 
                       }
                     });
+        }
 
 
             }
@@ -416,7 +502,7 @@
         $(document).ready(function () {
             $("#data").change(function () {
                
-              
+              if($('#checkradio2').is(':checked')){
                var options = document.querySelectorAll('#gruposSelect option');
                options.forEach(o => o.remove());
                
@@ -457,6 +543,7 @@
 
                       }
                     });
+        }
 
 
             }
@@ -474,7 +561,7 @@
         $(document).ready(function () {
             $("#horas").change(function () {
                
-            
+            if($('#checkradio2').is(':checked')){
                var options = document.querySelectorAll('#gruposSelect option');
                options.forEach(o => o.remove());
                
@@ -515,6 +602,7 @@
 
                       }
                     });
+        }
 
 
             }
@@ -532,6 +620,9 @@
             $("#data").change(function () {
                
               
+
+        if($('#checkradio1').is(':checked')){
+       
                var options = document.querySelectorAll('#atividade option');
                options.forEach(o => o.remove());
                
@@ -550,7 +641,7 @@
                             
                           
                           var lista = dados.activity_list;
-                        alert(lista[0]);
+                       
                           var nomes = dados.activity_name_list; 
                           var x = lista.length;
                           var grupos = document.getElementById("atividade");                
@@ -567,6 +658,7 @@
 
                       }
                     });
+        }
 
 
             }
@@ -583,6 +675,7 @@
             $("#atividade").change(function () {
                
               
+         if($('#checkradio1').is(':checked')){
                var options = document.querySelectorAll('#sessoesSelect option');
                options.forEach(o => o.remove());
                
@@ -602,7 +695,8 @@
                             
                           
                           var lista = dados.sessions_list;
-                          alert(lista[0]);
+                          
+
                           var horas = dados.sessions_hours_list; 
                           var x = horas.length;
                           var grupos = document.getElementById("sessoesSelect");                
@@ -619,6 +713,7 @@
 
                       }
                     });
+         }
 
 
             }
@@ -633,28 +728,34 @@
         <script>
 
         $(document).ready(function () {
-               
               
+              var tarefa = $("#tarefaid").val();
+              var estranho = -1;
+            
+              
+             if ($("#tipo_tarefa").val() == 'AV') {
                var options = document.querySelectorAll('#atividade option');
                options.forEach(o => o.remove());
-
+            
                $('#atividade').prepend('<option readonly="readonly"></option>');
 
                 var data = $("#data").val();
-
+                
                     $.ajax({
-                        url: '{% url "activity_switch" %}',
+                        url: '{% url "activity_switch_edit" %}',
                           data: {
-                              'data' : data
+                              'data' : data,
+                              'tarefa': tarefa
                           },
                       dataType: 'json',
                       success: function (dados) {
                          
                         if (typeof dados.activity_list[0] !== 'undefined') {   // this is good
-                            
+                          
+                          
                           
                           var lista = dados.activity_list;
-                        alert(lista[0]);
+                        
                           var nomes = dados.activity_name_list; 
                           var x = lista.length;
                           var grupos = document.getElementById("atividade");                
@@ -662,21 +763,77 @@
                            
                           for(var i = 0; i < x; i++){
                             var option = document.createElement("option");
+                            if(dados.posicaonoarray == i){
+                                 
+                                document.getElementById('checker').value = lista[i];
+                            }
                             option.value = lista[i];
                             option.text = nomes[i];
                             grupos.add(option);
                            }
-                        }
+                            document.getElementById('atividade').getElementsByTagName('option')[dados.posicaonoarray+1].selected = 'selected'
+                        
+                                 var options = document.querySelectorAll('#sessoesSelect option');
+                                options.forEach(o => o.remove());
+              
+                                 var data = $("#data").val();
+                                 var e = document.getElementById("atividade").value;
+                                 //var strUser = e.options[e.selectedIndex].value;
+                                 var atividade = document.getElementById('checker').value ;
+                                 
+
+                                     $.ajax({
+                                         url: '{% url "sessions_switch" %}',
+                                           data: {
+                                               'atividade' : atividade,
+                                                 'data' : data
+                                           },
+                                       dataType: 'json',
+                                       success: function (dados) {
+                                          
+                                         if (typeof dados.sessions_list[0] !== 'undefined') {   // this is good
+                                             
+                                           
+                                           var lista = dados.sessions_list;
+                                           
+
+                                           var horas = dados.sessions_hours_list; 
+                                           var x = horas.length;
+                                           var grupos = document.getElementById("sessoesSelect");                
+                                          
+                                            
+                                           for(var i = 0; i < x; i++){
+                                             var option = document.createElement("option");
+                                             option.value = lista[i];
+                                             option.text = horas[i];
+                                             grupos.add(option);
+                                            }
+                                         }
+
+
+                                       }
+                                     });
+
+            
+                            }
+                        
+                        
 
 
                       }
                     });
+                
+              
+                    
+
+            }
 
            });
 
     </script> 
 
 
+  
 
             <script>
             //
@@ -717,7 +874,7 @@
             //                
             //              
             //              var lista = dados.activity_list;
-            //            alert(lista[0]);
+            //            
             //              var nomes = dados.activity_name_list; 
             //              var x = lista.length;
             //              var grupos = document.getElementById("atividade");                
