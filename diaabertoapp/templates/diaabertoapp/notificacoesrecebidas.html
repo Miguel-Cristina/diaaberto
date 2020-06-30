@@ -419,7 +419,11 @@
                                                             <td data-label="Prioridade" class=""> {{ Notificacao.prioridade }} </td>
                                                             <td data-label="Utilizador" class=""> {{ Notificacao.utilizador_env }} </td>
                                                             <td>
-                                                                <i class="mdi mdi-check-all mdi-12px"> visto</i>
+                                                               <button class="button is-outlined is-small" disabled="">
+                                                                    <span class="">
+                                                                        <i class="mdi mdi mdi-24px">Vista</i>
+                                                                    </span>
+                                                                </button>
                                                             </td>
                                                             <!---->
                                                         </tr>
@@ -608,7 +612,11 @@
                                     
                                             {% if notificacoesOpen.visto %}
                                                 <p>
-                                                    <i class="mdi mdi-check-all mdi-12px"> visto</i>
+                                                    <button class="button is-outlined is-small" disabled="">
+                                                        <span class="">
+                                                            <i class="mdi mdi mdi-24px">Vista</i>
+                                                        </span>
+                                                    </button>
                                                 </p>
                                             {% else %}
                                                         
