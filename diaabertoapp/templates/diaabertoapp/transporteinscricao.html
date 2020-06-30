@@ -117,11 +117,45 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab router-link">Configuração de Transportes</a>
-                    <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab router-link"> Configuração de Percursos </a>
-                    <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab router-link"> Configuração de Horarios </a>
-                    <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab router-link"> Configuração de Preços </a>
-                    <a data-v-a67fe1ba="" href="/configurardiaaberto" class="navbar-item is-tab router-link"> Configuração Dia aberto </a>
+                                        <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Atividades
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/minhasatividades" class="navbar-item is-tab router-link"> Minhas Atividades </a>
+                            <a data-v-a67fe1ba="" href="/consultaratividades" class="navbar-item is-tab router-link">Consultar Atividades</a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Tarefas
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/tarefas" class="navbar-item is-tab router-link"> Minhas Tarefas </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Transportes
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link"> Meus Transportes </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Gestão de Configurações
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
+                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
+                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
+                            <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab router-link-exact-active router-link-active">Configuração dos Transportes</a>
+                            <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab is-active">Configuração dos Percursos</a>
+                            <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab">Configuração dos Horários</a>
+                            <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab">Configuração dos Menus</a>
+                        </div>
+                    </div>
                     </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -189,35 +223,104 @@
                                 <li>
                                     <a href="/index/" class="router-link-active">Início</a>
                                 </li>
+                                    <li>
+                                    <a href="/transportes" class="router-link-active">Transportes</a>
+                                </li>
                                 <li class="is-active">
-                                    <a href="/configurardiaaberto" class="router-link-exact-active router-link-active"> Configurar Dia aberto </a>
+                                    <a href="/transporteinscricao" class="">Inscricão Transportes</a>
                                 </li>
                             </ul>
                         </nav>
                         <div style="padding: 3rem 2vw 1rem; ">
 
                                 <div class="columns">
+                                    <div class="column tile is-3">
+                                        <div class="container box">
+                                            <div class="level">
+                                                <div class="level-left">
+                                                    <div class="level-item">
+                                                        <p class="menu-label">Filtros</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <form method="GET" action=".">
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not origemquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="origemSearch" name="origem"  placeholder="Origem" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="text" autocomplete="off" id="origemSearch" name="origem"  placeholder="Origem" class="input" value="{{ origemquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('origemSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+                                            </div>
+                                             <div class="field has-addons">
+                                            <!---->
+                                            {% if not destinoquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="destinoSearch" name="destino"  placeholder="Destino" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="text" autocomplete="off" id="destinoSearch" name="destino"  placeholder="Destino" class="input" value="{{ destinoquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('destinoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    </div>
                                     <div class="column tile is-9">
                                         <div class="container box">
                                             <div class="level">
                                                 <div class="level-left">
                                                     <div class="level-item">
-                                                        <p class="menu-label">Configuração do Dia aberto</p>
+                                                        <p class="menu-label">Inscrições</p>
                                                     </div>
                                                 </div>
-                                                {% if diaabertos_list|length == 0 %}
-                                                <div class="level-right">
-                                                    <div class="level-item">
-                                                        <a href="/adicionarconfigurardiaaberto" class="button is-success is-outlined  is-small">
-                                                        <span class="icon is-small">
-                                                            <i class="mdi mdi-plus"></i>
-                                                        </span>
-                                                        <span>Configurar</span>
-                                                        <!---->
-                                                    </a>
-                                                    </div>
-                                                </div>
-                                                {% endif %}
                                             </div>
                                             <div class="b-table ">
                                             <div class="field table-mobile-sort">
@@ -228,13 +331,10 @@
                                                                 <!---->
                                                                 <!---->
                                                                 <option value="[object Object]">
-                                                                    Tipo de Transporte
+                                                                    Origem
                                                                 </option>
                                                                 <option value="[object Object]">
-                                                                    Numero
-                                                                </option>
-                                                                <option value="[object Object]">
-                                                                    Capacidade
+                                                                    Destino
                                                                 </option>
                                                             </select>
                                                         </span>
@@ -255,56 +355,156 @@
                                                 <table id="activitiesTable" class="table has-mobile-cards is-hoverable">
                                                     <thead>
                                                         <tr>
+                                                            
                                                             <!---->
-                                                            <th></th>
                                                             <th class="is-sortable" style="width: 300px;">
-                                                                    <div class="th-wrap">Titulo
+                                                                {% if order_by == 'origem' and sort == 'asc' %}
+                                                                <a href="?order_by=origem&sort=desc">
+                                                                    <div class="th-wrap">Origem
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
+                                                                </a>
+                                                                {% elif order_by == 'origem' and sort == 'desc' %}
+                                                                <a href="?order_by=origem&sort=asc">
+                                                                    <div class="th-wrap">Origem
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="?order_by=origem&sort=desc">
+                                                                    <div class="th-wrap">Origem
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-swap"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% endif %}
+
                                                             </th>
+
                                                             <th class="is-sortable" style="width: 300px;">
-                                                                    <div class="th-wrap">E-mail
+                                                                {% if order_by == 'destino' and sort == 'asc' %}
+                                                                <a href="?order_by=destino&sort=desc">
+                                                                    <div class="th-wrap">Destino
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
+                                                                </a>
+                                                                {% elif order_by == 'destino' and sort == 'desc' %}
+                                                                <a href="?order_by=destino&sort=asc">
+                                                                    <div class="th-wrap">Destino
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="?order_by=destino&sort=desc">
+                                                                    <div class="th-wrap">Destino
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-swap"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% endif %}
+
+
                                                             </th>
-                                                            <th class="is-sortable" style="width: 400px;">
-                                                                    <div class="th-wrap">Contacto
+
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                {% if order_by == 'destino' and sort == 'asc' %}
+                                                                <a href="?order_by=destino&sort=desc">
+                                                                    <div class="th-wrap">Data
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
+                                                                </a>
+                                                                {% elif order_by == 'destino' and sort == 'desc' %}
+                                                                <a href="?order_by=destino&sort=asc">
+                                                                    <div class="th-wrap">Data
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="?order_by=destino&sort=desc">
+                                                                    <div class="th-wrap">Data
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-swap"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% endif %}
+
+
                                                             </th>
-                                                            <th class="is-sortable" style="width: 400px;">
-                                                                    <div class="th-wrap">Data inicio
+
+                                                            
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                {% if order_by == 'destino' and sort == 'asc' %}
+                                                                <a href="?order_by=destino&sort=desc">
+                                                                    <div class="th-wrap">Hora
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
+                                                                </a>
+                                                                {% elif order_by == 'destino' and sort == 'desc' %}
+                                                                <a href="?order_by=destino&sort=asc">
+                                                                    <div class="th-wrap">Hora
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-down"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="?order_by=destino&sort=desc">
+                                                                    <div class="th-wrap">Hora
+                                                                        <span class="icon is-small">
+                                                                            <i class="mdi mdi-menu-swap"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                                {% endif %}
+
+
                                                             </th>
-                                                            <th class="is-sortable" style="width: 400px;">
-                                                                    <div class="th-wrap">Data final
+
+                                                            <th class="is-sortable" style="width: 300px;">
+                                                                {% if order_by == 'destino' and sort == 'asc' %}
+                                                                <a href="?order_by=destino&sort=desc">
+                                                                    <div class="th-wrap">Nº Pessoas
                                                                         <span class="icon is-small">
                                                                             <i class="mdi mdi-menu-up"></i>
                                                                         </span>
                                                                     </div>
-                                                            </th>
-                                                            <th class="is-sortable" style="width: 400px;">
-                                                                    <div class="th-wrap">Limite Atividades
+                                                                </a>
+                                                                {% elif order_by == 'destino' and sort == 'desc' %}
+                                                                <a href="?order_by=destino&sort=asc">
+                                                                    <div class="th-wrap">Nº Pessoas
                                                                         <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                            <i class="mdi mdi-menu-down"></i>
                                                                         </span>
                                                                     </div>
-                                                            </th>
-                                                            <th class="is-sortable" style="width: 400px;">
-                                                                    <div class="th-wrap">Limite Participantes
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="?order_by=destino&sort=desc">
+                                                                    <div class="th-wrap">Nº Pessoas
                                                                         <span class="icon is-small">
-                                                                            <i class="mdi mdi-menu-up"></i>
+                                                                            <i class="mdi mdi-menu-swap"></i>
                                                                         </span>
                                                                     </div>
+                                                                </a>
+                                                                {% endif %}
+
+
                                                             </th>
 
                                                             
@@ -316,42 +516,26 @@
                                                                     </div>
                                                             </th>
 
+
                                                             <!---->
                                                         </tr>
                                                         <!---->
                                                         <!---->
                                                     </thead>
                                                     <tbody>
-                                                        {% for diaabertos in diaabertos %}
+                                                        {% for percurso in percursos %}
                                                         <tr draggable="false" class="header">
-                                                            <td class="chevron-cell">
-                                                                <a class="collapsible">
-                                                                    <span class="icon">
-                                                                        <i class="mdi mdi-chevron-right mdi-24px"></i>
-                                                                    </span>
-                                                                </a>
-                                                            </td>
+ 
                                                             <!---->
-                                                            <td data-label="Titulo" id="activityName" class=""> {{ diaabertos.titulo }} </td>
-                                                            <td data-label="E-mail" class=""> {{ diaabertos.email }} </td>
-                                                            <td data-label="contacto" class=""> {{ diaabertos.contacto }} </td>
-                                                            <td data-label="Data Inicio" class=""> {{ diaabertos.data_inicio }} </td>
-                                                            <td data-label="Data Final" class="">{{ diaabertos.data_fim }}</td>
-                                                            <td data-label="Limite Participantes" class="">{{ diaabertos.limite_inscricao_atividades }}</td>
-                                                            <td data-label="Data Final" class="">{{ diaabertos.limite_inscricao_participantes }}</td>
+                                                            <td data-label="Percurso" id="activityName" class=""> {{ percurso.origem}} </td>
+                                                            <td data-label="Destino" class=""> {{ percurso.destino}} </td>
+                                                            <td data-label="Data" class=""> {{ percurso.transporteproprio.data}} </td>
+                                                            <td data-label="Hora" class=""> {{ percurso.hora}} </td>
+                                                            <td data-label="Nº Pessoas" class=""> {{ percurso.np}} </td>
                                                             <td data-label="Accoes">
-                                                                <a class="button is-info is-small " href="{%url 'editarconfigurardiaaberto' diaabertos.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
+                                                                <a class="button is-info is-small " href="{%url 'adicionartransporteinscricao' percurso.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Associar</a>
                                                             </td>
                                                             <!---->
-                                                        </tr>
-                                                        <tr class="detail" style="display:none">
-                                                            <td colspan="6">
-                                                                <div class="content">
-                                                                    <div class="section" style="font-size: 15px;">
-                                                                        <p><strong>Descrição: </strong> {{ diaabertos.descricao }} </p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
                                                         </tr>
                                                         
                                                         <!---->
@@ -361,21 +545,21 @@
                                                     <!---->
                                                 </table>
                                             </div>
-                                             {% if diaabertos.has_other_pages %}
+                                             {% if percursos.has_other_pages %}
                                                 <div class="level">
                                                     <div class="level-left"></div>
                                                     <div class="level-right">
                                                         <div class="level-item">
                                                             <nav class="pagination">
-                                                                {% if diaabertos.has_previous %}
+                                                                {% if percursos.has_previous %}
                                                                     {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ diaabertos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                                        <a role="button" href="?page={{ percursos.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
                                                                         <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                             </span>
                                                                         </a>
                                                                     {% else %}
-                                                                        <a role="button" href="?page={{ diaabertos.previous_page_number }}" class="pagination-link pagination-previous">
+                                                                        <a role="button" href="?page={{ percursos.previous_page_number }}" class="pagination-link pagination-previous">
                                                                         <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                                             </span>
@@ -388,15 +572,15 @@
                                                                     </span>
                                                                 </a>
                                                                 {% endif %}
-                                                                {% if diaabertos.has_next %}
+                                                                {% if percursos.has_next %}
                                                                     {% if order_by is not None %}
-                                                                        <a role="button" href="?page={{ diaabertos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                                        <a role="button" href="?page={{ percursos.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
                                                                             <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                             </span>
                                                                         </a>
                                                                     {% else %}
-                                                                        <a role="button" href="?page={{ diaabertos.next_page_number }}" class="pagination-link pagination-next">
+                                                                        <a role="button" href="?page={{ percursos.next_page_number }}" class="pagination-link pagination-next">
                                                                             <span class="icon" aria-hidden="true">
                                                                                 <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                                             </span>
@@ -412,8 +596,8 @@
                                                                 <ul class="pagination-list">
                                                                     <!---->
                                                                     <!---->
-                                                                    {% for i in diaabertos.paginator.page_range %}
-                                                                    {% if diaabertos.number == i %}
+                                                                    {% for i in percursos.paginator.page_range %}
+                                                                    {% if percursos.number == i %}
                                                                     <li>
                                                                         <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                                     </li>
@@ -457,20 +641,6 @@
         <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
     </footer>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script>
-        $(document).ready(function () {
-            $('tr.header').click(function () {
-                //$(this).find('span').find('i').toggleClass('fa-thumbs-down');
-                if ($(this).find('span').find('i').hasClass('mdi mdi-chevron-right mdi-24px')) {
-                    $(this).find('span').find('i').removeClass("mdi mdi-chevron-right mdi-24px").addClass("mdi mdi-chevron-down mdi-24px");
-                  }else{
-                       $(this).find('span').find('i').removeClass("mdi mdi-chevron-down mdi-24px").addClass("mdi mdi-chevron-right mdi-24px");
-                  }
-                $(this).nextUntil('tr.header').slideToggle(100, function(){
-                    });
-            });
-        });
-    </script>
     <script>
         $(document).ready(function(){
             $('#plus-btn').click(function () {
