@@ -30,6 +30,12 @@ console.log(this_id)
     if(hora_fim_colab===''){
         hora_fim_colab='null'
     }
+    console.log(hora_inicio_colab)
+    console.log(hora_fim_colab)
+    if(hora_inicio_colab>=hora_fim_colab){
+        hora_fim_colab='null1'
+    }
+
 
     let sala_de_aula = document.forms["criar_colab_form"]["sala_de_aula"].value;
     if(sala_de_aula===''){
@@ -52,6 +58,8 @@ console.log(this_id)
         msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de inicio da colaboração' + errormsg2
     }else if(hora_fim_colab==='null'){
         msgdiv.innerHTML = errormsg1 + 'Deve indicar a hora de fim da colaboração' + errormsg2
+    }else if(hora_fim_colab==='null1'){
+        msgdiv.innerHTML = errormsg1 + 'A hora de fim da colaboração não pode ser inferior nem igual à hora de inicio' + errormsg2
     }else if(percurso==='null'){
         msgdiv.innerHTML = errormsg1 + 'Deve indicar se pretende auxiliar no percurso' + errormsg2
     }else if(sala_de_aula==='null'){
