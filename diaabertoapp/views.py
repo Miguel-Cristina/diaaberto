@@ -2317,15 +2317,18 @@ def get_tarefas(request):
     aform = TarefaForm()
 
     # BEGIN filter_by_name
-    nome_colab_query = request.GET.get('nomeColaborador')
-    if nome_colab_query != '' and nome_colab_query is not None:
-        tarefas_1 = tarefas_1.filter(coolaborador__nome__icontains=nome_colab_query)
+    nome_colab_query = request.GET.get('nomeColaborador',None)
+  
+    if nome_colab_query:
+        if nome_colab_query != '' and nome_colab_query != "None":
+            tarefas_1 = tarefas_1.filter(coolaborador__nome__icontains = nome_colab_query)
     # END filter_by_name
 
     # BEGIN filter_by_name
-    nome_query = request.GET.get('nome')
-    if nome_query != '' and nome_query is not None:
-        tarefas_1 = tarefas_1.filter(nome__icontains=nome_query)
+    nome_query = request.GET.get('nome',None)
+    if nome_query:
+         if nome_query != '' and nome_query != "None":
+             tarefas_1 = tarefas_1.filter(nome__icontains=nome_query)
     # END filter_by_name
 
     # BEGIN tipo_utilizador and estados filter
@@ -2339,19 +2342,22 @@ def get_tarefas(request):
     # END tipo_utilizador and estados filter filter
 
     ##BEGIN filter_by_tipo
-    tipo_query = request.GET.get('tipo')
-    if tipo_query != '' and tipo_query is not None:
-        tarefas_1 = tarefas_1.filter(tipo_tarefa=tipo_query)
+    tipo_query = request.GET.get('tipo',None)
+
+    if tipo_query:
+        if tipo_query != '' and tipo_query != "None":
+            tarefas_1 = tarefas_1.filter(tipo_tarefa=tipo_query)
 
     # END filter_by_tipo
 
     # BEGIN filter_by_campus
     campus_arr = Campus.objects.all()
-    campus_query = request.GET.get('campus')
-    if campus_query != '' and campus_query is not None:
-        
-        tarefas_1 = tarefas_1.filter(cordenador__unidadeorganica__campus__id = campus_query)
-        campus_arr = Campus.objects.filter(pk=campus_query)
+    campus_query = request.GET.get('campus',None)
+    if campus_query :
+         if campus_query != '' and campus_query != "None":
+             
+             tarefas_1 = tarefas_1.filter(cordenador__unidadeorganica__campus__id = campus_query)
+             campus_arr = Campus.objects.filter(pk=campus_query)
         
     
         
@@ -2359,10 +2365,11 @@ def get_tarefas(request):
    
     #BEGIN filter_by_UnidadeOrganica
     UnidadeOrganicas = UnidadeOrganica.objects.all()
-    UnidadeOrganica_query = request.GET.get('unidadeorganica')
-    if UnidadeOrganica_query !='' and UnidadeOrganica_query is not None:
-        tarefas_1 = tarefas_1.filter(cordenador__unidadeorganica__id = UnidadeOrganica_query)
-        UnidadeOrganicas = UnidadeOrganica.objects.filter(pk=UnidadeOrganica_query)
+    UnidadeOrganica_query = request.GET.get('unidadeorganica',None)
+    if UnidadeOrganica_query:
+        if UnidadeOrganica_query !='' and UnidadeOrganica_query != "None":
+            tarefas_1 = tarefas_1.filter(cordenador__unidadeorganica__id = UnidadeOrganica_query)
+            UnidadeOrganicas = UnidadeOrganica.objects.filter(pk=UnidadeOrganica_query)
      
     #END filter_by_UnidadeOrganica
    

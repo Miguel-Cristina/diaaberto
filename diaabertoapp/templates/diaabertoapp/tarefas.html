@@ -65,7 +65,7 @@
                                             
                                              {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
                                             <div class="field has-addons">
-                                            {% if not campusquery|length > 0 %}
+                                            {% if not campusquery|length > 0 and campusquery is None or campusquery == "None" %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
                                                     <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
@@ -107,7 +107,8 @@
 
                                               <div class="field has-addons">
                                             <!---->
-                                            {% if not UnidadeOrganicaquery|length > 0 %}
+                                                 
+                                            {% if not UnidadeOrganicaquery|length > 0 and UnidadeOrganicaquery is None or UnidadeOrganicaquery == "None" %}
                                             <div class="control is-expanded ">
                                                 <span class="select is-fullwidth is-empty">
                                                     <select  id="unidadeorganicaSearch" name="unidadeorganica"><!--onchange="searchByType()"-->
@@ -198,7 +199,7 @@
                                                 
                                                 <div class="field has-addons">
                                                 <!---->
-                                                {% if not tipo_query|length > 0 %}
+                                                {% if not tipo_query|length > 0  and tipo_query is None or tipo_query == "None"%}
                                                 <div class="control is-expanded ">
                                                     <span class="select is-fullwidth is-empty">
                                                         <select  id="tipoSearch" name="tipo"><!--onchange="searchByType()"-->
@@ -242,7 +243,7 @@
                                                 <p data-v-1513178e="" class="menu-label">Filtros Colaborador</p>
                                                      <div class="field has-addons">
                                                         <!---->
-                                                        {% if not nomesColaboradorQuery|length > 0 %}
+                                                        {% if not nomesColaboradorQuery|length > 0  or nomesColaboradorQuery == "None" %}
                                                             <div class="control is-expanded">
                                                                 <div class="control is-clearfix">
                                                                     <input type="search" autocomplete="off" id="namecolaboradorSearch" name="nomeColaborador"  placeholder="Nome do Colaborador" class="input"><!--onkeyup="searchByName()"-->
@@ -767,11 +768,14 @@
                                                         {% else %}
                                                         {% if order_by is not None %}
                                                         <li>
-                                                            <a role="button" href="?page={{ i }}&order_by={{ order_by }}&sort={{ sort }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+                                                            <a role="button" href="?page={{ i }}&order_by={{ order_by }}&sort={{ sort }}&campus={{ campusquery }}&unidadeorganica={{ UnidadeOrganicaquery}}&tipo={{ tipo_query }}&nome={{ nomesquery }}&nomeColaborador={{ nomesColaboradorQuery }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+
                                                         </li>
+                                                      
                                                         {% else %}
                                                         <li>
-                                                            <a role="button" href="?page={{ i }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+                                                            <a role="button" href="?page={{ i }}&campus={{ campusquery }}&unidadeorganica={{ UnidadeOrganicaquery }}&tipo={{ tipo_query }}&nome={{ nomesquery }}&nomeColaborador={{ nomesColaboradorQuery }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+
                                                         </li>
                                                         {% endif %}
                                                         {% endif %}
@@ -786,72 +790,7 @@
                                 {% endif %}
                                 
                                 
-                                
-                                
-                                <!--{ if tarefas.has_other_pages }                                                                                                            -->
-                                <!--    <div class="level">                                                                                                                     -->
-                                <!--        <div class="level-left"></div>                                                                                                      -->
-                                <!--        <div class="level-right">                                                                                                           -->
-                                <!--            <div class="level-item">                                                                                                        -->
-                                <!--                <nav class="pagination">                                                                                                    -->
-                                <!--                    { if tarefas.has_previous }                                                                                           -->
-                                <!--                    <a role="button" href="?page={ tarefas.previous_page_number }" class="pagination-link pagination-previous">           -->
-                                <!--                        <span class="icon" aria-hidden="true">                                                                              -->
-                                <!--                            <i class="mdi mdi-chevron-left mdi-24px"></i>                                                                   -->
-                                <!--                        </span>                                                                                                             -->
-                                <!--                    </a>                                                                                                                    -->
-                                <!--                    { else }                                                                                                              -->
-                                <!--                    <a role="button" href="#" disabled="disabled" class="pagination-link pagination-previous">                              -->
-                                <!--                        <span class="icon" aria-hidden="true">                                                                              -->
-                                <!--                            <i class="mdi mdi-chevron-left mdi-24px"></i>                                                                   -->
-                                <!--                        </span>                                                                                                             -->
-                                <!--                    </a>                                                                                                                    -->
-                                <!--                    { endif }                                                                                                             -->
-                                <!--                    { if tarefas.has_next }                                                                                               -->
-                                <!--                    <a role="button" href="?page={ tarefas.next_page_number }" class="pagination-link pagination-next">                   -->
-                                <!--                        <span class="icon" aria-hidden="true">                                                                              -->
-                                <!--                            <i class="mdi mdi-chevron-right mdi-24px"></i>                                                                  -->
-                                <!--                        </span>                                                                                                             -->
-                                <!--                    </a>                                                                                                                    -->
-                                <!--                                                                                                                                            -->
-                                <!--                    { else}                                                                                                              -->
-                                <!--                    <a role="button" href="#" disabled="disabled" class="pagination-link pagination-next">                                  -->
-                                <!--                        <span class="icon" aria-hidden="true">                                                                              -->
-                                <!--                            <i class="mdi mdi-chevron-right mdi-24px"></i>                                                                  -->
-                                <!--                        </span>                                                                                                             -->
-                                <!--                    </a>                                                                                                                    -->
-                                <!--                    { endif }                                                                                                             -->
-                                <!--                    <ul class="pagination-list">                                                                                            -->
-                                <!--                        <!--                                                                                                             -->
-                                <!--                        <!---                                                                                                            -->
-                                <!--                        { for i in tarefas.paginator.page_range %}                                                                         -->
-                                <!--                        { if tarefas.number == i %}                                                                                        -->
-                                <!--                        <li>                                                                                                                -->
-                                <!--                            <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{ i }}</a>                   -->
-                                <!--                        </li>                                                                                                               -->
-                                <!--                        { else %}                                                                                                          -->
-                                <!--                        <li>                                                                                                                -->
-                                <!--                            <a role="button" href="?page={ i }}" aria-current="true" class="pagination-link ">{ i }}</a>                  -->
-                                <!--                        </li>                                                                                                               -->
-                                <!--                        { endif %}                                                                                                         -->
-                                <!--                        { endfor %}                                                                                                        -->
-                                <!--                                                                                                                                   -->
-                                <!--                                                                                                                                    -->
-                                <!--                    </ul>                                                                                                                   -->
-                                <!--                </nav>                                                                                                                      -->
-                                <!--            </div>                                                                                                                          -->
-                                <!--        </div>                                                                                                                              -->
-                                <!--    </div>                                                                                                                                  -->
-                                <!--{ endif %}                                                                                                                                 -->
-                                <!--                                                                                                                                            -->
-
-
-
-
-
-
-
-
+                             
 
                                 <div><input id="contador" type="hidden"></div>
                             </div>
