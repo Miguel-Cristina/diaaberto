@@ -3636,29 +3636,20 @@ def almocos(request):
     # BEGIN filter_by_nome
     nome_query = request.GET.get('nome')
     if nome_query != '' and nome_query is not None:
-        pratos_list = pratos_list.filter(nome__icontains=nome_query)
-        ementas_list = ementas_list.filter(prato__in=pratos_list)
+        pratos_list = pratos_list.filter(prato_carne__icontains=nome_query)
     # END filter_by_nome
 
-    # BEGIN filter_by_tipo
-    tipo_query = request.GET.get('tipo')
-    if tipo_query != '' and tipo_query is not None:
-        pratos_list = pratos_list.filter(tipo__icontains=tipo_query)
-        ementas_list = ementas_list.filter(prato__in=pratos_list)
-    # END filter_by_tipo
 
     # BEGIN filter_by_sopa
     sopa_query = request.GET.get('sopa')
     if sopa_query != '' and sopa_query is not None:
         pratos_list = pratos_list.filter(sopa__icontains=sopa_query)
-        ementas_list = ementas_list.filter(prato__in=pratos_list)
     # END filter_by_sopa
 
     # BEGIN filter_by_sobremesa
     sobremesa_query = request.GET.get('sobremesa')
     if sobremesa_query != '' and sobremesa_query is not None:
         pratos_list = pratos_list.filter(sobremesa__icontains=sobremesa_query)
-        ementas_list = ementas_list.filter(prato__in=pratos_list)
     # END filter_by_sobremesa
     # BEGIN pagination
     page = request.GET.get('page', 1)
@@ -3672,7 +3663,7 @@ def almocos(request):
     # END pagination
     return render(request, 'diaabertoapp/almocos.html',
                   {'pratos': pratos, 'nomequery': nome_query, 'sopaquery': sopa_query,
-                   'sobremesaquery': sobremesa_query, 'tipoquery': tipo_query})
+                   'sobremesaquery': sobremesa_query})
 
 
 def editarementa(request, id):
@@ -4607,16 +4598,13 @@ def vizualizartransporteinscricao(request):
                    'horachegadaquery': horachegada_query, 'horapartidaquery': horapartida_query,
                    'dataquery': data_query})
 
-def transportes_asd(request):
+def meustransportes(request):
     utilizador = ''
     if request.user.is_authenticated:
         user_email = request.user.email
         utilizador = Utilizador.objects.get(email=user_email)
         if utilizador is not None:
             notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
-            if not utilizador.utilizadortipo.tipo == 'Participante em Grupo':
-                messages.error(request, 'Não tem permissões para aceder à pagina!!')
-                return HttpResponseRedirect('/index')
         else:
             messages.error(request, 'Não tem permissões para aceder à pagina!!')
             return HttpResponseRedirect('/index')
@@ -4629,7 +4617,9 @@ def transportes_asd(request):
     horarios_list = Horario.objects.all()
     transportes_list = Transporte.objects.all()
     tu_list = TransporteUniversitarioinscricao.objects.all()
-    
+    user_email=request.user.email
+    ut = Utilizador.objects.get(email=user_email)
+
 
         
     # BEGIN filter_by_origem
@@ -4697,6 +4687,12 @@ def transportes_asd(request):
     ins_list = InscricaoGrupo.objects.all()
     ind_list = InscricaoIndividual.objects.all()
 
+    tpp_list2 = tpp_list.filter(transporteproprio__inscricao__utilizador = ut)
+
+    tu_list2 = tu_list.filter(percursos__in = tpp_list2)
+    tu_ids2= tu_list2.values_list('transporte_id', flat=True)
+    transporte_list = transporte_list.filter(id__in=tu_ids2)
+
     for obj in transporte_list:
         tu_list1 = tu_list.filter(transporte=obj)
         tpp_ids = tu_list1.values_list('percursos_id', flat=True)
@@ -4716,8 +4712,8 @@ def transportes_asd(request):
 
 
         obj.np = sum(part_list) + sum(prof_list) + sum(acp_list) + n
- 
-    ins_list2 = ins_list()
+
+
 
     # BEGIN pagination
     page = request.GET.get('page', 1)
