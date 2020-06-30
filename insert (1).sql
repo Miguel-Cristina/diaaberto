@@ -1,18 +1,18 @@
 --
--- Dumping data for table `Campus`
+-- Dumping data for table `campus`
 --
 
-INSERT INTO `Campus` (`id`, `nome`, `morada`, `contacto`) VALUES
+INSERT INTO `campus` (`id`, `nome`, `morada`, `contacto`) VALUES
 (1, 'Campus das Gambelas', 'R. dos Malmequeres 101, 8005-139 Faro', '289 800 100'),
 (2, 'Campus da Penha', 'Estrada da Penha, 8000-139 Faro', '289 800 101');
 
 -- --------------------------------------------------------
 
 --
--- Dumping data for table `Departamento`
+-- Dumping data for table `departamento`
 --
 
-INSERT INTO `Departamento` (`id`, `nome`, `faculdade_id`) VALUES
+INSERT INTO `departamento` (`id`, `nome`, `faculdade_id`) VALUES
 (1, 'Departamento de Ciências Sociais e da Educação', NULL),
 (2, 'Departamento de Comunicação, Artes e Design', NULL),
 (3, 'Departamento de Línguas, Literaturas e Culturas', NULL),
@@ -41,10 +41,10 @@ INSERT INTO `Departamento` (`id`, `nome`, `faculdade_id`) VALUES
 
 
 --
--- Dumping data for table `Edificio`
+-- Dumping data for table `edificio`
 --
 
-INSERT INTO `Edificio` (`id`, `nome`, `campus_id`) VALUES
+INSERT INTO `edificio` (`id`, `nome`, `campus_id`) VALUES
 (1, 'Edificio 1: FCHS', 2),
 (10, 'Edificio 22: ESGHT', 1),
 (11, 'Edificio 23: ESEC', 1),
@@ -85,10 +85,10 @@ INSERT INTO `utilizadortipo` (`id`, `tipo`) VALUES
 
 
 --
--- Dumping data for table `Sala`
+-- Dumping data for table `sala`
 --
 
-INSERT INTO `Sala` (`id`, `identificacao`, `edificio_id`) VALUES
+INSERT INTO `sala` (`id`, `identificacao`, `edificio_id`) VALUES
 (37, '0.12', 7),
 (16, '0.22', 1),
 (38, '0.32', 7),
@@ -132,10 +132,10 @@ INSERT INTO `Sala` (`id`, `identificacao`, `edificio_id`) VALUES
 
 
 --
--- Dumping data for table `TipoAtividade`
+-- Dumping data for table `tipoatividade`
 --
 
-INSERT INTO `TipoAtividade` (`id`, `tipo`) VALUES
+INSERT INTO `tipoatividade` (`id`, `tipo`) VALUES
 (3, 'Atividades Experimentais'),
 (4, 'Atividades Tecnológicas'),
 (7, 'Conferências'),
@@ -157,10 +157,10 @@ INSERT INTO `TipoAtividade` (`id`, `tipo`) VALUES
 
 
 --
--- Dumping data for table `UnidadeOrganica`
+-- Dumping data for table `unidadeorganica`
 --
 
-INSERT INTO `UnidadeOrganica` (`id`, `nome`, `campus`) VALUES
+INSERT INTO `unidadeorganica` (`id`, `nome`, `campus`) VALUES
 (1, 'Escola Superior de Educação e Comunicação', 2),
 (2, 'Escola Superior de Gestão, Hotelaria e Turismo', 2),
 (3, 'Escola Superior de Saúde', 1),
@@ -175,10 +175,10 @@ INSERT INTO `UnidadeOrganica` (`id`, `nome`, `campus`) VALUES
 
 
 --
--- Dumping data for table `DiaAberto`
+-- Dumping data for table `diaaberto`
 --
 
-INSERT INTO `DiaAberto` (`id`, `titulo`, `descricao`, `email`, `contacto`, `data_inicio`, `data_fim`, `limite_inscricao_atividades`, `limite_inscricao_participantes`) VALUES
+INSERT INTO `diaaberto` (`id`, `titulo`, `descricao`, `email`, `contacto`, `data_inicio`, `data_fim`, `limite_inscricao_atividades`, `limite_inscricao_participantes`) VALUES
 (1, 'Dia Aberto Universidade do Algarve', 'Venha conhecer a Universidade do Algarve e descobrir qual a tua vocação profissional, antes de decidires qual o teu curso superior!', 'geral@ualg.pt', 289111111, '2020-02-02', '2020-03-03', 60, 880),
 (2, 'Dia Aberto da Universidade do Algarve 2021', 'Evento direcionado aos alunos que procuram ingressar no ensino superior, disponibilizando atividades, workshops e palestras para te ajudar a decidir o teu futuro. Junta-te a nós e faz parte da universidade de onde é bom viver!', 'diaabaerto@ualg.pt', 289100100, '2020-02-02', '2020-02-02', 60, 800);
 
@@ -196,10 +196,10 @@ INSERT INTO `ementa` (`id`, `preco_aluno_normal`, `preco_outro_normal`) VALUES
 
 
 --
--- Dumping data for table `Faculdade`
+-- Dumping data for table `faculdade`
 --
 
-INSERT INTO `Faculdade` (`id`, `nome`) VALUES
+INSERT INTO `faculdade` (`id`, `nome`) VALUES
 (1, 'Faculdade de Artes e Letras'),
 (2, 'Faculdade de Ciências e Tecnologia'),
 (3, 'Faculdade de Ciências Humanas e Sociais'),
@@ -211,10 +211,10 @@ INSERT INTO `Faculdade` (`id`, `nome`) VALUES
 
 
 --
--- Dumping data for table `PublicoAlvo`
+-- Dumping data for table `publicoalvo`
 --
 
-INSERT INTO `PublicoAlvo` (`id`, `nome`) VALUES
+INSERT INTO `publicoalvo` (`id`, `nome`) VALUES
 (3, '10º ano'),
 (4, '11º ano'),
 (5, '12º ano'),
@@ -231,10 +231,10 @@ INSERT INTO `PublicoAlvo` (`id`, `nome`) VALUES
 
 
 --
--- Dumping data for table `Sessao`
+-- Dumping data for table `sessao`
 --
 
-INSERT INTO `Sessao` (`id`, `hora`) VALUES
+INSERT INTO `sessao` (`id`, `hora`) VALUES
 (10, '09:00:00.000000'),
 (2, '10:00:00.000000'),
 (3, '11:00:00.000000'),
@@ -251,10 +251,10 @@ INSERT INTO `Sessao` (`id`, `hora`) VALUES
 
 
 --
--- Dumping data for table `Tematica`
+-- Dumping data for table `tematica`
 --
 
-INSERT INTO `Tematica` (`id`, `tema`) VALUES
+INSERT INTO `tematica` (`id`, `tema`) VALUES
 (1, 'Arte'),
 (2, 'Biologia'),
 (3, 'Ciências'),
