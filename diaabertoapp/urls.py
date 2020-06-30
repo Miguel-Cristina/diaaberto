@@ -8,7 +8,7 @@ from django.conf import settings
 from django.conf.urls import include
 
 urlpatterns = [
-    path('notificacoes/recebidas/', views.notificacoesrecebidas, name="notificacoes_recebidas"),
+    path('notificacao/consultar/recebidas/', views.notificacoesrecebidas, name="notificacoes_recebidas"),
 
     path('error_500/', views.error_500, name='error_500'),
     path('error_404/', views.error_404, name='error_404'),
@@ -61,9 +61,12 @@ urlpatterns = [
     path('tarefas/atribuir/<pk>',views.atribuir_tarefa, name='atribuir_tarefa'),
     path('tarefas/reatribuir/<pk>',views.remove_colab, name='remove_colab'),
     path(r'^ajax/grupos_switch/$', views.grupos_switch, name='grupos_switch'),
+      path(r'^ajax/grupos_switch_edit/$', views.grupos_switch_edit, name='grupos_switch_edit'),
     path(r'^ajax/user_switch/$', views.user_switch, name='user_switch'),
     path(r'^ajax/activity_switch/$', views.activity_switch, name='activity_switch'),
+      path(r'^ajax/activity_switch_edit/$', views.activity_switch_edit, name='activity_switch_edit'),
     path(r'^ajax/sessions_switch/$', views.sessions_switch, name='sessions_switch'),
+    path(r'^ajax/salas_switch_edit/$', views.salas_switch_edit, name='salas_switch_edit'),
 
     path('configurartransporte/', views.configurartransporte, name='configurartransporte'),
     path('adicionartransporte/', views.adicionartransporte, name='adicionartransporte'),

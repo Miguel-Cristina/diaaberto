@@ -149,7 +149,7 @@
                                                         </td>
                                                         {#------------------------------------------validar-----------------------------------#}
 
-                                                        <td data-label="Validar Utilizador" class="toggle pointer">
+                                                        <td data-label="Validar Utilizador" class="">
                                                             {% if instance.utilizador.validado == None or instance.utilizador.validado == 0 %}
                                                                 <div class="field is-grouped">
                                                                     <p class="control">
@@ -157,7 +157,7 @@
                                                                                 type="button"
                                                                                 id="validar"
                                                                                 name=""
-                                                                                value="{{ instance.id }}"
+                                                                                value="{{ instance.utilizador.id }}"
                                                                                 onclick="confirmacao(this.id, this.value)">
                                                                                 <span class="">
                                                                                     <i class="mdi mdi mdi-24px diogo">Validar</i>
@@ -185,24 +185,24 @@
                                                         <td data-label="buttons" class="">
                                                             <div class="field is-grouped">
                                                                 <p class="control">
-                                                                    <button class="button"
+                                                                    <button class="button has-text-white is-small"
                                                                             type="button"
                                                                             onclick="location.href='editar/{{ instance.id }}';">
-                                                                                <span class="icon">
-                                                                                    <i class="mdi mdi-pencil mdi-24px"></i>
-                                                                                </span>
+                                                                                <span class="icon is-small has-text-grey">
+                                                                            <i class="has-text-red mdi-pencil-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                                        </span>
                                                                     </button>
                                                                 </p>
                                                                 <p class="control">
-                                                                    <button class="button is-danger is-outlined"
+                                                                    <button class="button has-text-white is-small"
                                                                             type="button"
                                                                             id="apagar"
                                                                             name=""
                                                                             value="{{ instance.id }}"
                                                                             onclick="confirmacao(this.id, this.value)">
-                                                                                    <span class="icon">
-                                                                                        <i class="mdi mdi-close mdi-24px"></i>
-                                                                                    </span>
+                                                                                    <span class="icon is-small has-text-danger">
+                                                                                <i class="has-text-red mdi-close-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                                            </span>
                                                                     </button>
                                                                 </p>
                                                             </div>
@@ -379,7 +379,7 @@
                                                                                     type="button"
                                                                                     id="validar"
                                                                                     name=""
-                                                                                    value="{{ instance.id }}"
+                                                                                    value="{{ instance.utilizador.id }}"
                                                                                     onclick="confirmacao(this.id, this.value)">
                                                                                 <span class="">
                                                                                     <i class="mdi mdi mdi-24px diogo">Validar</i>
@@ -406,30 +406,30 @@
 
                                                             {#------------------------------------------BUTOES-----------------------------------#}
                                                             <td data-label="buttons" class="">
-                                                                <div class="field is-grouped">
-                                                                    <p class="control">
-                                                                        <button class="button"
-                                                                                type="button"
-                                                                                onclick="location.href='editar/{{ instance.id }}';">
-                                                                                <span class="icon">
-                                                                                    <i class="mdi mdi-pencil mdi-24px"></i>
-                                                                                </span>
-                                                                        </button>
-                                                                    </p>
-                                                                    <p class="control">
-                                                                        <button class="button is-danger is-outlined"
-                                                                                type="button"
-                                                                                id="apagar"
-                                                                                name=""
-                                                                                value="{{ instance.id }}"
-                                                                                onclick="confirmacao(this.id, this.value)">
-                                                                                    <span class="icon">
-                                                                                        <i class="mdi mdi-close mdi-24px"></i>
-                                                                                    </span>
-                                                                        </button>
-                                                                    </p>
-                                                                </div>
-                                                            </td>
+                                                            <div class="field is-grouped">
+                                                                <p class="control">
+                                                                    <button class="button has-text-white is-small"
+                                                                            type="button"
+                                                                            onclick="location.href='editar/{{ instance.id }}';">
+                                                                                <span class="icon is-small has-text-grey">
+                                                                            <i class="has-text-red mdi-pencil-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                                        </span>
+                                                                    </button>
+                                                                </p>
+                                                                <p class="control">
+                                                                    <button class="button has-text-white is-small"
+                                                                            type="button"
+                                                                            id="apagar"
+                                                                            name=""
+                                                                            value="{{ instance.id }}"
+                                                                            onclick="confirmacao(this.id, this.value)">
+                                                                                    <span class="icon is-small has-text-danger">
+                                                                                <i class="has-text-red mdi-close-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                                            </span>
+                                                                    </button>
+                                                                </p>
+                                                            </div>
+                                                        </td>
                                                             {#------------------------------------------TABELA BAIXO-----------------------------------#}
                                                         <tr class="detail tablesorter-childRow">
                                                         <td colspan="8">

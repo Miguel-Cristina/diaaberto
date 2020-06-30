@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'diaabertoapp/bulma.css' %}">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="{% static 'diaabertoapp/dist/bulma.js' %}"></script>
+    
     <meta charset="utf-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
@@ -740,56 +740,63 @@
                             </div>
         
 
-        <p><strong>Materiais:</strong></p>
-        <div class="b-table">
-            <!---->
-            <!---->
-            <div class="table-wrapper">
-                <table class="table has-mobile-cards">
-                    <thead>
-                        <tr>
-                            <!---->
-                            <!---->
-                            <th class="">
-                                <div class="th-wrap">Material
-                                    <span class="icon is-small" style="display: none;">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                    </span>
+        
+        {% for Mat in materiais %}
+        {%if Mat.atividade.id == Atividade.id > 0 %}
+        {% ifchanged %}
+                            <p><strong>Materiais:</strong></p>
+                                <div class="b-table">
+                                <!---->
+                                <!---->
+                                <div class="table-wrapper">
+                                    <table class="table has-mobile-cards">
+                                        <thead>
+                                            <tr>
+                                                <!---->
+                                                <!---->
+                                                <th class="">
+                                                    <div class="th-wrap">Material
+                                                        <span class="icon is-small" style="display: none;">
+                                                            <i class="mdi mdi-arrow-up"></i>
+                                                        </span>
+                                                    </div>
+                                                </th>
+                                                <th class="">
+                                                    <div class="th-wrap">Quantidade
+                                                        <span class="icon is-small" style="display: none;">
+                                                            <i class="mdi mdi-arrow-up"></i>
+                                                        </span>
+                                                    </div>
+                                                </th>
+                                                <!---->
+                                            </tr>
+                                            <!---->
+                                            <!---->
+                                        </thead>
+                                        <tbody>
+            {% endifchanged %}
+            {% endif %}
+            {% endfor %}
+            {% for Mat in materiais %}
+                {% ifequal Mat.atividade.id Atividade.id %}
+                                            <tr draggable="false">
+                                                <td data-label="Material" class=""> {{ Mat.material }} </td>
+                                                <td data-label="Hora" class=""> {{ Mat.quantidade }} </td>
+                                            </tr>
+                {% endifequal %}
+            {% endfor %}
+            {% for Mat in materiais %}
+            {%if Mat.atividade.id == Atividade.id > 0 %}
+            {% ifchanged %}
+                                        </tbody>
+                                        <!---->
+                                    </table>
                                 </div>
-                            </th>
-                            <th class="">
-                                <div class="th-wrap">Quantidade
-                                    <span class="icon is-small" style="display: none;">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                    </span>
-                                </div>
-                            </th>
-                            <!---->
-                        </tr>
-                        <!---->
-                        <!---->
-                    </thead>
-                    <tbody>
-                        <!---->
-
-                        {% for Mat in materiais %}
-                            {% ifequal Mat.atividade.id Atividade.id %}
-                                <tr draggable="false">
-                                    <!---->
-                                    <td data-label="Material" class=""> {{ Mat.material }} </td>
-                                    <td data-label="Hora" class=""> {{ Mat.quantidade }} </td>
-                                
-                                    <!---->
-                                </tr>
-                             {% endifequal %}
-                        {% endfor %}
-                        <!---->
-                    </tbody>
-                    <!---->
-                </table>
-            </div>
-            <!---->
-        </div>
+                                <!---->
+                            </div>
+            {% endifchanged %}
+            {% endif %}
+            {% endfor %}
 
         <br />
         <p><strong>Sessões:</strong></p>
@@ -916,27 +923,65 @@
                         </form>
                     {% endif %}
                 </div>
+                
+                    {% for Sessao in sessoesatividade %}
+                            {% ifequal Sessao.atividade.id Atividade.id %}
+                                {% if Sessao.n_alunos != Atividade.limite_participantes %}
+                                    {% ifchanged %}
+                                        <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente'%}
+                                                <span class="tag is-warning">Esta atividade já se encontra com utilizadores inscritos!</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente'%}
+                                            <div class="level-item">
+                                            
+                                                <form action="{% url 'eliminaratividade' Atividade.id %}" method=POST>
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="button is-small is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede eliminar a atividade que já se encontra com utilizadores inscritos?');">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </span>
+                                                        <span>Apagar mesmo assim?</span>
+                                                    </button>
+                                                </form>
+                                            
+                                        </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endifchanged %}
+                                {% else %}
+                                    {% ifchanged %}
+                                        <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
+                                                <a class="button is-info" href="{% url 'alteraratividade' Atividade.id %}"><i class="mdi mdi-pencil">&nbsp;</i> Editar</a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="level-item">
+                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
+                                                <form action="{% url 'eliminaratividade' Atividade.id %}" method=POST>
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="button is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede eliminar a atividade?');">
+                                                        <span class="icon is-small">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </span>
+                                                        <span>Eliminar</span>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    {% endifchanged %}
+                                {% endif %}
+                            {% endifequal %}
+                        {% endfor %}
+                    
+                 
+                
             </div>
             <div class="level-right">
-                <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
-                        <a class="button is-info" href="{% url 'alteraratividade' Atividade.id %}"><i class="mdi mdi-pencil">&nbsp;</i> Editar</a>
-                    {% endif %}
-                </div>
-                <div class="level-item">
-                    {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente' %}
-                        <form action="{% url 'eliminaratividade' Atividade.id %}" method=POST>
-                            {% csrf_token %}
-                            <button type="submit" class="button is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede eliminar a atividade?');">
-                                <span class="icon is-small">
-                                    <i class="mdi mdi-delete"></i>
-                                </span>
-                                <span>Eliminar</span>
-                                <!---->
-                            </button>
-                        </form>
-                    {% endif %}
-                </div>
+                
+                
             </div>
         </div>
     </div>

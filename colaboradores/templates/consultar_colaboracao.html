@@ -212,14 +212,38 @@ function cancelSessao(val) {
 
                                                     {% if lc.tarefa_atribuida != 1 %}
 
-                                                    <button type="button"
+<!--                                                    <button type="button"-->
+<!--                                                           onclick="location.href='editar/{{lc.id}}';"-->
+<!--                                                           value="Editar"><i style='font-size:18px' class='material-icons'>&#xe254;</i>-->
+<!--                                                    </button>-->
+
+                                                    <button class="button has-text-white is-small"
+                                                            type="button"
                                                            onclick="location.href='editar/{{lc.id}}';"
-                                                           value="Editar"><i style='font-size:18px' class='material-icons'>&#xe254;</i>
+                                                           value="Editar">
+                                                        <span class="icon is-small has-text-grey">
+                                                            <i class="has-text-red mdi-pencil-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                        </span>
                                                     </button>
 <!--                                                    <button type="submit" id="2" name="del" value="{{lc.id}}"><i style='font-size:18px;color:red'  class='material-icons'>&#xe92b;</i>-->
 <!--                                                    </button>-->
-                                                    <button type="button"  id="2" name="del" value="{{lc.id}}" onclick="deleteSessao(this.value)"><i style='font-size:18px;color:red'  class='material-icons'>&#xe92b;</i>
+
+
+<!--                                                    <button type="button"  id="2" name="del" value="{{lc.id}}" onclick="deleteSessao(this.value)">-->
+<!--                                                        <i style='font-size:18px;color:red'  class='material-icons'>&#xe92b;</i>-->
+<!--                                                    </button>-->
+
+                                                    <button class="button has-text-white is-small"
+                                                            type="button"
+                                                            id="2"
+                                                            name="del"
+                                                            value="{{lc.id}}"
+                                                            onclick="deleteSessao(this.value)">
+                                                        <span class="icon is-small has-text-danger">
+                                                            <i class="has-text-red mdi-close-box mdi-36px mdi mdi-chevron-right mdi-24px"></i>
+                                                        </span>
                                                     </button>
+
 <!--                                                    <span type="submit" id="2" name="del" value="{{lc.id}}" class="icon has-text-danger"><i class="mdi mdi-close-box mdi-24px"></i></span>-->
 <!--                                                    <span class="icon has-text-danger"><i class="mdi mdi-close-box mdi-24px"></i></span>-->
 

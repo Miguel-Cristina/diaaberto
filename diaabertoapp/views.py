@@ -51,11 +51,76 @@ def notificacoesrecebidas(request):
         messages.error(request, 'É necessário realizar o log in!')
         return HttpResponseRedirect('/login')
     lista_notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by("-hora")
+    notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by("-hora")
     count_notificacoes = 0
     for x in lista_notificacoes:
         if (x.visto == False):
             count_notificacoes = count_notificacoes + 1
-    return render(request, 'diaabertoapp/notificacoesrecebidas.html', {'count_notificacoes':count_notificacoes,'notificacoes':lista_notificacoes,'lista_notificacao_final':lista_notificacoes, 'utilizador':utilizador})
+    # BEGIN filter_by_data
+    data_query = request.GET.get('data')
+    if data_query != '' and data_query is not None:
+        lista_notificacoes = lista_notificacoes.filter(utilizador_rec=utilizador, hora__gte=data_query).order_by("-hora")
+        
+    # END filter_by_data
+    # BEGIN filter_by_assunto
+    assunto_query = request.GET.get('assunto')
+    if assunto_query != '' and assunto_query is not None:
+        lista_notificacoes = lista_notificacoes.filter(utilizador_rec=utilizador, assunto__icontains=assunto_query).order_by("-hora")
+        
+    # END filter_by_assunto
+    # BEGIN filter_by_name
+    utilizador_query = request.GET.get('utilizador')
+    if utilizador_query != '' and utilizador_query is not None:
+        lista_notificacoes = lista_notificacoes.filter(utilizador_rec=utilizador, utilizador_env__nome__icontains=utilizador_query).order_by("-hora")
+    # END filter_by_name
+    # BEGIN order_by
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'data':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('hora')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-hora')
+    elif order_by == 'assunto':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('assunto')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-assunto')
+    elif order_by == 'conteudo':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('conteudo')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-conteudo')
+    elif order_by == 'prioridade':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('prioridade')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-prioridade')
+    elif order_by == 'utilizador':
+        if sort == 'asc':
+            lista_notificacoes = lista_notificacoes.order_by('utilizador_env')
+        else:
+            lista_notificacoes = lista_notificacoes.order_by('-utilizador_env')
+    # END order_by
+
+    # BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(lista_notificacoes, 5)
+    try:
+        lista_notificacoes = paginator.page(page)
+    except PageNotAnInteger:
+        lista_notificacoes = paginator.page(1)
+    except EmptyPage:
+        lista_notificacoes = paginator.page(paginator.num_pages)
+    # END pagination
+   
+    notificacoesOpen = Notificacao.objects.none()
+    if request.GET:
+        notificacaoID = request.GET.get("notificacaoid")
+        if notificacaoID is not None:
+            notificacoesOpen = Notificacao.objects.get(id=notificacaoID)
+    return render(request, 'diaabertoapp/notificacoesrecebidas.html', {'count_notificacoes':count_notificacoes,'notificacoes':notificacoes,'lista_notificacao_final':lista_notificacoes, 'utilizador':utilizador, 'dataquery':data_query, 'assuntoquery':assunto_query, 
+                                                                      'utilizadorquery':utilizador_query, 'order_by':order_by, 'sort':sort ,'notificacoesOpen':notificacoesOpen})
 
 
 
@@ -1706,6 +1771,18 @@ def proporatividade(request):
                     sessao.atividade = atividade
                     sessao.n_alunos = atividade.limite_participantes
                     sessao.save()
+            #Envio da notificacao para o coordenador
+            if Notificacao.objects.all().exists():
+                notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+            else:
+                notificacao_grupo = 0
+
+            coordenadores = Utilizador.objects.filter(utilizadortipo__tipo="Coordenador",unidadeorganica=atividade.unidadeorganica)
+            for coordenador in coordenadores:
+                notificacao_obj = Notificacao(assunto="Nova atividade proposta!", hora=datetime.now(), conteudo="Atividade <" + atividade.nome + "> proposta por " + utilizador.nome,
+                                  utilizador_rec=coordenador, utilizador_env=utilizador, prioridade=2, notificacao_grupo=notificacao_grupo)
+                notificacao_obj.save()
+            #Fim do envio da notificacao para o coordenador
             messages.success(request, 'Proposta de atividade criada com sucesso!')
             return HttpResponseRedirect('/minhasatividades/')
         else:
@@ -1763,6 +1840,8 @@ def alteraratividade(request, pk):
     organicas = UnidadeOrganica.objects.get(id=utilizador.unidadeorganica.id)
     departamentos = Departamento.objects.get(id=utilizador.departamento.id)
 
+    
+
     notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador).order_by('-hora')  
     count_notificacoes = 0
     for x in notificacoes:
@@ -1792,6 +1871,20 @@ def alteraratividade(request, pk):
             aForm.save_m2m()
             mForm.save()
             sForm.save()
+
+            #Envio da notificacao para o coordenador
+            if Notificacao.objects.all().exists():
+                notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+            else:
+                notificacao_grupo = 0
+
+            coordenadores = Utilizador.objects.filter(utilizadortipo__tipo="Coordenador",unidadeorganica=atividade.unidadeorganica)
+            for coordenador in coordenadores:
+                notificacao_obj = Notificacao(assunto="Proposta alterada", hora=datetime.now(), conteudo="Proposta <" + atividade.nome + "> alterada!",
+                                  utilizador_rec=coordenador, utilizador_env=atividade.responsavel, prioridade=2, notificacao_grupo=notificacao_grupo)
+                notificacao_obj.save()
+            #Fim do envio da notificacao para o coordenador
+
             messages.success(request, 'Proposta de atividade editada com sucesso!')
             return HttpResponseRedirect('/minhasatividades/')
         else:
@@ -1886,7 +1979,9 @@ def rejeitaratividade(request, pk):
 # ========================================================================================================================
 def eliminaratividade(request, pk):
     object = Atividade.objects.get(pk=pk)
-
+    nome = object.nome
+    responsavel = object.responsavel
+    organica = object.unidadeorganica
     if request.user.is_authenticated:
         auth_user = request.user 
         utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
@@ -1900,8 +1995,17 @@ def eliminaratividade(request, pk):
     else:
         messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
-
+    
     object.delete()
+    if Notificacao.objects.all().exists():
+        notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
+    else:
+        notificacao_grupo = 0
+    coordenadores = Utilizador.objects.filter(utilizadortipo__tipo="Coordenador",unidadeorganica=organica)
+    for coordenador in coordenadores:
+        notificacao_obj = Notificacao(assunto="Atividade eliminada", hora=datetime.now(), conteudo="Atividade <" + nome + "> eliminada!",
+                                  utilizador_rec=coordenador, utilizador_env=responsavel, prioridade=3, notificacao_grupo=notificacao_grupo)
+        notificacao_obj.save()
     messages.success(request, 'Atividade foi eliminada!')
     return HttpResponseRedirect('/minhasatividades/')
 
@@ -2068,6 +2172,7 @@ def consultaratividades(request):
     if campus_query != '' and campus_query is not None:
         atividade_list = atividade_list.filter(campus=campus_query)
         campus_arr = campus_arr.filter(id=campus_query)
+        organicas = organicas.filter(campus=campus_query)
     # END filter_by_campus
     # BEGIN filter_by_unidadeorganica
     organica_query = request.GET.get('unidadeorganica')
@@ -2369,6 +2474,7 @@ def add_tarefa(request):
     for x in notificacoes:
         if (x.visto == False):
             count_notificacoes = count_notificacoes + 1
+
     return render(request, 'diaabertoapp/adicionarTarefa.html',
                   {'form': aForm, 'atividades': atividades, 'salas': salas, 'utilizador': aut_utilizador, 'diaaberto':diaaberto,
                    'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
@@ -2434,17 +2540,19 @@ def atribuir_tarefa(request, pk):
 
     tarefas_1 = Tarefa.objects.all()
     colaboradorids = request.POST.getlist('colaborador_id')
-
+    print(colaboradorids)
+    print("AIIIIIIIIIIIIIIIIIIIIII")
     if (len(colaboradorids) != 0):
 
         tarefa_obj = Tarefa.objects.get(pk=pk)
+        print("//////////////////////////////////////////////////////////////////")
         tarefa_obj.coolaborador.clear()
         tarefa_obj.coolaborador.add(*colaboradorids)
         tarefa_obj.estado = 'AT'
         tarefa_obj.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
-        return render(request, 'diaabertoapp/tarefas.html', {'tarefas': tarefas_1})
+        return render(request, 'diaabertoapp/tarefas.html', {'utilizador': aut_utilizador,'tarefas': tarefas_1})
 
 
 def remove_colab(request, pk):
@@ -2539,18 +2647,19 @@ def edit_tarefa(request, pk):
                   {'form': aForm, 'atividades': atividades, 'salas': salas, 'tipo_tarefa': tipo_tarefa, 'utilizador':aut_utilizador,
                    'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
-
 def grupos_switch(request):
     data = request.GET.get('data', None)
     horas = request.GET.get('horas', None)
     sala = request.GET.get('sala', None)
     tarefa = request.GET.get('tarefa', None)
-
-    print("--------------------------------------------------")
+ 
+   
+    index1=[]
     inscricaoids = []
+    
     if tarefa is None:
         horas = horas + ":00"
-    print(horas)
+
     horasstring = str(horas)
     leng = len(horasstring)
     if leng < 4:
@@ -2559,25 +2668,25 @@ def grupos_switch(request):
         leng = len(horasstring)
     if leng <= 5:
         horas = horas + ":00" 
-    print("-wrfkoweofwkofwekweofkweof------------------")
-    print(horas)
+   
+   
     novashoras = datetime.strptime(horas, '%H:%M:%S').time()
-    print(novashoras)
+  
     outrashoras = timedelta(seconds=((novashoras.hour * 3600) + (novashoras.minute * 60) + novashoras.second))
-    print(outrashoras)
+    
     sessaoatividades = SessaoAtividade.objects.filter(atividade__sala__id=sala, dia=data)
-    print("OLA")
-    print(sessaoatividades)
+ 
+  
     
     for sessaoatividade in sessaoatividades:
         atividade = sessaoatividade.atividade
-        print(atividade)
+      
         hora_inicio = sessaoatividade.sessao.hora
         hora_inicio_final = timedelta(
             seconds=((hora_inicio.hour * 3600) + (hora_inicio.minute * 60) + hora_inicio.second))
-        print(hora_inicio_final)
+      
         atividade_duracao = timedelta(seconds=(atividade.duracao * 60))
-        print(atividade_duracao)
+       
 
         tarefa_inicio = outrashoras - atividade_duracao
 
@@ -2589,44 +2698,170 @@ def grupos_switch(request):
                 'id')
 
             for inscricao in inscricaoid:
+                
                 inscricaoids.append(inscricao)
+                
+                                
                 grupos = Tarefa.objects.filter(grupo=inscricao, localizacao_grupo=sala, dia=data, horario=horas)
-                print(grupos)
+                
                 for grupo in grupos:
-                    print(grupo)
-                    print(grupo.grupo)
+                  
+                   
                     grupinhos = grupo.grupo.all()
-                    print(grupinhos)
+                
                     for grupozinhos in grupinhos:
                         if grupozinhos.id == inscricao:
                             if tarefa != None:
                                 tarefa1 = Tarefa.objects.get(id=tarefa)
                                 if (grupo != tarefa1):
-                                    print("entrei")
+                                  
                                     inscricaoids.remove(inscricao)
                             else:
                                 inscricaoids.remove(inscricao)
 
-    # sessaoatividade = SessaoAtividade.objects.filter(sessao__hora = horas, atividade__sala__id = sala, dia = data)
-    # print(sessaoatividade)
-    # atividade = sessaoatividade.atividade
-    # print(atividade)
-    # atividade_duracao = datetime.timedelta(seconds=(atividade.duracao*60))
-    # print(atividade_duracao)
-    # x = datetime.timedelta(seconds = ((horas.hour*3600)+(horas.minute*60)+horas.second))
-    # print(x)
-    # tarefa_inicio = x - atividade_duracao
-    # print(tarefa_inicio)
-    # inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora = tarefa_inicio , sessaoAtividade__atividade__sala = sala, sessaoAtividade__dia = data).values_list('inscricao', flat=True).order_by('id')
-
+           
     dados = {
-        'idinscricao': list(inscricaoids)
+        'idinscricao': list(inscricaoids),
+        
+        
     }
 
     return JsonResponse(dados)
 
 
+def grupos_switch_edit(request):
+    data = request.GET.get('data', None)
+    horas = request.GET.get('horas', None)
+    sala = request.GET.get('sala', None)
+    tarefa = request.GET.get('tarefa', None)
+    counter=0
+    counter1=0
+   
+    index1=[]
+    inscricaoids = []
+    
+    if tarefa is None:
+        horas = horas + ":00"
+    else:
+        tarefas = Tarefa.objects.get(pk=tarefa)
+        meninos = tarefas.grupo.all().values_list('id',flat=True)
+        
+   
+    horasstring = str(horas)
+    leng = len(horasstring)
+    if leng < 4:
+        horas = "00:00:00"
+        horasstring = str(horas)
+        leng = len(horasstring)
+    if leng <= 5:
+        horas = horas + ":00" 
+   
+   
+    novashoras = datetime.strptime(horas, '%H:%M:%S').time()
+  
+    outrashoras = timedelta(seconds=((novashoras.hour * 3600) + (novashoras.minute * 60) + novashoras.second))
+    
+    sessaoatividades = SessaoAtividade.objects.filter(atividade__sala__id=sala, dia=data)
+ 
+  
+    
+    for sessaoatividade in sessaoatividades:
+        atividade = sessaoatividade.atividade
+      
+        hora_inicio = sessaoatividade.sessao.hora
+        hora_inicio_final = timedelta(
+            seconds=((hora_inicio.hour * 3600) + (hora_inicio.minute * 60) + hora_inicio.second))
+      
+        atividade_duracao = timedelta(seconds=(atividade.duracao * 60))
+       
+
+        tarefa_inicio = outrashoras - atividade_duracao
+
+        if tarefa_inicio == hora_inicio_final:
+            inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora=str(tarefa_inicio),
+                                                                  sessaoAtividade__atividade__sala=sala,
+                                                                  sessaoAtividade__dia=data).values_list('inscricao',
+                                                                                                         flat=True).order_by(
+                'id')
+
+            for inscricao in inscricaoid:
+                
+                inscricaoids.append(inscricao)
+                
+                                
+                grupos = Tarefa.objects.filter(grupo=inscricao, localizacao_grupo=sala, dia=data, horario=horas)
+                
+                for grupo in grupos:
+                  
+                   
+                    grupinhos = grupo.grupo.all()
+                
+                    for grupozinhos in grupinhos:
+                        if grupozinhos.id == inscricao:
+                            if tarefa != None:
+                                tarefa1 = Tarefa.objects.get(id=tarefa)
+                                if (grupo != tarefa1):
+                                  
+                                    inscricaoids.remove(inscricao)
+                            else:
+                                inscricaoids.remove(inscricao)
+
+            for inscricao in inscricaoid:
+                counter1=counter1+1
+                for menino in meninos:
+                    if(inscricao == menino):
+                        counter=counter+1
+                        index1.append(counter1)
+    dados = {
+        'idinscricao': list(inscricaoids),
+        'index1':index1,
+        'index':counter
+        
+    }
+
+    return JsonResponse(dados)
+
+
+
+def salas_switch_edit(request):
+   
+    salalists = Sala.objects.all()
+    salalist=[]
+    namelist = []
+    count=0
+    tarefa = Tarefa.objects.get(pk=request.GET.get('tarefa', None))
+    enccount = -1
+    destcount = -1
+    enccount = []
+    destcount = []
+    salaenc  = tarefa.localizacao_grupo.id
+    saladest = tarefa.destino.id
+    enccount.append(salaenc) 
+    destcount.append(saladest)
+
+
+    for sala in salalists:
+        
+        if(salaenc == sala.id):
+            enccount.append(count)
+        elif(saladest == sala.id):
+            destcount.append(count)
+            
+        salalist.append(sala.id)
+        namelist.append(sala.edificio.nome+" Sala: "+sala.identificacao+" Campus: "+sala.edificio.campus.nome)
+        count=count+1
+
+    dados = {
+        'SALALIST': salalist,
+        'NAMELIST': namelist,
+        'ENCCOUNT': enccount,
+        'DESTCOUNT': destcount
+    }
+    return JsonResponse(dados)
+
+
 def user_switch(request):
+  
     userlist = []
     usernamelist = []
     colaboracaolist = []
@@ -2634,8 +2869,8 @@ def user_switch(request):
     tarefa_tipo = tarefa.tipo_tarefa
     utilizadores = Utilizador.objects.filter(utilizadortipo__tipo='Colaborador').order_by("nome")
     
-    #numero_colabs = 1
-    #if(tarefa.tipo_tarefa == 'AV'):
+    numero_colabs = 1
+   
 
 
     d = timedelta(seconds=(tarefa.duracao * 60))
@@ -2646,6 +2881,17 @@ def user_switch(request):
     no_task_day = 0
 
     if (tarefa.estado == 'PA'):
+
+        if(tarefa.tipo_tarefa == 'AV'):
+             atividade = Atividade.objects.get(pk=tarefa.atividade.id)
+             sessoes = SessaoAtividade.objects.filter(atividade=atividade)
+             
+             for sessao in sessoes:
+                sessao_hora = sessao.sessao.hora
+                sessao_hora_gucci = timedelta(seconds=((tarefa.horario.hour * 3600) + (tarefa.horario.minute * 60) + tarefa.horario.second))
+                if(tarefa_inicio == sessao_hora_gucci):
+                    numero_colabs = sessao.numero_colaboradores
+                 
 
         for utilizador in utilizadores:
             colaboracoes = Colaboracao.objects.filter(colaborador=utilizador)
@@ -2709,7 +2955,8 @@ def user_switch(request):
         dados = {
             'usernamelist': list(dict.fromkeys(usernamelist)),
             'userlist': list(dict.fromkeys(userlist)),
-            'colaboracao': list(dict.fromkeys(colaboracaolist))
+            'colaboracao': list(dict.fromkeys(colaboracaolist)),
+            'numero_colabs': numero_colabs
         }
 
     return JsonResponse(dados)
@@ -2721,22 +2968,74 @@ def activity_switch(request):
     sessoesatividades = SessaoAtividade.objects.filter(dia=dia)
     activity_list = []
     activity_name_list = []
-
+    tarefa = request.GET.get('tarefa', None)
+    count = -1
+    count1 = 0
+    print(tarefa)
+    
+    
     for sessaoatividade in sessoesatividades:
         if sessaoatividade.atividade.id in activity_list:
             pass
         else:
             if sessaoatividade.atividade.validada == 'VD':
+                
+              
+              
                 activity_list.append(sessaoatividade.atividade.id)
                 activity_name_list.append(sessaoatividade.atividade.nome)
 
-    print(sessoesatividades)
+ 
     dados = {
         'activity_list': activity_list,
-        'activity_name_list': activity_name_list
+        'activity_name_list': activity_name_list,
+        'posicaonoarray' : count
     }
 
     return JsonResponse(dados)
+
+
+def activity_switch_edit(request):
+     
+    dia = request.GET.get('data', None)
+    print(dia)
+    sessoesatividades = SessaoAtividade.objects.filter(dia=dia)
+    activity_list = []
+    activity_name_list = []
+    tarefa = request.GET.get('tarefa', None)
+    count = -1
+    count1 = 0
+    print(tarefa)
+    if(tarefa!=-1):
+        mainTask = Tarefa.objects.get(pk=tarefa)
+        
+        atividadeselected = mainTask.atividade.id
+        
+    else:
+         atividadeselected = -1
+    
+    for sessaoatividade in sessoesatividades:
+        if sessaoatividade.atividade.id in activity_list:
+            pass
+        else:
+            if sessaoatividade.atividade.validada == 'VD':
+                
+              
+                if(sessaoatividade.atividade.id == atividadeselected):
+                    count = count1
+                count1 = count1+1 
+                activity_list.append(sessaoatividade.atividade.id)
+                activity_name_list.append(sessaoatividade.atividade.nome)
+
+ 
+    dados = {
+        'activity_list': activity_list,
+        'activity_name_list': activity_name_list,
+        'posicaonoarray' : count
+    }
+
+    return JsonResponse(dados)
+
 
 def sessions_switch(request):
      
@@ -2754,7 +3053,6 @@ def sessions_switch(request):
             sessions_list.append(sessao.id)
             sessions_hours_list.append(sessao.sessao.hora)
 
-    print(sessoesdaatividade)
     dados = {
         'sessions_list': sessions_list,
         'sessions_hours_list': sessions_hours_list
@@ -2763,29 +3061,7 @@ def sessions_switch(request):
     return JsonResponse(dados)
 
 
-#def salas_switch(request):
-#     
-#    tarefa = request.GET.get('tarefa', None)
-#    salas = request.GET.get('salas', None)
-#
-#
-#    salas_list = []
-#    salas_nome_list = []
-#
-#    for sala in salas:
-#        if sessao.id in sessions_list:
-#            pass
-#        else:
-#            salas_list.append(sala.id)
-#            salas_nome_list.append(sala.edificio.nome + " Sala: "+ sala.identificacao +" Campus: "+ sala.edificio.campus.nome )
-#
-#    print(sessoesdaatividade)
-#    dados = {
-#        'salas_list': salas_list,
-#        'salas_nome_list': salas_nome_list
-#    }
-#
-#    return JsonResponse(dados)
+
 
 
 

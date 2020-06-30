@@ -152,6 +152,7 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\login.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\listaratividades.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\notificacoesrecebidas.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\proportransporte.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\sugeriralteracao.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\minhasatividades.html" />

@@ -579,10 +579,15 @@
                                                           <div class="content">
                                                             <div style="font-size: 15px;">
                                                                
+
+                                                                    <span class="is-danger">Número de Colaboradores Necessário: <label class="numero_colabs" id="numero_colabs"></label><input type="hidden" class="numero_colabs1"><br><br></span>
                                                                 {% if tarefa.tipo_tarefa == 'AV' %}   
-                                                                    <span class="is-danger">Número de Colaboradores Necessário: <label id="numero_colabs"></label></span> 
+                                                                     
                                                                     <span>Nome da Atividade: &nbsp;{{tarefa.atividade.nome}} <br><br> </span>
                                                                     <span>Local da Atividade: &nbsp;{{tarefa.atividade.campus}}&nbsp;{{tarefa.atividade.sala}} <br><br> </span>
+                                                               
+                                                                    
+                                                                
                                                                 {% endif %}
                                                                 
 
@@ -626,9 +631,13 @@
                                                                       </div>
                                                                       <div class="column">
                                                                     
-                                                                           <button type="submit" class="button is-success is-outlined" onclick="return confirm('Tem a certeza que prentede atribuir coolaboradores à tarefa?');"><span
+                                                                           <a  type="button"  class="button is-success is-outlined" onclick="myfunc2({{forloop.counter0}})"><span
                                                                                 class="icon is-small "><i
-                                                                            class=" mdi mdi-account-arrow-left"></i></span><span>Atribuir Tarefa</span></button>
+                                                                            class=" mdi mdi-account-arrow-left"></i></span><span>Atribuir Tarefa</span></a>
+
+                                                                          <button type="submit" class="sub" value="{{forloop.counter0}}" id ="submit" style="display: none;" >
+                                                                               
+                                                                            </button>
                                                                       
                                                                   
                                                                       </div>
@@ -641,6 +650,9 @@
                                                                 
                                                               </div>
                                                                 {% else %}
+                                                                <button type="submit" class="sub" value="{{forloop.counter0}}" id ="submit" style="display: none;" >
+                                                                               
+                                                                            </button>
                                                                 <select class="colaborador_id" name="colaborador_id" id="colaborador_id{{forloop.counter0}}" value="{{forloop.counter0}}" style="display:none" multiple>
                                                                                         
                                                                 </select> 
@@ -750,6 +762,8 @@
                                         </div>
                                     </div>
                                 {% endif %}
+
+                                <div><input id="contador" type="hidden"></div>
                             </div>
                         </div>
                     </div>
@@ -786,7 +800,7 @@
     </script>
     <script>
            function myfunc(tarefas,contador){
-              
+                
                 var tarefa = tarefas;
                 var colabs1 = document.getElementsByClassName("colaborador_id");  
                 var colabs2 = colabs1[contador];
@@ -810,8 +824,14 @@
                           var lista = dados.userlist;
                           var x = lista.length;
                            
-                          var colabs = document.getElementsByClassName("colaborador_id");                
-                         
+                           
+                          var colabs = document.getElementsByClassName("colaborador_id");
+        
+                          var numero_colabs = document.getElementsByClassName("numero_colabs");
+                         var numero_colabs1 = document.getElementsByClassName("numero_colabs1");
+                          numero_colabs[contador].innerHTML= dados.numero_colabs;
+                          numero_colabs1[contador].value = dados.numero_colabs;
+                          
                            
                           for(var i = 0; i < x; i++){
                             
@@ -834,7 +854,49 @@
 
     </script>
 
+     <script>
+         function myfunc2(contador) {
+
+               var numero_colabs = document.getElementsByClassName("numero_colabs1");
+               var numero_colabs1 = numero_colabs[contador].value;
+               var colabs1 = document.getElementsByClassName("colaborador_id");  
+               var colabs2 = colabs1[contador];
+               var x = colabs2.querySelectorAll("option");
+
+               var count = 0;
+               
+               
+               for (var i = 0; i < x.length; i++) {
+                 if (x[i].selected) count++;
+               }
+               
+
+               if (numero_colabs1 > count) {
+                   confirm('Selecione o numero de colaboradores indicado ou mais!')
+                   return returnToPreviousPage();
+
+               } else {
+                   if (confirm('Tem a certeza que prentede atribuir a tarefa a atribuição da tarefa?')) {
+                                var subs = document.getElementsByClassName("sub");
+                                var sub =subs[contador]
+                                sub.click();
+                            }
+                       }
+                   }
+              
+         
+    </script>
  
+    <script>
+        $(document).ready(function() {
+  $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
+    </script>
 
     <script src="/js/chunk-vendors.63f37e79.js"></script>
     <script src="/js/app.841e44b5.js"></script>

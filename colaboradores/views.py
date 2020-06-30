@@ -254,7 +254,22 @@ class Consultar_tarefa(View):
         if pk_user.utilizadortipo.tipo == "Colaborador":
             # lista_tarefa = UtilizadorTarefa.objects.filter(colaborador_id=user_id.pk)
             lista_tarefa = Tarefa.objects.filter(coolaborador=user_id.pk)
-            print(lista_tarefa)
+            # test = Tarefa.grupo.all()
+
+            # results = Staff.objects.filter(pk=1)
+            # grupos_m=[]
+            # for y in lista_tarefa:
+            #     grupos_m.append(list(y.grupo.all()))
+            #     grupos_final=zip(lista_tarefa,grupos_m)
+            #
+            #
+            # for x,y in grupos_final:
+            #     print(x.tipo_tarefa)
+            #     print(y)
+            #
+            # lst1 = ['a', 'b', 'c']
+            # lst2 = ['a', 'b', 'c']
+            # grp= zip(lst1,lst2)
             # for x in lista_colab:
             #     lista_colab3.append(str(x.data_colaboracao))
             #     lista_colab_final =  zip(lista_colab, lista_colab3)
@@ -263,9 +278,9 @@ class Consultar_tarefa(View):
             #print(lista_colab)
             return render(request, self.template_name, {
                 # 'form': form,
-                #'lista_colab': lista_colab,
-                #'hora_str': hora_str,
-                #'lista_colab3': lista_colab3,
+                # 'grp': grp,
+                # 'grupos': grupos_m,
+                # 'tarefa_id': lista_tarefa,
                 'lista_tarefa': lista_tarefa,
                 'utilizador': pk_user
             })

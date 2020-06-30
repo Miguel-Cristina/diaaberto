@@ -108,6 +108,7 @@
                             Colaboração</a>
                         <a data-v-a67fe1ba="" href="/colaboradores/consultar" class="navbar-item is-tab router-link">Consultar
                             Colaborações</a>
+                         <a data-v-a67fe1ba="" href="/colaboradores/consultar_tarefa" class="navbar-item is-tab router-link">Tarefas Atribuidas</a>
                     </div>
                 </div>
             {% endif %}
@@ -137,11 +138,11 @@
                                 </span>
                     </div>
 
-                    <div aria-hidden="true" class="dropdown-menu">
+                    <div aria-hidden="true" class="dropdown-menu" style="min-width:18rem">
                         <div role="menu" class="dropdown-content">
                             <div data-v-a67fe1ba="" role="menuitem" tabindex="0" class="dropdown-item">
-                                
-                            
+
+
                             <div class="level">
                                 <div class="level-left">
                                     <div class="level-item">
@@ -150,7 +151,7 @@
                                 </div>
                                 <div class="level-right">
                                     <div class="level-item">
-                                        <a href="/notificacao/consultar" style="color:black" class="button is-small"><i class="mdi mdi-email-send-outline"></i><small></small></a>
+                                        <a href="/notificacao/consultar" style="color:black" class="button is-small"><i class="mdi mdi-email-send-outline"> Enviadas</i><small></small></a>
                                     </div>
                                     <div class="level-item">
                                         <a href="/notificacao/criar" style="color:black" class="button is-small"><i class="mdi mdi-send"></i><small></small></a>
@@ -172,13 +173,11 @@
                                                     <small>{{ notificacao.conteudo }} </small></div>
                                                 <!--style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"-->
                                                 <div class="level">
-                                                    <div class="level-item"><a href="" class="is-small"><i
+                                                    <div class="level-item"><a href="/notificacao/consultar/recebidas/?notificacaoid={{ notificacao.id }}" class="is-small"><i
                                                             class="mdi mdi-open-in-new mdi-12px"></i></a></div>
                                                     <div class="level-item"><a href="{% url 'visto' notificacao.id %}"
                                                                                class="is-small"><i
                                                             class="mdi mdi-check mdi-12px"></i></a></div>
-                                                    <div class="level-item"><a href="" class="is-small"><i
-                                                            class="mdi mdi-reply mdi-12px"></i></a></div>
                                                 </div>
 
                                             </div>
@@ -191,10 +190,8 @@
                                                 <div data-v-a67fe1ba="" class="is-small has-text-grey has-text-left">
                                                     <small>{{ notificacao.conteudo }} </small></div>
                                                 <div class="level">
-                                                    <div class="level-item"><a href="" class="is-small"><i
+                                                    <div class="level-item"><a href="/notificacao/consultar/recebidas/?notificacaoid={{ notificacao.id }}" class="is-small"><i
                                                             class="mdi mdi-open-in-new mdi-12px"></i></a></div>
-                                                    <div class="level-item"><a href="" class="is-small"><i
-                                                            class="mdi mdi-reply mdi-12px"></i></a></div>
                                                 </div>
 
                                             </div>
@@ -210,8 +207,8 @@
                                 {% endif %}
 
                             </div>
-                            <a data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
-                                <u data-v-a67fe1ba="">Ver todas as notificações</u>
+                            <a href="/notificacao/consultar/recebidas" data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
+                                <u data-v-a67fe1ba="">Ver todas as notificações recebidas</u>
                             </a>
                         </div>
                     </div>
