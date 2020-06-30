@@ -274,7 +274,7 @@ function check_n_emails(val,counter) {
                                                                                             class="input"
                                                                                             name="nome"
                                                                                             id="id_nome"
-                                                                                            oninput="formerror(this.name, this.id, 'text')">
+                                                                                            oninput="formerror(this.name, this.id, 'text')" required>
                                                         <span id="id_nome_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
 
                                                     </div>
@@ -287,7 +287,7 @@ function check_n_emails(val,counter) {
                                                                                             class="input"
                                                                                             name="email"
                                                                                             id="id_email"
-                                                                                            onchange="formerror(this.name, this.id, 'email')">
+                                                                                            onchange="formerror(this.name, this.id, 'email')" required>
                                                     <span id="id_email_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
 
                                                     </div>
@@ -299,7 +299,7 @@ function check_n_emails(val,counter) {
                                                                                             class="input"
                                                                                             name="password_digest"
                                                                                             id="id_password"
-                                                                                            onchange="formerror(this.name, this.id, 'password')">
+                                                                                            onchange="formerror(this.name, this.id, 'password')" required>
                                                     <span id="id_password_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
 
                                                     </div>
@@ -311,7 +311,7 @@ function check_n_emails(val,counter) {
                                                                                             class="input"
                                                                                             name="password_conf"
                                                                                             id="id_password1"
-                                                                                            onchange="formerror(this.name, this.id, 'password')">
+                                                                                            onchange="formerror(this.name, this.id, 'password')" required>
                                                     <span id="id_password1_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
 
                                                     </div>
@@ -322,7 +322,7 @@ function check_n_emails(val,counter) {
                                                     <div class="control is-clearfix"><input type="date"
                                                                                             autocomplete="on" id="date"
                                                                                             class="input"
-                                                                                            name="data_nascimento" >
+                                                                                            name="data_nascimento" required >
                                                     </div>
                                                 </div>
                                                 <div class="field"><label class="label">Numero de telemóvel:</label>
@@ -331,7 +331,7 @@ function check_n_emails(val,counter) {
                                                                                             class="input"
                                                                                             name="numero_telemovel"
                                                                                             id="id_tele"
-                                                                                            onchange="formerror(this.name, this.id, 'movel')">
+                                                                                            onchange="formerror(this.name, this.id, 'movel')" required>
                                                     <span id="id_tele_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
 
                                                     </div>
@@ -344,14 +344,14 @@ function check_n_emails(val,counter) {
                                                                                             class="input"
                                                                                             name="cartao_cidadao"
                                                                                             id="id_cartao"
-                                                                                            onchange="formerror(this.name, this.id, 'cartao')">
+                                                                                            onchange="formerror(this.name, this.id, 'cartao')" required>
                                                     <span id="id_cartao_icon" style="display: none" class="icon is-right has-text-danger"><i class="mdi mdi-alert-circle mdi-24px"></i></span>
 
                                                     </div>
                                                     <p id="id_cartao_msg" style="display: none" class="help is-danger" >O número de cartao de cidadão tem que ter 8 digitos.</p>
 
                                                 </div>
-                                                <div class="field"><label class="label">Tem alguma deficiência?:</label>
+                                                <div class="field" ><label class="label">Tem alguma deficiência?:</label>
                                                     <label class="b-radio radio"><input type="radio"
                                                                                         name="deficiencias1"
                                                                                         onchange="check_def(this.value);"

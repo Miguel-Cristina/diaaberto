@@ -112,7 +112,7 @@ function cancel_reg(val) {
                                                             <label class="label">Em que dia quer colaborar?</label>
                                                         </div>
                                                         <input type="date" id="datemax" name="data_colaboracao"
-                                                               min={{ data_inicio }} max={{ data_fim }} class="input">
+                                                               min={{ data_inicio }} max={{ data_fim }} class="input" required>
                                                     </div>
 
                                                     <div class="columns">
@@ -121,7 +121,7 @@ function cancel_reg(val) {
                                                             <div class="field">
                                                                 <label class="label">Horário de Início</label>
                                                                 <input type="time" min="08:00" max="18:00"
-                                                                       name="hora_inicio_colab" class="input">
+                                                                       name="hora_inicio_colab" class="input" required>
 <!--                                                                       id="timepicker-two"-->
 
 <!--                                                                       class="timepicker-12-hr"-->
@@ -133,7 +133,7 @@ function cancel_reg(val) {
                                                             <div class="field">
                                                                 <label class="label">Horário de Fim</label>
                                                                 <input type="time" min="08:00" max="18:00"
-                                                                       name="hora_fim_colab" class="input">
+                                                                       name="hora_fim_colab" class="input" required>
 <!--                                                                       id="timepicker-one"-->
 
 <!--                                                                       class="timepicker-12-hr"-->

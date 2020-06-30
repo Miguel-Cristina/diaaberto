@@ -352,6 +352,9 @@
         $(document).ready(function () {
             $("#horas").change(function () {
                
+
+            if($('#checkradio2').is(':checked')){
+               
                var options = document.querySelectorAll('#gruposSelect option');
                options.forEach(o => o.remove());
                
@@ -390,6 +393,7 @@
 
                       }
                     });
+            }
 
 
             }
@@ -403,6 +407,8 @@
         $(document).ready(function () {
             $("#salaSearchEnc").change(function () {
                
+
+        if($('#checkradio2').is(':checked')){
                var options = document.querySelectorAll('#gruposSelect option');
                options.forEach(o => o.remove());
                
@@ -441,6 +447,7 @@
 
                       }
                     });
+        }
 
 
             }
@@ -458,7 +465,7 @@
                
               if($('#checkradio2').is(':checked'))
         {
-                alert("AHAHAHAHAH");
+            
                var options = document.querySelectorAll('#gruposSelect option');
                options.forEach(o => o.remove());
                
@@ -515,10 +522,11 @@
         $(document).ready(function () {
             $("#data").change(function () {
                
+             if($('#checkradio1').is(':checked')){
               
                var options = document.querySelectorAll('#atividade option');
                options.forEach(o => o.remove());
-
+                  var tarefa = -1;
                 $('#atividade').prepend('<option readonly="readonly"></option>');
 
                 var data = $("#data").val();
@@ -526,7 +534,8 @@
                     $.ajax({
                         url: '{% url "activity_switch" %}',
                           data: {
-                              'data' : data
+                              'data' : data,
+                              'tarefa': tarefa
                           },
                       dataType: 'json',
                       success: function (dados) {
@@ -535,7 +544,7 @@
                             
                           
                           var lista = dados.activity_list;
-                        alert(lista[0]);
+                        
                           var nomes = dados.activity_name_list; 
                           var x = lista.length;
                           var grupos = document.getElementById("atividade");                
@@ -545,6 +554,7 @@
                             var option = document.createElement("option");
                             option.value = lista[i];
                             option.text = nomes[i];
+                            
                             grupos.add(option);
                            }
                            
@@ -553,6 +563,7 @@
 
                       }
                     });
+        }
 
 
             }
@@ -568,7 +579,7 @@
         $(document).ready(function () {
             $("#atividade").change(function () {
                
-              
+              if($('#checkradio1').is(':checked')){
                var options = document.querySelectorAll('#sessoesSelect option');
                options.forEach(o => o.remove());
                
@@ -588,7 +599,7 @@
                             
                           
                           var lista = dados.sessions_list;
-                          alert(lista[0]);
+                        
                           var horas = dados.sessions_hours_list; 
                           var x = horas.length;
                           var grupos = document.getElementById("sessoesSelect");                
@@ -605,6 +616,7 @@
 
                       }
                     });
+         }
 
 
             }

@@ -631,11 +631,11 @@
                                                                       </div>
                                                                       <div class="column">
                                                                     
-                                                                           <a type="button"  class="button is-success is-outlined" onclick="myfunc2({{forloop.counter0}})"><span
+                                                                           <a  type="button"  class="button is-success is-outlined" onclick="myfunc2({{forloop.counter0}})"><span
                                                                                 class="icon is-small "><i
                                                                             class=" mdi mdi-account-arrow-left"></i></span><span>Atribuir Tarefa</span></a>
 
-                                                                          <button type="submit" id ="submit" style="display: none;" class="button is-success is-outlined" >
+                                                                          <button type="submit" class="sub" value="{{forloop.counter0}}" id ="submit" style="display: none;" >
                                                                                
                                                                             </button>
                                                                       
@@ -650,6 +650,9 @@
                                                                 
                                                               </div>
                                                                 {% else %}
+                                                                <button type="submit" class="sub" value="{{forloop.counter0}}" id ="submit" style="display: none;" >
+                                                                               
+                                                                            </button>
                                                                 <select class="colaborador_id" name="colaborador_id" id="colaborador_id{{forloop.counter0}}" value="{{forloop.counter0}}" style="display:none" multiple>
                                                                                         
                                                                 </select> 
@@ -873,12 +876,14 @@
                    return returnToPreviousPage();
 
                } else {
-                   if (confirm('Tem a certeza que prentede atribuir a tarefa a atribuição da tarefa?')) 
-                        document.getElementById("submit").click();
-               }
-                
-
-            }
+                   if (confirm('Tem a certeza que prentede atribuir a tarefa a atribuição da tarefa?')) {
+                                var subs = document.getElementsByClassName("sub");
+                                var sub =subs[contador]
+                                sub.click();
+                            }
+                       }
+                   }
+              
          
     </script>
  

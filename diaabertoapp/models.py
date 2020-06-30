@@ -690,3 +690,10 @@ class UtilizadorTarefa(models.Model):
 
     class Meta:
         db_table = 'utilizador_tarefa'
+
+class TransporteUniversitarioinscricao(models.Model):
+    percursos = models.ForeignKey(TransporteproprioPercursos, models.DO_NOTHING)
+    transporte = models.ForeignKey(TransporteUniversitarioHorario, models.DO_NOTHING)
+
+    class Meta:
+        db_table = 'transporte_universitarioinscricao'

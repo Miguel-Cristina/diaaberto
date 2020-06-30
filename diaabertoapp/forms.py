@@ -1,5 +1,5 @@
 from django import forms
-from .models import Prato, Ementa, Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, TransporteUniversitarioHorario, Transporte, Percurso, Horario, PublicoAlvo, UnidadeOrganica, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade, TipoAtividade, DiaAberto, Utilizador, Inscricao
+from .models import Prato, TransporteUniversitarioinscricao, Ementa, Atividade, Campus, Edificio, Sala, Tematica, Dia, Tarefa, TransporteUniversitarioHorario, Transporte, Percurso, Horario, PublicoAlvo, UnidadeOrganica, Departamento, MaterialQuantidade, Material, Sessao, SessaoAtividade, TipoAtividade, DiaAberto, Utilizador, Inscricao
 import datetime
 from django.contrib.admin.widgets import AutocompleteSelect
 from django_select2.forms import ModelSelect2Widget
@@ -239,6 +239,23 @@ class HorarioForm(forms.ModelForm):
     hora_partida = forms.TimeField(widget= forms.TimeInput(attrs ={'class': 'input','type':'time'}))
     data = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
     
+    def __init__(self, *args, **kwargs):
+        super(HorarioForm, self).__init__(*args, **kwargs)
+        try:
+            diaaberto = DiaAberto.objects.first()
+        except DiaAberto.DoesNotExist:
+            diaaberto = None
+        if diaaberto is not None:
+            data_inicio = diaaberto.data_inicio
+            data_fim = diaaberto.data_fim
+        else:
+            data_inicio = '2001-01-01'
+            data_fim = '2001-01-01'
+        self.fields['data'].widget.attrs.update({
+                'min': data_inicio,
+                'max': data_fim
+            })
+
     class Meta:
         model = Horario
         fields = ('hora_chegada', 'hora_partida', 'data')
@@ -260,6 +277,23 @@ class PratoForm(forms.ModelForm):
     descricao = forms.CharField(label="", max_length=1200, required=True, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea tabfields", 'id':"descricaoField",'placeholder': "Ex: Descrição do Menu"}))
     dia = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
 
+    def __init__(self, *args, **kwargs):
+        super(PratoForm, self).__init__(*args, **kwargs)
+        try:
+            diaaberto = DiaAberto.objects.first()
+        except DiaAberto.DoesNotExist:
+            diaaberto = None
+        if diaaberto is not None:
+            data_inicio = diaaberto.data_inicio
+            data_fim = diaaberto.data_fim
+        else:
+            data_inicio = '2001-01-01'
+            data_fim = '2001-01-01'
+        self.fields['dia'].widget.attrs.update({
+                'min': data_inicio,
+                'max': data_fim
+            })
+
     class Meta:
         model = Prato
         fields = ('prato_carne', 'prato_peixe', 'prato_vegan', 'sopa', 'sobremesa', 'descricao', 'dia')
@@ -272,7 +306,8 @@ class DiaabertoForm(forms.ModelForm):
     data_inicio = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
     data_fim = forms.DateTimeField(widget= forms.DateInput(attrs ={'class': 'input','type':'date'}))
     descricao = forms.CharField(label="", max_length=1200, required=True, widget=forms.Textarea(attrs={'rows':"3",'class': "textarea tabfields", 'id':"descricaoField",'placeholder': "Ex: Descrição do Dia Aberto"}))
-    
+    limite_inscricao_atividades = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"Limite de Atividades"}))
+    limite_inscricao_participantes = forms.IntegerField(min_value=0, label="", widget=forms.NumberInput(attrs={'class':"input",'step':"1", 'type':"number",'placeholder':"0",'name':"Limite participantes"}))
 
     class Meta:
         model = DiaAberto
@@ -287,5 +322,10 @@ class TransporteUniversitarioHorarioForm(forms.ModelForm):
     class Meta:
         model = TransporteUniversitarioHorario
         fields = ('transporte_universitario', 'horario', 'percurso')
+
+class TransporteUniversitarioinscricaoForm(forms.ModelForm):
+    class Meta:
+        model = TransporteUniversitarioinscricao
+        exclude = ('percursos', 'transporte',)
 
 
