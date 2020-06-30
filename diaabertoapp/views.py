@@ -2542,11 +2542,11 @@ def atribuir_tarefa(request, pk):
     tarefas_1 = Tarefa.objects.all()
     colaboradorids = request.POST.getlist('colaborador_id')
     print(colaboradorids)
-    print("AIIIIIIIIIIIIIIIIIIIIII")
+    
     if (len(colaboradorids) != 0):
 
         tarefa_obj = Tarefa.objects.get(pk=pk)
-        print("//////////////////////////////////////////////////////////////////")
+       
         tarefa_obj.coolaborador.clear()
         tarefa_obj.coolaborador.add(*colaboradorids)
         tarefa_obj.estado = 'AT'
@@ -2649,6 +2649,7 @@ def edit_tarefa(request, pk):
                    'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 def grupos_switch(request):
+    
     data = request.GET.get('data', None)
     horas = request.GET.get('horas', None)
     sala = request.GET.get('sala', None)
@@ -2862,14 +2863,17 @@ def salas_switch_edit(request):
 
 
 def user_switch(request):
-  
+    
     userlist = []
     usernamelist = []
     colaboracaolist = []
+    removes = []
+    removesnamelist =[]
+    removescolaboracaolist =[]
     tarefa = Tarefa.objects.get(pk=request.GET.get('tarefa', None))
     tarefa_tipo = tarefa.tipo_tarefa
     utilizadores = Utilizador.objects.filter(utilizadortipo__tipo='Colaborador').order_by("nome")
-    
+    numero_colabsremove = 0
     numero_colabs = 1
    
 
@@ -2910,6 +2914,9 @@ def user_switch(request):
                     if (data_colaboracao == data_tarefa and hora_inicio_colab <= tarefa_inicio and hora_fim_colab >= tarefa_fim):
 
                         tarefa_atribuida = Tarefa.objects.filter(coolaborador=utilizador.id)
+                        print("**********************************")
+                        print(tarefa_atribuida)
+                        print("**********************************")
                         
                         if (len(tarefa_atribuida) != 0):
 
@@ -2923,24 +2930,56 @@ def user_switch(request):
                                
                                 if (data_task == data_tarefa):
                                     no_task_day = no_task_day + 1
+                                    
+                                    print("////////////////")
                                     print("Tarefa")
-                                    print(tarefa)
+                                    print(tarefa.nome)
+                                    print(tarefa_inicio)
+                                    print(tarefa_fim)
+                                    print("-------------")
                                     print("Task")
-                                    print(task)
+                                    print(task.nome)
+                                    print(task_inicio)
+                                    print(task_fim)
+                                    print("////////////////")
+                                    
+
+
                                     if ((tarefa_inicio < task_inicio and tarefa_fim <= task_inicio) or (
                                             tarefa_fim > task_fim and tarefa_inicio >= task_fim)):
+                                        print("zeeeeeeeeeeeeeeeeeeeeeeeeee")
+                                        print("Tarefa")
+                                        print(tarefa.nome)
+                                        print(tarefa_inicio) 
+                                        print(tarefa_fim)
+                                        print("-------------")
+                                        print("Task")
+                                        print(task.nome)
+                                        print(task_inicio)
+                                        print(task_fim)
+                                        print("zeeeeeeeeeeeeeeeeeeeeeeeeee")
                                         if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
                                                 tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (
                                                 tarefa_tipo == 'OT')):
+                                            print("normal")
+                                            print(utilizador.id)
                                             userlist.append(utilizador.id)
                                             usernamelist.append(utilizador.nome)
                                             colaboracaolist.append(colaboracao.id)
                                     else:
-                                        break
-                            if(no_task_day == 0):
+                                        removes.append(utilizador.id)
+                                        removesnamelist.append(utilizador.nome)
+                                        removescolaboracaolist.append(colaboracao.id)
+                                       
+                                        
+                                        
+
+                            if(data_task != data_tarefa):
                                 if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
                                                 tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (
                                                 tarefa_tipo == 'OT')):
+                                    print("else")
+                                    print(utilizador.id)
                                     userlist.append(utilizador.id)
                                     usernamelist.append(utilizador.nome)
                                     colaboracaolist.append(colaboracao.id)   
@@ -2949,16 +2988,23 @@ def user_switch(request):
                         else:
                             if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
                                     tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (tarefa_tipo == 'OT')):
+                                print("else")
+                                print(utilizador.id)
                                 userlist.append(utilizador.id)
                                 usernamelist.append(utilizador.nome)
                                 colaboracaolist.append(colaboracao.id)
 
-        dados = {
-            'usernamelist': list(dict.fromkeys(usernamelist)),
-            'userlist': list(dict.fromkeys(userlist)),
-            'colaboracao': list(dict.fromkeys(colaboracaolist)),
-            'numero_colabs': numero_colabs
-        }
+       
+
+    dados = {
+        'usernamelist': list(dict.fromkeys(usernamelist)),
+        'userlist': list(dict.fromkeys(userlist)),
+        'colaboracao': list(dict.fromkeys(colaboracaolist)),
+        'numero_colabs': numero_colabs,
+        'removes': list(dict.fromkeys(removes)),
+        'removesnamelist': list(dict.fromkeys(removesnamelist)),
+        'removescolaboracaolist': list(dict.fromkeys(removescolaboracaolist)) 
+    }
 
     return JsonResponse(dados)
 

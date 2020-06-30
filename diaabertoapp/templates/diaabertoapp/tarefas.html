@@ -63,90 +63,7 @@
                                         <div data-v-1513178e="" class="menu" style="margin-bottom: 1rem;">
                                             <p data-v-1513178e="" class="menu-label">Filtros Tarefa</p>
                                 
-                                            {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
-                                            <div class="field has-addons">
-                                            {% if not campusquery|length > 0 %}
-                                            <div class="control is-expanded ">
-                                                <span class="select is-fullwidth is-empty">
-                                                    <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
-                                                        <option disabled="disabled" hidden="hidden" selected>
-                                                            Campus
-                                                        </option>
-                                                        {% for Campus in campuss %}
-                                                            <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </span>
-                                                <!--<span class="icon is-left">
-                                                    <i class="mdi mdi-magnify mdi-24px"></i>
-                                                </span>-->
-                                            </div>
-                                            <div class="control">
-                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                            </div>
-                                            {% else %}
-                                            <div class="control is-expanded ">
-                                                <span class="select is-fullwidth is-empty">
-                                                    <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
-                                                        {% for Campus in campuss %}
-                                                            <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </span>
-                                                <!--<span class="icon is-left">
-                                                    <i class="mdi mdi-magnify mdi-24px"></i>
-                                                </span>-->
-                                            </div>
-                                            <!---->
-                                            <div class="control">
-                                                <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                              </div>
-                                            {% endif %}
-                                        </div>
-
-
-                                              <div class="field has-addons">
-                                            <!---->
-                                            {% if not departamentoquery|length > 0 %}
-                                            <div class="control is-expanded ">
-                                                <span class="select is-fullwidth is-empty">
-                                                    <select  id="departamentoSearch" name="departamento"><!--onchange="searchByType()"-->
-                                                        <option disabled="disabled" hidden="hidden" selected>
-                                                            Departamento
-                                                        </option>
-                                                        {% for Departamento in departamentos %}
-                                                            <option value="{{ Departamento.id }}">{{ Departamento.nome }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </span>
-                                                <!--<span class="icon is-left">
-                                                    <i class="mdi mdi-magnify mdi-24px"></i>
-                                                </span>-->
-                                            </div>
-                                            <div class="control">
-                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
-                                            </div>
-                                            {% else %}
-                                            <div class="control is-expanded ">
-                                                <span class="select is-fullwidth is-empty">
-                                                    <select  id="departamentoSearch" name="departamento"><!--onchange="searchByType()"-->
-                                                        {% for Departamento in departamentos %}
-                                                            <option value="{{ Departamento.id }}">{{ Departamento.nome }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </span>
-                                                <!--<span class="icon is-left">
-                                                    <i class="mdi mdi-magnify mdi-24px"></i>
-                                                </span>-->
-                                            </div>
-                                            <!---->
-                                            <div class="control">
-                                                <button class="button is-danger" onclick="document.getElementById('departamentoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
-                                              </div>
-                                            {% endif %}
-
-                                            </div>
-                                           {% endif %}
+                                            
                                           
 
                                         <div class="field has-addons">
@@ -804,7 +721,7 @@
                 var tarefa = tarefas;
                 var colabs1 = document.getElementsByClassName("colaborador_id");  
                 var colabs2 = colabs1[contador];
-                //alert(colabs2);
+                
                 var x = colabs2.querySelectorAll("option")
                 x.forEach(o => o.remove());
                 
@@ -822,8 +739,10 @@
                              
                           
                           var lista = dados.userlist;
+                          var removes = dados.removes;
                           var x = lista.length;
-                           
+                          var y = removes.length;
+                    
                            
                           var colabs = document.getElementsByClassName("colaborador_id");
         
@@ -831,18 +750,34 @@
                          var numero_colabs1 = document.getElementsByClassName("numero_colabs1");
                           numero_colabs[contador].innerHTML= dados.numero_colabs;
                           numero_colabs1[contador].value = dados.numero_colabs;
-                          
                            
-                          for(var i = 0; i < x; i++){
+                           for( var j = 0; j < removes.length; j++){
+                              for( var i = 0; i < lista.length; i++){ 
+                                   
+                                       if(lista[i]==removes[j]){
+                                       
+                                        lista.splice(i, 1);
+                                        i--;
+                                   }
+                               }
+                            }
+        
+
+                          
+                            for(var i = 0; i < lista.length ;i++){
+                               
+                                var option = document.createElement("option");
+                                option.value = lista[i];
                             
-                            var option = document.createElement("option");
-                            option.value = lista[i];
+                                option.text = dados.usernamelist[i]; 
+                                colabs[contador].add(option);
+                             }
                             
-                            option.text = dados.usernamelist[i]; 
-                            colabs[contador].add(option);
-                           }
+
+
+
+
                           }
-    
 
                       }
                     });
