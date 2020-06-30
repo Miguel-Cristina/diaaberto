@@ -101,6 +101,10 @@ urlpatterns = [
     path('adicionarconfigurardiaaberto/', views.adicionardiaaberto, name='adicionarconfigurardiaaberto'),
     path('editarconfigurardiaaberto/<int:id>/', views.editardiaaberto, name='editarconfigurardiaaberto'),
 
+    path('transporteinscricao/', views.transporteinscricao, name='transporteinscricao'),
+    path('adicionartransporteinscricao/<int:id>/', views.adicionartransporteinscricao, name='adicionartransporteinscricao'),
+    path('visualizartransporteinscricao/', views.vizualizartransporteinscricao, name='visualizartransporteinscricao'),
+    path('editartransporteinscricao/<int:id>/', views.editartransporteinscricao, name='editartransporteinscricao')
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

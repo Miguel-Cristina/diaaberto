@@ -41,7 +41,6 @@
     <Compile Include="diaabertoapp\forms.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="diaabertoapp\migrations\__init__.py" />
     <Compile Include="diaabertoapp\models.py" />
     <Compile Include="diaabertoapp\tests.py" />
     <Compile Include="diaabertoapp\urls.py">
@@ -150,7 +149,6 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\editTarefa.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\error_404.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\error_500.html" />
-    <Content Include="diaabertoapp\templates\diaabertoapp\inscricaoTransporte.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\login.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\index.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\listaratividades.html" />
@@ -168,7 +166,10 @@
     <Content Include="diaabertoapp\templates\diaabertoapp\sessoes.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\proporatividade.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\tarefas.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\transporteinscricao.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\transporteinscricao2.html" />
     <Content Include="diaabertoapp\templates\diaabertoapp\transportes.html" />
+    <Content Include="diaabertoapp\templates\diaabertoapp\visualizartransporteinscricao.html" />
     <Content Include="pytest.ini">
       <SubType>Code</SubType>
     </Content>
