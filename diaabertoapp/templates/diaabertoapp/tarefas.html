@@ -62,8 +62,91 @@
                                         <form method="GET" action=".">                                           
                                         <div data-v-1513178e="" class="menu" style="margin-bottom: 1rem;">
                                             <p data-v-1513178e="" class="menu-label">Filtros Tarefa</p>
-                                
                                             
+                                             {% if utilizador.utilizadortipo.tipo == 'Administrador' %}
+                                            <div class="field has-addons">
+                                            {% if not campusquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Campus
+                                                        </option>
+                                                        {% for Campus in campuss %}
+                                                            <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="campusSearch" name="campus"><!--onchange="searchByType()"-->
+                                                        {% for Campus in campuss %}
+                                                            <option value="{{ Campus.id }}">{{ Campus.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('campusSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+                                        </div>
+
+
+                                              <div class="field has-addons">
+                                            <!---->
+                                            {% if not UnidadeOrganicaquery|length > 0 %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="unidadeorganicaSearch" name="unidadeorganica"><!--onchange="searchByType()"-->
+                                                        <option disabled="disabled" hidden="hidden" selected>
+                                                            Unidade Organica
+                                                        </option>
+                                                        {% for unidade in UnidadeOrganicas %}
+                                                            <option value="{{ unidade.id }}">{{ unidade.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <div class="control">
+                                                <button class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                            </div>
+                                            {% else %}
+                                            <div class="control is-expanded ">
+                                                <span class="select is-fullwidth is-empty">
+                                                    <select  id="unidadeorganicaSearch" name="unidadeorganica"><!--onchange="searchByType()"-->
+                                                        {% for unidade in UnidadeOrganicas %}
+                                                            <option value="{{ unidade.id }}">{{ unidade.nome }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </span>
+                                                <!--<span class="icon is-left">
+                                                    <i class="mdi mdi-magnify mdi-24px"></i>
+                                                </span>-->
+                                            </div>
+                                            <!---->
+                                            <div class="control">
+                                                <button class="button is-danger" onclick="document.getElementById('unidadeorganicaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                              </div>
+                                            {% endif %}
+
+                                            </div>
+                                           {% endif %}
                                           
 
                                         <div class="field has-addons">
@@ -624,6 +707,7 @@
                                         <!---->
                                     </table>
                                 </div>
+                                
                                 {% if tarefas.has_other_pages %}
                                     <div class="level">
                                         <div class="level-left"></div>
@@ -631,11 +715,19 @@
                                             <div class="level-item">
                                                 <nav class="pagination">
                                                     {% if tarefas.has_previous %}
-                                                    <a role="button" href="?page={{ tarefas.previous_page_number }}" class="pagination-link pagination-previous">
-                                                        <span class="icon" aria-hidden="true">
-                                                            <i class="mdi mdi-chevron-left mdi-24px"></i>
-                                                        </span>
-                                                    </a>
+                                                        {% if order_by is not None %}
+                                                            <a role="button" href="?page={{ tarefas.previous_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-previous">
+                                                            <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                        {% else %}
+                                                            <a role="button" href="?page={{ tarefas.previous_page_number }}" class="pagination-link pagination-previous">
+                                                            <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-left mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                        {% endif %}
                                                     {% else %}
                                                     <a role="button" href="#" disabled="disabled" class="pagination-link pagination-previous">
                                                         <span class="icon" aria-hidden="true">
@@ -643,13 +735,20 @@
                                                         </span>
                                                     </a>
                                                     {% endif %}
-                                                    {% if tarefas.has_next %}
-                                                    <a role="button" href="?page={{ tarefas.next_page_number }}" class="pagination-link pagination-next">
-                                                        <span class="icon" aria-hidden="true">
-                                                            <i class="mdi mdi-chevron-right mdi-24px"></i>
-                                                        </span>
-                                                    </a>
-
+                                                    {% if atividades.has_next %}
+                                                        {% if order_by is not None %}
+                                                            <a role="button" href="?page={{ tarefas.next_page_number }}&order_by={{ order_by }}&sort={{ sort }}" class="pagination-link pagination-next">
+                                                                <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                        {% else %}
+                                                            <a role="button" href="?page={{ tarefas.next_page_number }}" class="pagination-link pagination-next">
+                                                                <span class="icon" aria-hidden="true">
+                                                                    <i class="mdi mdi-chevron-right mdi-24px"></i>
+                                                                </span>
+                                                            </a>
+                                                        {% endif %}
                                                     {% else %}
                                                     <a role="button" href="#" disabled="disabled" class="pagination-link pagination-next">
                                                         <span class="icon" aria-hidden="true">
@@ -666,9 +765,15 @@
                                                             <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                         </li>
                                                         {% else %}
+                                                        {% if order_by is not None %}
+                                                        <li>
+                                                            <a role="button" href="?page={{ i }}&order_by={{ order_by }}&sort={{ sort }}" aria-current="true" class="pagination-link ">{{ i }}</a>
+                                                        </li>
+                                                        {% else %}
                                                         <li>
                                                             <a role="button" href="?page={{ i }}" aria-current="true" class="pagination-link ">{{ i }}</a>
                                                         </li>
+                                                        {% endif %}
                                                         {% endif %}
                                                         {% endfor %}
                                                         <!---->
@@ -679,6 +784,74 @@
                                         </div>
                                     </div>
                                 {% endif %}
+                                
+                                
+                                
+                                
+                                <!--{ if tarefas.has_other_pages }                                                                                                            -->
+                                <!--    <div class="level">                                                                                                                     -->
+                                <!--        <div class="level-left"></div>                                                                                                      -->
+                                <!--        <div class="level-right">                                                                                                           -->
+                                <!--            <div class="level-item">                                                                                                        -->
+                                <!--                <nav class="pagination">                                                                                                    -->
+                                <!--                    { if tarefas.has_previous }                                                                                           -->
+                                <!--                    <a role="button" href="?page={ tarefas.previous_page_number }" class="pagination-link pagination-previous">           -->
+                                <!--                        <span class="icon" aria-hidden="true">                                                                              -->
+                                <!--                            <i class="mdi mdi-chevron-left mdi-24px"></i>                                                                   -->
+                                <!--                        </span>                                                                                                             -->
+                                <!--                    </a>                                                                                                                    -->
+                                <!--                    { else }                                                                                                              -->
+                                <!--                    <a role="button" href="#" disabled="disabled" class="pagination-link pagination-previous">                              -->
+                                <!--                        <span class="icon" aria-hidden="true">                                                                              -->
+                                <!--                            <i class="mdi mdi-chevron-left mdi-24px"></i>                                                                   -->
+                                <!--                        </span>                                                                                                             -->
+                                <!--                    </a>                                                                                                                    -->
+                                <!--                    { endif }                                                                                                             -->
+                                <!--                    { if tarefas.has_next }                                                                                               -->
+                                <!--                    <a role="button" href="?page={ tarefas.next_page_number }" class="pagination-link pagination-next">                   -->
+                                <!--                        <span class="icon" aria-hidden="true">                                                                              -->
+                                <!--                            <i class="mdi mdi-chevron-right mdi-24px"></i>                                                                  -->
+                                <!--                        </span>                                                                                                             -->
+                                <!--                    </a>                                                                                                                    -->
+                                <!--                                                                                                                                            -->
+                                <!--                    { else}                                                                                                              -->
+                                <!--                    <a role="button" href="#" disabled="disabled" class="pagination-link pagination-next">                                  -->
+                                <!--                        <span class="icon" aria-hidden="true">                                                                              -->
+                                <!--                            <i class="mdi mdi-chevron-right mdi-24px"></i>                                                                  -->
+                                <!--                        </span>                                                                                                             -->
+                                <!--                    </a>                                                                                                                    -->
+                                <!--                    { endif }                                                                                                             -->
+                                <!--                    <ul class="pagination-list">                                                                                            -->
+                                <!--                        <!--                                                                                                             -->
+                                <!--                        <!---                                                                                                            -->
+                                <!--                        { for i in tarefas.paginator.page_range %}                                                                         -->
+                                <!--                        { if tarefas.number == i %}                                                                                        -->
+                                <!--                        <li>                                                                                                                -->
+                                <!--                            <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{ i }}</a>                   -->
+                                <!--                        </li>                                                                                                               -->
+                                <!--                        { else %}                                                                                                          -->
+                                <!--                        <li>                                                                                                                -->
+                                <!--                            <a role="button" href="?page={ i }}" aria-current="true" class="pagination-link ">{ i }}</a>                  -->
+                                <!--                        </li>                                                                                                               -->
+                                <!--                        { endif %}                                                                                                         -->
+                                <!--                        { endfor %}                                                                                                        -->
+                                <!--                                                                                                                                   -->
+                                <!--                                                                                                                                    -->
+                                <!--                    </ul>                                                                                                                   -->
+                                <!--                </nav>                                                                                                                      -->
+                                <!--            </div>                                                                                                                          -->
+                                <!--        </div>                                                                                                                              -->
+                                <!--    </div>                                                                                                                                  -->
+                                <!--{ endif %}                                                                                                                                 -->
+                                <!--                                                                                                                                            -->
+
+
+
+
+
+
+
+
 
                                 <div><input id="contador" type="hidden"></div>
                             </div>
@@ -739,6 +912,7 @@
                              
                           
                           var lista = dados.userlist;
+                          var nomes = dados.usernamelist;
                           var removes = dados.removes;
                           var x = lista.length;
                           var y = removes.length;
@@ -755,7 +929,7 @@
                               for( var i = 0; i < lista.length; i++){ 
                                    
                                        if(lista[i]==removes[j]){
-                                       
+                                        nomes.splice(i,1);
                                         lista.splice(i, 1);
                                         i--;
                                    }
@@ -769,7 +943,7 @@
                                 var option = document.createElement("option");
                                 option.value = lista[i];
                             
-                                option.text = dados.usernamelist[i]; 
+                                option.text = nomes[i]; 
                                 colabs[contador].add(option);
                              }
                             

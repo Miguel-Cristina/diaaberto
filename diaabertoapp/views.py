@@ -1677,6 +1677,9 @@ def minhasatividades(request):
         atividades = paginator.page(1)
     except EmptyPage:
         atividades = paginator.page(paginator.num_pages)
+
+
+
     # END pagination
     # BEGIN tipo_utilizador and estados filter
     unique_valida_obj = []
@@ -2346,25 +2349,29 @@ def get_tarefas(request):
     campus_arr = Campus.objects.all()
     campus_query = request.GET.get('campus')
     if campus_query != '' and campus_query is not None:
-        users = Utilizadores.object.filter()
-        tarefas_1 = tarefas_1.filter(campus=campus_query)
-        campus_arr = campus_arr.filter(id=campus_query)
-    # END filter_by_campus
-    #
-    # #BEGIN filter_by_UnidadeOrganica
-    # UnidadeOrganica_query = request.GET.get('UnidadeOrganica')
-    # if UnidadeOrganica_query !='' and UnidadeOrganica_query is not None:
-    #     tarefas_1 = tarefas_1.filter(UnidadeOrganica=UnidadeOrganica_query)
-    #     UnidadeOrganicas = UnidadeOrganicas.filter(id=UnidadeOrganica_query)
-    #     departamentos = departamentos.filter(UnidadeOrganica=UnidadeOrganica_query)
-    # #END filter_by_UnidadeOrganica
-    #
-    # #BEGIN filter_by_departamento
-    # departamento_query = request.GET.get('departamento')
-    # if departamento_query !='' and departamento_query is not None:
-    #     tarefas_1 = tarefas_1.filter(departamento=departamento_query)
-    #     departamentos = departamentos.filter(id=departamento_query)
-    # #END filter_by_departamento
+        
+        tarefas_1 = tarefas_1.filter(cordenador__unidadeorganica__campus__id = campus_query)
+        campus_arr = Campus.objects.filter(pk=campus_query)
+        
+    
+        
+    #END filter_by_campus
+   
+    #BEGIN filter_by_UnidadeOrganica
+    UnidadeOrganicas = UnidadeOrganica.objects.all()
+    UnidadeOrganica_query = request.GET.get('unidadeorganica')
+    if UnidadeOrganica_query !='' and UnidadeOrganica_query is not None:
+        tarefas_1 = tarefas_1.filter(cordenador__unidadeorganica__id = UnidadeOrganica_query)
+        UnidadeOrganicas = UnidadeOrganica.objects.filter(pk=UnidadeOrganica_query)
+     
+    #END filter_by_UnidadeOrganica
+   
+   # #BEGIN filter_by_departamento
+   # departamento_query = request.GET.get('departamento')
+   # if departamento_query !='' and departamento_query is not None:
+   #     tarefas_1 = tarefas_1.filter(departamento=departamento_query)
+   #     departamentos = departamentos.filter(id=departamento_query)
+   # #END filter_by_departamento
 
     # BEGIN order_by
     order_by = request.GET.get('order_by')
@@ -2405,6 +2412,10 @@ def get_tarefas(request):
         tarefas = paginator.page(1)
     except EmptyPage:
         tarefas = paginator.page(paginator.num_pages)
+
+
+
+
     # END pagination
     # ,'campuss': campus_arr, 'campusquery':campus_query ,'UnidadeOrganicas':UnidadeOrganicas,'UnidadeOrganicaquery':UnidadeOrganica_query,'departamentos':departamentos,'departamentoquery':departamento_query,
     notificacoes = Notificacao.objects.filter(utilizador_rec=aut_utilizador).order_by('-hora')  
@@ -2413,7 +2424,7 @@ def get_tarefas(request):
         if (x.visto == False):
             count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/tarefas.html',
-                  {'utilizador': aut_utilizador, 'campuss': campus_arr, 'campusquery': campus_query, 'form': aform,
+                  {'utilizador': aut_utilizador,'UnidadeOrganicas':UnidadeOrganicas,'UnidadeOrganicaquery':UnidadeOrganica_query, 'campuss': campus_arr, 'campusquery': campus_query, 'form': aform,
                    'tipo_query': tipo_query, 'tarefas': tarefas, 'utilizadores': utilizador,
                    'tiposs': unique_valida_obj, 'nomesquery': nome_query, 'nomesColaboradorQuery': nome_colab_query,
                    'order_by': order_by, 'sort': sort,'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
