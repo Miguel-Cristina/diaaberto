@@ -99,6 +99,16 @@
                             Inscrições</a>
                     </div>
                 </div>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        Transportes
+                    </a>
+                    <div class="navbar-dropdown">
+                        {% if utilizador.utilizadortipo.tipo == 'Participante em Grupo' or utilizador.utilizadortipo.tipo == 'Participante Individual' %}
+                            <a data-v-a67fe1ba="" href="/meustransportes" class="navbar-item is-tab router-link">Meus transportes</a>
+                        {% endif %}
+                    </div>
+                </div>
             {% endif %}
             {% if utilizador.utilizadortipo.tipo == 'Colaborador' %}
                 <div class="navbar-item has-dropdown is-hoverable">

@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE HTML> {% load static %}
+<!DOCTYPE HTML> {% load static %}
 <html lang="pt-pt">
 
 <head>
@@ -53,8 +53,23 @@
             </div>
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <a data-v-a67fe1ba="" href="/almocos" class="navbar-item is-tab router-link router-link-exact-active router-link-active">
-                        Almocos </a>
+                    <a data-v-a67fe1ba="" href="/transportes" class="navbar-item is-tab router-link router-link-exact-active router-link-active">
+                        Transportes </a>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                          Gestão de Configurações
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a data-v-a67fe1ba="" href="/configuraratividades" class="navbar-item is-tab">Configuração das Atividades</a>
+                            <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
+                            <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
+                            <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab">Configuração dos Transportes</a>
+                            <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab">Configuração dos Transportes</a>
+                            <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab">Configuração dos Percursos</a>
+                            <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab">Configuração dos Horários</a>
+                            <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab">Configuração dos Menus</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="navbar-end">
                     <div data-v-a67fe1ba="" class="navbar-item">
@@ -76,17 +91,17 @@
                             <div aria-hidden="true" class="dropdown-menu">
                                 <div role="menu" class="dropdown-content">
                                     <div data-v-a67fe1ba="" role="menuitem" tabindex="0" class="dropdown-item">
-                                        <strong data-v-a67fe1ba="">NotificaÃ§Ãµes</strong>
+                                        <strong data-v-a67fe1ba="">Notificações</strong>
                                     </div>
                                     <hr data-v-a67fe1ba="" class="dropdown-divider">
                                     <div data-v-a67fe1ba="">
                                         <div data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
-                                            <div data-v-a67fe1ba="" class="has-text-grey"> NÃ£o tem novas notificaÃ§Ãµes! </div>
+                                            <div data-v-a67fe1ba="" class="has-text-grey"> Não tem novas notificações! </div>
                                         </div>
                                         <hr data-v-a67fe1ba="" class="dropdown-divider">
                                     </div>
                                     <a data-v-a67fe1ba="" tabindex="0" class="dropdown-item">
-                                        <u data-v-a67fe1ba="">Ver todas as notificaÃ§Ãµes</u>
+                                        <u data-v-a67fe1ba="">Ver todas as notificações</u>
                                     </a>
                                 </div>
                             </div>
@@ -107,9 +122,9 @@
                             <div class="dropdown-menu" aria-hidden="true">
                                 <div role="list" class="dropdown-content">
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Participante Individual</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor SecundÃ¡rio</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Secundário</a>
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item is-disabled">Colaborador</a>
-                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor UniversitÃ¡rio</a>
+                                    <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Professor Universitário</a>
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Coordenador</a>
                                     <a data-v-a67fe1ba="" role="listitem" tabindex="0" class="dropdown-item">Administrador</a>
                                 </div>
@@ -137,15 +152,15 @@
                         <div class="column is-3">
                             <div>
                                 <div class="menu" style="        margin-bottom: 1rem;">
-                                    <p class="menu-label">Filtros AlmoÃ§os</p>
+                                    <p class="menu-label">Filtros Transportes</p>
                                     <ul class="menu-list">
                                         <form method="GET" action=".">
                                             <div class="field has-addons">
                                             <!---->
-                                            {% if not nomequery|length > 0 %}
+                                            {% if not origemquery|length > 0 %}
                                                 <div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="nomeSearch" name="nome"  placeholder="Nome" class="input"><!--onkeyup="searchByName()"-->
+                                                        <input type="search" autocomplete="off" id="origemSearch" name="origem"  placeholder="Origem" class="input"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -159,7 +174,7 @@
                                                   </div>
                                             {% else %}<div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="nomeSearch" name="nome"  placeholder="Nome" class="input" value="{{ nomequery }}"><!--onkeyup="searchByName()"-->
+                                                        <input type="text" autocomplete="off" id="origemSearch" name="origem"  placeholder="Origem" class="input" value="{{ origemquery }}"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -169,20 +184,16 @@
                                                 
                                                 </div>
                                                 <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('nomeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                    <button class="button is-danger" onclick="document.getElementById('origemSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
                                                 </div>
                                             {% endif %}
                                             </div>
                                              <div class="field has-addons">
                                             <!---->
-                                            </div>
-
-                                            <div class="field has-addons">
-                                            <!---->
-                                            {% if not sopaquery|length > 0 %}
+                                            {% if not destinoquery|length > 0 %}
                                                 <div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="sopaSearch" name="sopa"  placeholder="Sopa" class="input"><!--onkeyup="searchByName()"-->
+                                                        <input type="search" autocomplete="off" id="destinoSearch" name="destino"  placeholder="Destino" class="input"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -195,7 +206,7 @@
                                                   </div>
                                             {% else %}<div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="sopaSearch" name="sopa"  placeholder="Sopa" class="input" value="{{ sopaquery }}"><!--onkeyup="searchByName()"-->
+                                                        <input type="text" autocomplete="off" id="destinoSearch" name="destino"  placeholder="Destino" class="input" value="{{ destinoquery }}"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -205,30 +216,30 @@
                                                 
                                                 </div>
                                                 <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('sopaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                    <button class="button is-danger" onclick="document.getElementById('destinoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
                                                 </div>
                                             {% endif %}
-
                                             </div>
                                             <div class="field has-addons">
                                             <!---->
-                                            {% if not sobremesaquery|length > 0 %}
+                                            {% if not horachegadaquery|length > 0 %}
                                                 <div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="search" autocomplete="off" id="sobremesaSearch" name="sobremesa"  placeholder="Sobremesa" class="input"><!--onkeyup="searchByName()"-->
+                                                        <input type="search" autocomplete="off" id="horachegadaSearch" name="horachegada"  placeholder="Hora Chegada" class="input"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
                                                         <!---->
                                                         <!---->
                                                     </div>
+                                                
                                                 </div>
                                                 <div class="control">
                                                     <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
                                                   </div>
                                             {% else %}<div class="control is-expanded">
                                                     <div class="control is-clearfix">
-                                                        <input type="text" autocomplete="off" id="sobremesaSearch" name="sobremesa"  placeholder="Sobremesa" class="input" value="{{ sobremesaquery }}"><!--onkeyup="searchByName()"-->
+                                                        <input type="time" autocomplete="off" id="horachegadaSearch" name="horachegada"  placeholder="Hora Chegada" class="input" value="{{ horachegadaquery }}"><!--onkeyup="searchByName()"-->
                                                         <!--<span class="icon is-left">
                                                             <i class="mdi mdi-magnify mdi-24px"></i>
                                                         </span>-->
@@ -238,10 +249,174 @@
                                                 
                                                 </div>
                                                 <div class="control">
-                                                    <button class="button is-danger" onclick="document.getElementById('sobremesaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                    <button class="button is-danger" onclick="document.getElementById('horachegadaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
                                                 </div>
                                             {% endif %}
-
+                                            </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not horapartidaquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="horapartidaSearch" name="horapartida"  placeholder="Hora Partida" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="time" autocomplete="off" id="horapartidaSearch" name="horapartida"  placeholder="Hora Partida" class="input" value="{{ horapartidaquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('horapartidaSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+                                            </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not dataquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="dataSearch" name="data"  placeholder="Data" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="date" autocomplete="off" id="dataSearch" name="data"  placeholder="Data" class="input" value="{{ dataquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('dataSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+                                            </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not tipoquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="tipoSearch" name="tipo"  placeholder="Tipo" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="text" autocomplete="off" id="tipoSearch" name="tipo"  placeholder="Tipo" class="input" value="{{ tipoquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('tipoSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+                                            </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not numeroquery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="numeroSearch" name="numero"  placeholder="Numero" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="number" autocomplete="off" id="numeroSearch" name="numero"  placeholder="Numero" class="input" value="{{ numeroquery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('numeroSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
+                                            </div>
+                                            <div class="field has-addons">
+                                            <!---->
+                                            {% if not capacidadequery|length > 0 %}
+                                                <div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="search" autocomplete="off" id="capacidadeSearch" name="capacidade"  placeholder="Capacidade" class="input"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button type="submit" class="button is-primary"> <i class="mdi mdi-magnify mdi-12px"></i></button>
+                                                  </div>
+                                            {% else %}<div class="control is-expanded">
+                                                    <div class="control is-clearfix">
+                                                        <input type="number" autocomplete="off" id="capacidadeSearch" name="capacidade"  placeholder="Capacidade" class="input" value="{{ capacidadequery }}"><!--onkeyup="searchByName()"-->
+                                                        <!--<span class="icon is-left">
+                                                            <i class="mdi mdi-magnify mdi-24px"></i>
+                                                        </span>-->
+                                                        <!---->
+                                                        <!---->
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-danger" onclick="document.getElementById('capacidadeSearch').value = ''"> <i class="mdi mdi-close mdi-12px"></i></button>
+                                                </div>
+                                            {% endif %}
                                             </div>
                                         </form>
                                     </ul>
@@ -253,20 +428,13 @@
                             <nav aria-label="breadcrumbs" class="breadcrumb">
                                 <ul>
                                     <li>
-                                        <a href="/" class="router-link-active">InÃ­cio</a>
+                                        <a href="/" class="router-link-active">Início</a>
                                     </li>
                                     <li class="is-active">
-                                        <a href="/Almocos" class="router-link-exact-active router-link-active">AlmoÃ§os</a>
+                                        <a href="/Transportes" class="router-link-exact-active router-link-active">Transportes</a>
                                     </li>
                                 </ul>
                             </nav>
-                            <a href="{% url 'adicionarementa' %}" class="button is-success is-outlined" type="button" style="        margin-bottom: 0.5rem;">
-                                <span class="icon is-small">
-                                    <i class="mdi mdi-plus"></i>
-                                </span>
-                                <span>Adicionar AlmoÃ§o</span>
-                                <!---->
-                            </a>
                             <div>
                                 <!------------------------------------------------------------------------------------------------------------------Inicio de Tabela------------------------------------------------------------------------------------------------------------>
 
@@ -277,43 +445,36 @@
                                                 <tr>
                                                     <th width="40px"></th>
                                                     <th class="is-sortable">
-                                                        <div class="th-wrap" onclick="sortTable(1)">Dia
+                                                        <div class="th-wrap" onclick="sortTable(1)">Numero
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-menu-up"></i>
                                                             </span>
                                                         </div>
                                                     </th>
                                                     <th class="is-sortable">
-                                                        <div class="th-wrap" onclick="sortTable(1)">Prato Carne
+                                                        <div class="th-wrap" onclick="sortTable(1)">Origem
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-menu-up"></i>
                                                             </span>
                                                         </div>
                                                     </th>
                                                     <th class="is-sortable">
-                                                        <div class="th-wrap">Prato Peixe
+                                                        <div class="th-wrap">Destino
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-menu-up"></i>
                                                             </span>
                                                         </div>
                                                     </th>
                                                     <th class="is-sortable">
-                                                        <div class="th-wrap"> Sopa
-                                                            <span class="icon is-small">
-                                                                <i class="mdi mdi-menu-up"></i>
-                                                            </span>
-                                                        </div>
-                                                    </th>
-                                                    <th class="is-sortable"> 
-                                                        <div class="th-wrap"> Sobremesa
+                                                        <div class="th-wrap">Partida
                                                             <span class="icon is-small">
                                                                 <i class="mdi mdi-menu-up"></i>
                                                             </span>
                                                         </div>
                                                     </th>
                                                     <th class="is-sortable">
-                                                        <div class="th-wrap">
-                                                            <span class="icon is-small">Opcoes
+                                                        <div class="th-wrap">Chegada
+                                                            <span class="icon is-small">
                                                                 <i class="mdi mdi-menu-up"></i>
                                                             </span>
                                                         </div>
@@ -322,7 +483,7 @@
                                             </thead>
 
                                             <tbody>
-                                                {% for pratos in pratos %}
+                                                {% for Transporte in transportes %}
                                                 <tr draggable="false" class="header">
                                                     <td class="chevron-cell">
                                                         <a class="collapsible">
@@ -332,45 +493,47 @@
                                                         </a>
                                                     </td>
                                                     <!---->
-                                                    <td data-label="Dia" class=""> {{ pratos.dia|date:"d-m-Y"}} </td>
-                                                    <td data-label="Prato Carne" class=""> {{ pratos.prato_carne }} </td>
-                                                    <td data-label="Prato Peixe" class=""> {{ pratos.prato_peixe }} </td>
-                                                    <td data-label="Sopa" class=""> {{ pratos.sopa }} </td>
-                                                    <td data-label="Sobremesa" class=""> {{ pratos.sobremesa}} </td>
-                                                    <td data-label="Accoes">
-                                                        <a class="button is-info is-small " href="{%url 'editarementa' pratos.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
-                                                        <a class="button is-danger is-small" href="{%url 'eliminarementa' pratos.id %}" onclick="return confirm('Tem a certeza que prentede eliminar este almoÃ§o?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a>
-                                                    </td>
+                                                    <td data-label="Numero" class=""> {{ Transporte.transporte_universitario.numero}} </td>
+                                                    <td data-label="Origem" class=""> {{ Transporte.percurso.origem }} </td>
+                                                    <td data-label="Destino" class=""> {{ Transporte.percurso.destino }} </td>
+                                                    <td data-label="Partida" class=""> {{ Transporte.horario.hora_partida|time:"H:i"}} </td>
+                                                    <td data-label="Chegada" class=""> {{ Transporte.horario.hora_chegada|time:"H:i"}} </td>
                                                     <!---->
                                                 </tr>
+
                                                 <tr class="detail" style="display:none">
-                                                    <td colspan="6">
+                                                    <td colspan="4">
+
                                                         <div class="content">
                                                             <div class="section" style="font-size: 15px;">
                                                                 <div class="columns">
                                                                     <div class="column">
                                                                         <p>
-                                                                        <strong> Carne : </strong> {{ pratos.prato_carne}} </p>
+                                                                        <strong> Numero : </strong> {{ Transporte.transporte_universitario.numero}} </p>
                                                                         <p>
-                                                                        <strong> Sopa : </strong> {{ pratos.sopa}} </p>
+                                                                        <strong> Hora Partida : </strong> {{ Transporte.horario.hora_partida|time:"H:i"}} </p>
+                                                                        <p>
+                                                                        <strong> Origem : </strong> {{ Transporte.percurso.origem}} </p>
                                                                     </div>
                                                                     <div class="column">
                                                                         <p>
-                                                                        <strong> Peixe : </strong> {{ pratos.prato_peixe}} </p>
+                                                                        <strong> Tipo : </strong> {{ Transporte.transporte_universitario.tipo_transporte}} </p>
                                                                         <p>
-                                                                        <strong> Sobremesa : </strong> {{ pratos.sobremesa}} </p>
+                                                                        <strong> Hora Chegada : </strong> {{ Transporte.horario.hora_chegada|time:"H:i"}} </p>
                                                                         <p>
-                                                                        <strong>  Dia : </strong> {{ pratos.dia}} </p>
-
+                                                                        <strong> Destino : </strong> {{ Transporte.percurso.destino}} </p>
                                                                     </div>
                                                                     <div class="column">
                                                                         <p>
-                                                                        <strong> Vegan : </strong> {{ pratos.prato_vegan}} </p>
-                                                                    </div>
+                                                                        <strong> Capacidade : </strong>{{ Transporte.np}} / {{ Transporte.transporte_universitario.capacidade}} </p>
+                                                                        <p>
+                                                                        <strong> Data : </strong> {{ Transporte.horario.data|date:"d-m-Y"}} </p>
+                                                                        <p></p>
                                                                 </div>
-                                                                <p><strong>DescriÃ§Ã£o: </strong> {{ pratos.descricao }} </p>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                        
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -379,14 +542,14 @@
                                             <!---->
                                         </table>
                                     </div>
-                                    {% if ementas.has_other_pages %}
+                                    {% if transportes.has_other_pages %}
                                     <div class="level">
                                         <div class="level-left"></div>
                                         <div class="level-right">
                                             <div class="level-item">
                                                 <nav class="pagination">
-                                                    {% if ementas.has_previous %}
-                                                    <a role="button" href="?page={{ ementas.previous_page_number }}" class="pagination-link pagination-previous">
+                                                    {% if transportes.has_previous %}
+                                                    <a role="button" href="?page={{ transportes.previous_page_number }}" class="pagination-link pagination-previous">
                                                         <span class="icon" aria-hidden="true">
                                                             <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                         </span>
@@ -397,8 +560,8 @@
                                                             <i class="mdi mdi-chevron-left mdi-24px"></i>
                                                         </span>
                                                     </a>
-                                                    {% endif %} {% if ementas.has_next %}
-                                                    <a role="button" href="?page={{ ementas.next_page_number }}" class="pagination-link pagination-next">
+                                                    {% endif %} {% if transportes.has_next %}
+                                                    <a role="button" href="?page={{ transportes.next_page_number }}" class="pagination-link pagination-next">
                                                         <span class="icon" aria-hidden="true">
                                                             <i class="mdi mdi-chevron-right mdi-24px"></i>
                                                         </span>
@@ -413,7 +576,7 @@
                                                     <ul class="pagination-list">
                                                         <!---->
                                                         <!---->
-                                                        {% for i in ementas.paginator.page_range %} {% if ementas.number == i %}
+                                                        {% for i in transportes.paginator.page_range %} {% if transportes.number == i %}
                                                         <li>
                                                             <a role="button" href="#" aria-current="true" class="pagination-link is-current ">{{ i }}</a>
                                                         </li>
@@ -442,7 +605,7 @@
         </div>
     </div>
     <footer class="footer">
-        <div data-v-8716d23a="" style="float: left;"> Â© 2020 Universidade do Algarve </div>
+        <div data-v-8716d23a="" style="float: left;"> © 2020 Universidade do Algarve </div>
         <div data-v-8716d23a="" style="float: right;"> Made by Grupo 9 </div>
         <div data-v-8716d23a="" style="margin: auto; width: max-content;"> Dia Aberto da Universidade do Algarve </div>
     </footer>
@@ -577,7 +740,7 @@
               } else {
                   document.getElementById("nextBtn").style.display = "";
                   document.getElementById("submitBtn").style.display = "none";
-                  document.getElementById("nextBtn").innerHTML = '<span> PrÃ³ximo </span><span class="icon is-small"><i class="mdi mdi-arrow-right mdi-24px"></i></span>';
+                  document.getElementById("nextBtn").innerHTML = '<span> Próximo </span><span class="icon is-small"><i class="mdi mdi-arrow-right mdi-24px"></i></span>';
               }
               // ... and run a function that displays the correct step indicator:
               fixStepIndicator(n)
