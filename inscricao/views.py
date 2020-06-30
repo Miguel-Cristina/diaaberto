@@ -304,6 +304,15 @@ class ConsultarInscricaoView(View):
             sai.sessaoAtividade.n_alunos = sai.sessaoAtividade.n_alunos + sai.numero_alunos
             sai.sessaoAtividade.save()
             sai.delete()
+
+            incri = sai.inscricao
+            sai2 = SessaoAtividadeInscricao.objects.filter(inscricao=incri)
+            incri.hora_check_in = time(23, 59, 59)
+            for s in sai2:
+                if s.sessaoAtividade.sessao.hora < incri.hora_check_in:
+                    incri.hora_check_in = s.sessaoAtividade.sessao.hora
+                    incri.unidadeorganica_checkin = s.sessaoAtividade.atividade.unidadeorganica
+                    incri.save()
             messages.success(request, "Sessão inscrita apagada com sucesso!")
         return redirect('/inscricao/consultar')
 
