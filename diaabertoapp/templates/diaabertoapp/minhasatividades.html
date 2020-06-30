@@ -933,23 +933,6 @@
                                                 <span class="tag is-warning">Esta atividade já se encontra com utilizadores inscritos!</span>
                                             {% endif %}
                                         </div>
-                                        <div class="level-item">
-                                            {% if user.is_authenticated and utilizador.utilizadortipo.tipo == 'Docente'%}
-                                            <div class="level-item">
-                                            
-                                                <form action="{% url 'eliminaratividade' Atividade.id %}" method=POST>
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="button is-small is-danger" style="margin-right: 10px;" onclick="return confirm('Tem a certeza que prentede eliminar a atividade que já se encontra com utilizadores inscritos?');">
-                                                        <span class="icon is-small">
-                                                            <i class="mdi mdi-delete"></i>
-                                                        </span>
-                                                        <span>Apagar mesmo assim?</span>
-                                                    </button>
-                                                </form>
-                                            
-                                        </div>
-                                            {% endif %}
-                                        </div>
                                     {% endifchanged %}
                                 {% else %}
                                     {% ifchanged %}
