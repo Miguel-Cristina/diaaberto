@@ -11,7 +11,7 @@ from django.contrib import messages
 
 
 # from .forms import Criar_Colab_Form, Editar_Colab_From
-from diaabertoapp.models import Colaboracao, UtilizadorTarefa, AuthUser, Utilizador, Tarefa, DiaAberto
+from diaabertoapp.models import Colaboracao, AuthUser, Utilizador, Tarefa, DiaAberto
 
 
 def remove_all_space(string):
