@@ -1995,12 +1995,6 @@ def eliminaratividade(request, pk):
         messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     
-    sessoesatividades = SessaoAtividade.objects.filter(atividade=object)
-    inscricoes = 0
-    for sessao in sessoesatividades:
-        if int(sessao.n_alunos) < int(sessao.atividade.limite_participantes):
-            inscricoes = inscricoes + 1
-    
     object.delete()
     if Notificacao.objects.all().exists():
         notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
