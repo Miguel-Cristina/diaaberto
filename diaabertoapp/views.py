@@ -1,15 +1,16 @@
 from django.views.generic import ListView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models.deletion import ProtectedError
-from django.db.models import Count
+from django.db.models import Count, Sum
 from .models import Dia, SessaoAtividadeInscricao, Prato, Ementa, DiaAberto, Edificio, Atividade, Campus, \
     UnidadeOrganica, Departamento, Tematica, Percurso, Transporte, TransporteUniversitarioHorario, Horario, \
     TipoAtividade, Tarefa, PublicoAlvo, Sala, MaterialQuantidade, Sessao, SessaoAtividade, Utilizador, UtilizadorTipo, \
-    UtilizadorParticipante, Notificacao, Colaboracao, AuthUser
+    UtilizadorParticipante, Notificacao, Colaboracao, AuthUser, TransporteproprioPercursos, TransporteUniversitarioinscricao, \
+    InscricaoGrupo, Transporteproprio, Inscricao, InscricaoIndividual
 from .forms import CampusForm, AtividadeForm, EmentaForm, PratoForm, MaterialQuantidadeForm, DiaabertoForm, \
     TransporteUniversitarioHorarioForm, SessaoAtividadeForm, TransporteForm, PercursoForm, HorarioForm, MaterialFormSet, \
     TarefaForm, SessoesForm, SessaoFormSet, PublicoAlvoForm, TematicasForm, TipoAtividadeForm, CampusForm, EdificioForm, \
-    SalaForm, UnidadeOrganicaForm, DepartamentoForm
+    SalaForm, UnidadeOrganicaForm, DepartamentoForm, TransporteUniversitarioinscricaoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -1995,12 +1996,6 @@ def eliminaratividade(request, pk):
         messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
     
-    sessoesatividades = SessaoAtividade.objects.filter(atividade=object)
-    inscricoes = 0
-    for sessao in sessoesatividades:
-        if int(sessao.n_alunos) < int(sessao.atividade.limite_participantes):
-            inscricoes = inscricoes + 1
-    
     object.delete()
     if Notificacao.objects.all().exists():
         notificacao_grupo = Notificacao.objects.last().notificacao_grupo + 1
@@ -2479,6 +2474,7 @@ def add_tarefa(request):
     for x in notificacoes:
         if (x.visto == False):
             count_notificacoes = count_notificacoes + 1
+
     return render(request, 'diaabertoapp/adicionarTarefa.html',
                   {'form': aForm, 'atividades': atividades, 'salas': salas, 'utilizador': aut_utilizador, 'diaaberto':diaaberto,
                    'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
@@ -2544,10 +2540,12 @@ def atribuir_tarefa(request, pk):
 
     tarefas_1 = Tarefa.objects.all()
     colaboradorids = request.POST.getlist('colaborador_id')
-
+    print(colaboradorids)
+    print("AIIIIIIIIIIIIIIIIIIIIII")
     if (len(colaboradorids) != 0):
 
         tarefa_obj = Tarefa.objects.get(pk=pk)
+        print("//////////////////////////////////////////////////////////////////")
         tarefa_obj.coolaborador.clear()
         tarefa_obj.coolaborador.add(*colaboradorids)
         tarefa_obj.estado = 'AT'
@@ -2649,18 +2647,19 @@ def edit_tarefa(request, pk):
                   {'form': aForm, 'atividades': atividades, 'salas': salas, 'tipo_tarefa': tipo_tarefa, 'utilizador':aut_utilizador,
                    'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
-
 def grupos_switch(request):
     data = request.GET.get('data', None)
     horas = request.GET.get('horas', None)
     sala = request.GET.get('sala', None)
     tarefa = request.GET.get('tarefa', None)
-
-    print("--------------------------------------------------")
+ 
+   
+    index1=[]
     inscricaoids = []
+    
     if tarefa is None:
         horas = horas + ":00"
-    print(horas)
+
     horasstring = str(horas)
     leng = len(horasstring)
     if leng < 4:
@@ -2669,25 +2668,25 @@ def grupos_switch(request):
         leng = len(horasstring)
     if leng <= 5:
         horas = horas + ":00" 
-    print("-wrfkoweofwkofwekweofkweof------------------")
-    print(horas)
+   
+   
     novashoras = datetime.strptime(horas, '%H:%M:%S').time()
-    print(novashoras)
+  
     outrashoras = timedelta(seconds=((novashoras.hour * 3600) + (novashoras.minute * 60) + novashoras.second))
-    print(outrashoras)
+    
     sessaoatividades = SessaoAtividade.objects.filter(atividade__sala__id=sala, dia=data)
-    print("OLA")
-    print(sessaoatividades)
+ 
+  
     
     for sessaoatividade in sessaoatividades:
         atividade = sessaoatividade.atividade
-        print(atividade)
+      
         hora_inicio = sessaoatividade.sessao.hora
         hora_inicio_final = timedelta(
             seconds=((hora_inicio.hour * 3600) + (hora_inicio.minute * 60) + hora_inicio.second))
-        print(hora_inicio_final)
+      
         atividade_duracao = timedelta(seconds=(atividade.duracao * 60))
-        print(atividade_duracao)
+       
 
         tarefa_inicio = outrashoras - atividade_duracao
 
@@ -2699,40 +2698,165 @@ def grupos_switch(request):
                 'id')
 
             for inscricao in inscricaoid:
+                
                 inscricaoids.append(inscricao)
+                
+                                
                 grupos = Tarefa.objects.filter(grupo=inscricao, localizacao_grupo=sala, dia=data, horario=horas)
-                print(grupos)
+                
                 for grupo in grupos:
-                    print(grupo)
-                    print(grupo.grupo)
+                  
+                   
                     grupinhos = grupo.grupo.all()
-                    print(grupinhos)
+                
                     for grupozinhos in grupinhos:
                         if grupozinhos.id == inscricao:
                             if tarefa != None:
                                 tarefa1 = Tarefa.objects.get(id=tarefa)
                                 if (grupo != tarefa1):
-                                    print("entrei")
+                                  
                                     inscricaoids.remove(inscricao)
                             else:
                                 inscricaoids.remove(inscricao)
 
-    # sessaoatividade = SessaoAtividade.objects.filter(sessao__hora = horas, atividade__sala__id = sala, dia = data)
-    # print(sessaoatividade)
-    # atividade = sessaoatividade.atividade
-    # print(atividade)
-    # atividade_duracao = datetime.timedelta(seconds=(atividade.duracao*60))
-    # print(atividade_duracao)
-    # x = datetime.timedelta(seconds = ((horas.hour*3600)+(horas.minute*60)+horas.second))
-    # print(x)
-    # tarefa_inicio = x - atividade_duracao
-    # print(tarefa_inicio)
-    # inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora = tarefa_inicio , sessaoAtividade__atividade__sala = sala, sessaoAtividade__dia = data).values_list('inscricao', flat=True).order_by('id')
-
+           
     dados = {
-        'idinscricao': list(inscricaoids)
+        'idinscricao': list(inscricaoids),
+        
+        
     }
 
+    return JsonResponse(dados)
+
+
+def grupos_switch_edit(request):
+    data = request.GET.get('data', None)
+    horas = request.GET.get('horas', None)
+    sala = request.GET.get('sala', None)
+    tarefa = request.GET.get('tarefa', None)
+    counter=0
+    counter1=0
+   
+    index1=[]
+    inscricaoids = []
+    
+    if tarefa is None:
+        horas = horas + ":00"
+    else:
+        tarefas = Tarefa.objects.get(pk=tarefa)
+        meninos = tarefas.grupo.all().values_list('id',flat=True)
+        
+   
+    horasstring = str(horas)
+    leng = len(horasstring)
+    if leng < 4:
+        horas = "00:00:00"
+        horasstring = str(horas)
+        leng = len(horasstring)
+    if leng <= 5:
+        horas = horas + ":00" 
+   
+   
+    novashoras = datetime.strptime(horas, '%H:%M:%S').time()
+  
+    outrashoras = timedelta(seconds=((novashoras.hour * 3600) + (novashoras.minute * 60) + novashoras.second))
+    
+    sessaoatividades = SessaoAtividade.objects.filter(atividade__sala__id=sala, dia=data)
+ 
+  
+    
+    for sessaoatividade in sessaoatividades:
+        atividade = sessaoatividade.atividade
+      
+        hora_inicio = sessaoatividade.sessao.hora
+        hora_inicio_final = timedelta(
+            seconds=((hora_inicio.hour * 3600) + (hora_inicio.minute * 60) + hora_inicio.second))
+      
+        atividade_duracao = timedelta(seconds=(atividade.duracao * 60))
+       
+
+        tarefa_inicio = outrashoras - atividade_duracao
+
+        if tarefa_inicio == hora_inicio_final:
+            inscricaoid = SessaoAtividadeInscricao.objects.filter(sessaoAtividade__sessao__hora=str(tarefa_inicio),
+                                                                  sessaoAtividade__atividade__sala=sala,
+                                                                  sessaoAtividade__dia=data).values_list('inscricao',
+                                                                                                         flat=True).order_by(
+                'id')
+
+            for inscricao in inscricaoid:
+                
+                inscricaoids.append(inscricao)
+                
+                                
+                grupos = Tarefa.objects.filter(grupo=inscricao, localizacao_grupo=sala, dia=data, horario=horas)
+                
+                for grupo in grupos:
+                  
+                   
+                    grupinhos = grupo.grupo.all()
+                
+                    for grupozinhos in grupinhos:
+                        if grupozinhos.id == inscricao:
+                            if tarefa != None:
+                                tarefa1 = Tarefa.objects.get(id=tarefa)
+                                if (grupo != tarefa1):
+                                  
+                                    inscricaoids.remove(inscricao)
+                            else:
+                                inscricaoids.remove(inscricao)
+
+            for inscricao in inscricaoid:
+                counter1=counter1+1
+                for menino in meninos:
+                    if(inscricao == menino):
+                        counter=counter+1
+                        index1.append(counter1)
+    dados = {
+        'idinscricao': list(inscricaoids),
+        'index1':index1,
+        'index':counter
+        
+    }
+
+    return JsonResponse(dados)
+
+
+
+def salas_switch_edit(request):
+   
+    salalists = Sala.objects.all()
+    salalist=[]
+    namelist = []
+    count=0
+    tarefa = Tarefa.objects.get(pk=request.GET.get('tarefa', None))
+    enccount = -1
+    destcount = -1
+    enccount = []
+    destcount = []
+    salaenc  = tarefa.localizacao_grupo.id
+    saladest = tarefa.destino.id
+    enccount.append(salaenc) 
+    destcount.append(saladest)
+
+
+    for sala in salalists:
+        
+        if(salaenc == sala.id):
+            enccount.append(count)
+        elif(saladest == sala.id):
+            destcount.append(count)
+            
+        salalist.append(sala.id)
+        namelist.append(sala.edificio.nome+" Sala: "+sala.identificacao+" Campus: "+sala.edificio.campus.nome)
+        count=count+1
+
+    dados = {
+        'SALALIST': salalist,
+        'NAMELIST': namelist,
+        'ENCCOUNT': enccount,
+        'DESTCOUNT': destcount
+    }
     return JsonResponse(dados)
 
 
@@ -2844,22 +2968,74 @@ def activity_switch(request):
     sessoesatividades = SessaoAtividade.objects.filter(dia=dia)
     activity_list = []
     activity_name_list = []
-
+    tarefa = request.GET.get('tarefa', None)
+    count = -1
+    count1 = 0
+    print(tarefa)
+    
+    
     for sessaoatividade in sessoesatividades:
         if sessaoatividade.atividade.id in activity_list:
             pass
         else:
             if sessaoatividade.atividade.validada == 'VD':
+                
+              
+              
                 activity_list.append(sessaoatividade.atividade.id)
                 activity_name_list.append(sessaoatividade.atividade.nome)
 
-    print(sessoesatividades)
+ 
     dados = {
         'activity_list': activity_list,
-        'activity_name_list': activity_name_list
+        'activity_name_list': activity_name_list,
+        'posicaonoarray' : count
     }
 
     return JsonResponse(dados)
+
+
+def activity_switch_edit(request):
+     
+    dia = request.GET.get('data', None)
+    print(dia)
+    sessoesatividades = SessaoAtividade.objects.filter(dia=dia)
+    activity_list = []
+    activity_name_list = []
+    tarefa = request.GET.get('tarefa', None)
+    count = -1
+    count1 = 0
+    print(tarefa)
+    if(tarefa!=-1):
+        mainTask = Tarefa.objects.get(pk=tarefa)
+        
+        atividadeselected = mainTask.atividade.id
+        
+    else:
+         atividadeselected = -1
+    
+    for sessaoatividade in sessoesatividades:
+        if sessaoatividade.atividade.id in activity_list:
+            pass
+        else:
+            if sessaoatividade.atividade.validada == 'VD':
+                
+              
+                if(sessaoatividade.atividade.id == atividadeselected):
+                    count = count1
+                count1 = count1+1 
+                activity_list.append(sessaoatividade.atividade.id)
+                activity_name_list.append(sessaoatividade.atividade.nome)
+
+ 
+    dados = {
+        'activity_list': activity_list,
+        'activity_name_list': activity_name_list,
+        'posicaonoarray' : count
+    }
+
+    return JsonResponse(dados)
+
 
 def sessions_switch(request):
      
@@ -2877,7 +3053,6 @@ def sessions_switch(request):
             sessions_list.append(sessao.id)
             sessions_hours_list.append(sessao.sessao.hora)
 
-    print(sessoesdaatividade)
     dados = {
         'sessions_list': sessions_list,
         'sessions_hours_list': sessions_hours_list
@@ -2886,29 +3061,7 @@ def sessions_switch(request):
     return JsonResponse(dados)
 
 
-#def salas_switch(request):
-#     
-#    tarefa = request.GET.get('tarefa', None)
-#    salas = request.GET.get('salas', None)
-#
-#
-#    salas_list = []
-#    salas_nome_list = []
-#
-#    for sala in salas:
-#        if sessao.id in sessions_list:
-#            pass
-#        else:
-#            salas_list.append(sala.id)
-#            salas_nome_list.append(sala.edificio.nome + " Sala: "+ sala.identificacao +" Campus: "+ sala.edificio.campus.nome )
-#
-#    print(sessoesdaatividade)
-#    dados = {
-#        'salas_list': salas_list,
-#        'salas_nome_list': salas_nome_list
-#    }
-#
-#    return JsonResponse(dados)
+
 
 
 
@@ -3371,12 +3524,12 @@ def adicionarprato(request):
         return HttpResponseRedirect('/index')
 
     if request.method == 'POST':
-        form = PratoForm(request.POST)
+        form = EmentaForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/configurarprato/')
     else:
-        form = PratoForm()
+        form = EmentaForm()
     return render(request, 'diaabertoapp/adicionarprato.html', {'form': form})
 
 
@@ -3399,10 +3552,10 @@ def editarprato(request, id):
 
     ementa = Ementa.objects.get(pk=id)
     if request.method == 'POST':
-        form = EmentaForm(request.POST, instance=prato)
+        form = EmentaForm(request.POST, instance=ementa)
         if form.is_valid():
             form.save()
-            messages.success(request, 'O prato foi editado com sucesso!')
+            messages.success(request, 'O preço foi editado com sucesso!')
             return HttpResponseRedirect('/configurarprato/')
         else:
             print(form.errors)
@@ -3462,16 +3615,16 @@ def almocos(request):
     # END filter_by_sobremesa
     # BEGIN pagination
     page = request.GET.get('page', 1)
-    paginator = Paginator(ementas_list, 5)
+    paginator = Paginator(pratos_list, 5)
     try:
-        ementas = paginator.page(page)
+        pratos = paginator.page(page)
     except PageNotAnInteger:
-        ementas = paginator.page(1)
+        pratos = paginator.page(1)
     except EmptyPage:
-        ementas = paginator.page(paginator.num_pages)
+        pratos = paginator.page(paginator.num_pages)
     # END pagination
     return render(request, 'diaabertoapp/almocos.html',
-                  {'ementas': ementas, 'nomequery': nome_query, 'sopaquery': sopa_query,
+                  {'pratos': pratos, 'nomequery': nome_query, 'sopaquery': sopa_query,
                    'sobremesaquery': sobremesa_query, 'tipoquery': tipo_query})
 
 
@@ -3492,9 +3645,9 @@ def editarementa(request, id):
         messages.error(request, 'Não tem permissões para aceder à pagina!!')
         return HttpResponseRedirect('/index')
 
-    ementa = Ementa.objects.get(pk=id)
+    prato = Prato.objects.get(pk=id)
     if request.method == 'POST':
-        form = EmentaForm(request.POST, instance=ementa)
+        form = PratoForm(request.POST, instance=prato)
         if form.is_valid():
             form.save()
             messages.success(request, 'O almoço foi editado com sucesso!')
@@ -3502,41 +3655,42 @@ def editarementa(request, id):
         else:
             print(form.errors)
     else:
-        form = EmentaForm(instance=ementa)
+        form = PratoForm(instance=prato)
 
     return render(request, 'diaabertoapp/adicionarementa.html', {'form': form})
 
 
 def eliminarementa(request, id):
-    object = Ementa.objects.get(pk=id)
+    object = Prato.objects.get(pk=id)
     object.delete()
     return HttpResponseRedirect('/almocos/')
 
 
 def adicionarementa(request):
-    utilizador = ''
     if request.user.is_authenticated:
-        user_email = request.user.email
-        utilizador = Utilizador.objects.get(email=user_email)
+        auth_user = request.user 
+        utilizador = AuthUser.objects.get(pk=auth_user.pk).utilizador
         if utilizador is not None:
-            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
             if not utilizador.utilizadortipo.tipo == 'Administrador':
                 messages.error(request, 'Não tem permissões para aceder à pagina!!')
                 return HttpResponseRedirect('/index')
         else:
-            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            messages.error(request, 'É necessário efetuar o login!')
             return HttpResponseRedirect('/index')
     else:
-        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        messages.error(request, 'É necessário efetuar o login!')
         return HttpResponseRedirect('/index')
 
+    ementa = Ementa.objects.first()
     if request.method == 'POST':
-        form = EmentaForm(request.POST)
+        form = PratoForm(request.POST)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.ementa = ementa
+            obj.save()
             return HttpResponseRedirect('/almocos/')
     else:
-        form = EmentaForm()
+        form = PratoForm()
     return render(request, 'diaabertoapp/adicionarementa.html', {'form': form})
 
 
@@ -3561,7 +3715,9 @@ def transportes(request):
     percurso_list = Percurso.objects.all()
     horarios_list = Horario.objects.all()
     transportes_list = Transporte.objects.all()
-
+    tu_list = TransporteUniversitarioinscricao.objects.all()
+    
+        
     # BEGIN filter_by_origem
     origem_query = request.GET.get('origem')
     if origem_query != '' and origem_query is not None:
@@ -3619,6 +3775,34 @@ def transportes(request):
         horarios_list = horarios_list.filter(data=data_query)
         transporte_list = transporte_list.filter(horario__in=horarios_list)
     # END data
+
+    tu_list = TransporteUniversitarioinscricao.objects.all()
+    tpp_list = TransporteproprioPercursos.objects.all()
+    ig_list = InscricaoGrupo.objects.all()
+    tp_list = Transporteproprio.objects.all()
+    ins_list = InscricaoGrupo.objects.all()
+    ind_list = InscricaoIndividual.objects.all()
+
+    for obj in transporte_list:
+        tu_list1 = tu_list.filter(transporte=obj)
+        tpp_ids = tu_list1.values_list('percursos_id', flat=True)
+        tpp_list1 = tpp_list.filter(id__in=tpp_ids)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+        #ins_ids = ig_list1.values_list('total_participantes', flat=True)
+
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+
+        obj.np = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+ 
 
     # BEGIN pagination
     page = request.GET.get('page', 1)
@@ -3798,3 +3982,714 @@ def editardiaaberto(request, id):
         form = DiaabertoForm(instance=diaaberto)
 
     return render(request, 'diaabertoapp/adicionarconfigurardiaaberto.html', {'form': form})
+
+
+def transporteinscricao(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    tu_list = TransporteUniversitarioinscricao.objects.all()
+    percursos_list = TransporteproprioPercursos.objects.all()
+
+
+
+    # BEGIN filter_by_origem
+    origem_query = request.GET.get('origem')
+    if origem_query != '' and origem_query is not None:
+        percursos_list = percursos_list.filter(origem__icontains=origem_query)
+    # END filter_by_origem
+
+    # BEGIN filter_by_destino
+    destino_query = request.GET.get('destino')
+    if destino_query != '' and destino_query is not None:
+        percursos_list = percursos_list.filter(destino__icontains=destino_query)
+    # END filter_by_destino
+
+    # ORDER
+    order_by = request.GET.get('order_by')
+    sort = request.GET.get('sort')
+    if order_by == 'origem':
+        if sort == 'asc':
+            percursos_list = percursos_list.order_by('origem')
+        else:
+            percursos_list = percursos_list.order_by('-origem')
+    elif order_by == 'destino':
+        if sort == 'asc':
+            percursos_list = percursos_list.order_by('destino')
+        else:
+            percursos_list = percursos_list.order_by('-destino')
+
+    tpp_list = TransporteproprioPercursos.objects.all()
+    ig_list = InscricaoGrupo.objects.all()
+    tp_list = Transporteproprio.objects.all()
+    ins_list = InscricaoGrupo.objects.all()
+    ind_list = InscricaoIndividual.objects.all()
+
+    #Filter percursos que ja estao associados
+    for x in percursos_list:
+        if tu_list.filter(percursos=x).count()>0:
+            percursos_list = percursos_list.exclude(pk=x.id)
+
+    #Metodo soma n pessoas
+    for obj in percursos_list:
+        tpp_list1 = tpp_list.filter(id=obj.id)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+        obj.np = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+
+    # BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(percursos_list, 5)
+    try:
+        percursos = paginator.page(page)
+    except PageNotAnInteger:
+        percursos = paginator.page(1)
+    except EmptyPage:
+        percursos = paginator.page(paginator.num_pages)
+    # END pagination
+
+    # 'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/transporteinscricao.html',
+                  {'percursos': percursos, 'origemquery': origem_query, 'destinoquery': destino_query,
+                   'order_by': order_by, 'sort': sort})
+
+
+def adicionartransporteinscricao(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    transporte_list = TransporteUniversitarioHorario.objects.all()
+    percurso_list = Percurso.objects.all()
+    horarios_list = Horario.objects.all()
+    transportes_list = Transporte.objects.all()
+
+    # BEGIN filter_by_origem
+    origem_query = request.GET.get('origem')
+    if origem_query != '' and origem_query is not None:
+        percurso_list = percurso_list.filter(origem__icontains=origem_query)
+        transporte_list = transporte_list.filter(percurso__in=percurso_list)
+    # END filter_by_origem
+
+    # BEGIN filter_by_destino
+    destino_query = request.GET.get('destino')
+    if destino_query != '' and destino_query is not None:
+        #percurso_list = percurso_list.filter(destino__icontains=destino_query)
+        #transporte_list = transporte_list.filter(percurso__in=percurso_list)
+        transporte_list = transporte_list.filter(percurso__destino__icontains=destino_query)
+    # END filter_by_destino
+
+    # BEGIN filter_by_numero
+    numero_query = request.GET.get('numero')
+    if numero_query != '' and numero_query is not None:
+        #transportes_list = transportes_list.filter(numero=numero_query)
+        #transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+        transporte_list = transporte_list.filter(transporte_universitario__numero = numero_query)
+    # END filter_by_numero
+
+    # BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query != '' and tipo_query is not None:
+        transportes_list = transportes_list.filter(tipo_transporte__icontains=tipo_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    # END filter_by_tipo
+
+    # BEGIN filter_by_transporte
+    capacidade_query = request.GET.get('capacidade')
+    if capacidade_query != '' and capacidade_query is not None:
+        transportes_list = transportes_list.filter(capacidade=capacidade_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    # END filter_by_tipo
+
+    # BEGIN hora partida
+    horachegada_query = request.GET.get('horachegada')
+    if horachegada_query != '' and horachegada_query is not None:
+        horarios_list = horarios_list.filter(hora_chegada__icontains=horachegada_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END hora partida
+
+    # BEGIN hora chegada
+    horapartida_query = request.GET.get('horapartida')
+    if horapartida_query != '' and horapartida_query is not None:
+        horarios_list = horarios_list.filter(hora_partida__icontains=horapartida_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END hora chegada
+
+    # BEGIN data
+    data_query = request.GET.get('data')
+    if data_query != '' and data_query is not None:
+        horarios_list = horarios_list.filter(data=data_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END data
+
+    tu_list = TransporteUniversitarioinscricao.objects.all()
+    tpp_list = TransporteproprioPercursos.objects.all()
+    ig_list = InscricaoGrupo.objects.all()
+    tp_list = Transporteproprio.objects.all()
+    ins_list = InscricaoGrupo.objects.all()
+    ind_list = InscricaoIndividual.objects.all()
+
+    for obj in transporte_list:
+        tu_list1 = tu_list.filter(transporte=obj)
+        tpp_ids = tu_list1.values_list('percursos_id', flat=True)
+        tpp_list1 = tpp_list.filter(id__in=tpp_ids)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+        #ins_ids = ig_list1.values_list('total_participantes', flat=True)
+
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+
+        obj.np = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+
+    # BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(transporte_list, 5)
+    try:
+        transportes = paginator.page(page)
+    except PageNotAnInteger:
+        transportes = paginator.page(1)
+    except EmptyPage:
+        transportes = paginator.page(paginator.num_pages)
+    # END pagination
+
+
+
+    #adicionar
+    obj1 = TransporteproprioPercursos.objects.get(pk=id)
+    form = TransporteUniversitarioinscricaoForm()
+    if request.POST:
+        variavel = request.POST.get("transporte")
+        obj2 = TransporteUniversitarioHorario.objects.get(pk=variavel)
+
+        tpp_list1 = tpp_list.filter(id=obj1.id)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+        npessoas = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+
+
+        tu_list1 = tu_list.filter(transporte=obj2.id)
+        tpp_ids = tu_list1.values_list('percursos_id', flat=True)
+        tpp_list1 = tpp_list.filter(id__in=tpp_ids)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+        #ins_ids = ig_list1.values_list('total_participantes', flat=True)
+
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+
+        npessoas2 = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+
+
+        form = TransporteUniversitarioinscricaoForm(request.POST)
+        if form.is_valid() and npessoas + npessoas2 < obj2.transporte_universitario.capacidade :
+            bbb = form.save(commit=False)
+            bbb.percursos = obj1
+            bbb.transporte = obj2
+            bbb.save()
+            return HttpResponseRedirect("/transportes/")
+        
+
+
+    # 'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/transporteinscricao2.html',
+                  {'transportes': transportes, 'origemquery': origem_query, 'destinoquery': destino_query,
+                   'numeroquery': numero_query, 'tipoquery': tipo_query, 'capacidadequery': capacidade_query,
+                   'horachegadaquery': horachegada_query, 'horapartidaquery': horapartida_query,
+                   'dataquery': data_query, 'form':form})
+
+def editartransporteinscricao(request, id):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    transporte_list = TransporteUniversitarioHorario.objects.all()
+    percurso_list = Percurso.objects.all()
+    horarios_list = Horario.objects.all()
+    transportes_list = Transporte.objects.all()
+
+    # BEGIN filter_by_origem
+    origem_query = request.GET.get('origem')
+    if origem_query != '' and origem_query is not None:
+        percurso_list = percurso_list.filter(origem__icontains=origem_query)
+        transporte_list = transporte_list.filter(percurso__in=percurso_list)
+    # END filter_by_origem
+
+    # BEGIN filter_by_destino
+    destino_query = request.GET.get('destino')
+    if destino_query != '' and destino_query is not None:
+        #percurso_list = percurso_list.filter(destino__icontains=destino_query)
+        #transporte_list = transporte_list.filter(percurso__in=percurso_list)
+        transporte_list = transporte_list.filter(percurso__destino__icontains=destino_query)
+    # END filter_by_destino
+
+    # BEGIN filter_by_numero
+    numero_query = request.GET.get('numero')
+    if numero_query != '' and numero_query is not None:
+        #transportes_list = transportes_list.filter(numero=numero_query)
+        #transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+        transporte_list = transporte_list.filter(transporte_universitario__numero = numero_query)
+    # END filter_by_numero
+
+    # BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query != '' and tipo_query is not None:
+        transportes_list = transportes_list.filter(tipo_transporte__icontains=tipo_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    # END filter_by_tipo
+
+    # BEGIN filter_by_transporte
+    capacidade_query = request.GET.get('capacidade')
+    if capacidade_query != '' and capacidade_query is not None:
+        transportes_list = transportes_list.filter(capacidade=capacidade_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    # END filter_by_tipo
+
+    # BEGIN hora partida
+    horachegada_query = request.GET.get('horachegada')
+    if horachegada_query != '' and horachegada_query is not None:
+        horarios_list = horarios_list.filter(hora_chegada__icontains=horachegada_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END hora partida
+
+    # BEGIN hora chegada
+    horapartida_query = request.GET.get('horapartida')
+    if horapartida_query != '' and horapartida_query is not None:
+        horarios_list = horarios_list.filter(hora_partida__icontains=horapartida_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END hora chegada
+
+    # BEGIN data
+    data_query = request.GET.get('data')
+    if data_query != '' and data_query is not None:
+        horarios_list = horarios_list.filter(data=data_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END data
+
+    tu_list = TransporteUniversitarioinscricao.objects.all()
+    tpp_list = TransporteproprioPercursos.objects.all()
+    ig_list = InscricaoGrupo.objects.all()
+    tp_list = Transporteproprio.objects.all()
+    ins_list = InscricaoGrupo.objects.all()
+    ind_list = InscricaoIndividual.objects.all()
+
+    for obj in transporte_list:
+        tu_list1 = tu_list.filter(transporte=obj)
+        tpp_ids = tu_list1.values_list('percursos_id', flat=True)
+        tpp_list1 = tpp_list.filter(id__in=tpp_ids)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+        #ins_ids = ig_list1.values_list('total_participantes', flat=True)
+
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+
+        obj.np = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+
+    # BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(transporte_list, 5)
+    try:
+        transportes = paginator.page(page)
+    except PageNotAnInteger:
+        transportes = paginator.page(1)
+    except EmptyPage:
+        transportes = paginator.page(paginator.num_pages)
+    # END pagination
+
+     
+
+    #adicionar
+    obj1 = TransporteUniversitarioinscricao.objects.get(pk=id)
+    form = TransporteUniversitarioinscricaoForm(instance=obj1)
+    if request.POST:
+        variavel = request.POST.get("transporte")
+        obj2 = TransporteUniversitarioHorario.objects.get(pk=variavel)
+
+        tpp_list1 = tpp_list.filter(id=obj1.percursos.id)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+        npessoas = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+
+
+        tu_list1 = tu_list.filter(transporte=obj2.id)
+        tpp_ids = tu_list1.values_list('percursos_id', flat=True)
+        tpp_list1 = tpp_list.filter(id__in=tpp_ids)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+        #ins_ids = ig_list1.values_list('total_participantes', flat=True)
+
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+
+        npessoas2 = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+
+
+        form = TransporteUniversitarioinscricaoForm(request.POST, instance=obj1)
+        if form.is_valid() and npessoas + npessoas2 < obj2.transporte_universitario.capacidade :
+            bbb = form.save(commit=False)
+            bbb.transporte = obj2
+            bbb.save()
+            return HttpResponseRedirect("/transportes/")
+        
+
+
+    # 'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/transporteinscricao2.html',
+                  {'transportes': transportes, 'origemquery': origem_query, 'destinoquery': destino_query,
+                   'numeroquery': numero_query, 'tipoquery': tipo_query, 'capacidadequery': capacidade_query,
+                   'horachegadaquery': horachegada_query, 'horapartidaquery': horapartida_query,
+                   'dataquery': data_query, 'form':form})
+
+
+def vizualizartransporteinscricao(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Administrador':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+
+    tu_list = TransporteUniversitarioinscricao.objects.all()
+    transporte_list = TransporteUniversitarioHorario.objects.all()
+    percurso_list = Percurso.objects.all()
+    horarios_list = Horario.objects.all()
+    transportes_list = Transporte.objects.all()
+
+    # BEGIN filter_by_origem
+    origem_query = request.GET.get('origem')
+    if origem_query != '' and origem_query is not None:
+        percurso_list = percurso_list.filter(origem__icontains=origem_query)
+        transporte_list = transporte_list.filter(percurso__in=percurso_list)
+    # END filter_by_origem
+
+    # BEGIN filter_by_destino
+    destino_query = request.GET.get('destino')
+    if destino_query != '' and destino_query is not None:
+        #percurso_list = percurso_list.filter(destino__icontains=destino_query)
+        #transporte_list = transporte_list.filter(percurso__in=percurso_list)
+        transporte_list = transporte_list.filter(percurso__destino__icontains=destino_query)
+    # END filter_by_destino
+
+    # BEGIN filter_by_numero
+    numero_query = request.GET.get('numero')
+    if numero_query != '' and numero_query is not None:
+        #transportes_list = transportes_list.filter(numero=numero_query)
+        #transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+        transporte_list = transporte_list.filter(transporte_universitario__numero = numero_query)
+    # END filter_by_numero
+
+    # BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query != '' and tipo_query is not None:
+        transportes_list = transportes_list.filter(tipo_transporte__icontains=tipo_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    # END filter_by_tipo
+
+    # BEGIN filter_by_transporte
+    capacidade_query = request.GET.get('capacidade')
+    if capacidade_query != '' and capacidade_query is not None:
+        transportes_list = transportes_list.filter(capacidade=capacidade_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    # END filter_by_tipo
+
+    # BEGIN hora partida
+    horachegada_query = request.GET.get('horachegada')
+    if horachegada_query != '' and horachegada_query is not None:
+        horarios_list = horarios_list.filter(hora_chegada__icontains=horachegada_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END hora partida
+
+    # BEGIN hora chegada
+    horapartida_query = request.GET.get('horapartida')
+    if horapartida_query != '' and horapartida_query is not None:
+        horarios_list = horarios_list.filter(hora_partida__icontains=horapartida_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END hora chegada
+
+    # BEGIN data
+    data_query = request.GET.get('data')
+    if data_query != '' and data_query is not None:
+        horarios_list = horarios_list.filter(data=data_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END data
+
+    
+    tpp_list = TransporteproprioPercursos.objects.all()
+    ig_list = InscricaoGrupo.objects.all()
+    tp_list = Transporteproprio.objects.all()
+    ins_list = InscricaoGrupo.objects.all()
+    ind_list = InscricaoIndividual.objects.all()
+
+    for obj in tu_list:
+        tpp_list1 = tpp_list.filter(id=obj.percursos.id)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+        #ins_ids = ig_list1.values_list('total_participantes', flat=True)
+
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+
+        obj.np = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+
+    # BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(tu_list, 5)
+    try:
+        transportes = paginator.page(page)
+    except PageNotAnInteger:
+        transportes = paginator.page(1)
+    except EmptyPage:
+        transportes = paginator.page(paginator.num_pages)
+    # END pagination
+
+
+    # 'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/visualizartransporteinscricao.html',
+                  {'transportes': transportes, 'origemquery': origem_query, 'destinoquery': destino_query,
+                   'numeroquery': numero_query, 'tipoquery': tipo_query, 'capacidadequery': capacidade_query,
+                   'horachegadaquery': horachegada_query, 'horapartidaquery': horapartida_query,
+                   'dataquery': data_query})
+
+def transportes_asd(request):
+    utilizador = ''
+    if request.user.is_authenticated:
+        user_email = request.user.email
+        utilizador = Utilizador.objects.get(email=user_email)
+        if utilizador is not None:
+            notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
+            if not utilizador.utilizadortipo.tipo == 'Participante em Grupo':
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
+        else:
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
+    else:
+        messages.error(request, 'Não tem permissões para aceder à pagina!!')
+        return HttpResponseRedirect('/index')
+
+    transporte_list = TransporteUniversitarioHorario.objects.all()
+    percurso_list = Percurso.objects.all()
+    horarios_list = Horario.objects.all()
+    transportes_list = Transporte.objects.all()
+    tu_list = TransporteUniversitarioinscricao.objects.all()
+    
+
+        
+    # BEGIN filter_by_origem
+    origem_query = request.GET.get('origem')
+    if origem_query != '' and origem_query is not None:
+        percurso_list = percurso_list.filter(origem__icontains=origem_query)
+        transporte_list = transporte_list.filter(percurso__in=percurso_list)
+    # END filter_by_origem
+
+    # BEGIN filter_by_destino
+    destino_query = request.GET.get('destino')
+    if destino_query != '' and destino_query is not None:
+        #percurso_list = percurso_list.filter(destino__icontains=destino_query)
+        #transporte_list = transporte_list.filter(percurso__in=percurso_list)
+        transporte_list = transporte_list.filter(percurso__destino__icontains=destino_query)
+    # END filter_by_destino
+
+    # BEGIN filter_by_numero
+    numero_query = request.GET.get('numero')
+    if numero_query != '' and numero_query is not None:
+        #transportes_list = transportes_list.filter(numero=numero_query)
+        #transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+        transporte_list = transporte_list.filter(transporte_universitario__numero = numero_query)
+    # END filter_by_numero
+
+    # BEGIN filter_by_tipo
+    tipo_query = request.GET.get('tipo')
+    if tipo_query != '' and tipo_query is not None:
+        transportes_list = transportes_list.filter(tipo_transporte__icontains=tipo_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    # END filter_by_tipo
+
+    # BEGIN filter_by_transporte
+    capacidade_query = request.GET.get('capacidade')
+    if capacidade_query != '' and capacidade_query is not None:
+        transportes_list = transportes_list.filter(capacidade=capacidade_query)
+        transporte_list = transporte_list.filter(transporte_universitario__in=transportes_list)
+    # END filter_by_tipo
+
+    # BEGIN hora partida
+    horachegada_query = request.GET.get('horachegada')
+    if horachegada_query != '' and horachegada_query is not None:
+        horarios_list = horarios_list.filter(hora_chegada__icontains=horachegada_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END hora partida
+
+    # BEGIN hora chegada
+    horapartida_query = request.GET.get('horapartida')
+    if horapartida_query != '' and horapartida_query is not None:
+        horarios_list = horarios_list.filter(hora_partida__icontains=horapartida_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END hora chegada
+
+    # BEGIN data
+    data_query = request.GET.get('data')
+    if data_query != '' and data_query is not None:
+        horarios_list = horarios_list.filter(data=data_query)
+        transporte_list = transporte_list.filter(horario__in=horarios_list)
+    # END data
+
+    tu_list = TransporteUniversitarioinscricao.objects.all()
+    tpp_list = TransporteproprioPercursos.objects.all()
+    ig_list = InscricaoGrupo.objects.all()
+    tp_list = Transporteproprio.objects.all()
+    ins_list = InscricaoGrupo.objects.all()
+    ind_list = InscricaoIndividual.objects.all()
+
+    for obj in transporte_list:
+        tu_list1 = tu_list.filter(transporte=obj)
+        tpp_ids = tu_list1.values_list('percursos_id', flat=True)
+        tpp_list1 = tpp_list.filter(id__in=tpp_ids)
+        tp_ids = tpp_list1.values_list('transporteproprio_id', flat=True)
+        tp_list1 = tp_list.filter(id__in=tp_ids)
+        ins_ids = tp_list1.values_list('inscricao_id', flat=True)
+        ig_list1 = ins_list.filter(inscricao__id__in=ins_ids)
+        ind_list1 = ind_list.filter(inscricao__id__in=ins_ids)
+        #ins_ids = ig_list1.values_list('total_participantes', flat=True)
+
+
+        part_list = ig_list1.values_list('total_participantes', flat=True)
+        prof_list = ig_list1.values_list('total_professores', flat=True)
+        acp_list = ind_list1.values_list('acompanhantes', flat=True)
+        n = ind_list1.count()
+
+
+        obj.np = sum(part_list) + sum(prof_list) + sum(acp_list) + n
+ 
+    ins_list2 = ins_list()
+
+    # BEGIN pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(transporte_list, 5)
+    try:
+        transportes = paginator.page(page)
+    except PageNotAnInteger:
+        transportes = paginator.page(1)
+    except EmptyPage:
+        transportes = paginator.page(paginator.num_pages)
+    # END pagination
+
+    if request.POST:          
+       variavel = request.POST.get("transporte")
+       print(variavel)
+
+    # 'tiposquery':tipo_query
+    return render(request, 'diaabertoapp/transportes.html',
+                  {'transportes': transportes, 'origemquery': origem_query, 'destinoquery': destino_query,
+                   'numeroquery': numero_query, 'tipoquery': tipo_query, 'capacidadequery': capacidade_query,
+                   'horachegadaquery': horachegada_query, 'horapartidaquery': horapartida_query,
+                   'dataquery': data_query})

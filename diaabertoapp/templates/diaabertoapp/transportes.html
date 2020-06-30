@@ -64,6 +64,7 @@
                             <a data-v-a67fe1ba="" href="/configurarespacos" class="navbar-item is-tab"> Configuração dos Espaços </a>
                             <a data-v-a67fe1ba="" href="/configurarorganicasdepartamentos" class="navbar-item is-tab"> Configuração das Unidades Orgânicas e Departamentos </a>
                             <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab">Configuração dos Transportes</a>
+                            <a data-v-a67fe1ba="" href="/configurartransporte" class="navbar-item is-tab">Configuração dos Transportes</a>
                             <a data-v-a67fe1ba="" href="/configurarpercurso" class="navbar-item is-tab">Configuração dos Percursos</a>
                             <a data-v-a67fe1ba="" href="/configurarhorario" class="navbar-item is-tab">Configuração dos Horários</a>
                             <a data-v-a67fe1ba="" href="/configurarprato" class="navbar-item is-tab">Configuração dos Menus</a>
@@ -441,13 +442,12 @@
                                 <span>Adicionar transporte</span>
                                 <!---->
                             </a>
-                            <!--<a href=" url 'inscricaotransporte' " class="button is-success is-outlined" type="button" style="        margin-bottom: 0.5rem;">
+                            <a href="{% url 'transporteinscricao' %}" class="button is-success is-outlined" type="button" style="        margin-bottom: 0.5rem;">
                                 <span class="icon is-small">
-                                    <i class="mdi mdi-plus"></i>
                                 </span>
                                 <span>Inscricoes</span>
                                 
-                            </a>-->
+                            </a>
                             <div>
                                 <!------------------------------------------------------------------------------------------------------------------Inicio de Tabela------------------------------------------------------------------------------------------------------------>
 
@@ -519,12 +519,7 @@
                                                     <td data-label="Partida" class=""> {{ Transporte.horario.hora_partida|time:"H:i"}} </td>
                                                     <td data-label="Chegada" class=""> {{ Transporte.horario.hora_chegada|time:"H:i"}} </td>
                                                     <td data-label="Accoes">
-                                                        <form action="." method="post">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" value="{{Transporte.id}}" name="transporte"> 
-                                                                <button type="submit" class="button is-info is-small " ><i class="mdi mdi-pencil"></i>&nbsp;Editar</button>
-                                                        </form>
-                                                        
+                                                        <a class="button is-info is-small " href="{%url 'editartransporteuniversitario' Transporte.id %}"><i class="mdi mdi-pencil"></i>&nbsp;Editar</a>
                                                         <a class="button is-danger is-small" href="{%url 'eliminartransporteuniversitario' Transporte.id %}" onclick="return confirm('Tem a certeza que prentede eliminar este transporte?');"><i class="mdi mdi-delete"></i>&nbsp;Apagar</a>
                                                     </td>
                                                     <!---->
@@ -554,7 +549,7 @@
                                                                     </div>
                                                                     <div class="column">
                                                                         <p>
-                                                                        <strong> Capacidade : </strong> {{ Transporte.transporte_universitario.capacidade}} </p>
+                                                                        <strong> Capacidade : </strong>{{ Transporte.np}} / {{ Transporte.transporte_universitario.capacidade}} </p>
                                                                         <p>
                                                                         <strong> Data : </strong> {{ Transporte.horario.data|date:"d-m-Y"}} </p>
                                                                         <p></p>
