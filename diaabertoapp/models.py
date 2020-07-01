@@ -681,16 +681,6 @@ class UnidadeorganicaDepartamento(models.Model):
         db_table = 'unidadeorganica_departamento'
 
 
-class UtilizadorTarefa(models.Model):
-    tarefa = models.ForeignKey(Tarefa, models.DO_NOTHING)
-    coordenador = models.ForeignKey(Utilizador, models.DO_NOTHING, related_name='1+')
-    colaborador = models.ForeignKey(Utilizador, models.DO_NOTHING, blank=True, null=True, related_name='1+')
-    colaboracao = models.ForeignKey(Colaboracao, models.DO_NOTHING)
-    estado = models.CharField(max_length=45, blank=True, null=True)
-
-    class Meta:
-        db_table = 'utilizador_tarefa'
-
 class TransporteUniversitarioinscricao(models.Model):
     percursos = models.ForeignKey(TransporteproprioPercursos, models.DO_NOTHING)
     transporte = models.ForeignKey(TransporteUniversitarioHorario, models.DO_NOTHING)

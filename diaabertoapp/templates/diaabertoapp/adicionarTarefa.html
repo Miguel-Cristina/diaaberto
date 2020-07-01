@@ -297,11 +297,18 @@
                         <!----></a>
                     </div>
                     <div class="level-right">
-                      <button type="submit" class="button is-large is-success is-outlined">
+                      
+                        <a type="button" class="button is-large is-success is-outlined" onclick="myfunc2()">
                         <!---->
                         <span> Adicionar Tarefa </span>
                         <!---->
-                      </button>
+                        </a>
+
+                        <button type="submit" id="submitos" style="display:none" class="button is-large is-success is-outlined">
+                        <!---->
+                        <!---->
+                        </button>
+
                     </div>
                       
                   </div>
@@ -345,7 +352,94 @@
     src =
       "https://cdn.jsdelivr.net/npm/vee-validate@2.1.0-beta.9/dist/vee-validate.min.js";
   </script>
+
+    <script>
+         function myfunc2() {
+             if ($('#checkradio2').is(':checked')) {
+                
+                 var numero_grupos = document.getElementById("gruposSelect");
+                 var x = numero_grupos.querySelectorAll("option");
+
+                 var numero_salas = document.getElementById("salaSearchDesct");
+                 var y = numero_salas.querySelectorAll("option");
+
+
+                 var count = 0;
+                 var count2 = 0;
+
+
+                 for (var i = 0; i < x.length; i++) {
+                     if (x[i].selected) count++;
+                 }
+                 for (var i = 0; i < y.length; i++) {
+                     if (y[i].selected) count2++;
+                 }
+
+
+                 if (1 > count2) {
+                     confirm('Selecione um destino!')
+                     return returnToPreviousPage();
+                 }
+
+                 if (1 > count) {
+                     confirm('Selecione pelo menos um grupo!')
+                     return returnToPreviousPage();
+
+                 } else {
+                     if (confirm('Tem a certeza que prentede criar a tarefa?')) {
+                         var subs = document.getElementById("submitos");
+
+                         subs.click();
+                     }
+                 }
+             }
         
+
+                if ($('#checkradio1').is(':checked')) {
+                         var atividade = document.getElementById("atividade");
+                        var x = atividade.querySelectorAll("option");
+
+                        var sessao = document.getElementById("sessoesSelect");
+                        var y = sessao.querySelectorAll("option");
+                        var count = 0;
+                        var count2 = 0;
+                         for (var i = 0; i < x.length; i++) {
+                             if (x[i].selected) count++;
+                         }
+
+                         for (var i = 0; i < y.length; i++) {
+                            if (y[i].selected) count2++;
+                         }
+
+                        if (1 > count) {
+                            confirm('Selecione uma atividade!')
+                            return returnToPreviousPage();
+                        }
+                        if (1 > count2) {
+                            confirm('Selecione  uma sessao!')
+                            return returnToPreviousPage();
+
+                        } else {
+                            if (confirm('Tem a certeza que prentede criar a tarefa?')) {
+                                var subs = document.getElementById("submitos");
+
+                                subs.click();
+                            }
+                        }
+                 
+                }
+
+             if ($('#checkradio3').is(':checked')) {
+                  
+                         var subs = document.getElementById("submitos");
+
+                         subs.click();
+                 
+                }
+       }
+              
+         
+    </script>
 
     
         <script>

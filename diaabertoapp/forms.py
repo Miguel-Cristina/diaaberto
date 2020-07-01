@@ -311,7 +311,7 @@ class DiaabertoForm(forms.ModelForm):
 
     class Meta:
         model = DiaAberto
-        fields = ('titulo', 'email', 'contacto', 'data_inicio', 'data_fim', 'descricao')
+        fields = ('titulo', 'email', 'contacto', 'data_inicio', 'data_fim', 'descricao', 'limite_inscricao_atividades', 'limite_inscricao_participantes')
 
 class TransporteUniversitarioHorarioForm(forms.ModelForm):
     percurso = forms.ModelChoiceField(queryset=Percurso.objects.all(), widget=forms.Select(attrs={'class':"select is-fullwidth",'style':"width:100%"}))

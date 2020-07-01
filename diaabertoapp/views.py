@@ -1677,6 +1677,9 @@ def minhasatividades(request):
         atividades = paginator.page(1)
     except EmptyPage:
         atividades = paginator.page(paginator.num_pages)
+
+
+
     # END pagination
     # BEGIN tipo_utilizador and estados filter
     unique_valida_obj = []
@@ -2314,15 +2317,18 @@ def get_tarefas(request):
     aform = TarefaForm()
 
     # BEGIN filter_by_name
-    nome_colab_query = request.GET.get('nomeColaborador')
-    if nome_colab_query != '' and nome_colab_query is not None:
-        tarefas_1 = tarefas_1.filter(coolaborador__nome__icontains=nome_colab_query)
+    nome_colab_query = request.GET.get('nomeColaborador',None)
+  
+    if nome_colab_query:
+        if nome_colab_query != '' and nome_colab_query != "None":
+            tarefas_1 = tarefas_1.filter(coolaborador__nome__icontains = nome_colab_query)
     # END filter_by_name
 
     # BEGIN filter_by_name
-    nome_query = request.GET.get('nome')
-    if nome_query != '' and nome_query is not None:
-        tarefas_1 = tarefas_1.filter(nome__icontains=nome_query)
+    nome_query = request.GET.get('nome',None)
+    if nome_query:
+         if nome_query != '' and nome_query != "None":
+             tarefas_1 = tarefas_1.filter(nome__icontains=nome_query)
     # END filter_by_name
 
     # BEGIN tipo_utilizador and estados filter
@@ -2336,35 +2342,43 @@ def get_tarefas(request):
     # END tipo_utilizador and estados filter filter
 
     ##BEGIN filter_by_tipo
-    tipo_query = request.GET.get('tipo')
-    if tipo_query != '' and tipo_query is not None:
-        tarefas_1 = tarefas_1.filter(tipo_tarefa=tipo_query)
+    tipo_query = request.GET.get('tipo',None)
+
+    if tipo_query:
+        if tipo_query != '' and tipo_query != "None":
+            tarefas_1 = tarefas_1.filter(tipo_tarefa=tipo_query)
 
     # END filter_by_tipo
 
     # BEGIN filter_by_campus
     campus_arr = Campus.objects.all()
-    campus_query = request.GET.get('campus')
-    if campus_query != '' and campus_query is not None:
-        users = Utilizadores.object.filter()
-        tarefas_1 = tarefas_1.filter(campus=campus_query)
-        campus_arr = campus_arr.filter(id=campus_query)
-    # END filter_by_campus
-    #
-    # #BEGIN filter_by_UnidadeOrganica
-    # UnidadeOrganica_query = request.GET.get('UnidadeOrganica')
-    # if UnidadeOrganica_query !='' and UnidadeOrganica_query is not None:
-    #     tarefas_1 = tarefas_1.filter(UnidadeOrganica=UnidadeOrganica_query)
-    #     UnidadeOrganicas = UnidadeOrganicas.filter(id=UnidadeOrganica_query)
-    #     departamentos = departamentos.filter(UnidadeOrganica=UnidadeOrganica_query)
-    # #END filter_by_UnidadeOrganica
-    #
-    # #BEGIN filter_by_departamento
-    # departamento_query = request.GET.get('departamento')
-    # if departamento_query !='' and departamento_query is not None:
-    #     tarefas_1 = tarefas_1.filter(departamento=departamento_query)
-    #     departamentos = departamentos.filter(id=departamento_query)
-    # #END filter_by_departamento
+    campus_query = request.GET.get('campus',None)
+    if campus_query :
+         if campus_query != '' and campus_query != "None":
+             
+             tarefas_1 = tarefas_1.filter(cordenador__unidadeorganica__campus__id = campus_query)
+             campus_arr = Campus.objects.filter(pk=campus_query)
+        
+    
+        
+    #END filter_by_campus
+   
+    #BEGIN filter_by_UnidadeOrganica
+    UnidadeOrganicas = UnidadeOrganica.objects.all()
+    UnidadeOrganica_query = request.GET.get('unidadeorganica',None)
+    if UnidadeOrganica_query:
+        if UnidadeOrganica_query !='' and UnidadeOrganica_query != "None":
+            tarefas_1 = tarefas_1.filter(cordenador__unidadeorganica__id = UnidadeOrganica_query)
+            UnidadeOrganicas = UnidadeOrganica.objects.filter(pk=UnidadeOrganica_query)
+     
+    #END filter_by_UnidadeOrganica
+   
+   # #BEGIN filter_by_departamento
+   # departamento_query = request.GET.get('departamento')
+   # if departamento_query !='' and departamento_query is not None:
+   #     tarefas_1 = tarefas_1.filter(departamento=departamento_query)
+   #     departamentos = departamentos.filter(id=departamento_query)
+   # #END filter_by_departamento
 
     # BEGIN order_by
     order_by = request.GET.get('order_by')
@@ -2405,6 +2419,10 @@ def get_tarefas(request):
         tarefas = paginator.page(1)
     except EmptyPage:
         tarefas = paginator.page(paginator.num_pages)
+
+
+
+
     # END pagination
     # ,'campuss': campus_arr, 'campusquery':campus_query ,'UnidadeOrganicas':UnidadeOrganicas,'UnidadeOrganicaquery':UnidadeOrganica_query,'departamentos':departamentos,'departamentoquery':departamento_query,
     notificacoes = Notificacao.objects.filter(utilizador_rec=aut_utilizador).order_by('-hora')  
@@ -2413,7 +2431,7 @@ def get_tarefas(request):
         if (x.visto == False):
             count_notificacoes = count_notificacoes + 1
     return render(request, 'diaabertoapp/tarefas.html',
-                  {'utilizador': aut_utilizador, 'campuss': campus_arr, 'campusquery': campus_query, 'form': aform,
+                  {'utilizador': aut_utilizador,'UnidadeOrganicas':UnidadeOrganicas,'UnidadeOrganicaquery':UnidadeOrganica_query, 'campuss': campus_arr, 'campusquery': campus_query, 'form': aform,
                    'tipo_query': tipo_query, 'tarefas': tarefas, 'utilizadores': utilizador,
                    'tiposs': unique_valida_obj, 'nomesquery': nome_query, 'nomesColaboradorQuery': nome_colab_query,
                    'order_by': order_by, 'sort': sort,'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
@@ -2452,6 +2470,7 @@ def add_tarefa(request):
             tarefa.cordenador = aut_utilizador
             if (tarefa.tipo_tarefa == 'PE'):
                 tarefa.duracao = 15
+
             if (tarefa.tipo_tarefa == 'AV'):
                 horas = request.POST.get("sessao")
                 print(horas)
@@ -2541,11 +2560,11 @@ def atribuir_tarefa(request, pk):
     tarefas_1 = Tarefa.objects.all()
     colaboradorids = request.POST.getlist('colaborador_id')
     print(colaboradorids)
-    print("AIIIIIIIIIIIIIIIIIIIIII")
+    
     if (len(colaboradorids) != 0):
 
         tarefa_obj = Tarefa.objects.get(pk=pk)
-        print("//////////////////////////////////////////////////////////////////")
+       
         tarefa_obj.coolaborador.clear()
         tarefa_obj.coolaborador.add(*colaboradorids)
         tarefa_obj.estado = 'AT'
@@ -2648,6 +2667,7 @@ def edit_tarefa(request, pk):
                    'notificacoes':notificacoes, 'count_notificacoes':count_notificacoes})
 
 def grupos_switch(request):
+    
     data = request.GET.get('data', None)
     horas = request.GET.get('horas', None)
     sala = request.GET.get('sala', None)
@@ -2861,14 +2881,17 @@ def salas_switch_edit(request):
 
 
 def user_switch(request):
-  
+    
     userlist = []
     usernamelist = []
     colaboracaolist = []
+    removes = []
+    removesnamelist =[]
+    removescolaboracaolist =[]
     tarefa = Tarefa.objects.get(pk=request.GET.get('tarefa', None))
     tarefa_tipo = tarefa.tipo_tarefa
     utilizadores = Utilizador.objects.filter(utilizadortipo__tipo='Colaborador').order_by("nome")
-    
+    numero_colabsremove = 0
     numero_colabs = 1
    
 
@@ -2909,6 +2932,9 @@ def user_switch(request):
                     if (data_colaboracao == data_tarefa and hora_inicio_colab <= tarefa_inicio and hora_fim_colab >= tarefa_fim):
 
                         tarefa_atribuida = Tarefa.objects.filter(coolaborador=utilizador.id)
+                        print("**********************************")
+                        print(tarefa_atribuida)
+                        print("**********************************")
                         
                         if (len(tarefa_atribuida) != 0):
 
@@ -2922,24 +2948,56 @@ def user_switch(request):
                                
                                 if (data_task == data_tarefa):
                                     no_task_day = no_task_day + 1
+                                    
+                                    print("////////////////")
                                     print("Tarefa")
-                                    print(tarefa)
+                                    print(tarefa.nome)
+                                    print(tarefa_inicio)
+                                    print(tarefa_fim)
+                                    print("-------------")
                                     print("Task")
-                                    print(task)
+                                    print(task.nome)
+                                    print(task_inicio)
+                                    print(task_fim)
+                                    print("////////////////")
+                                    
+
+
                                     if ((tarefa_inicio < task_inicio and tarefa_fim <= task_inicio) or (
                                             tarefa_fim > task_fim and tarefa_inicio >= task_fim)):
+                                        print("zeeeeeeeeeeeeeeeeeeeeeeeeee")
+                                        print("Tarefa")
+                                        print(tarefa.nome)
+                                        print(tarefa_inicio) 
+                                        print(tarefa_fim)
+                                        print("-------------")
+                                        print("Task")
+                                        print(task.nome)
+                                        print(task_inicio)
+                                        print(task_fim)
+                                        print("zeeeeeeeeeeeeeeeeeeeeeeeeee")
                                         if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
                                                 tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (
                                                 tarefa_tipo == 'OT')):
+                                            print("normal")
+                                            print(utilizador.id)
                                             userlist.append(utilizador.id)
                                             usernamelist.append(utilizador.nome)
                                             colaboracaolist.append(colaboracao.id)
                                     else:
-                                        break
-                            if(no_task_day == 0):
+                                        removes.append(utilizador.id)
+                                        removesnamelist.append(utilizador.nome)
+                                        removescolaboracaolist.append(colaboracao.id)
+                                       
+                                        
+                                        
+
+                            if(data_task != data_tarefa):
                                 if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
                                                 tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (
                                                 tarefa_tipo == 'OT')):
+                                    print("else")
+                                    print(utilizador.id)
                                     userlist.append(utilizador.id)
                                     usernamelist.append(utilizador.nome)
                                     colaboracaolist.append(colaboracao.id)   
@@ -2948,16 +3006,23 @@ def user_switch(request):
                         else:
                             if ((tarefa_tipo == 'AV' and colaboracao.sala_de_aula == 1) or (
                                     tarefa_tipo == 'PE' and colaboracao.percurso == 1) or (tarefa_tipo == 'OT')):
+                                print("else")
+                                print(utilizador.id)
                                 userlist.append(utilizador.id)
                                 usernamelist.append(utilizador.nome)
                                 colaboracaolist.append(colaboracao.id)
 
-        dados = {
-            'usernamelist': list(dict.fromkeys(usernamelist)),
-            'userlist': list(dict.fromkeys(userlist)),
-            'colaboracao': list(dict.fromkeys(colaboracaolist)),
-            'numero_colabs': numero_colabs
-        }
+       
+
+    dados = {
+        'usernamelist': list(dict.fromkeys(usernamelist)),
+        'userlist': list(dict.fromkeys(userlist)),
+        'colaboracao': list(dict.fromkeys(colaboracaolist)),
+        'numero_colabs': numero_colabs,
+        'removes': list(dict.fromkeys(removes)),
+        'removesnamelist': list(dict.fromkeys(removesnamelist)),
+        'removescolaboracaolist': list(dict.fromkeys(removescolaboracaolist)) 
+    }
 
     return JsonResponse(dados)
 
@@ -3589,29 +3654,20 @@ def almocos(request):
     # BEGIN filter_by_nome
     nome_query = request.GET.get('nome')
     if nome_query != '' and nome_query is not None:
-        pratos_list = pratos_list.filter(nome__icontains=nome_query)
-        ementas_list = ementas_list.filter(prato__in=pratos_list)
+        pratos_list = pratos_list.filter(prato_carne__icontains=nome_query)
     # END filter_by_nome
 
-    # BEGIN filter_by_tipo
-    tipo_query = request.GET.get('tipo')
-    if tipo_query != '' and tipo_query is not None:
-        pratos_list = pratos_list.filter(tipo__icontains=tipo_query)
-        ementas_list = ementas_list.filter(prato__in=pratos_list)
-    # END filter_by_tipo
 
     # BEGIN filter_by_sopa
     sopa_query = request.GET.get('sopa')
     if sopa_query != '' and sopa_query is not None:
         pratos_list = pratos_list.filter(sopa__icontains=sopa_query)
-        ementas_list = ementas_list.filter(prato__in=pratos_list)
     # END filter_by_sopa
 
     # BEGIN filter_by_sobremesa
     sobremesa_query = request.GET.get('sobremesa')
     if sobremesa_query != '' and sobremesa_query is not None:
         pratos_list = pratos_list.filter(sobremesa__icontains=sobremesa_query)
-        ementas_list = ementas_list.filter(prato__in=pratos_list)
     # END filter_by_sobremesa
     # BEGIN pagination
     page = request.GET.get('page', 1)
@@ -3625,7 +3681,7 @@ def almocos(request):
     # END pagination
     return render(request, 'diaabertoapp/almocos.html',
                   {'pratos': pratos, 'nomequery': nome_query, 'sopaquery': sopa_query,
-                   'sobremesaquery': sobremesa_query, 'tipoquery': tipo_query})
+                   'sobremesaquery': sobremesa_query})
 
 
 def editarementa(request, id):
@@ -4560,16 +4616,13 @@ def vizualizartransporteinscricao(request):
                    'horachegadaquery': horachegada_query, 'horapartidaquery': horapartida_query,
                    'dataquery': data_query})
 
-def transportes_asd(request):
+def meustransportes(request):
     utilizador = ''
     if request.user.is_authenticated:
         user_email = request.user.email
         utilizador = Utilizador.objects.get(email=user_email)
         if utilizador is not None:
             notificacoes = Notificacao.objects.filter(utilizador_rec=utilizador.id).order_by('-hora')
-            if not utilizador.utilizadortipo.tipo == 'Participante em Grupo':
-                messages.error(request, 'Não tem permissões para aceder à pagina!!')
-                return HttpResponseRedirect('/index')
         else:
             messages.error(request, 'Não tem permissões para aceder à pagina!!')
             return HttpResponseRedirect('/index')
@@ -4582,7 +4635,9 @@ def transportes_asd(request):
     horarios_list = Horario.objects.all()
     transportes_list = Transporte.objects.all()
     tu_list = TransporteUniversitarioinscricao.objects.all()
-    
+    user_email=request.user.email
+    ut = Utilizador.objects.get(email=user_email)
+
 
         
     # BEGIN filter_by_origem
@@ -4650,6 +4705,12 @@ def transportes_asd(request):
     ins_list = InscricaoGrupo.objects.all()
     ind_list = InscricaoIndividual.objects.all()
 
+    tpp_list2 = tpp_list.filter(transporteproprio__inscricao__utilizador = ut)
+
+    tu_list2 = tu_list.filter(percursos__in = tpp_list2)
+    tu_ids2= tu_list2.values_list('transporte_id', flat=True)
+    transporte_list = transporte_list.filter(id__in=tu_ids2)
+
     for obj in transporte_list:
         tu_list1 = tu_list.filter(transporte=obj)
         tpp_ids = tu_list1.values_list('percursos_id', flat=True)
@@ -4669,8 +4730,8 @@ def transportes_asd(request):
 
 
         obj.np = sum(part_list) + sum(prof_list) + sum(acp_list) + n
- 
-    ins_list2 = ins_list()
+
+
 
     # BEGIN pagination
     page = request.GET.get('page', 1)

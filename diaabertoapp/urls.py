@@ -104,7 +104,8 @@ urlpatterns = [
     path('transporteinscricao/', views.transporteinscricao, name='transporteinscricao'),
     path('adicionartransporteinscricao/<int:id>/', views.adicionartransporteinscricao, name='adicionartransporteinscricao'),
     path('visualizartransporteinscricao/', views.vizualizartransporteinscricao, name='visualizartransporteinscricao'),
-    path('editartransporteinscricao/<int:id>/', views.editartransporteinscricao, name='editartransporteinscricao')
+    path('editartransporteinscricao/<int:id>/', views.editartransporteinscricao, name='editartransporteinscricao'),
+    path('meustransportes/', views.meustransportes, name='meustransportes'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
