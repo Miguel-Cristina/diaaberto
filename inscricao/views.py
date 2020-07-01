@@ -273,7 +273,8 @@ class ConsultarInscricaoView(View):
                 'ementa': ementa
             })
         else:
-            return HttpResponse('<h1>Não lhe é permitido aceder a esta página</h1>')
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request):
         typee = request.POST['type']
@@ -367,9 +368,11 @@ class EditarInscricaoView(View):
                     'prato': prato
                 })
             else:
-                return HttpResponse('<h1>Não lhe é permitido aceder a esta página</h1>')
+                messages.error(request, 'Não tem permissões para aceder à pagina!!')
+                return HttpResponseRedirect('/index')
         else:
-            return HttpResponse('<h1>Não lhe é permitido aceder a esta página</h1>')
+            messages.error(request, 'Não tem permissões para aceder à pagina!!')
+            return HttpResponseRedirect('/index')
 
     def post(self, request, pk):
         inscricao = Inscricao.objects.get(pk=pk)
